@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import {
   login,
-  appUrl,
+  //appUrl,
   ensureDashboardLoaded,
   expectSummaryCard,
   expectTableHeaders,

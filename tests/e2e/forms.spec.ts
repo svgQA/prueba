@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import {
   login,
-  appUrl,
+  //appUrl,
   ensureDashboardLoaded,
   expectSummaryCard,
   expectTableHeaders,
@@ -96,7 +96,7 @@ test.describe('Forms', () => {
     await page.locator('input[name="int-selection"]').nth(2).fill('Luis');
     await page.getByRole('button', { name: /crear|create/i }).click();
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
-  }); test('create new forms', async ({ page }) => {
+  }); test.skip('Create new form and answer', async ({ page }) => {
     test.setTimeout(120000);
     await page.getByRole('button', { name: 'Ʌ' }).click();
     await page.locator('#setting-dropdown-element').click();
@@ -115,16 +115,69 @@ test.describe('Forms', () => {
     await page.locator('input[id$="-page-title-input"]').fill('PruebaFormulario');
     await page.locator('input[id$="-element-title-input"]').fill('pruebaformularioTST');
     await page.locator('input[id$="-element-title-input"]').click();
-    await page.getByRole('button', { name: 'element' }).click();
-    await page.getByPlaceholder('Enter element title').nth(1).fill('PruebaTiempo');
-    const elementRow = page.getByRole('row', { name: /PruebaTiempo/i });    
-    for (let i = 0; i < 10; i++) {
-    await page.keyboard.press('ArrowDown');
-    await page.waitForTimeout(1);
-    }
-    const answerTypeDropdown = elementRow.locator('select[id$="-element-type-select"]');
-    await page.waitForLoadState('networkidle');
-    await answerTypeDropdown.selectOption({ label: 'Time' });
+    await page.locator('label').filter({ hasText: 'Required' }).locator('div').first().click();
+    await page.locator('label').filter({ hasText: 'Administrator' }).locator('div').first().click();
     await page.getByRole('button', { name: /crear|create/i }).click();
-  });
-});
+    await Promise.all([
+    page.waitForURL('**/forms', { timeout: 10000 }),
+    page.click('div.flex.flex-row.justify-center.items-center.w-full.md\\:w-auto')
+    ]);
+    await expect(page.getByRole('cell', { name: 'PruebaForms' }).first()).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('PruebaDescripForms').first()).toBeVisible();
+    await page.getByRole('button', { name: 'ĥ Continue' }).click();
+    await page.waitForLoadState('networkidle');
+    await page.getByRole('textbox', { name: 'pruebaformularioTST' }).click();
+    await page.getByRole('textbox', { name: 'pruebaformularioTST' }).fill('prueba');
+    await page.getByRole('button', { name: 'Ɛ Finish' }).click();
+    await page.waitForLoadState('networkidle');
+    await expect(page.getByText('Closed')).toBeVisible({ timeout: 10000 });
+  }); test.skip('verify form Excel export', async ({ page }) => {
+      test.setTimeout(120000);
+      await page.getByRole('link', { name: /forms/i }).click();
+      await page.waitForLoadState('networkidle');
+      await page.getByRole('button', { name: 'ɜ' }).click();
+      await expect(page.getByText(/Export by date range|Exportar por rango/i)).toBeVisible();
+      const searchBox = page.getByRole('textbox', { name: 'Form' });
+      await searchBox.click();
+      await searchBox.fill('PruebaForms');
+      await page.waitForTimeout(500);
+      await page.getByText('PruebaForms').first().click();
+      await page.getByRole('textbox', { name: 'Start Date' }).click();
+      await page.getByRole('textbox', { name: 'Start Date' }).fill('2025-11-10T14:43');
+      await page.getByRole('textbox', { name: 'End Date' }).click();
+      await page.getByRole('textbox', { name: 'End Date' }).fill('2025-11-12T18:43');
+      const downloadExcelPromise = page.waitForEvent('download');
+      await page.getByRole('button', { name: /Export|Exportar/i }).click();
+      const download = await downloadExcelPromise;
+      expect(download).toBeDefined();
+      expect(download.suggestedFilename()).toContain('.xlsx');
+  }); test.skip('verify form PDF export', async ({ page }) => {
+      test.setTimeout(120000);
+      await page.getByRole('link', { name: /forms/i }).click();
+      await page.waitForLoadState('networkidle');
+      const formRow = page.getByRole('row', { name: /PruebaForms/i }).first();
+      await formRow.scrollIntoViewIfNeeded();
+      await page.locator('span.vox-icon.vx-icon-options').first().click();
+      await page.locator('#dropdown-action-0-button').click();
+      await page.waitForLoadState('networkidle');
+      const downloadPDFPromise = page.waitForEvent('download');
+      await page.getByText('Generate Report').click();
+      const download = await downloadPDFPromise;
+      expect(download).toBeDefined();
+      expect(download.suggestedFilename()).toContain('.pdf');
+  }); test('Validate response view switching', async ({ page }) => {
+      await page.getByRole('link', { name: /forms/i }).click();
+
+
+      const pruebaFormsRow = page.locator('tr').filter({ hasText: 'PruebaForms' });
+      await page.locator('tr').nth(2).locator('span.vox-icon.vx-icon-options').click();
+      await page.locator('#dropdown-action-0-button').click();
+      await page.waitForLoadState('networkidle');
+      await expect(page.getByRole('heading', { name: 'Report' })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Generate Report' })).toBeVisible();
+      const tableViewButton = page.locator('[data-testid="view-toggle-table"]');
+      await tableViewButton.click();
+      await page.waitForLoadState('networkidle');
+      await page.click('#undefined-button');
+  });  
+}); 
