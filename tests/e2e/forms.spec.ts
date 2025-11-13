@@ -17,7 +17,7 @@ test.describe('Forms', () => {
   test.beforeEach(async ({ page }) => {
     await login(page);
     await ensureDashboardLoaded(page);
-  }); test.skip('renders forms metrics and disables unavailable views', async ({ page }) => {
+  }); test('renders forms metrics and disables unavailable views', async ({ page }) => {
   await page.getByRole('link', { name: translationRegex('t_inspect') }).click();
   await expect(page).toHaveURL(/.*forms/);
   await expect(page).toHaveTitle(/TY Formulario|TY Form/);
@@ -42,7 +42,7 @@ test.describe('Forms', () => {
 
     const schedulerButton = page.locator('button[name="button-change-scheduler"]');
     await expect(schedulerButton).toBeDisabled();
-  }); test.skip('create smart group', async ({ page }) => {
+  }); test('create smart group', async ({ page }) => {
     test.setTimeout(120000);
     await page.getByRole('button', { name: 'Ʌ' }).click();
     await page.locator('#setting-dropdown-element').click();
@@ -96,7 +96,7 @@ test.describe('Forms', () => {
     await page.locator('input[name="int-selection"]').nth(2).fill('Luis');
     await page.getByRole('button', { name: /crear|create/i }).click();
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
-  }); test.skip('Create new form and answer', async ({ page }) => {
+  }); test('Create new form and answer', async ({ page }) => {
     test.setTimeout(120000);
     await page.getByRole('button', { name: 'Ʌ' }).click();
     await page.locator('#setting-dropdown-element').click();
@@ -131,7 +131,7 @@ test.describe('Forms', () => {
     await page.getByRole('button', { name: 'Ɛ Finish' }).click();
     await page.waitForLoadState('networkidle');
     await expect(page.getByText('Closed')).toBeVisible({ timeout: 10000 });
-  }); test.skip('verify form Excel export', async ({ page }) => {
+  }); test('verify form Excel export', async ({ page }) => {
       test.setTimeout(120000);
       await page.getByRole('link', { name: /forms/i }).click();
       await page.waitForLoadState('networkidle');
@@ -151,7 +151,7 @@ test.describe('Forms', () => {
       const download = await downloadExcelPromise;
       expect(download).toBeDefined();
       expect(download.suggestedFilename()).toContain('.xlsx');
-  }); test.skip('verify form PDF export', async ({ page }) => {
+  }); test('verify form PDF export', async ({ page }) => {
       test.setTimeout(120000);
       await page.getByRole('link', { name: /forms/i }).click();
       await page.waitForLoadState('networkidle');
@@ -167,17 +167,62 @@ test.describe('Forms', () => {
       expect(download.suggestedFilename()).toContain('.pdf');
   }); test('Validate response view switching', async ({ page }) => {
       await page.getByRole('link', { name: /forms/i }).click();
-
-
+      await page.waitForLoadState('networkidle');
+      await expect(page.locator('table')).toBeVisible();
+      await expect(page.getByRole('heading', { name: /Total Forms|Total Formularios/i })).toBeVisible();
       const pruebaFormsRow = page.locator('tr').filter({ hasText: 'PruebaForms' });
       await page.locator('tr').nth(2).locator('span.vox-icon.vx-icon-options').click();
       await page.locator('#dropdown-action-0-button').click();
       await page.waitForLoadState('networkidle');
       await expect(page.getByRole('heading', { name: 'Report' })).toBeVisible();
       await expect(page.getByRole('button', { name: 'Generate Report' })).toBeVisible();
-      const tableViewButton = page.locator('[data-testid="view-toggle-table"]');
-      await tableViewButton.click();
+      await page.locator('button[name="button-change-table"]').click();
+      await page.locator('div:has-text("PruebaFormulario02") >> button:has-text("Continue")').click();
       await page.waitForLoadState('networkidle');
-      await page.click('#undefined-button');
-  });  
+      await expect(page.getByRole('heading', { name: 'Inspection' })).toBeVisible();
+      await page.locator('button[name="button-change-table"]').click();
+  }); test('Cover response status transitions', async ({ page }) => {
+    test.setTimeout(120000);
+    await page.getByRole('link', { name: /forms/i }).click();
+    await page.waitForLoadState('networkidle');
+    await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
+    const activeFormsCard = page.getByText('Active Forms', { exact: true })
+                                .locator('xpath=ancestor::div[contains(@class, "border-2")]');
+    const percentageElement = activeFormsCard.locator('div.text-3xl.font-bold');
+    await expect(percentageElement).toBeVisible({ timeout: 10000 });
+    const initialPercentage = await percentageElement.textContent();
+
+    const archivedFormsCard = page.getByText('Archived Forms', { exact: true })
+                                  .locator('xpath=ancestor::div[contains(@class, "border-2")]');
+    const archivedPercentageElement = archivedFormsCard.locator('div.text-3xl.font-bold');
+    const initialArchivedPercentage = await archivedPercentageElement.textContent();
+
+    await expect(page.getByRole('cell', { name: 'PruebaForms' }).first()).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText('PruebaDescripForms').first()).toBeVisible();
+    await page.getByRole('row', { name: /PruebaForms.*PruebaDescripForms/i })
+      .getByRole('button', { name: 'ĥ Continue' })
+      .click();
+    await page.waitForLoadState('networkidle');
+    await page.getByRole('textbox', { name: 'pruebaformularioTST' }).click();
+    await page.getByRole('textbox', { name: 'pruebaformularioTST' }).fill('prueba');
+    await page.getByRole('button', { name: 'Ɛ Finish' }).click();
+    await page.waitForLoadState('networkidle');
+    await expect(page.getByText('Closed')).toBeVisible({ timeout: 10000 });
+    await page.getByRole('link', { name: /forms/i }).click();
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(2000);
+    const finalActiveFormsCard = page.getByText('Active Forms', { exact: true })
+                                   .locator('xpath=ancestor::div[contains(@class, "border-2")]');
+    const finalPercentageElement = finalActiveFormsCard.locator('div.text-3xl.font-bold');
+    await expect(finalPercentageElement).not.toHaveText(initialPercentage!, { timeout: 10000 });
+    const finalPercentage = await finalPercentageElement.textContent();
+    expect(finalPercentage).not.toEqual(initialPercentage);
+    const finalArchivedFormsCard = page.getByText('Archived Forms', { exact: true })
+                                     .locator('xpath=ancestor::div[contains(@class, "border-2")]');
+    const finalArchivedPercentageElement = finalArchivedFormsCard.locator('div.text-3xl.font-bold');
+    await expect(finalArchivedPercentageElement).not.toHaveText(initialArchivedPercentage!, { timeout: 10000 }); 
+    const finalArchivedPercentage = await finalArchivedPercentageElement.textContent();
+    console.log('Porcentaje final Archived Forms:', finalArchivedPercentage);
+    expect(finalArchivedPercentage).not.toEqual(initialArchivedPercentage);
+  });
 }); 
