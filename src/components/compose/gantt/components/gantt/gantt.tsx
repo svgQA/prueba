@@ -31,6 +31,7 @@ import { memo } from 'preact/compat';
 import { Search } from '@/components/common/search/search';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { ReplicateModal } from './replicate.modal';
+import { useTranslation } from 'react-i18next';
 
 const GanttComponent: ComponentType<GanttProps> = ({
   tasks: initialTasks,
@@ -80,6 +81,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
   group,
   onReloadSignal,
 }) => {
+  const { t } = useTranslation();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
   const [dateSetup, setDateSetup] = useState<DateSetup>(() => {
@@ -616,67 +618,67 @@ const GanttComponent: ComponentType<GanttProps> = ({
     let filteredUsers =
       userLevelFilters.length > 0
         ? initialTasks.users.filter((user) => {
-            return userLevelFilters.every((filter) => {
-              const filterValue = filter.value as string[];
-              const userValue = filter.id === 'name' ? user.name : user.cardId;
+          return userLevelFilters.every((filter) => {
+            const filterValue = filter.value as string[];
+            const userValue = filter.id === 'name' ? user.name : user.cardId;
 
-              if (Array.isArray(filterValue)) {
-                return filterValue.some((val) =>
-                  String(userValue)
-                    .toLowerCase()
-                    .includes(String(val).toLowerCase())
-                );
-              }
-              return String(userValue)
-                .toLowerCase()
-                .includes(String(filterValue).toLowerCase());
-            });
-          })
+            if (Array.isArray(filterValue)) {
+              return filterValue.some((val) =>
+                String(userValue)
+                  .toLowerCase()
+                  .includes(String(val).toLowerCase())
+              );
+            }
+            return String(userValue)
+              .toLowerCase()
+              .includes(String(filterValue).toLowerCase());
+          });
+        })
         : initialTasks.users;
 
     filteredUsers =
       taskLevelFilters.length > 0
         ? filteredUsers.map((user) => {
-            const filteredTasks = user.tasks.filter((task) => {
-              return taskLevelFilters.every((filter) => {
-                const filterValue = filter.value as string[];
-                let taskValue = '';
+          const filteredTasks = user.tasks.filter((task) => {
+            return taskLevelFilters.every((filter) => {
+              const filterValue = filter.value as string[];
+              let taskValue = '';
 
-                switch (filter.id) {
-                  case 'task.service':
-                    taskValue = task.name;
-                    break;
-                  case 'task.contract':
-                    taskValue = task.contract;
-                    break;
-                  case 'task.client':
-                    taskValue = task.client;
-                    break;
-                  case 'task.status':
-                    taskValue = task.status;
-                    break;
-                  default:
-                    return true;
-                }
+              switch (filter.id) {
+                case 'task.service':
+                  taskValue = task.name;
+                  break;
+                case 'task.contract':
+                  taskValue = task.contract;
+                  break;
+                case 'task.client':
+                  taskValue = task.client;
+                  break;
+                case 'task.status':
+                  taskValue = task.status;
+                  break;
+                default:
+                  return true;
+              }
 
-                if (Array.isArray(filterValue)) {
-                  return filterValue.some((val) =>
-                    String(taskValue)
-                      .toLowerCase()
-                      .includes(String(val).toLowerCase())
-                  );
-                }
-                return String(taskValue)
-                  .toLowerCase()
-                  .includes(String(filterValue).toLowerCase());
-              });
+              if (Array.isArray(filterValue)) {
+                return filterValue.some((val) =>
+                  String(taskValue)
+                    .toLowerCase()
+                    .includes(String(val).toLowerCase())
+                );
+              }
+              return String(taskValue)
+                .toLowerCase()
+                .includes(String(filterValue).toLowerCase());
             });
+          });
 
-            return {
-              ...user,
-              tasks: filteredTasks,
-            };
-          })
+          return {
+            ...user,
+            tasks: filteredTasks,
+          };
+        })
         : filteredUsers;
 
     filteredUsers = filteredUsers.filter((user) => user.tasks.length);
@@ -769,12 +771,12 @@ const GanttComponent: ComponentType<GanttProps> = ({
             id='search-general'
             name='search-general'
             keys={[
-              { label: 'Nombre', id: 'name', type: 'text' },
-              { label: 'Estado', id: 'task.status', type: 'text' },
-              { label: 'Identificador', id: 'cardId', type: 'text' },
-              { label: 'Servicio', id: 'task.service', type: 'text' },
-              { label: 'Contrato', id: 'task.contract', type: 'text' },
-              { label: 'Cliente', id: 'task.client', type: 'text' },
+              { label: t('name'), id: 'name', type: 'text' },
+              { label: t('status'), id: 'task.status', type: 'text' },
+              { label: t('identifier'), id: 'cardId', type: 'text' },
+              { label: t('service'), id: 'task.service', type: 'text' },
+              { label: t('contract'), id: 'task.contract', type: 'text' },
+              { label: t('client'), id: 'task.client', type: 'text' },
             ]}
             onChange={setColumnFilters}
             group={group}

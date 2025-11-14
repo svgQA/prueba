@@ -3,6 +3,7 @@ import { Button } from '@/components/common/button/button';
 import { Switch } from '@/components/common/switch/switch';
 import { ViewMode } from '../../types/public-types';
 import { Chip } from '@/components/common/chip/chip';
+import { useTranslation } from 'react-i18next';
 
 interface IGroupProps {
   className?: string;
@@ -20,6 +21,7 @@ export const Group = ({
   status,
 }: IGroupProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <div
@@ -28,7 +30,7 @@ export const Group = ({
       onMouseLeave={() => setIsOpen(false)}
     >
       <div className='flex items-center gap-2'>
-        <Chip label={status}></Chip>
+        <Chip label={t(status)}></Chip>
         <Button
           id='show-task-list'
           name='show-task-list'
@@ -45,7 +47,7 @@ export const Group = ({
             <Button
               id='hour-button'
               name='hour-button'
-              label='2 Dias'
+              label='h_two_days'
               borderless
               full
               selected={status === ViewMode.Hour}
@@ -54,7 +56,7 @@ export const Group = ({
             <Button
               id='quarter-day-button'
               name='quarter-day-button'
-              label='Semana'
+              label='h_week'
               borderless
               full
               selected={status === ViewMode.QuarterDay}
@@ -63,7 +65,7 @@ export const Group = ({
             <Button
               id='month-button'
               name='month-button'
-              label='Mes'
+              label='h_month'
               borderless
               full
               selected={status === ViewMode.HalfDay}
@@ -73,7 +75,7 @@ export const Group = ({
             <Switch
               id={`cb-shift-gantt-vals`}
               name='shift-gantt-vals'
-              label='Show Task List'
+              label='h_task_list'
               onChange={() => onViewListChange(!isChecked)}
               value={isChecked}
             />
