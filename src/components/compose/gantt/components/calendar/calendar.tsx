@@ -10,6 +10,7 @@ import {
 } from '../../helpers/date-helper';
 import { DateSetup } from '../../types/date-setup';
 import styles from './calendar.module.css';
+import { useTranslation } from 'react-i18next';
 
 export type CalendarProps = {
   dateSetup: DateSetup;
@@ -32,6 +33,8 @@ export const Calendar = ({
   fontFamily,
   fontSize,
 }: CalendarProps) => {
+  const { t } = useTranslation();
+
   const getCalendarValuesForYear = () => {
     const topValues: VNode[] = [];
     const bottomValues: VNode[] = [];
@@ -126,7 +129,8 @@ export const Calendar = ({
     const topDefaultHeight = headerHeight * 0.5;
     for (let i = 0; i < dateSetup.dates.length; i++) {
       const date = dateSetup.dates[i];
-      const bottomValue = getLocaleMonth(date, locale);
+      const monthName = getLocaleMonth(date, locale).toLowerCase();
+      const bottomValue = t(monthName);
       bottomValues.push(
         <text
           key={bottomValue + date.getFullYear()}
@@ -174,7 +178,8 @@ export const Calendar = ({
       const date = dates[i];
       let topValue = '';
       if (i === 0 || date.getMonth() !== dates[i - 1].getMonth()) {
-        topValue = `${getLocaleMonth(date, locale)}, ${date.getFullYear()}`;
+        const monthName = getLocaleMonth(date, locale).toLowerCase();
+        topValue = `${t(monthName)}, ${date.getFullYear()}`;
       }
       const bottomValue = `W${getWeekNumberISO8601(date)}`;
 
@@ -217,7 +222,8 @@ export const Calendar = ({
     const dates = dateSetup.dates;
     for (let i = 0; i < dates.length; i++) {
       const date = dates[i];
-      const bottomValue = `${getLocalDayOfWeek(date, locale, 'short')}, ${date
+      const dayShort = getLocalDayOfWeek(date, locale, 'short').toLowerCase().substring(0, 3);
+      const bottomValue = `${t(dayShort)}, ${date
         .getDate()
         .toString()}`;
 
@@ -235,7 +241,8 @@ export const Calendar = ({
         i + 1 !== dates.length &&
         date.getMonth() !== dates[i + 1].getMonth()
       ) {
-        const topValue = getLocaleMonth(date, locale);
+        const monthName = getLocaleMonth(date, locale).toLowerCase();
+        const topValue = t(monthName);
 
         topValues.push(
           <TopPartOfCalendar
@@ -282,11 +289,9 @@ export const Calendar = ({
         </text>
       );
       if (i === 0 || date.getDate() !== dates[i - 1].getDate()) {
-        const topValue = `${getLocalDayOfWeek(
-          date,
-          locale,
-          'short'
-        )}, ${date.getDate()} ${getLocaleMonth(date, locale)}`;
+        const dayShort = getLocalDayOfWeek(date, locale, 'short').toLowerCase().substring(0, 3);
+        const monthName = getLocaleMonth(date, locale).toLowerCase();
+        const topValue = `${t(dayShort)}, ${date.getDate()} ${t(monthName)}`;
         topValues.push(
           <TopPartOfCalendar
             key={topValue + date.getFullYear()}
@@ -328,11 +333,9 @@ export const Calendar = ({
       );
       if (i !== 0 && date.getDate() !== dates[i - 1].getDate()) {
         const displayDate = dates[i - 1];
-        const topValue = `${getLocalDayOfWeek(
-          displayDate,
-          locale,
-          'long'
-        )}, ${displayDate.getDate()} ${getLocaleMonth(displayDate, locale)}`;
+        const dayName = getLocalDayOfWeek(displayDate, locale, 'long').toLowerCase();
+        const monthName = getLocaleMonth(displayDate, locale).toLowerCase();
+        const topValue = `${t(dayName)}, ${displayDate.getDate()} ${t(monthName)}`;
         const topPosition = (date.getHours() - 24) / 2;
         topValues.push(
           <TopPartOfCalendar
@@ -386,7 +389,7 @@ export const Calendar = ({
         height={headerHeight}
         className='fill-transparent'
       />
-      {bottomValues} {topValues}
+       {bottomValues} {topValues}
     </g>
   );
 };

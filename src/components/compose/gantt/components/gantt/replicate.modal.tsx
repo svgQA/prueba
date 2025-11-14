@@ -11,6 +11,7 @@ import { ShiftService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { DateUtils } from '@/utils/utilities/dates';
+import { useTranslation } from 'react-i18next';
 
 interface ReplicateModalProps {
   selectedUsers: Set<string | number>;
@@ -53,6 +54,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
   onReloadSignal,
 }) => {
   const [showDateForm, setShowDateForm] = useState(false);
+  const { t } = useTranslation();
   if (selectedUsers.size === 0) return null;
 
   const onSubmit = async (values: FormValues, form: any) => {
@@ -91,15 +93,14 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
             }}
             validate={(values) => {
               const errors: FormErrors = {};
-              if (!values.startDate) errors.startDate = 'Campo obligatorio';
-              if (!values.endDate) errors.endDate = 'Campo obligatorio';
+              if (!values.startDate) errors.startDate = t('error.missing_required_field');
+              if (!values.endDate) errors.endDate = t('error.missing_required_field');
 
               if (values.startDate && values.endDate) {
                 const start = new Date(values.startDate);
                 const end = new Date(values.endDate);
                 if (start > end) {
-                  errors.endDate =
-                    'La fecha final debe ser posterior a la fecha inicial';
+                  errors.endDate = t('error.invalid_end_date');
                 }
               }
 
@@ -111,7 +112,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                 (!form.getState().values.replacements ||
                   form.getState().values.replacements.length === 0 ||
                   form.getState().values.replacements.length !==
-                    selectedUsers.size)
+                  selectedUsers.size)
               ) {
                 const initialReplacements = Array.from(selectedUsers).map(
                   (userId) => ({
@@ -134,7 +135,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                       {({ input, meta }) => (
                         <Input
                           {...input}
-                          label='Fecha de Inicio'
+                          label='h_date_start'
                           type='date'
                           meta={meta}
                         />
@@ -145,7 +146,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                       {({ input, meta }) => (
                         <Input
                           {...input}
-                          label='Fecha Final'
+                          label='h_date_end'
                           type='date'
                           meta={meta}
                         />
@@ -157,7 +158,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                     {({ input, meta }) => (
                       <Input
                         {...input}
-                        label='Iteraciones'
+                        label='h_iteration'
                         type='number'
                         min='1'
                         max='100'
@@ -208,7 +209,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                                           multiple={true}
                                           allowAll={true}
                                           menuPortalTarget={document.body}
-                                          placeholder='Selecciona usuarios de reemplazo'
+                                          placeholder='h_selected_user_replacement'
                                         />
                                       )}
                                     </Field>
