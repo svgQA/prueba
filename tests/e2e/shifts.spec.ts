@@ -431,6 +431,7 @@ import {
     await page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i }).click();
     await page.getByRole('row', { name: /usuarioprueba1 PSdor/i }).first().getByRole('checkbox').check();
     await page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i }).click();
+  }); test.skip('Exercise Gantt timeline interactions (Drag and Drop)', async ({ page }) => {
   }); test.skip('Edit an existing shift', async ({ page }) => {
     const testRow = page.getByRole('row')
     .filter({ hasText: /usuarioprueba1 PSdor/i })
@@ -469,6 +470,7 @@ import {
     await sendButton.scrollIntoViewIfNeeded();
     await sendButton.click();   
     await expect(page.getByText(/Enviado con éxito|Sent successfully/i)).toBeVisible({ timeout: 20000 });
+  }); test.skip('Validate live workforce mapping', async ({ page }) => {
   }); test.skip('Delete an existing shift', async ({ page }) => {
     const testRow = page.getByRole('row')
       .filter({ hasText: /usuarioprueba1 PSdor/i })
@@ -481,6 +483,22 @@ import {
     await page.getByRole('button', { name: 'Confirmar' }).click();
     await expect(page.getByText(/Eliminado con éxito|deleted successfully/i)).toBeVisible({ timeout: 20000 });
     await page.waitForLoadState('networkidle');
+  }); test('Ensure planner workload accuracy (Grouping by Service)', async ({ page }) => {
+      test.setTimeout(60000);
+      await page.getByRole('link', { name: /turnos|shifts/i }).click();
+      await page.waitForLoadState('networkidle');
+      await page.locator('button[name="button-change-table"]').click();
+      await page.waitForLoadState('networkidle');
+      const groupButton = page.locator('button[name="group-none-filter"]').first();
+      await expect(groupButton).toBeVisible();
+      await groupButton.click();
+      await page.locator('button[name="group-service-filter"]').click();
+      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(1000);
+      const groupedRow = page.locator('tbody tr').filter({ hasText: /\(\d+\)/ }).first();
+      await expect(groupedRow).toBeVisible({ timeout: 10000 });
+      const firstHeader = page.locator('thead th').first();
+      await expect(firstHeader).toHaveText(/Servicio|Service/i);
   }); test.skip('Guard mention pickers for shifts', async ({ page }) => {
   try {
     const createButton = page.locator('button[name="button-create-shift"]').first();

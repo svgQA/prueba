@@ -95,5 +95,22 @@ test.describe('Main Interface (Shell) Experience', () => {
     await page.waitForLoadState('networkidle');
     await expect(tareaCompañiaA).not.toBeVisible();
     await expect(tareaCompañiaB).toBeVisible({ timeout: 10000 });
-   });
+    }); test.skip('Validate the global panic shortcut', async ({ page }) => {
+        test.setTimeout(60000);
+        const panicButton = page.locator('header button[name="user-action"]').first();
+        await expect(panicButton).toBeVisible();
+        await panicButton.click();
+        const panicAlertText = page.getByText('Emit a Panic Alert').first();
+        await expect(panicAlertText).toBeVisible({ timeout: 10000 });
+        await expect(page.getByText('Sixto Orobio').first()).toBeVisible();
+        await page.locator('body').click({ position: { x: 0, y: 0 } });
+    }); test.skip('Exercise the header notification center', async ({ page }) => {
+        test.setTimeout(60000);
+        const notifButton = page.locator('header button[name="user-action"]').nth(1);
+        await expect(notifButton).toBeVisible();
+        await notifButton.click();
+        const notificationPanel = page.locator('text=/No hay notificaciones|No notifications/i');
+        await expect(notificationPanel).toBeVisible({ timeout: 10000 });
+        await page.locator('body').click({ position: { x: 0, y: 0 } });       
+});
 });
