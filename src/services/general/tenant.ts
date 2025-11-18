@@ -20,7 +20,7 @@ export class TenantService extends BaseService {
 
   static async create_tenant(data: ICSuperTenantRequest) {
     const model: IMakeRequest = {
-      url: ['tenants', 'super'],
+      url: ['tenants'],
       method: REQUEST_METHODS.POST,
       data: data,
     };
@@ -40,13 +40,6 @@ export class TenantService extends BaseService {
     };
     return await super.make_request<ITenant>(this.name, model, false);
   }
-
-  // static async get_tenants() {
-  //   const model: IMakeRequest = {
-  //     url: ['tenants'],
-  //   };
-  //   return await super.make_request<ITenant>(this.name, model);
-  // }
 
   static async get_instances() {
     const model: IMakeRequest = {
@@ -100,18 +93,4 @@ export class TenantService extends BaseService {
     };
     return await super.make_request(this.name, model);
   }
-
-  // static async get_modules() {
-  //   const model: IMakeRequest = {
-  //     url: ['module'],
-  //   };
-  //   return await super.make_request<IModule>(this.name, model);
-  // }
-
-  // static async get_owners() {
-  //   const model: IMakeRequest = {
-  //     url: ['owner'],
-  //   };
-  //   return await super.make_request<IOwner>(this.name, model);
-  // }
 }
