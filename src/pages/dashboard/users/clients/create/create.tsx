@@ -47,6 +47,7 @@ type UserInList = {
   phone: string;
   email: string;
   address: string;
+  owner?: boolean | null;
 };
 
 export const ClientsCreateSettingPage: FunctionComponent = () => {
@@ -602,6 +603,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                       mode='primary'
                       label='clean'
                       big={true}
+                      disabled={user.owner === true}
                     />
                   </div>
                 </div>
