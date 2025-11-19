@@ -651,8 +651,12 @@ const GanttComponent: ComponentType<GanttProps> = ({
                 case 'task.contract':
                   taskValue = task.contract;
                   break;
-                case 'task.client':
-                  taskValue = task.client;
+                // case 'task.client':
+                //   taskValue = task.client;
+                //   break;
+                case 'task.client_name':
+                  console.log('task.client_name', task.client_name);
+                  taskValue = task.client_name;
                   break;
                 case 'task.status':
                   taskValue = task.status;
@@ -776,7 +780,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
               { label: t('identifier'), id: 'cardId', type: 'text' },
               { label: t('service'), id: 'task.service', type: 'text' },
               { label: t('contract'), id: 'task.contract', type: 'text' },
-              { label: t('client'), id: 'task.client', type: 'text' },
+              { label: t('client'), id: 'task.client_name', type: 'text' },
             ]}
             onChange={setColumnFilters}
             group={group}

@@ -24,6 +24,7 @@ export interface Task {
   phone: string;
   contract: string;
   client: string;
+  client_name: string;
   userId: string | number;
   cardId: string;
   type: TaskType;
