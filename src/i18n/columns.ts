@@ -183,6 +183,12 @@ export const columns_es = {
   h_add_user: 'Añadir usuario nuevo',
   h_surname: 'Apellido',
   h_search_users: 'Buscar usuarios',
+  h_selected_user_replacement: 'Selecciona usuarios de reemplazo',
+  h_iteration: 'Iteraciones',
+  h_two_days: '2 Días',
+  h_week: 'Semana',
+  h_month: 'Mes',
+  h_task_list: 'Lista de Tareas',
 };
 
 export const columns_en = {
@@ -370,4 +376,10 @@ export const columns_en = {
   h_add_user: 'Add New User',
   h_surname: 'Last Name',
   h_search_users: 'Search users',
+  h_selected_user_replacement: 'Select replacement users',
+  h_iteration: 'Iterations',
+  h_two_days: '2 Days',
+  h_week: 'Week',
+  h_month: 'Month',
+  h_task_list: 'Task List',
 };
