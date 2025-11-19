@@ -63,12 +63,12 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
   // Setear valores iniciales en edición
   const setInitialValues = useCallback(async () => {
     loading.value = true;
-    if (!id) return loading.value = false;
+    if (!id) return (loading.value = false);
     const numericId = Number(id);
     if (!Number.isFinite(numericId)) return;
 
     const req = await CommonZoneService.getCommonZone(numericId);
-    if (!req.getStatus()) return loading.value = false;
+    if (!req.getStatus()) return (loading.value = false);
 
     const model = req.getOne();
     initialValues.value = {
@@ -120,7 +120,7 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
       ? await CommonZoneService.updateCommonZone(numericId, payload)
       : await CommonZoneService.createCommonZone(payload);
 
-    if (!req.getStatus()) return loading.value = false;
+    if (!req.getStatus()) return (loading.value = false);
 
     ToastManager.success(id ? 's_updated_success' : 's_created_success');
     go({
@@ -133,7 +133,10 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
+    <Section
+      className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
+      loading={loading.value}
+    >
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}

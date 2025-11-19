@@ -1,5 +1,6 @@
 export interface IKeyResponse {
-  id: string;
+  id?: string;
   name: string;
-  pat: string;
+  pat?: string;
+  show: boolean;
 }

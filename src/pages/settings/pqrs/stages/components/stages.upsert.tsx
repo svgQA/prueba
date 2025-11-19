@@ -64,11 +64,11 @@ export const StageForm: FunctionComponent = () => {
         errorStageId: null,
         status: 'active',
       });
-      return loading.value = false;
+      return (loading.value = false);
     }
 
     const response = await StageService.get_by_id(id);
-    if (!response.getStatus()) return loading.value = false;
+    if (!response.getStatus()) return (loading.value = false);
     const initialData = response.getOne();
 
     setInitialValues({
@@ -123,7 +123,10 @@ export const StageForm: FunctionComponent = () => {
   };
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
+    <Section
+      className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
+      loading={loading.value}
+    >
       <Form
         onSubmit={handleSubmit}
         initialValues={initialValues}

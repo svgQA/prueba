@@ -80,7 +80,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
     if (trimmedPhone.startsWith('+57')) return trimmedPhone;
     if (trimmedPhone.startsWith('57')) return `+${trimmedPhone}`;
     return `+57${trimmedPhone}`;
-  }
+  };
 
   const onSubmit = async (model: FormData) => {
     loading.value = true;
@@ -449,11 +449,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
               name='toggle-user-form'
               onClick={toggleUserForm}
               mode='primary'
-              label={
-                showUserForm.value
-                  ? 'h_hide_form'
-                  : 'h_add_user'
-              }
+              label={showUserForm.value ? 'h_hide_form' : 'h_add_user'}
             />
           </div>
         </div>
@@ -468,7 +464,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
               validate={(values) => {
                 const errors: Partial<UserFormData> = {};
                 if (!values.name) errors.name = t('missing_required_field');
-                if (!values.surname) errors.surname = t('missing_required_field');
+                if (!values.surname)
+                  errors.surname = t('missing_required_field');
                 if (!values.phone) errors.phone = t('missing_required_field');
                 if (!values.email) {
                   errors.email = t('missing_required_field');
@@ -485,7 +482,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                   const phoneError = validatedPhone(values.phone!!);
                   if (phoneError) errors.phone = phoneError;
                 }
-                if (!values.address) errors.address = t('missing_required_field');
+                if (!values.address)
+                  errors.address = t('missing_required_field');
                 if (!values.name) errors.name = t('missing_required_field');
                 if (!values.name) errors.surname = t('missing_required_field');
                 return errors;

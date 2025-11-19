@@ -114,7 +114,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
 
   const setInitialValues = async () => {
     loading.value = true;
-    if (!id) return loading.value = false;
+    if (!id) return (loading.value = false);
 
     const userKeys = [
       'name',
@@ -209,7 +209,10 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className=' p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
+    <Section
+      className=' p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
+      loading={loading.value}
+    >
       <Form
         mutators={{
           ...arrayMutators,

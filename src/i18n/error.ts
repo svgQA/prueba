@@ -134,7 +134,7 @@ export const error_es = {
     unknown_error: 'Error desconocido',
     typia_error: 'Parámetros de solicitud inválidos',
     unauthorized: 'No autorizado',
-    not_found_tenant:  'Tenant no encontrado',
+    not_found_tenant: 'Tenant no encontrado',
     not_found_company: 'Empresa no encontrada',
     invalid_tenant: 'ID de Tenant inválido',
     invalid_company: 'ID de empresa inválido',
@@ -176,8 +176,7 @@ export const error_es = {
     user_creation_success: 'Usuario creado exitosamente',
     passwords_not_match: 'Las contraseñas no coinciden',
     email_phone_required: 'Se requiere correo electrónico o número de teléfono',
-    unknown_username:
-      'Nombre de usuario desconocido para este usuario',
+    unknown_username: 'Nombre de usuario desconocido para este usuario',
     signup_error: 'Error al registrar el usuario',
     unknown_signup_error: 'Error desconocido durante el registro',
     authentication_failed: 'Autenticación fallida',
@@ -189,8 +188,7 @@ export const error_es = {
     password_change_success: 'Contraseña cambiada exitosamente',
     user_profile_not_found: 'Perfil de usuario no encontrado',
     user_has_account: 'El usuario ya tiene una cuenta',
-    tenant_connection_failed:
-      'No se pudo conectar al microservicio del Tenant',
+    tenant_connection_failed: 'No se pudo conectar al microservicio del Tenant',
     invalid_user_type: 'Tipo de usuario inválido',
     invalid_user_data: 'Datos de usuario inválidos',
     user_replication_failed: 'Error al replicar los datos del usuario',

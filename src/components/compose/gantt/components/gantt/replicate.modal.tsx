@@ -93,8 +93,10 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
             }}
             validate={(values) => {
               const errors: FormErrors = {};
-              if (!values.startDate) errors.startDate = t('error.missing_required_field');
-              if (!values.endDate) errors.endDate = t('error.missing_required_field');
+              if (!values.startDate)
+                errors.startDate = t('error.missing_required_field');
+              if (!values.endDate)
+                errors.endDate = t('error.missing_required_field');
 
               if (values.startDate && values.endDate) {
                 const start = new Date(values.startDate);
@@ -112,7 +114,7 @@ export const ReplicateModal: ComponentType<ReplicateModalProps> = ({
                 (!form.getState().values.replacements ||
                   form.getState().values.replacements.length === 0 ||
                   form.getState().values.replacements.length !==
-                  selectedUsers.size)
+                    selectedUsers.size)
               ) {
                 const initialReplacements = Array.from(selectedUsers).map(
                   (userId) => ({

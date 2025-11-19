@@ -35,7 +35,7 @@ export const Search = ({
   const isOpenRange = useSignal<boolean>(false);
   const columnSelected = useSignal<string>('createdAt');
   //TODO: Verificar si es necesario este useEffect, porque cuando se cambia el valor se borra del buscador automáticamente
- /* useEffect(() => {
+  /* useEffect(() => {
     searchArray.value = value;
   }, [value]);*/
 
@@ -370,7 +370,6 @@ export const Search = ({
           {keysList}
         </div>
       )}
-
 
       <RangeDateFilter
         isOpen={isOpenRange}

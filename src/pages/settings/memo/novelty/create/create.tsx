@@ -54,7 +54,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
       message = 's_created_success';
     }
 
-    if (!request.getStatus()) return loading.value = false;
+    if (!request.getStatus()) return (loading.value = false);
     ToastManager.success(message);
     go({
       to: '/memo/novelty',
@@ -67,7 +67,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
 
   const setInitialValues = async () => {
     loading.value = true;
-    if (!id) return loading.value = false;
+    if (!id) return (loading.value = false);
 
     const userKeys = [
       'name',

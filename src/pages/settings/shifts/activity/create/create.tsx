@@ -68,7 +68,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
       message = 's_updated_success';
     }
 
-    if (!request.getStatus()) return loading.value = false;
+    if (!request.getStatus()) return (loading.value = false);
     ToastManager.success(message);
     navigateUpsert('/shifts/activity');
     loading.value = false;
@@ -76,7 +76,7 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
 
   const setInitialValues = async () => {
     loading.value = true;
-    if (!id) return loading.value = false;
+    if (!id) return (loading.value = false);
 
     const userKeys = [
       'start',
@@ -277,7 +277,12 @@ export const ActivityCreateSettingPage: FunctionComponent = () => {
               <div class='col-span-1'>
                 <Field<string> name='externalId'>
                   {({ input }) => (
-                    <Input {...input} type='text' label='l_external_code' disabled={loading.value} />
+                    <Input
+                      {...input}
+                      type='text'
+                      label='l_external_code'
+                      disabled={loading.value}
+                    />
                   )}
                 </Field>
               </div>

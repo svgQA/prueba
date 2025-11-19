@@ -77,8 +77,8 @@ export const general_en = {
     client: {
       users_client: {
         title: 'Client Users',
-      }
-    }
+      },
+    },
   },
   permissions: {
     denied: 'Permission denied',
@@ -88,5 +88,5 @@ export const general_en = {
   company: {
     title_form: 'New Company',
     title_form_edit: 'Edit Company',
-  }
+  },
 };

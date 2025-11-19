@@ -53,10 +53,22 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
       }
 
       const u = prev[i];
-      if (u.lat === lat && u.lng === lng && u.name === name && (u.userShifts?.length || 0) > 0) return prev;
+      if (
+        u.lat === lat &&
+        u.lng === lng &&
+        u.name === name &&
+        (u.userShifts?.length || 0) > 0
+      )
+        return prev;
 
       const next = prev.slice();
-      next[i] = { ...u, lat, lng, name, userShifts: shift ? [shift] : u.userShifts || [] };
+      next[i] = {
+        ...u,
+        lat,
+        lng,
+        name,
+        userShifts: shift ? [shift] : u.userShifts || [],
+      };
       return next;
     });
   };
@@ -84,7 +96,9 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
   };
 
   const getPointsByFilters = () => {
-    let filteredUsers = users.filter((user) => user.lat !== undefined && user.lng !== undefined);
+    let filteredUsers = users.filter(
+      (user) => user.lat !== undefined && user.lng !== undefined
+    );
     if (searchFilters.length === 0) return filteredUsers;
 
     let finalFilteredUsers = filteredUsers;
@@ -92,34 +106,54 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
     const updatedFilters: ColumnFiltersState = [];
 
     searchFilters.forEach((filter) => {
-      let values: unknown[] = Array.isArray(filter.value) ? filter.value : [filter.value];
-      const validValues = values.filter((v: any) => v && typeof v === 'string') as string[];
+      let values: unknown[] = Array.isArray(filter.value)
+        ? filter.value
+        : [filter.value];
+      const validValues = values.filter(
+        (v: any) => v && typeof v === 'string'
+      ) as string[];
       if (validValues.length === 0) return;
 
       const foundValues: string[] = [];
-      const filterLabel = filter.id === 'user' ? 'usuario' : filter.id === 'service' ? 'servicio' : 'contrato';
+      const filterLabel =
+        filter.id === 'user'
+          ? 'usuario'
+          : filter.id === 'service'
+            ? 'servicio'
+            : 'contrato';
 
       validValues.forEach((searchValue: string) => {
-        const usersMatchingThisValue = finalFilteredUsers.filter((user: any) => {
-          if (filter.id === 'user') {
-            return user.name.toLowerCase().includes(searchValue.toLowerCase());
-          }
-
-          if (filter.id === 'service' || filter.id === 'contract') {
-            if (!user.userShifts || user.userShifts.length === 0) return false;
-            const firstShift = user.userShifts[0];
-
-            if (filter.id === 'service') {
-              return matchesFilterValue(firstShift.service?.name, searchValue);
+        const usersMatchingThisValue = finalFilteredUsers.filter(
+          (user: any) => {
+            if (filter.id === 'user') {
+              return user.name
+                .toLowerCase()
+                .includes(searchValue.toLowerCase());
             }
 
-            if (filter.id === 'contract') {
-              return matchesFilterValue(firstShift.service?.contract?.name, searchValue);
-            }
-          }
+            if (filter.id === 'service' || filter.id === 'contract') {
+              if (!user.userShifts || user.userShifts.length === 0)
+                return false;
+              const firstShift = user.userShifts[0];
 
-          return true;
-        });
+              if (filter.id === 'service') {
+                return matchesFilterValue(
+                  firstShift.service?.name,
+                  searchValue
+                );
+              }
+
+              if (filter.id === 'contract') {
+                return matchesFilterValue(
+                  firstShift.service?.contract?.name,
+                  searchValue
+                );
+              }
+            }
+
+            return true;
+          }
+        );
 
         if (usersMatchingThisValue.length > 0) {
           foundValues.push(searchValue);
@@ -131,7 +165,7 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
       if (foundValues.length > 0) {
         finalFilteredUsers = finalFilteredUsers.filter((user: any) => {
           if (filter.id === 'user') {
-            return foundValues.some((value: string) => 
+            return foundValues.some((value: string) =>
               user.name.toLowerCase().includes(value.toLowerCase())
             );
           }
@@ -141,13 +175,13 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
             const firstShift = user.userShifts[0];
 
             if (filter.id === 'service') {
-              return foundValues.some((value: string) => 
+              return foundValues.some((value: string) =>
                 matchesFilterValue(firstShift.service?.name, value)
               );
             }
 
             if (filter.id === 'contract') {
-              return foundValues.some((value: string) => 
+              return foundValues.some((value: string) =>
                 matchesFilterValue(firstShift.service?.contract?.name, value)
               );
             }
@@ -158,14 +192,16 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
 
         updatedFilters.push({
           ...filter,
-          value: foundValues
+          value: foundValues,
         });
       }
     });
 
     if (notFoundValues.length > 0) {
-      ToastManager.error(`No se encontraron puntos para: ${notFoundValues.join(' | ')}`);
-      setSearchFilters([...updatedFilters]); 
+      ToastManager.error(
+        `No se encontraron puntos para: ${notFoundValues.join(' | ')}`
+      );
+      setSearchFilters([...updatedFilters]);
     }
 
     if (finalFilteredUsers.length === 0) {
@@ -173,13 +209,16 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
     }
 
     return finalFilteredUsers;
-  }
+  };
 
   const mapPoints = useMemo(() => {
     const points = getPointsByFilters();
     return points?.map((user: User, index: number) => {
-      const firstShift = user.userShifts && user.userShifts.length > 0 ? user.userShifts[0] : null;
-      
+      const firstShift =
+        user.userShifts && user.userShifts.length > 0
+          ? user.userShifts[0]
+          : null;
+
       return {
         id: index + 1,
         name: user.name,
@@ -208,7 +247,7 @@ const LiveUserMap = ({ unsearch }: { unsearch?: boolean }) => {
       <MapLibreShowPoints
         name='map-points'
         pointsRef={mapPoints}
-        sendPoints={() => { }}
+        sendPoints={() => {}}
         height='78vh'
         disablePointSelection={true}
         adminUser={searchFilters.length === 0 ? true : false}
