@@ -25,10 +25,10 @@ export const UserCreateSettingPage: FunctionComponent = () => {
     loading.value = true;
     if (getUserMode.value.mode === USER_MODE_SERVICE.UPDATE) {
       const request = await UserService.update(values, 1);
-      if (!request.getStatus()) return loading.value = false;
+      if (!request.getStatus()) return (loading.value = false);
     } else {
       const request = await UserService.create(values);
-      if (!request.getStatus()) return loading.value = false;
+      if (!request.getStatus()) return (loading.value = false);
     }
     navigate('/dashboard/setting/setting');
     loading.value = false;
@@ -40,134 +40,134 @@ export const UserCreateSettingPage: FunctionComponent = () => {
 
   return (
     <Section loading={loading.value}>
-    <Form
-      onSubmit={onSubmit}
-      render={({ handleSubmit }) => (
-        <form onSubmit={handleSubmit} className='p-4'>
-          <div className='grid grid-cols-2 gap-4 py-3'>
-            <Field<string> name='name' validate={required}>
-              {({ input, meta }) => (
-                <Input
-                  {...input}
-                  placeholder='Nombre'
-                  label='Nombre'
-                  type='text'
-                  meta={meta}
-                />
-              )}
-            </Field>
+      <Form
+        onSubmit={onSubmit}
+        render={({ handleSubmit }) => (
+          <form onSubmit={handleSubmit} className='p-4'>
+            <div className='grid grid-cols-2 gap-4 py-3'>
+              <Field<string> name='name' validate={required}>
+                {({ input, meta }) => (
+                  <Input
+                    {...input}
+                    placeholder='Nombre'
+                    label='Nombre'
+                    type='text'
+                    meta={meta}
+                  />
+                )}
+              </Field>
 
-            <Field<string> name='surname' validate={required}>
-              {({ input, meta }) => (
-                <Input
-                  {...input}
-                  placeholder='Apellido'
-                  label='Apellido'
-                  type='text'
-                  meta={meta}
-                />
-              )}
-            </Field>
+              <Field<string> name='surname' validate={required}>
+                {({ input, meta }) => (
+                  <Input
+                    {...input}
+                    placeholder='Apellido'
+                    label='Apellido'
+                    type='text'
+                    meta={meta}
+                  />
+                )}
+              </Field>
 
-            <Field<string> name='email' validate={required}>
-              {({ input, meta }) => (
-                <Input
-                  {...input}
-                  placeholder='Email'
-                  label='Email'
-                  type='email'
-                  meta={meta}
-                  normal
-                />
-              )}
-            </Field>
+              <Field<string> name='email' validate={required}>
+                {({ input, meta }) => (
+                  <Input
+                    {...input}
+                    placeholder='Email'
+                    label='Email'
+                    type='email'
+                    meta={meta}
+                    normal
+                  />
+                )}
+              </Field>
 
-            <Field<string> name='phone'>
-              {({ input, meta }) => (
-                <Input
-                  {...input}
-                  placeholder='Teléfono'
-                  label='Teléfono'
-                  type='tel'
-                  meta={meta}
-                  normal
-                />
-              )}
-            </Field>
+              <Field<string> name='phone'>
+                {({ input, meta }) => (
+                  <Input
+                    {...input}
+                    placeholder='Teléfono'
+                    label='Teléfono'
+                    type='tel'
+                    meta={meta}
+                    normal
+                  />
+                )}
+              </Field>
 
-            <Field<string> name='cardId'>
-              {({ input, meta }) => (
-                <Input
-                  {...input}
-                  placeholder='ID de Tarjeta'
-                  label='ID de Tarjeta'
-                  type='text'
-                  meta={meta}
-                />
-              )}
-            </Field>
+              <Field<string> name='cardId'>
+                {({ input, meta }) => (
+                  <Input
+                    {...input}
+                    placeholder='ID de Tarjeta'
+                    label='ID de Tarjeta'
+                    type='text'
+                    meta={meta}
+                  />
+                )}
+              </Field>
 
-            <Field<string> name='address' validate={required}>
-              {({ input, meta }) => (
-                <Input
-                  {...input}
-                  placeholder='Dirección'
-                  label='Dirección'
-                  type='text'
-                  meta={meta}
-                />
-              )}
-            </Field>
+              <Field<string> name='address' validate={required}>
+                {({ input, meta }) => (
+                  <Input
+                    {...input}
+                    placeholder='Dirección'
+                    label='Dirección'
+                    type='text'
+                    meta={meta}
+                  />
+                )}
+              </Field>
 
-            <Field<string> name='userType' validate={required}>
-              {({ input, meta }) => (
-                <Input
-                  {...input}
-                  placeholder='Tipo de Usuario'
-                  label='Tipo de Usuario'
-                  type='text'
-                  meta={meta}
-                />
-              )}
-            </Field>
-            <datalist id='userTypes'>
-              <option value='USER'>Usuario</option>
-              <option value='ADMIN'>Administrador</option>
-              <option value='CLIENT'>Cliente</option>
-            </datalist>
+              <Field<string> name='userType' validate={required}>
+                {({ input, meta }) => (
+                  <Input
+                    {...input}
+                    placeholder='Tipo de Usuario'
+                    label='Tipo de Usuario'
+                    type='text'
+                    meta={meta}
+                  />
+                )}
+              </Field>
+              <datalist id='userTypes'>
+                <option value='USER'>Usuario</option>
+                <option value='ADMIN'>Administrador</option>
+                <option value='CLIENT'>Cliente</option>
+              </datalist>
 
-            <Field<string> name='cardType'>
-              {({ input, meta }) => (
-                <Input
-                  {...input}
-                  placeholder='Tipo de Documento'
-                  label='Tipo de Documento'
-                  type='text'
-                  meta={meta}
-                />
-              )}
-            </Field>
-          </div>
-          {/* Botonera */}
-          <div className='w-full flex-row flex justify-end items-center'>
-            <Button
-              id='btn-clean'
-              name='btn-clean'
-              type='button'
-              label='Limpiar'
-            />
+              <Field<string> name='cardType'>
+                {({ input, meta }) => (
+                  <Input
+                    {...input}
+                    placeholder='Tipo de Documento'
+                    label='Tipo de Documento'
+                    type='text'
+                    meta={meta}
+                  />
+                )}
+              </Field>
+            </div>
+            {/* Botonera */}
+            <div className='w-full flex-row flex justify-end items-center'>
+              <Button
+                id='btn-clean'
+                name='btn-clean'
+                type='button'
+                label='Limpiar'
+              />
 
-            <Button
-              id='btn-save'
-              name='btn-save'
-              type='submit'
-              label='Crear Usuario'
-              className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
-            />
-          </div>
-        </form>
-      )}
-    />
+              <Button
+                id='btn-save'
+                name='btn-save'
+                type='submit'
+                label='Crear Usuario'
+                className="rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'"
+              />
+            </div>
+          </form>
+        )}
+      />
     </Section>
   );
 };

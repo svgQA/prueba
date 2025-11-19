@@ -59,7 +59,7 @@ export const RangeExport = () => {
             result.data.mimeType ||
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         });
-  
+
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
@@ -74,7 +74,6 @@ export const RangeExport = () => {
       }
     }
 
-   
     setIsOpen(false);
     loading.value = false;
   };

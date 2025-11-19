@@ -66,7 +66,7 @@ export const SIDEBAR_MENUS: IMenu[] = [
     icon: '191', // 'support',
     id: 'pqrs',
     key: 'pqrs',
-  }
+  },
   /* {
     label: 't_device',
     to: PAGES_LIST_ROUTER.dashboard.devices,

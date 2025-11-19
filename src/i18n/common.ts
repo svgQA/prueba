@@ -96,8 +96,8 @@ export const common_es = {
   mobile: 'Móvil',
   message: 'Mensaje',
   Hour: 'Hora',
-  "Quarter Day": 'Cuarto Día',
-  "Half Day": 'Medio Día'
+  'Quarter Day': 'Cuarto Día',
+  'Half Day': 'Medio Día',
 };
 
 export const common_en = {
@@ -201,6 +201,6 @@ export const common_en = {
   mobile: 'Mobile',
   message: 'Message',
   Hour: 'Hour',
-  "Quarter Day": 'Quarter Day',
-  "Half Day": 'Half Day',
+  'Quarter Day': 'Quarter Day',
+  'Half Day': 'Half Day',
 };

@@ -222,10 +222,10 @@ export const Calendar = ({
     const dates = dateSetup.dates;
     for (let i = 0; i < dates.length; i++) {
       const date = dates[i];
-      const dayShort = getLocalDayOfWeek(date, locale, 'short').toLowerCase().substring(0, 3);
-      const bottomValue = `${t(dayShort)}, ${date
-        .getDate()
-        .toString()}`;
+      const dayShort = getLocalDayOfWeek(date, locale, 'short')
+        .toLowerCase()
+        .substring(0, 3);
+      const bottomValue = `${t(dayShort)}, ${date.getDate().toString()}`;
 
       bottomValues.push(
         <text
@@ -289,7 +289,9 @@ export const Calendar = ({
         </text>
       );
       if (i === 0 || date.getDate() !== dates[i - 1].getDate()) {
-        const dayShort = getLocalDayOfWeek(date, locale, 'short').toLowerCase().substring(0, 3);
+        const dayShort = getLocalDayOfWeek(date, locale, 'short')
+          .toLowerCase()
+          .substring(0, 3);
         const monthName = getLocaleMonth(date, locale).toLowerCase();
         const topValue = `${t(dayShort)}, ${date.getDate()} ${t(monthName)}`;
         topValues.push(
@@ -333,7 +335,11 @@ export const Calendar = ({
       );
       if (i !== 0 && date.getDate() !== dates[i - 1].getDate()) {
         const displayDate = dates[i - 1];
-        const dayName = getLocalDayOfWeek(displayDate, locale, 'long').toLowerCase();
+        const dayName = getLocalDayOfWeek(
+          displayDate,
+          locale,
+          'long'
+        ).toLowerCase();
         const monthName = getLocaleMonth(displayDate, locale).toLowerCase();
         const topValue = `${t(dayName)}, ${displayDate.getDate()} ${t(monthName)}`;
         const topPosition = (date.getHours() - 24) / 2;
@@ -389,7 +395,7 @@ export const Calendar = ({
         height={headerHeight}
         className='fill-transparent'
       />
-       {bottomValues} {topValues}
+      {bottomValues} {topValues}
     </g>
   );
 };

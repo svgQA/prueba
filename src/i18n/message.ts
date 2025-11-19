@@ -364,7 +364,8 @@ export const message_en = {
   i_showAlert_msg: 'Are you sure you want to delete the ticket?',
   i_showAlert_title: 'Delete ticket',
   i_showAlert_msg_zone: 'Are you sure you want to delete the common zone?',
-  i_showAlert_msg_resource: 'Are you sure you want to delete the resource zone?',
+  i_showAlert_msg_resource:
+    'Are you sure you want to delete the resource zone?',
   i_showAlert_title_zone: 'Delete common zone',
   s_structure_success: 'Correct structure format',
 };

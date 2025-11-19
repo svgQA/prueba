@@ -76,10 +76,9 @@ export const DemoForm = () => {
   const { t } = useTranslation();
 
   const onSubmit = async (model: Record<string, any>, form: any) => {
-    
     const data = {
       ...model,
-      phone:  `+57${model.phone}`,
+      phone: `+57${model.phone}`,
     };
     const response = await TenantService.create_demo(data as DemoFormData);
     if (response.getStatus()) {

@@ -37,7 +37,7 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
       message = 's_created_success';
     }
 
-    if (!request.getStatus()) return loading.value = false;
+    if (!request.getStatus()) return (loading.value = false);
     ToastManager.success(message);
     go({
       to: '/memo/predefined',
@@ -45,12 +45,12 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
       id: 'memo:predefined:state',
       base: 'setting',
     });
-  loading.value = false;
+    loading.value = false;
   };
 
-  const setInitialValues = async () => {  
+  const setInitialValues = async () => {
     loading.value = true;
-    if (!id) return loading.value = false;
+    if (!id) return (loading.value = false);
     const userKeys = ['name'] as const;
     const request: any = await PredefinedService.getPredefinedById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);

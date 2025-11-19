@@ -481,9 +481,13 @@ export const Table = <T,>({
                           <span className='ml-2'>
                             {row.groupingColumnId
                               ? `${(() => {
-                                  const value = row.getValue(row.groupingColumnId);
-                                  return value === undefined || value === null || value === '' 
-                                    ? t('l_no_has') 
+                                  const value = row.getValue(
+                                    row.groupingColumnId
+                                  );
+                                  return value === undefined ||
+                                    value === null ||
+                                    value === ''
+                                    ? t('l_no_has')
                                     : String(value);
                                 })()} (${row.subRows.length})`
                               : `(${row.subRows.length})`}
