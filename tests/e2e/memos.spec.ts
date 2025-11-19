@@ -240,12 +240,34 @@ import {
         await expect(dateRow).toBeVisible();
         await page.locator('button[name="group-none-filter"]').first().click();
         await page.getByText('Ninguno', { exact: true }).click();
+
+    }); test.skip('Validate the panic workflow end-to-end', async ({ page }) => {
         test.setTimeout(60000);
-        const notifButton = page.locator('header button[name="user-action"]').nth(1);
-        await expect(notifButton).toBeVisible();
-        await notifButton.click();
-        const notificationPanel = page.locator('text=/No hay notificaciones|No notifications/i');
-        await expect(notificationPanel).toBeVisible({ timeout: 10000 });
-        await page.locator('body').click({ position: { x: 0, y: 0 } }); 
-   });
+        await page.locator('header button[name="user-action"]').first().click();
+        await expect(page.getByText('Emit a Panic Alert')).toBeVisible({ timeout: 10000 });
+        await expect(page.getByText('Sixto Orobio').first()).toBeVisible();
+        await page.locator('.vx-icon.vx-icon-061').click();
+        await page.waitForSelector('text=Emit a Panic Alert', { 
+            state: 'visible', 
+            timeout: 15000 
+        });
+        await page.waitForTimeout(1500);
+        const alertCell = page.getByRole('cell', { name: /Emit a Panic Alert/i });
+        await expect(alertCell.first()).toBeVisible({ timeout: 10000 });
+        await alertCell.first().click();
+        await page.locator('tr')
+        .filter({ hasText: 'Sixto Orobio' })
+        .filter({ hasText: 'Emit a Panic Alert' })
+        .first()
+        .locator('span[data-id="expandable"]')
+        .click();
+        await page.locator('button[name="btn-check-memo"]').click();
+    }); test('Surface new memo banner alerts', async ({ page }) => {
+        test.setTimeout(60000);
+        const newMemoBanner = page.locator('text=Memo nuevo').first();
+        await expect(newMemoBanner).toBeVisible({ timeout: 40000 });
+        await page.click('#setting-close-button');
+        await page.locator('div.border-primary').filter({ hasText: 'Memo nuevo' }).first().click();
+        await expect(newMemoBanner).not.toBeVisible();
+  });
 });
