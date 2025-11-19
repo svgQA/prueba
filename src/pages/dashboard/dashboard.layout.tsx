@@ -3,7 +3,6 @@ import { Route, Router } from 'wouter';
 import { lazy, Suspense, useEffect, useState } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
-import { useTranslation } from 'react-i18next';
 
 /** ***********************************************************************
  * UTILS
@@ -35,7 +34,6 @@ import {
  * COMMENTS
  ** ***********************************************************************/
 import { SettingsModal } from '../settings/settings';
-import { toast } from 'react-toastify';
 import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { AuthAmplifyProps } from '@/utils/types/auth.interface';
 import { HistoryNotificationsPage } from './history/history.page';
@@ -47,7 +45,7 @@ import { hasUserTenant, useUserStore } from '@/store/slices';
 import { localStorage } from '@/utils/storage';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { ThemeButton } from '@/components/compose/button';
-import { CompanyService, PlaceService, TenantService } from '@/services';
+import { CompanyService, PlaceService } from '@/services';
 import Notifications from '@/components/common/notifications/notifications';
 import { RoleService } from '@/services/general/role';
 import Panic from '@/components/common/panic/panic';
@@ -59,9 +57,7 @@ import { IPanic } from '@/components/common/panic/utils/interface';
 import { UserService } from '@/services/general/user';
 
 import { WebSocketManager } from '@/utils/socket/manager/manager';
-import { Modal } from '@/components/common/modal/modal';
-import { Field, Form } from 'react-final-form';
-import { Input } from '@/components/common/input/input';
+import { TenantsModal } from './tenants/tenants';
 import { FaroManager } from '@/utils/telemetry';
 import { IClientResponse } from '@/types/user/user.response';
 import { USER_TYPE } from '@/types/user/user.enum';
@@ -72,7 +68,6 @@ import { IDropdownOptions } from '@/components/common/dropdown/interface';
  ** ***********************************************************************/
 export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
   ({ signOut }: AuthAmplifyProps) => {
-    const { t } = useTranslation();
     const {
       setCompanies,
       companies,
@@ -113,12 +108,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     const isModalOpen = useSignal<boolean>(false);
     const modalPanic = useSignal<IPanic | undefined>(undefined);
     const [modalKey, setModalKey] = useState(0);
-    const [activeTab, setActiveTab] = useState<
-      'tenant' | 'instance' | 'companies' | 'databases'
-    >('tenant');
     const openModalTenant = useSignal<boolean>(false);
-    const tenants = useSignal<any[]>([]);
-    const instances = useSignal<any[]>([]);
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
@@ -151,8 +141,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           getCompanies(),
           setTenantOption(),
           getPermissions(),
-          getTenants(),
-          getInstances(),
           // getPlaces(),
         ]);
       }
@@ -160,7 +148,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
     const setTenantOption = () => {
       const user = getUser();
-      console.log('user', user);
       if (user?.email === 'juanpablorodriguezfernandez93@gmail.com') {
         options.value.push({
           label: 'tenant',
@@ -252,314 +239,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         return;
       setAllPermissions(permissions.model);
     };
-
-    const onTenantSubmit = async (values: any) => {
-      const request = await TenantService.create_tenant(values);
-      if (!request.getStatus()) return;
-      toast.success('s_tenant_created');
-      getTenants();
-    };
-
-    const onInstanceSubmit = async (values: any) => {
-      const request = await TenantService.create_instance(values);
-      if (!request.getStatus()) return;
-      toast.success('s_instance_created');
-      getInstances();
-    };
-
-    const getTenants = async () => {
-      const user = getUser();
-
-      if (user?.email != 'juanpablorodriguezfernandez93@gmail.com') {
-        return;
-      }
-      const request = await TenantService.get_tenants();
-      if (!request.getStatus()) return;
-      tenants.value = request.getMany();
-    };
-
-    const getInstances = async () => {
-      const user = getUser();
-
-      if (user?.email != 'juanpablorodriguezfernandez93@gmail.com') {
-        return;
-      }
-      const request = await TenantService.get_instances();
-      if (!request.getStatus()) return;
-      instances.value = request.getMany();
-    };
-
-    // TODO: Joshua debes llevarte esta mierda para otro lado.
-    const modalTenant = (
-      <Modal
-        open={openModalTenant.value}
-        onClose={() => {
-          openModalTenant.value = false;
-        }}
-        name='tenant-modal'
-        id='tenant-modal'
-        expandable
-        theme
-        setExpandable={openModalTenant.value}
-        header={
-          <div className='flex flex-row w-full items-center justify-between px-3'></div>
-        }
-      >
-        <div className='w-full p-4'>
-          <div className='flex border-b mb-4'>
-            <button
-              className={`px-4 py-2 ${activeTab === 'tenant' ? 'border-b-2 border-primary' : ''}`}
-              onClick={() => setActiveTab('tenant')}
-            >
-              {t('h_create_tenant')}
-            </button>
-            <button
-              className={`px-4 py-2 ${activeTab === 'companies' ? 'border-b-2 border-primary' : ''}`}
-              onClick={() => setActiveTab('companies')}
-            >
-              {t('h_companies')}
-            </button>
-            <button
-              className={`px-4 py-2 ${activeTab === 'instance' ? 'border-b-2 border-primary' : ''}`}
-              onClick={() => setActiveTab('instance')}
-            >
-              {t('h_create_instance')}
-            </button>
-            <button
-              className={`px-4 py-2 ${activeTab === 'databases' ? 'border-b-2 border-primary' : ''}`}
-              onClick={() => setActiveTab('databases')}
-            >
-              {t('h_databases')}
-            </button>
-          </div>
-
-          {activeTab === 'tenant' ? (
-            <div>
-              <Form
-                onSubmit={onTenantSubmit}
-                render={({ handleSubmit }) => (
-                  <form onSubmit={handleSubmit} className='mb-8'>
-                    <div className='grid grid-cols-2 gap-4'>
-                      <div className='col-span-1'>
-                        <h1>[TENANT] {t('h_tenant_info')}</h1>
-                        <Field name='name'>
-                          {({ input }) => (
-                            <Input
-                              {...input}
-                              type='text'
-                              label='l_name'
-                              placeholder='h_company'
-                            />
-                          )}
-                        </Field>
-                        <Field name='description'>
-                          {({ input }) => (
-                            <Input
-                              {...input}
-                              placeholder='p_service_software'
-                              label='h_description'
-                              type='text'
-                            />
-                          )}
-                        </Field>
-                        <Field name='manager_name'>
-                          {({ input }) => (
-                            <Input
-                              {...input}
-                              placeholder='p_usuario_test'
-                              label='manager_name'
-                              type='text'
-                            />
-                          )}
-                        </Field>
-                        <Field name='manager_email'>
-                          {({ input }) => (
-                            <Input
-                              {...input}
-                              type='email'
-                              placeholder='p_user_email'
-                              label='manager_email'
-                            />
-                          )}
-                        </Field>
-                        <Field name='manager_phone'>
-                          {({ input }) => (
-                            <Input
-                              {...input}
-                              placeholder='p_manager_phone'
-                              label='l_manager_phone'
-                              type='tel'
-                            />
-                          )}
-                        </Field>
-                      </div>
-
-                      <div className='col-span-1'>
-                        <h1>[OWNER] {t('h_user_info')}</h1>
-                        <Field name='email'>
-                          {({ input }) => (
-                            <Input
-                              {...input}
-                              type='email'
-                              placeholder='p_owner_email'
-                              label='h_email'
-                            />
-                          )}
-                        </Field>
-                        <Field name='phone'>
-                          {({ input }) => (
-                            <Input
-                              {...input}
-                              placeholder='p_owner_phone'
-                              label='h_phone'
-                              type='tel'
-                            />
-                          )}
-                        </Field>
-                        <Field name='password'>
-                          {({ input }) => (
-                            <Input
-                              {...input}
-                              type='text'
-                              placeholder='p_enter_password'
-                              label='l_password'
-                            />
-                          )}
-                        </Field>
-                      </div>
-                    </div>
-                    <button
-                      type='submit'
-                      className='mt-4 px-4 py-2 bg-primary text-white rounded'
-                    >
-                      {t('h_create_tenant')}
-                    </button>
-                  </form>
-                )}
-              />
-            </div>
-          ) : activeTab === 'instance' ? (
-            <div>
-              <Form
-                onSubmit={onInstanceSubmit}
-                render={({ handleSubmit }) => (
-                  <form onSubmit={handleSubmit} className='mb-8'>
-                    <div className='grid grid-cols-2 gap-4'>
-                      <Field name='name'>
-                        {({ input }) => (
-                          <Input
-                            {...input}
-                            placeholder='p_instance'
-                            type='text'
-                            label='h_name'
-                          />
-                        )}
-                      </Field>
-                      <Field name='url'>
-                        {({ input }) => (
-                          <Input
-                            {...input}
-                            placeholder='postgresql://child1:child1pass@localhost:5434/child1db'
-                            type='text'
-                            label='URL*'
-                          />
-                        )}
-                      </Field>
-                    </div>
-                    <button
-                      type='submit'
-                      className='mt-4 px-4 py-2 bg-primary text-white rounded'
-                    >
-                      {t('h_create_instance')}
-                    </button>
-                  </form>
-                )}
-              />
-            </div>
-          ) : activeTab === 'databases' ? (
-            <div>
-              <h1>{t('h_instances')}</h1>
-              <table className='w-full border-collapse'>
-                <thead>
-                  <tr>
-                    <th className='border p-2'>ID</th>
-                    <th className='border p-2'>{t('h_name')}</th>
-                    <th className='border p-2'>URL</th>
-                    <th className='border p-2'>{t('h_count')}</th>
-                    <th className='border p-2'>{t('h_created_at')}</th>
-                    <th className='border p-2'>{t('h_updated_at')}</th>
-                    <th className='border p-2'>{t('h_status')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {instances.value.map((instance) => (
-                    <tr key={instance.id}>
-                      <td className='border p-2'>{instance.id}</td>
-                      <td className='border p-2'>{instance.name}</td>
-                      <td className='border p-2'>{instance.url}</td>
-                      <td className='border p-2'>{instance.count}</td>
-                      <td className='border p-2'>{instance.created_at}</td>
-                      <td className='border p-2'>{instance.updated_at}</td>
-                      <td className='border p-2'>
-                        {instance.status ? 'Active' : 'Inactive'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : activeTab === 'companies' ? (
-            <div>
-              <h1>{t('h_companies')}</h1>
-              <table className='w-full border-collapse'>
-                <thead>
-                  <tr>
-                    <th className='border p-2'>ID</th>
-                    <th className='border p-2'>{t('h_name')}</th>
-                    <th className='border p-2'>{t('h_description')}</th>
-                    <th className='border p-2'>{t('l_manager_name')}</th>
-                    <th className='border p-2'>{t('l_manager_email')}</th>
-                    <th className='border p-2'>{t('l_manager_phone')}</th>
-                    <th className='border p-2'>{t('h_external_id')}</th>
-                    <th className='border p-2'>
-                      {t('h_platform_external_id')}
-                    </th>
-                    <th className='border p-2'>{t('h_instance_id')}</th>
-                    <th className='border p-2'>{t('h_status')}</th>
-                    <th className='border p-2'>{t('message')}</th>
-                    <th className='border p-2'>{t('h_date')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tenants.value.map((tenant) => (
-                    <tr key={tenant.id}>
-                      <td className='border p-2'>{tenant.id}</td>
-                      <td className='border p-2'>{tenant.name}</td>
-                      <td className='border p-2'>{tenant.description}</td>
-                      <td className='border p-2'>{tenant.manager_name}</td>
-                      <td className='border p-2'>{tenant.manager_email}</td>
-                      <td className='border p-2'>{tenant.manager_phone}</td>
-                      <td className='border p-2'>{tenant.external_id}</td>
-                      <td className='border p-2'>
-                        {tenant.platform_external_id}
-                      </td>
-                      <td className='border p-2'>{tenant.instance_id}</td>
-                      <td className='border p-2'>{tenant.status}</td>
-                      <td className='border p-2'>{tenant.message}</td>
-                      <td className='border p-2'>{tenant.created_at}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div>
-              <h1>{t('h_databases')}</h1>
-            </div>
-          )}
-        </div>
-      </Modal>
-    );
 
     return (
       <section>
@@ -704,9 +383,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         </div>
 
         <SettingsModal />
-
-        {/*<IconsModal />*/}
-        {openModalTenant.value && modalTenant}
+        <TenantsModal open={openModalTenant} />
       </section>
     );
   }

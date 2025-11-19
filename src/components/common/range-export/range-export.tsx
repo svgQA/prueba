@@ -29,8 +29,6 @@ export const RangeExport = () => {
       return;
     }
 
-    console.log(values.formId);
-
     const start = new Date(DateUtils.dateToFrontend(values.startDate));
     const end = new Date(DateUtils.dateToFrontend(values.endDate));
 
@@ -47,36 +45,36 @@ export const RangeExport = () => {
       formId: values.formId?.value,
     });
 
-    if (!response.getStatus()) {
-      loading.value = false;
-    }
-
-    const result = response.getOne();
-    if (result.data.buffer) {
-      const byteCharacters = atob(result.data.buffer);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    if (response.getStatus()) {
+      const result = response.getOne();
+      if (result.data?.buffer) {
+        const byteCharacters = atob(result.data.buffer);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], {
+          type:
+            result.data.mimeType ||
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+  
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = result.data.filename || 'data_export.xlsx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        ToastManager.success(t('file_exportSuccess'));
+      } else {
+        ToastManager.success(t('file_export_processing'));
       }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], {
-        type:
-          result.data.mimeType ||
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
-
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = result.data.filename || 'data_export.xlsx';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-      ToastManager.success(t('file_exportSuccess'));
-    } else {
-      ToastManager.success(t('file_export_processing'));
     }
+
+   
     setIsOpen(false);
     loading.value = false;
   };
