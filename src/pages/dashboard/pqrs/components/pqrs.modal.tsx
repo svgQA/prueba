@@ -43,9 +43,9 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
   };
 
   const tabs = [
-    { id: 'general', label: 'General', icon: '📋' },
-    { id: 'files', label: 'Archivos', icon: '📎' },
-    { id: 'analysis', label: 'Análisis IA', icon: '🤖' },
+    { id: 'general', label: 'General', icon: '310' },
+    { id: 'files', label: 'Archivos', icon: '310' },
+    { id: 'analysis', label: 'Análisis IA', icon: '312' },
   ];
 
   return (
@@ -99,7 +99,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
                   }`}
                 onClick={() => (activeTab.value = tab.id)}
               >
-                <span class='mr-1'>{tab.icon}</span>
+                <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>
                 {tab.label}
               </button>
             ))}
