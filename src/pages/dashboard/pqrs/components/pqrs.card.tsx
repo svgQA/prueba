@@ -160,6 +160,8 @@ export const PqrsCards = ({ pqrs, index, columnColorClass = 'text-primary' }: IP
           id={modalId.value}
           showModal={openModal}
           closeModal={() => (openModal.value = false)}
+          tags={tags}
+          areas={area}
         />
       </Card>
     </>

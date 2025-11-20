@@ -25,7 +25,6 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
     const renderInferenceContent = () => {
         const data = inference.inference;
 
-        // Si tiene title, summary, subtitle, description (respuesta oficial)
         if (data.title && data.summary) {
             return ( 
                 <div class='space-y-3'>
@@ -49,10 +48,8 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
             );
         }
 
-        // Estructura general para otros tipos de inferencia
         return (
             <div class='space-y-3'>
-                {/* Tipo de clasificación */}
                 {data.tipo && (
                     <div class='flex items-center gap-2'>
                         <span class='text-xs font-medium text-gray-500'>Tipo:</span>
@@ -62,7 +59,6 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                     </div>
                 )}
 
-                {/* Clasificación */}
                 {data.clasificacion && (
                     <div class='flex items-center gap-2'>
                         <span class='text-xs font-medium text-gray-500'>Clasificación:</span>
@@ -72,7 +68,6 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                     </div>
                 )}
 
-                {/* Prioridad */}
                 {data.prioridad && (
                     <div class='flex items-center gap-2'>
                         <span class='text-xs font-medium text-gray-500'>Prioridad:</span>
@@ -86,7 +81,6 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                     </div>
                 )}
 
-                {/* Área y Subárea */}
                 {(data.area || data.subarea) && (
                     <div class='grid grid-cols-2 gap-3'>
                         {data.area && (
@@ -108,7 +102,6 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                     </div>
                 )}
 
-                {/* Routing Queue */}
                 {data.routing_queue && (
                     <div class='p-2 bg-cyan-50 rounded'>
                         <span class='text-xs font-medium text-cyan-700'>
@@ -117,7 +110,6 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                     </div>
                 )}
 
-                {/* Razones */}
                 {data.razones && data.razones.length > 0 && (
                     <div class='p-3 bg-blue-50 rounded-lg'>
                         <label class='block text-xs font-medium text-blue-800 mb-2'>
@@ -134,7 +126,6 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                     </div>
                 )}
 
-                {/* Etiquetas */}
                 {data.etiquetas && data.etiquetas.length > 0 && (
                     <div>
                         <label class='block text-xs font-medium text-gray-500 mb-2'>
@@ -150,7 +141,6 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                     </div>
                 )}
 
-                {/* Banderas */}
                 {data.banderas && Object.keys(data.banderas).length > 0 && (
                     <div class='p-3 bg-orange-50 rounded-lg'>
                         <label class='block text-xs font-medium text-orange-800 mb-2'>
@@ -171,7 +161,6 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                     </div>
                 )}
 
-                {/* Confianza */}
                 {data.confidence !== undefined && (
                     <div class='flex items-center gap-2'>
                         <span class='text-xs font-medium text-gray-500'>Confianza:</span>
