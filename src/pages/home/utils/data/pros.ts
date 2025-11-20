@@ -8,26 +8,26 @@ import HomeWhyTryvooIconScalar from '@/assets/image/home-icon-scalar.jpg';
 export const tryvoo_pros: ISectionProps[] = [
   {
     id: 1,
-    titleKey: 'i_management_title',
-    subtitleKey: 'i_management_subtitle',
+    titleKey: 'h_pros_manage_title',
+    subtitleKey: 'h_pros_manage_subtitle',
     image: HomeWhyTryvooIconAnalitics,
   },
   {
     id: 2,
-    titleKey: 'i_ai_title',
-    subtitleKey: 'i_ai_subtitle',
+    titleKey: 'h_pros_ai_title',
+    subtitleKey: 'h_pros_ai_subtitle',
     image: HomeWhyTryvooIconReason,
   },
   {
     id: 3,
-    titleKey: 'i_offline_title',
-    subtitleKey: 'i_offline_subtitle',
+    titleKey: 'h_pros_offline_title',
+    subtitleKey: 'h_pros_offline_subtitle',
     image: HomeWhyTryvooIconPlace,
   },
   {
     id: 4,
-    titleKey: 'i_scalability_title',
-    subtitleKey: 'i_scalability_subtitle',
+    titleKey: 'h_pros_scalability_title',
+    subtitleKey: 'h_pros_scalability_subtitle',
     image: HomeWhyTryvooIconScalar,
   },
 ];

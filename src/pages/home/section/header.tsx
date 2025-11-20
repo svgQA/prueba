@@ -1,15 +1,17 @@
 import { useState } from 'preact/hooks';
+import { useTranslation } from 'react-i18next';
 import { Logo } from '@/components/common/logo/logo';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 
 const navItems = [
-  { id: 'hero', label: 'Inicio', href: '#inicio' },
-  { id: 'features', label: 'Soluciones', href: '#soluciones' },
-  { id: 'pros', label: 'Beneficios', href: '#beneficios' },
-  { id: 'about', label: 'Nosotros', href: '#nosotros' },
+  { id: 'hero', labelKey: 'h_nav_home', href: '#inicio' },
+  { id: 'features', labelKey: 'h_nav_solutions', href: '#soluciones' },
+  { id: 'pros', labelKey: 'h_nav_benefits', href: '#beneficios' },
+  { id: 'about', labelKey: 'h_nav_about', href: '#nosotros' },
 ];
 
 export const HomeHeader = () => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
@@ -19,7 +21,7 @@ export const HomeHeader = () => {
     <header className='fixed inset-x-0 top-0 z-50 border-b border-white/40 bg-white/75 shadow-sm backdrop-blur-md'>
       <div className='mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8'>
         <div className='flex items-center gap-3'>
-          <Logo slogan='Gestión en campo' color='text-ternary' gradient />
+          <Logo slogan={t('h_logo_slogan')} color='text-ternary' gradient />
         </div>
 
         <nav className='hidden lg:flex items-center gap-8 text-sm font-semibold text-[#0b1f33]'>
@@ -30,7 +32,7 @@ export const HomeHeader = () => {
               onClick={closeMenu}
               className='hover:text-primary transition-colors duration-200 text-ternary'
             >
-              {item.label}
+              {t(item.labelKey)}
             </a>
           ))}
         </nav>
@@ -49,7 +51,7 @@ export const HomeHeader = () => {
             href='#beta'
             className='rounded-full border border-primary px-4 py-2 text-sm font-semibold text-primary hover:bg-primary hover:text-white transition-colors duration-200'
           >
-            Únete a la beta
+            {t('h_cta_beta')}
           </a>
         </div>
 
@@ -58,7 +60,7 @@ export const HomeHeader = () => {
           onClick={toggleMenu}
           className='flex h-11 w-11 items-center justify-center rounded-lg border border-[#d7e3f2] bg-white shadow-sm lg:hidden'
         >
-          <span className='sr-only'>Abrir menú</span>
+          <span className='sr-only'>{t('h_menu_open')}</span>
           <div className='space-y-1.5'>
             <span
               className={`block h-0.5 w-7 bg-[#0b1f33] transition-transform duration-300 ${
@@ -87,7 +89,7 @@ export const HomeHeader = () => {
                 onClick={closeMenu}
                 className='text-base font-semibold text-[#0b1f33] hover:text-primary'
               >
-                {item.label}
+                {t(item.labelKey)}
               </a>
             ))}
             <div className='flex items-center justify-between gap-3 pt-2'>
@@ -106,7 +108,7 @@ export const HomeHeader = () => {
                 onClick={closeMenu}
                 className='rounded-full border border-primary px-4 py-2 text-sm font-semibold text-primary hover:bg-primary hover:text-white'
               >
-                Beta
+                {t('h_cta_beta_short')}
               </a>
             </div>
           </div>

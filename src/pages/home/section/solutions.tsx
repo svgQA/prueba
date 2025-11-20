@@ -1,6 +1,9 @@
+import { useTranslation } from 'react-i18next';
 import { tryvoo_solutions } from '../utils/data/solutions';
 
 export const HomeSolutions = () => {
+  const { t } = useTranslation();
+
   return (
     <div
       id='soluciones'
@@ -8,14 +11,13 @@ export const HomeSolutions = () => {
     >
       <div className='max-w-6xl text-center'>
         <p className='inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-primary'>
-          Suite modular
+          {t('h_solutions_badge')}
         </p>
         <h2 className='mt-4 text-3xl font-bold leading-tight sm:text-4xl'>
-          Todo lo que necesitas para operar y auditar equipos en campo.
+          {t('h_solutions_title')}
         </h2>
         <p className='mt-3 text-lg text-gray-600'>
-          Módulos interoperables que combinan trazabilidad, colaboración, IA y
-          automatización. Activa solo lo que tu operación necesita.
+          {t('h_solutions_description')}
         </p>
       </div>
 
@@ -32,21 +34,21 @@ export const HomeSolutions = () => {
                 className='h-28 w-auto object-contain'
               />
             </div>
-            <div className='flex flex-1 flex-col justify-between space-y-3 p-6'>
-              <div>
-                <h3 className='text-xl font-bold text-[#0b1f33]'>
-                  {item.titleKey ?? ''}
-                </h3>
-                <p className='mt-2 text-base text-gray-600'>
-                  {item.subtitleKey ?? ''}
-                </p>
-              </div>
-              <div className='flex items-center gap-3 text-sm font-semibold text-primary'>
-                <span className='vox-icon vx-icon-008 size-sm text-primary' />
-                Listo para tus equipos web y móvil
+              <div className='flex flex-1 flex-col justify-between space-y-3 p-6'>
+                <div>
+                  <h3 className='text-xl font-bold text-[#0b1f33]'>
+                  {item.titleKey ? t(item.titleKey) : ''}
+                  </h3>
+                  <p className='mt-2 text-base text-gray-600'>
+                  {item.subtitleKey ? t(item.subtitleKey) : ''}
+                  </p>
+                </div>
+                <div className='flex items-center gap-3 text-sm font-semibold text-primary'>
+                  <span className='vox-icon vx-icon-008 size-sm text-primary' />
+                {t('h_solutions_ready')}
+                </div>
               </div>
             </div>
-          </div>
         ))}
       </div>
     </div>

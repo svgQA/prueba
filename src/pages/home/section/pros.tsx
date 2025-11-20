@@ -1,7 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import HomeTryvooDesktopImg from '@/assets/image/home-desktop-with-tryvoo.png';
 import { tryvoo_pros } from '../utils/data/pros';
 
 export const HomePros = () => {
+  const { t } = useTranslation();
+
   return (
     <div
       id='beneficios'
@@ -10,15 +13,13 @@ export const HomePros = () => {
       <div className='mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-2 md:items-center'>
         <div className='space-y-6'>
           <p className='inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-primary'>
-            Impacto inmediato
+            {t('h_pros_badge')}
           </p>
           <h2 className='text-3xl font-bold leading-tight sm:text-4xl'>
-            Visibilidad total, menos fricción y más control operativo.
+            {t('h_pros_title')}
           </h2>
           <p className='text-lg text-gray-600'>
-            Consolida turnos, novedades y comunicaciones en un solo panel. Usa
-            validaciones de ubicación y tiempo para asegurar cumplimiento y
-            genera evidencia en segundos.
+            {t('h_pros_description')}
           </p>
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
             {tryvoo_pros.slice(0, 4).map((item, index) => (
@@ -34,14 +35,14 @@ export const HomePros = () => {
                   />
                   <div>
                     <p className='text-sm font-semibold text-primary'>
-                      KPI #{index + 1}
+                      {t('h_pros_kpi', { number: index + 1 })}
                     </p>
                     <p className='text-base font-bold text-[#0b1f33]'>
-                      {item.titleKey}
+                      {t(item.titleKey)}
                     </p>
                   </div>
                 </div>
-                <p className='mt-3 text-sm text-gray-600'>{item.subtitleKey}</p>
+                <p className='mt-3 text-sm text-gray-600'>{t(item.subtitleKey)}</p>
               </div>
             ))}
           </div>
@@ -58,19 +59,19 @@ export const HomePros = () => {
             />
             <div className='grid grid-cols-2 gap-4 border-t border-[#d7e3f2] bg-[#f7fbff] p-5 text-left'>
               <div>
-                <p className='text-sm text-gray-500'>Ahorro en horas extra</p>
+                <p className='text-sm text-gray-500'>{t('h_pros_stat_overtime')}</p>
                 <p className='text-2xl font-bold text-primary'>-25%</p>
               </div>
               <div>
-                <p className='text-sm text-gray-500'>Tiempo de programación</p>
+                <p className='text-sm text-gray-500'>{t('h_pros_stat_scheduling')}</p>
                 <p className='text-2xl font-bold text-primary'>-30%</p>
               </div>
               <div>
-                <p className='text-sm text-gray-500'>Ejecución de rondas</p>
+                <p className='text-sm text-gray-500'>{t('h_pros_stat_rounds')}</p>
                 <p className='text-2xl font-bold text-primary'>+40%</p>
               </div>
               <div>
-                <p className='text-sm text-gray-500'>Reportes con evidencia</p>
+                <p className='text-sm text-gray-500'>{t('h_pros_stat_reports')}</p>
                 <p className='text-2xl font-bold text-primary'>100%</p>
               </div>
             </div>
