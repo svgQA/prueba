@@ -62,10 +62,9 @@ export const PqrsCards = ({ pqrs, index, columnColorClass = 'text-primary' }: IP
             modalId.value = pqrs.id;
           }}
         >
-          {/* Header: Cliente y Badges */}
           <div class='flex items-start justify-between gap-3'>
             <div class='flex-1 min-w-0'>
-              <TextEllipsis 
+              <TextEllipsis
                 text={pqrs.extraData.clientOrCompanyName || 'Sin nombre'}
                 maxWidth='100%'
                 lines={1}
@@ -100,11 +99,10 @@ export const PqrsCards = ({ pqrs, index, columnColorClass = 'text-primary' }: IP
             )}
           </div>
 
-          {/* Observación */}
           {pqrs.extraData.registerObservation && (
-            <TextEllipsis 
-              text={pqrs.extraData.registerObservation} 
-              maxWidth='100%' 
+            <TextEllipsis
+              text={pqrs.extraData.registerObservation}
+              maxWidth='100%'
               lines={2}
               className='text-xs text-gray-text-light leading-relaxed'
             />
@@ -130,7 +128,6 @@ export const PqrsCards = ({ pqrs, index, columnColorClass = 'text-primary' }: IP
             )}
           </div>
 
-          {/* Tags y Chips */}
           {(tags.length > 0 || pqrs.extraData.hasFiles || typeof pqrs.extraData.daysToExpire === 'number') && (
             <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border'>
               {tags.map((tag, idx) => (
@@ -156,18 +153,15 @@ export const PqrsCards = ({ pqrs, index, columnColorClass = 'text-primary' }: IP
             </div>
           )}
 
-          {/* Footer Decorative Bar */}
-          <div
-            class={`h-1.5 -mx-0.5 -mb-0.5 mt-0 opacity-30 ${columnColorClass.replace('text-', 'bg-')}`}
-          />
+          <div class={`h-1.5 -mx-0.5 -mb-0.5 mt-0 opacity-30 ${columnColorClass.replace('text-', 'bg-')}`} />
         </div>
-      </Card>
 
-      <PqrsModal
-        id={modalId.value}
-        showModal={openModal}
-        closeModal={() => (openModal.value = false)}
-      />
+        <PqrsModal
+          id={modalId.value}
+          showModal={openModal}
+          closeModal={() => (openModal.value = false)}
+        />
+      </Card>
     </>
   );
 };
