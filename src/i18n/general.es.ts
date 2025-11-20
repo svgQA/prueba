@@ -89,4 +89,9 @@ export const general_es = {
     title_form: 'Nueva empresa',
     title_form_edit: 'Editar empresa',
   },
+  pqrs: {
+    pageTitle: 'TR - Servicio de PQRS',
+    created: 'Creadas',
+    finished: 'Finalizadas',
+  }
 };

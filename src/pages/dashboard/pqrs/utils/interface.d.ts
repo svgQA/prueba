@@ -4,7 +4,7 @@ export interface ICPqrsRequest {
   id?: number;
   extraData: ICPqrs;
   filesBedrock?: IPresignedResponse[] | null;
-  resources?: IPresignedRequest[] | null;
+  resource?: IPresignedRequest[] | null;
   status: string;
 }
 
