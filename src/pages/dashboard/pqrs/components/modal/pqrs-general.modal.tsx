@@ -3,7 +3,7 @@ import { Signal } from "@preact/signals";
 import { useTranslation } from "react-i18next";
 
 import { FormattedDate } from "@/components/compose/forms";
-import ShowFiles from '@/components/common/file/show.file';
+// import ShowFiles from '@/components/common/file/show.file';
 
 import { ICPqrsRequest } from "../../utils/interface";
 
@@ -120,14 +120,13 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
                         </p>
                     </div>
                 )}
-                {(pqrs.value?.extraData.hasFiles && pqrs.value?.extraData.informationFile) && (
+                {/* {(pqrs.value?.extraData.hasFiles && pqrs.value?.extraData.informationFile) && (
                     <TextInformation
                         label='Analisis del archivo'
                         value={pqrs.value?.extraData.informationFile}
                     />
-
-                )}
-                {pqrs.value?.resource && (
+                )} */}
+                {/* {pqrs.value?.resource && (
                     <div class='space-y-3'>
                         <h4 class='font-semibold text-gray-900 text-sm uppercase tracking-wide border-b pb-1'>
                             Archivos Adjuntos
@@ -136,7 +135,7 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
                             <ShowFiles resources={pqrs.value.resource}  />
                         </div>
                     </div>
-                )}
+                )} */}
             </div>
 
             {pqrs.value?.extraData?.referencedTicketNumber && (
