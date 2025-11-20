@@ -7,6 +7,7 @@ interface BetaFormData {
   company: string;
   role: string;
   teamSize: string;
+  phone: string;
   message: string;
 }
 
@@ -16,6 +17,7 @@ const initialForm: BetaFormData = {
   company: '',
   role: '',
   teamSize: '',
+  phone: '',
   message: '',
 };
 
@@ -124,18 +126,30 @@ export const HomeBetaForm = () => {
                 />
               </label>
               <label className='text-sm font-semibold text-[#0b1f33]'>
-                {t('h_beta_field_email')}
+                {t('h_beta_field_phone')}
                 <input
                   required
-                  type='email'
-                  name='email'
-                  value={form.email}
+                  type='text'
+                  name='phone'
+                  value={form.phone}
                   onInput={handleChange}
                   className='mt-2 w-full rounded-lg border border-[#d7e3f2] bg-white px-3 py-2 text-sm text-[#0b1f33] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30'
-                  placeholder={t('h_beta_placeholder_email')}
+                  placeholder={t('h_beta_placeholder_phone')}
                 />
               </label>
             </div>
+            <label className='text-sm font-semibold text-[#0b1f33]'>
+              {t('h_beta_field_email')}
+              <input
+                required
+                type='email'
+                name='email'
+                value={form.email}
+                onInput={handleChange}
+                className='mt-2 w-full rounded-lg border border-[#d7e3f2] bg-white px-3 py-2 text-sm text-[#0b1f33] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30'
+                placeholder={t('h_beta_placeholder_email')}
+              />
+            </label>
 
             <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
               <label className='text-sm font-semibold text-[#0b1f33]'>
