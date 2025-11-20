@@ -1,47 +1,80 @@
 import HomeMainDesktopImg from '@/assets/image/home-main-desktop.png';
-import { useTranslation } from 'react-i18next';
 import BrandCarousel from './component/brand.carousel';
 
 export const HomeHero = () => {
-  const { t } = useTranslation();
-
   return (
-    <div className='relative w-full bg-gradient-to-r from-cyan-500 to-emerald-400'>
-      <div className='container mx-auto min-h-[85vh] md:min-h-[90vh] flex flex-col md:flex-row items-center justify-evenly px-4 sm:px-6 md:px-8 py-10 sm:py-16 md:py-20'>
-        <div className='w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left mb-8 md:mb-0 text-white'>
-          <div className='max-w-xl'>
-            <h1 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight'>
-              {t('i_title')}
-            </h1>
-            <div className='text-xl sm:text-2xl md:text-3xl opacity-90 mb-8 md:mb-10'>
-              {t('i_subtitle').split('conectividad para tus negocios')[0]}{' '}
-              <span className='font-bold'>
-                {t('i_subtitle').includes('conectividad para tus negocios')
-                  ? 'conectividad para tus negocios'
-                  : 'connectivity for your business'}
-              </span>
-            </div>
-            <div className='flex justify-center md:justify-start gap-4'>
-              <button
-                type='button'
-                className='bg-secondary rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl border-none font-bold py-3 px-5 mb-12 z-10'
-                onClick={() => {
-                  window.location.href = '/demo';
-                }}
+    <div id='inicio' className='relative w-full overflow-hidden bg-gradient-to-r from-[#0b1f33] via-[#0b1f33] to-[#0b1f33]'>
+      <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.18),transparent_30%),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.25),transparent_25%)]' />
+      <div className='container relative mx-auto flex min-h-[90vh] flex-col-reverse items-center gap-12 px-4 pb-20 pt-10 sm:px-6 md:min-h-[92vh] md:flex-row md:items-stretch md:gap-10 md:px-8 lg:pt-16'>
+        <div className='flex w-full flex-col justify-center text-center text-white md:w-1/2 md:text-left'>
+          <div className='mb-6 inline-flex items-center gap-2 self-center rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white md:self-start'>
+            Gestión inteligente en campo
+          </div>
+          <h1 className='text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl lg:text-6xl'>
+            Orquesta tus operaciones en campo con datos, trazabilidad y IA.
+          </h1>
+          <p className='mt-5 max-w-2xl text-lg leading-relaxed text-white/90 md:text-xl'>
+            Tryvoo centraliza turnos, rondas, formularios y comunicaciones en una sola plataforma web y móvil con modo offline. Tu equipo tiene claridad; tus clientes, confianza.
+          </p>
+          <div className='mt-8 flex flex-wrap items-center justify-center gap-4 md:justify-start'>
+            <a
+              href='#beta'
+              className='rounded-full bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg transition-all duration-200 hover:translate-y-[-1px] hover:shadow-xl'
+            >
+              Únete a la beta
+            </a>
+            <a
+              href='/demo'
+              className='rounded-full border border-white/60 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-white hover:text-[#0b1f33]'
+            >
+              Ver demo guiada
+            </a>
+          </div>
+
+          <div className='mt-10 grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2'>
+            {[1, 2, 3, 4].map((item) => (
+              <div
+                key={item}
+                className='rounded-2xl bg-white/5 p-4 text-left shadow-lg ring-1 ring-white/5 backdrop-blur-lg'
               >
-                {t('i_demoButton')}
-              </button>
-            </div>
+                <p className='text-base font-semibold text-white'>
+                  {item === 1 && 'Check-in/out con ubicación y horario validado'}
+                  {item === 2 && 'Reportes multimedia y formularios dinámicos, incluso offline'}
+                  {item === 3 && 'Automatización de turnos masivos y rondas con IA contextual'}
+                  {item === 4 && 'Multi-tenant, comunicaciones seguras y trazabilidad en tiempo real'}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className='w-full md:w-1/2 flex items-start justify-center md:justify-end h-full'>
-          <div className='relative w-full max-w-2xl'>
+        <div className='relative flex w-full items-center justify-center md:w-1/2'>
+          <div className='absolute -left-8 -top-6 h-44 w-44 rounded-full bg-primary/20 blur-3xl' />
+          <div className='absolute -right-8 bottom-0 h-48 w-48 rounded-full bg-emerald-300/30 blur-3xl' />
+          <div className='relative w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-4 shadow-2xl backdrop-blur-lg'>
             <img
               src={HomeMainDesktopImg}
               alt='Tryvoo platform interface'
-              className='w-full h-auto object-contain drop-shadow-2xl'
+              className='w-full rounded-2xl border border-white/10 shadow-xl'
             />
+            <div className='mt-4 grid grid-cols-2 gap-3 rounded-2xl bg-white/10 p-4 text-white shadow-inner'>
+              <div>
+                <p className='text-sm font-semibold'>Cobertura operativa</p>
+                <p className='text-2xl font-bold'>24/7</p>
+              </div>
+              <div>
+                <p className='text-sm font-semibold'>Equipos en campo</p>
+                <p className='text-2xl font-bold'>+300</p>
+              </div>
+              <div>
+                <p className='text-sm font-semibold'>Intervenciones automatizadas</p>
+                <p className='text-2xl font-bold'>85%</p>
+              </div>
+              <div>
+                <p className='text-sm font-semibold'>Reducción de errores</p>
+                <p className='text-2xl font-bold'>-30%</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
