@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
+import { useTranslation } from 'react-i18next';
 import HomeMainDesktopImg from '@/assets/image/home-main-desktop.png';
 import BrandCarousel from './component/brand.carousel';
 
@@ -8,8 +9,14 @@ const heroSlides = [
   HomeMainDesktopImg,
   HomeMainDesktopImg,
 ];
+const heroFeatures = [
+  'h_hero_feature_check',
+  'h_hero_feature_reports',
+  'h_hero_feature_multitenant',
+];
 
 export const HomeHero = () => {
+  const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showDemo, setShowDemo] = useState(false);
 
@@ -30,49 +37,38 @@ export const HomeHero = () => {
       <div className='container relative mx-auto flex min-h-[90vh] flex-col-reverse items-center gap-16 px-4 pb-20 pt-6 sm:px-6 md:min-h-[92vh] md:flex-row md:items-stretch md:gap-12 md:px-8 lg:pt-12'>
         <div className='flex w-full flex-col justify-center text-center text-white md:w-1/2 md:text-left'>
           <div className='mb-6 inline-flex items-center gap-2 self-center rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white md:self-start'>
-            Gestión inteligente en campo
+            {t('h_hero_badge')}
           </div>
           <h1 className='text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl lg:text-6xl'>
-            Orquesta tus operaciones en campo con datos, trazabilidad e IA.
+            {t('h_hero_title')}
           </h1>
           <p className='mt-5 max-w-2xl text-lg leading-relaxed text-white/90 md:text-xl'>
-            Tryvoo centraliza turnos, rondas, formularios y comunicaciones en
-            una sola plataforma web y móvil con modo offline. Tu equipo tiene
-            claridad; tus clientes, confianza.
+            {t('h_hero_description')}
           </p>
           <div className='mt-8 flex flex-wrap items-center justify-center gap-4 md:justify-start'>
             <a
               href='#beta'
               className='rounded-full bg-primary px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg transition-all duration-200 hover:translate-y-[-1px] hover:shadow-xl'
             >
-              Únete a la beta
+              {t('h_cta_beta')}
             </a>
             <button
               type='button'
               onClick={() => setShowDemo(true)}
               className='rounded-full border border-white/60 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-white hover:text-[#0b1f33]'
             >
-              Ver demo
+              {t('h_hero_cta_demo')}
             </button>
           </div>
 
           <div className='mt-12 grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2'>
-            {[1, 2, 3, 4].map((item) => (
+            {heroFeatures.map((featureKey) => (
               <div
-                key={item}
+                key={featureKey}
                 className='rounded-2xl bg-white/5 p-4 text-left shadow-lg ring-1 ring-white/5 backdrop-blur-lg'
               >
                 <p className='text-base font-semibold text-white'>
-                  {item === 1 &&
-                    'Check-in/out con ubicación y horario validado'}
-                  {item === 2 &&
-                    'Reportes multimedia y formularios dinámicos, incluso offline'}
-                  {item === 4 &&
-                    'Multi-tenant, comunicaciones seguras y trazabilidad en tiempo real'}
-                  {/*
-                  {item === 3 &&
-                    'Automatización de turnos masivos y rondas con IA contextual'}
-                  */}
+                  {t(featureKey)}
                 </p>
               </div>
             ))}
@@ -88,7 +84,7 @@ export const HomeHero = () => {
                 <img
                   key={index}
                   src={slide}
-                  alt='Tryvoo platform interface'
+                  alt={t('h_hero_image_alt')}
                   className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
                     index === currentSlide ? 'opacity-100' : 'opacity-0'
                   }`}
@@ -104,28 +100,28 @@ export const HomeHero = () => {
                       index === currentSlide ? 'w-4 bg-white' : 'bg-white/40'
                     }`}
                   >
-                    <span className='sr-only'>Slide {index + 1}</span>
+                    <span className='sr-only'>
+                      {t('h_hero_slide_label', { number: index + 1 })}
+                    </span>
                   </button>
                 ))}
               </div>
             </div>
             <div className='mt-4 grid grid-cols-2 gap-3 rounded-2xl bg-white/10 p-4 text-white shadow-inner'>
               <div>
-                <p className='text-sm font-semibold'>Cobertura operativa</p>
+                <p className='text-sm font-semibold'>{t('h_hero_stat_coverage')}</p>
                 <p className='text-2xl font-bold'>24/7</p>
               </div>
               <div>
-                <p className='text-sm font-semibold'>Equipos en campo</p>
+                <p className='text-sm font-semibold'>{t('h_hero_stat_teams')}</p>
                 <p className='text-2xl font-bold'>+300</p>
               </div>
               <div>
-                <p className='text-sm font-semibold'>
-                  Intervenciones automatizadas
-                </p>
+                <p className='text-sm font-semibold'>{t('h_hero_stat_interventions')}</p>
                 <p className='text-2xl font-bold'>45%</p>
               </div>
               <div>
-                <p className='text-sm font-semibold'>Reducción de errores</p>
+                <p className='text-sm font-semibold'>{t('h_hero_stat_errors')}</p>
                 <p className='text-2xl font-bold'>-30%</p>
               </div>
             </div>
@@ -145,7 +141,7 @@ export const HomeHero = () => {
               onClick={() => setShowDemo(false)}
               className='absolute right-3 top-3 z-10 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20'
             >
-              <span className='sr-only'>Cerrar</span>✕
+              <span className='sr-only'>{t('h_hero_demo_close')}</span>✕
             </button>
             <div className='relative aspect-video overflow-hidden bg-gradient-to-br from-primary/30 via-white/5 to-emerald-300/20'>
               <video
@@ -157,11 +153,10 @@ export const HomeHero = () => {
             </div>
             <div className='flex flex-col gap-1 px-6 py-4 text-left text-white/90'>
               <p className='text-sm font-semibold uppercase tracking-[0.15em] text-white/70'>
-                Demo integrada
+                {t('h_hero_demo_badge')}
               </p>
               <p className='text-lg font-bold text-white'>
-                Visualiza cómo Tryvoo orquesta turnos, rondas y formularios en
-                segundos.
+                {t('h_hero_demo_title')}
               </p>
             </div>
           </div>

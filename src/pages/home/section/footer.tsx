@@ -3,57 +3,59 @@ import socialIcon2 from '@/assets/image/icon2.svg';
 import socialIcon3 from '@/assets/image/icon3.svg';
 import HomeMainDesktopImg from '@/assets/image/home-main-desktop.png';
 import { Logo } from '@/components/common/logo/logo';
+import { useTranslation } from 'react-i18next';
 
 const footerLinks = [
   {
-    title: 'Producto',
+    titleKey: 'h_footer_product',
     items: [
-      'Turnos y rondas',
-      'Reportes y formularios',
-      'IA Bot-Doc',
-      'SDK e integraciones',
+      'h_footer_item_shifts',
+      'h_footer_item_reports',
+      'h_footer_item_bot',
+      'h_footer_item_sdk',
     ],
   },
   {
-    title: 'Empresa',
-    items: ['Casos de uso', 'Equipo', 'Seguridad y cumplimiento'],
+    titleKey: 'h_footer_company',
+    items: ['h_footer_item_use_cases', 'h_footer_item_team', 'h_footer_item_security'],
   },
   {
-    title: 'Recursos',
-    items: ['Centro de ayuda', 'Blog', 'Soporte prioritario'],
+    titleKey: 'h_footer_resources',
+    items: ['h_footer_item_help', 'h_footer_item_blog', 'h_footer_item_support'],
   },
 ];
 
 export const HomeFooter = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className='bg-[#0b1f33] text-white'>
       <div className='mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8'>
         <div className='grid grid-cols-1 gap-10 lg:grid-cols-8 lg:items-start'>
           <div className='space-y-3 lg:col-span-3'>
             <div className='fill-white'>
-              <Logo slogan='Gestión en Campo' />
+              <Logo slogan={t('h_logo_slogan')} />
             </div>
             <p className='text-sm text-white/80'>
-              Plataforma modular de trazabilidad y control operativo para
-              equipos en campo. Web + App con IA y capacidades offline.
+              {t('h_footer_intro')}
             </p>
             <div className='flex items-center gap-3 pt-1 text-sm text-white/70'>
               <span className='vx-icon vx-icon-041 size-sm text-white' />
-              soporte@tryvoo.com
+              {t('h_footer_email')}
             </div>
             <div className='flex items-center gap-3 text-sm text-white/70'>
               <span className='vx-icon vx-icon-007 size-sm text-white' />
-              +57 300 000 0000
+              {t('h_footer_phone')}
             </div>
           </div>
 
           <div className='grid grid-cols-2 gap-6 sm:grid-cols-3 lg:col-span-5 lg:grid-cols-3'>
             {footerLinks.map((section) => (
-              <div key={section.title} className='space-y-3'>
-                <h3 className='text-lg font-semibold'>{section.title}</h3>
+              <div key={section.titleKey} className='space-y-3'>
+                <h3 className='text-lg font-semibold'>{t(section.titleKey)}</h3>
                 <ul className='space-y-2 text-sm text-white/80'>
                   {section.items.map((item) => (
-                    <li key={item}>{item}</li>
+                    <li key={item}>{t(item)}</li>
                   ))}
                 </ul>
               </div>
@@ -64,18 +66,17 @@ export const HomeFooter = () => {
         <div className='mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2'>
           <div className='space-y-4 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg backdrop-blur-lg w-64'>
             <p className='text-sm uppercase tracking-[0.15em] text-white/80'>
-              Programa beta
+              {t('h_footer_beta_badge')}
             </p>
-            <p className='text-xl font-semibold'>Agendemos una demo</p>
+            <p className='text-xl font-semibold'>{t('h_footer_beta_title')}</p>
             <p className='text-sm text-white/80'>
-              Descubre cómo Tryvoo reduce costos operativos en semanas, no
-              meses.
+              {t('h_footer_beta_desc')}
             </p>
             <a
               href='/demo'
               className='inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-xl'
             >
-              Reservar espacio
+              {t('h_footer_beta_cta')}
             </a>
             <div className='flex gap-3 pt-2'>
               <img
@@ -109,8 +110,7 @@ export const HomeFooter = () => {
               />
             </div>
             <p className='mt-3 text-sm text-white/80'>
-              Explora la automatización de turnos, rondas y reportes con IA
-              dentro de la plataforma.
+              {t('h_footer_video_desc')}
             </p>
           </div>
         </div>
@@ -119,17 +119,17 @@ export const HomeFooter = () => {
       <div className='border-t border-white/10'>
         <div className='mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-6 text-sm text-white/70 sm:flex-row sm:px-6 lg:px-8'>
           <p>
-            © {new Date().getFullYear()} Tryvoo. Todos los derechos reservados.
+            © {new Date().getFullYear()} Tryvoo. {t('h_footer_rights')}
           </p>
           <div className='flex gap-4'>
             <a href='#' className='hover:text-white'>
-              Política de privacidad
+              {t('h_footer_privacy')}
             </a>
             <a href='#' className='hover:text-white'>
-              Términos
+              {t('h_footer_terms')}
             </a>
             <a href='#' className='hover:text-white'>
-              Soporte
+              {t('h_footer_support')}
             </a>
           </div>
         </div>

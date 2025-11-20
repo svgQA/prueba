@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
+import { useTranslation } from 'react-i18next';
 import HomeAboutCenterImg from '@/assets/image/home-we-center.png';
 
 const aboutSlides = [
@@ -9,6 +10,7 @@ const aboutSlides = [
 ];
 
 export const HomeAbout = () => {
+  const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -28,52 +30,45 @@ export const HomeAbout = () => {
       <div className='relative mx-auto flex w-full max-w-6xl flex-col gap-10 md:flex-row md:items-center'>
         <div className='space-y-6 md:w-1/2'>
           <p className='inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white'>
-            Equipo + Tecnología
+            {t('h_about_badge')}
           </p>
           <h2 className='text-3xl font-bold leading-tight sm:text-4xl'>
-            Un partner estratégico para empresas con personal distribuido.
+            {t('h_about_title')}
           </h2>
           <p className='text-lg text-white/85'>
-            Nacimos en operaciones de campo reales: vigilancia, servicios
-            generales y construcción. Por eso diseñamos Tryvoo para funcionar
-            con conectividad limitada, múltiples clientes y altos estándares de
-            trazabilidad.
+            {t('h_about_description')}
           </p>
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
             <div className='rounded-2xl border border-white/15 bg-white/5 p-4 shadow-lg backdrop-blur-lg'>
               <p className='text-sm font-semibold text-emerald-200'>
-                Arquitectura modular
+                {t('h_about_architecture_title')}
               </p>
               <p className='text-base text-white/90'>
-                Activa módulos de IA, formularios, accesos, comunicaciones o IoT
-                según tu operación.
+                {t('h_about_architecture_desc')}
               </p>
             </div>
             <div className='rounded-2xl border border-white/15 bg-white/5 p-4 shadow-lg backdrop-blur-lg'>
               <p className='text-sm font-semibold text-emerald-200'>
-                Interoperabilidad
+                {t('h_about_interoperability_title')}
               </p>
               <p className='text-base text-white/90'>
-                SDK y API para conectar con ERP (Odoo) y sistemas existentes sin
-                fricción.
+                {t('h_about_interoperability_desc')}
               </p>
             </div>
             <div className='rounded-2xl border border-white/15 bg-white/5 p-4 shadow-lg backdrop-blur-lg'>
               <p className='text-sm font-semibold text-emerald-200'>
-                Operación offline
+                {t('h_about_offline_title')}
               </p>
               <p className='text-base text-white/90'>
-                La app móvil sigue registrando evidencias y formularios aun sin
-                internet.
+                {t('h_about_offline_desc')}
               </p>
             </div>
             <div className='rounded-2xl border border-white/15 bg-white/5 p-4 shadow-lg backdrop-blur-lg'>
               <p className='text-sm font-semibold text-emerald-200'>
-                Seguridad y multi-tenant
+                {t('h_about_security_title')}
               </p>
               <p className='text-base text-white/90'>
-                Gobierna múltiples clientes con roles, auditoría y
-                personalización de marca.
+                {t('h_about_security_desc')}
               </p>
             </div>
           </div>
@@ -88,7 +83,7 @@ export const HomeAbout = () => {
                 <img
                   key={index}
                   src={slide}
-                  alt='Aplicación móvil Tryvoo'
+                  alt={t('h_about_slide_alt')}
                   className={`absolute inset-0 mx-auto h-full w-full object-contain p-4 transition-opacity duration-700 ${
                     index === currentSlide ? 'opacity-100' : 'opacity-0'
                   }`}
@@ -111,14 +106,13 @@ export const HomeAbout = () => {
             </div>
             <div className='mt-6 rounded-2xl bg-white/10 p-4 text-left shadow-inner'>
               <p className='text-sm uppercase tracking-wide text-emerald-200'>
-                Operaciones críticas
+                {t('h_about_highlight_badge')}
               </p>
               <p className='text-lg font-semibold text-white'>
-                Rondas, tareas y evidencia geolocalizada sin interrupciones.
+                {t('h_about_highlight_title')}
               </p>
               <p className='mt-2 text-sm text-white/85'>
-                Optimiza seguridad, mantenimiento y servicios generales con
-                datos listos para auditoría.
+                {t('h_about_highlight_desc')}
               </p>
             </div>
           </div>

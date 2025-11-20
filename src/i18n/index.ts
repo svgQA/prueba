@@ -31,6 +31,7 @@ import { message_en, message_es } from './message';
 import { smartGroup_en, smartGroup_es } from './smart-group';
 import { trybook_en, trybook_es } from './trybook';
 import { file_en, file_es } from './file';
+import { home_en, home_es } from './home';
 
 const resources = {
   en: {
@@ -56,6 +57,7 @@ const resources = {
       ...panic_en,
       ...role_en,
       ...hero_en,
+      ...home_en,
       ...schedule_en,
       ...smartGroup_en,
       ...trybook_en,
@@ -85,6 +87,7 @@ const resources = {
       ...panic_es,
       ...role_es,
       ...hero_es,
+      ...home_es,
       ...schedule_es,
       ...smartGroup_es,
       ...trybook_es,
