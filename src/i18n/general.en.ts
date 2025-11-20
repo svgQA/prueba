@@ -89,4 +89,9 @@ export const general_en = {
     title_form: 'New Company',
     title_form_edit: 'Edit Company',
   },
+  pqrs: {
+    pageTitle: 'TR - PQRS Service',
+    created: 'Created',
+    finished: 'Finished',
+  }
 };
