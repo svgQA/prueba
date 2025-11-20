@@ -2,7 +2,12 @@ import { useEffect, useState } from 'preact/hooks';
 import HomeMainDesktopImg from '@/assets/image/home-main-desktop.png';
 import BrandCarousel from './component/brand.carousel';
 
-const heroSlides = [HomeMainDesktopImg, HomeMainDesktopImg, HomeMainDesktopImg, HomeMainDesktopImg];
+const heroSlides = [
+  HomeMainDesktopImg,
+  HomeMainDesktopImg,
+  HomeMainDesktopImg,
+  HomeMainDesktopImg,
+];
 
 export const HomeHero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -17,7 +22,10 @@ export const HomeHero = () => {
   }, []);
 
   return (
-    <div id='inicio' className='relative w-full overflow-hidden bg-gradient-to-r from-[#0b1f33] via-[#0b1f33] to-[#0b1f33]'>
+    <div
+      id='inicio'
+      className='relative w-full overflow-hidden bg-gradient-to-r from-[#0b1f33] via-[#0b1f33] to-[#0b1f33]'
+    >
       <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.18),transparent_30%),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.25),transparent_25%)]' />
       <div className='container relative mx-auto flex min-h-[90vh] flex-col-reverse items-center gap-16 px-4 pb-20 pt-6 sm:px-6 md:min-h-[92vh] md:flex-row md:items-stretch md:gap-12 md:px-8 lg:pt-12'>
         <div className='flex w-full flex-col justify-center text-center text-white md:w-1/2 md:text-left'>
@@ -25,10 +33,12 @@ export const HomeHero = () => {
             Gestión inteligente en campo
           </div>
           <h1 className='text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl lg:text-6xl'>
-            Orquesta tus operaciones en campo con datos, trazabilidad y IA.
+            Orquesta tus operaciones en campo con datos, trazabilidad e IA.
           </h1>
           <p className='mt-5 max-w-2xl text-lg leading-relaxed text-white/90 md:text-xl'>
-            Tryvoo centraliza turnos, rondas, formularios y comunicaciones en una sola plataforma web y móvil con modo offline. Tu equipo tiene claridad; tus clientes, confianza.
+            Tryvoo centraliza turnos, rondas, formularios y comunicaciones en
+            una sola plataforma web y móvil con modo offline. Tu equipo tiene
+            claridad; tus clientes, confianza.
           </p>
           <div className='mt-8 flex flex-wrap items-center justify-center gap-4 md:justify-start'>
             <a
@@ -53,10 +63,16 @@ export const HomeHero = () => {
                 className='rounded-2xl bg-white/5 p-4 text-left shadow-lg ring-1 ring-white/5 backdrop-blur-lg'
               >
                 <p className='text-base font-semibold text-white'>
-                  {item === 1 && 'Check-in/out con ubicación y horario validado'}
-                  {item === 2 && 'Reportes multimedia y formularios dinámicos, incluso offline'}
-                  {item === 3 && 'Automatización de turnos masivos y rondas con IA contextual'}
-                  {item === 4 && 'Multi-tenant, comunicaciones seguras y trazabilidad en tiempo real'}
+                  {item === 1 &&
+                    'Check-in/out con ubicación y horario validado'}
+                  {item === 2 &&
+                    'Reportes multimedia y formularios dinámicos, incluso offline'}
+                  {item === 4 &&
+                    'Multi-tenant, comunicaciones seguras y trazabilidad en tiempo real'}
+                  {/*
+                  {item === 3 &&
+                    'Automatización de turnos masivos y rondas con IA contextual'}
+                  */}
                 </p>
               </div>
             ))}
@@ -103,8 +119,10 @@ export const HomeHero = () => {
                 <p className='text-2xl font-bold'>+300</p>
               </div>
               <div>
-                <p className='text-sm font-semibold'>Intervenciones automatizadas</p>
-                <p className='text-2xl font-bold'>85%</p>
+                <p className='text-sm font-semibold'>
+                  Intervenciones automatizadas
+                </p>
+                <p className='text-2xl font-bold'>45%</p>
               </div>
               <div>
                 <p className='text-sm font-semibold'>Reducción de errores</p>
@@ -127,8 +145,7 @@ export const HomeHero = () => {
               onClick={() => setShowDemo(false)}
               className='absolute right-3 top-3 z-10 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20'
             >
-              <span className='sr-only'>Cerrar</span>
-              ✕
+              <span className='sr-only'>Cerrar</span>✕
             </button>
             <div className='relative aspect-video overflow-hidden bg-gradient-to-br from-primary/30 via-white/5 to-emerald-300/20'>
               <video
@@ -139,8 +156,13 @@ export const HomeHero = () => {
               />
             </div>
             <div className='flex flex-col gap-1 px-6 py-4 text-left text-white/90'>
-              <p className='text-sm font-semibold uppercase tracking-[0.15em] text-white/70'>Demo integrada</p>
-              <p className='text-lg font-bold text-white'>Visualiza cómo Tryvoo orquesta turnos, rondas y formularios en segundos.</p>
+              <p className='text-sm font-semibold uppercase tracking-[0.15em] text-white/70'>
+                Demo integrada
+              </p>
+              <p className='text-lg font-bold text-white'>
+                Visualiza cómo Tryvoo orquesta turnos, rondas y formularios en
+                segundos.
+              </p>
             </div>
           </div>
         </div>

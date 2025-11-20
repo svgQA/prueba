@@ -1,7 +1,6 @@
 import { useState } from 'preact/hooks';
 import { Logo } from '@/components/common/logo/logo';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
-import { Link } from 'wouter';
 
 const navItems = [
   { id: 'hero', label: 'Inicio', href: '#inicio' },
@@ -20,7 +19,7 @@ export const HomeHeader = () => {
     <header className='fixed inset-x-0 top-0 z-50 border-b border-white/40 bg-white/75 shadow-sm backdrop-blur-md'>
       <div className='mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8'>
         <div className='flex items-center gap-3'>
-          <Logo slogan='Tryvoo' color='text-[#0b1f33]' gradient />
+          <Logo slogan='Gestión en campo' color='text-ternary' gradient />
         </div>
 
         <nav className='hidden lg:flex items-center gap-8 text-sm font-semibold text-[#0b1f33]'>
@@ -29,7 +28,7 @@ export const HomeHeader = () => {
               key={item.id}
               href={item.href}
               onClick={closeMenu}
-              className='hover:text-primary transition-colors duration-200'
+              className='hover:text-primary transition-colors duration-200 text-ternary'
             >
               {item.label}
             </a>
@@ -66,7 +65,9 @@ export const HomeHeader = () => {
                 isOpen ? 'translate-y-[7px] rotate-45' : ''
               }`}
             />
-            <span className={`block h-0.5 w-7 bg-[#0b1f33] transition-opacity duration-300 ${isOpen ? 'opacity-0' : 'opacity-100'}`} />
+            <span
+              className={`block h-0.5 w-7 bg-[#0b1f33] transition-opacity duration-300 ${isOpen ? 'opacity-0' : 'opacity-100'}`}
+            />
             <span
               className={`block h-0.5 w-7 bg-[#0b1f33] transition-transform duration-300 ${
                 isOpen ? '-translate-y-[7px] -rotate-45' : ''

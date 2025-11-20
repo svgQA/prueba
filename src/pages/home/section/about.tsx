@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'preact/hooks';
 import HomeAboutCenterImg from '@/assets/image/home-we-center.png';
 
-const aboutSlides = [HomeAboutCenterImg, HomeAboutCenterImg, HomeAboutCenterImg, HomeAboutCenterImg];
+const aboutSlides = [
+  HomeAboutCenterImg,
+  HomeAboutCenterImg,
+  HomeAboutCenterImg,
+  HomeAboutCenterImg,
+];
 
 export const HomeAbout = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -15,7 +20,10 @@ export const HomeAbout = () => {
   }, []);
 
   return (
-    <div id='nosotros' className='relative flex flex-col items-center bg-[#0b1f33] px-4 py-16 text-white sm:px-6 md:px-8'>
+    <div
+      id='nosotros'
+      className='relative flex flex-col items-center bg-[#0b1f33] px-4 py-16 text-white sm:px-6 md:px-8'
+    >
       <div className='absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(255,255,255,0.08),transparent_35%),radial-gradient(circle_at_90%_0%,rgba(16,185,129,0.18),transparent_30%)]' />
       <div className='relative mx-auto flex w-full max-w-6xl flex-col gap-10 md:flex-row md:items-center'>
         <div className='space-y-6 md:w-1/2'>
@@ -26,24 +34,47 @@ export const HomeAbout = () => {
             Un partner estratégico para empresas con personal distribuido.
           </h2>
           <p className='text-lg text-white/85'>
-            Nacimos en operaciones de campo reales: vigilancia, servicios generales y construcción. Por eso diseñamos Tryvoo para funcionar con conectividad limitada, múltiples clientes y altos estándares de trazabilidad.
+            Nacimos en operaciones de campo reales: vigilancia, servicios
+            generales y construcción. Por eso diseñamos Tryvoo para funcionar
+            con conectividad limitada, múltiples clientes y altos estándares de
+            trazabilidad.
           </p>
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
             <div className='rounded-2xl border border-white/15 bg-white/5 p-4 shadow-lg backdrop-blur-lg'>
-              <p className='text-sm font-semibold text-emerald-200'>Arquitectura modular</p>
-              <p className='text-base text-white/90'>Activa módulos de IA, formularios, accesos, comunicaciones o IoT según tu operación.</p>
+              <p className='text-sm font-semibold text-emerald-200'>
+                Arquitectura modular
+              </p>
+              <p className='text-base text-white/90'>
+                Activa módulos de IA, formularios, accesos, comunicaciones o IoT
+                según tu operación.
+              </p>
             </div>
             <div className='rounded-2xl border border-white/15 bg-white/5 p-4 shadow-lg backdrop-blur-lg'>
-              <p className='text-sm font-semibold text-emerald-200'>Interoperabilidad</p>
-              <p className='text-base text-white/90'>SDK y API para conectar con ERP (Odoo) y sistemas existentes sin fricción.</p>
+              <p className='text-sm font-semibold text-emerald-200'>
+                Interoperabilidad
+              </p>
+              <p className='text-base text-white/90'>
+                SDK y API para conectar con ERP (Odoo) y sistemas existentes sin
+                fricción.
+              </p>
             </div>
             <div className='rounded-2xl border border-white/15 bg-white/5 p-4 shadow-lg backdrop-blur-lg'>
-              <p className='text-sm font-semibold text-emerald-200'>Operación offline</p>
-              <p className='text-base text-white/90'>La app móvil sigue registrando evidencias y formularios aun sin internet.</p>
+              <p className='text-sm font-semibold text-emerald-200'>
+                Operación offline
+              </p>
+              <p className='text-base text-white/90'>
+                La app móvil sigue registrando evidencias y formularios aun sin
+                internet.
+              </p>
             </div>
             <div className='rounded-2xl border border-white/15 bg-white/5 p-4 shadow-lg backdrop-blur-lg'>
-              <p className='text-sm font-semibold text-emerald-200'>Seguridad y multi-tenant</p>
-              <p className='text-base text-white/90'>Gobierna múltiples clientes con roles, auditoría y personalización de marca.</p>
+              <p className='text-sm font-semibold text-emerald-200'>
+                Seguridad y multi-tenant
+              </p>
+              <p className='text-base text-white/90'>
+                Gobierna múltiples clientes con roles, auditoría y
+                personalización de marca.
+              </p>
             </div>
           </div>
         </div>
@@ -79,9 +110,16 @@ export const HomeAbout = () => {
               </div>
             </div>
             <div className='mt-6 rounded-2xl bg-white/10 p-4 text-left shadow-inner'>
-              <p className='text-sm uppercase tracking-wide text-emerald-200'>Operaciones críticas</p>
-              <p className='text-lg font-semibold text-white'>Rondas, tareas y evidencia geolocalizada sin interrupciones.</p>
-              <p className='mt-2 text-sm text-white/85'>Optimiza seguridad, mantenimiento y servicios generales con datos listos para auditoría.</p>
+              <p className='text-sm uppercase tracking-wide text-emerald-200'>
+                Operaciones críticas
+              </p>
+              <p className='text-lg font-semibold text-white'>
+                Rondas, tareas y evidencia geolocalizada sin interrupciones.
+              </p>
+              <p className='mt-2 text-sm text-white/85'>
+                Optimiza seguridad, mantenimiento y servicios generales con
+                datos listos para auditoría.
+              </p>
             </div>
           </div>
         </div>

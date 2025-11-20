@@ -1,7 +1,7 @@
 import { type ILogo } from './interface';
 
 export const Logo = ({ slogan, color = 'text-white', gradient }: ILogo) => {
-  const fill = gradient ? 'url(#tryvoo-logo-gradient)' : 'currentColor';
+  const fill = gradient ? 'url(#tryvoo-logo-gradient)' : 'fillColor';
 
   return (
     <div className='flex flex-row items-center'>
@@ -15,10 +15,16 @@ export const Logo = ({ slogan, color = 'text-white', gradient }: ILogo) => {
         >
           {gradient && (
             <defs>
-              <linearGradient id='tryvoo-logo-gradient' x1='6.5%' x2='98.5%' y1='11.6%' y2='92.2%'>
-                <stop offset='0%' stopColor='#2a7be8' />
-                <stop offset='50%' stopColor='#1b6bce' />
-                <stop offset='100%' stopColor='#17c9a3' />
+              <linearGradient
+                id='tryvoo-logo-gradient'
+                x1='6.5%'
+                x2='98.5%'
+                y1='11.6%'
+                y2='92.2%'
+              >
+                <stop offset='0%' stopColor='#00BDD6' />
+                <stop offset='50%' stopColor='#00BDD6' />
+                <stop offset='100%' stopColor='#1DD578' />
               </linearGradient>
             </defs>
           )}

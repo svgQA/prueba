@@ -25,7 +25,7 @@ export const HomeBetaForm = () => {
   const handleChange = (
     event: Event & {
       currentTarget: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-    },
+    }
   ) => {
     const { name, value } = event.currentTarget;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -37,7 +37,10 @@ export const HomeBetaForm = () => {
   };
 
   return (
-    <section id='beta' className='relative overflow-hidden bg-[#0b1f33] py-16 text-white md:py-24'>
+    <section
+      id='beta'
+      className='relative overflow-hidden bg-[#0b1f33] py-16 text-white md:py-24'
+    >
       <div className='absolute inset-0 bg-gradient-to-r from-primary to-emerald-400 opacity-70' />
       <div className='relative mx-auto grid max-w-6xl grid-cols-1 gap-10 px-4 sm:px-6 md:grid-cols-2 md:px-8'>
         <div className='space-y-5'>
@@ -45,38 +48,50 @@ export const HomeBetaForm = () => {
             Acceso anticipado
           </p>
           <h2 className='text-3xl font-bold leading-tight md:text-4xl'>
-            Únete a la beta privada de Tryvoo y lleva tu operación de campo a otro nivel.
+            Únete a la beta privada de Tryvoo y lleva tu operación de campo a
+            otro nivel.
           </h2>
           <p className='text-lg text-white/90'>
-            Recibe onboarding prioritario, soporte dedicado y acceso temprano a los módulos de turnos, formularios y analítica con IA. Queremos construir contigo la herramienta definitiva para equipos operativos distribuidos.
+            Recibe onboarding prioritario, soporte dedicado y acceso temprano a
+            los módulos de turnos, formularios y analítica con IA. Queremos
+            construir contigo la herramienta definitiva para equipos operativos
+            distribuidos.
           </p>
           <ul className='grid grid-cols-1 gap-3 text-sm text-white/90 sm:grid-cols-2'>
             <li className='flex items-start gap-3 rounded-xl bg-white/10 p-3'>
-              <span className='vox-icon vx-icon-013 size-sm text-white' />
+              <span className='vx-icon vx-icon-013 size-sm text-white' />
               <div>
                 <p className='font-semibold text-white'>Onboarding guiado</p>
-                <p>Sesiones personalizadas para replicar tus flujos actuales.</p>
+                <p>
+                  Sesiones personalizadas para replicar tus flujos actuales.
+                </p>
               </div>
             </li>
             <li className='flex items-start gap-3 rounded-xl bg-white/10 p-3'>
-              <span className='vox-icon vx-icon-041 size-sm text-white' />
+              <span className='vx-icon vx-icon-041 size-sm text-white' />
               <div>
                 <p className='font-semibold text-white'>Feedback con impacto</p>
                 <p>Influencias la hoja de ruta y nuevas automatizaciones.</p>
               </div>
             </li>
             <li className='flex items-start gap-3 rounded-xl bg-white/10 p-3'>
-              <span className='vox-icon vx-icon-007 size-sm text-white' />
+              <span className='vx-icon vx-icon-007 size-sm text-white' />
               <div>
                 <p className='font-semibold text-white'>IA contextual</p>
-                <p>Respuestas en tiempo real sobre tus documentos y protocolos.</p>
+                <p>
+                  Respuestas en tiempo real sobre tus documentos y protocolos.
+                </p>
               </div>
             </li>
             <li className='flex items-start gap-3 rounded-xl bg-white/10 p-3'>
-              <span className='vox-icon vx-icon-017 size-sm text-white' />
+              <span className='vx-icon vx-icon-017 size-sm text-white' />
               <div>
-                <p className='font-semibold text-white'>Operación sin fricción</p>
-                <p>Check-in/out con validación de ubicación, rondas y reportes.</p>
+                <p className='font-semibold text-white'>
+                  Operación sin fricción
+                </p>
+                <p>
+                  Check-in/out con validación de ubicación, rondas y reportes.
+                </p>
               </div>
             </li>
           </ul>
@@ -84,11 +99,17 @@ export const HomeBetaForm = () => {
 
         <div className='rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-white/20 md:p-8'>
           <div className='mb-4 flex items-center justify-between'>
-            <h3 className='text-xl font-bold text-[#0b1f33]'>Solicita acceso</h3>
+            <h3 className='text-xl font-bold text-[#0b1f33]'>
+              Solicita acceso
+            </h3>
             {submitted ? (
-              <span className='rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase text-emerald-700'>Enviado</span>
+              <span className='rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase text-emerald-700'>
+                Enviado
+              </span>
             ) : (
-              <span className='rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase text-primary'>Plazas limitadas</span>
+              <span className='rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase text-primary'>
+                Plazas limitadas
+              </span>
             )}
           </div>
 
@@ -157,7 +178,7 @@ export const HomeBetaForm = () => {
                 className='mt-2 w-full appearance-none rounded-lg border border-[#d7e3f2] bg-white px-3 py-2 pr-10 text-sm text-[#0b1f33] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30'
                 style={{
                   backgroundImage:
-                    "url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"8\" viewBox=\"0 0 12 8\" fill=\"none\"%3E%3Cpath d=\"M1 1.5L6 6.5L11 1.5\" stroke=\"%230b1f33\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/%3E%3C/svg%3E')",
+                    'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none"%3E%3Cpath d="M1 1.5L6 6.5L11 1.5" stroke="%230b1f33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/%3E%3C/svg%3E\')',
                   backgroundRepeat: 'no-repeat',
                   backgroundPosition: 'right 0.75rem center',
                 }}
@@ -192,7 +213,8 @@ export const HomeBetaForm = () => {
 
             {submitted && (
               <p className='rounded-lg bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700'>
-                ¡Gracias! Tu solicitud fue registrada. Nuestro equipo te contactará en menos de 24 horas para agendar el onboarding.
+                ¡Gracias! Tu solicitud fue registrada. Nuestro equipo te
+                contactará en menos de 24 horas para agendar el onboarding.
               </p>
             )}
           </form>
