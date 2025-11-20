@@ -2,6 +2,7 @@ import { useState } from 'preact/hooks';
 import { useTranslation } from 'react-i18next';
 import { Logo } from '@/components/common/logo/logo';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
+import { app_environment } from '@/env.config';
 
 const navItems = [
   { id: 'hero', labelKey: 'h_nav_home', href: '#inicio' },

@@ -17,11 +17,19 @@ const footerLinks = [
   },
   {
     titleKey: 'h_footer_company',
-    items: ['h_footer_item_use_cases', 'h_footer_item_team', 'h_footer_item_security'],
+    items: [
+      'h_footer_item_use_cases',
+      'h_footer_item_team',
+      'h_footer_item_security',
+    ],
   },
   {
     titleKey: 'h_footer_resources',
-    items: ['h_footer_item_help', 'h_footer_item_blog', 'h_footer_item_support'],
+    items: [
+      'h_footer_item_help',
+      'h_footer_item_blog',
+      'h_footer_item_support',
+    ],
   },
 ];
 
@@ -36,9 +44,7 @@ export const HomeFooter = () => {
             <div className='fill-white'>
               <Logo slogan={t('h_logo_slogan')} />
             </div>
-            <p className='text-sm text-white/80'>
-              {t('h_footer_intro')}
-            </p>
+            <p className='text-sm text-white/80'>{t('h_footer_intro')}</p>
             <div className='flex items-center gap-3 pt-1 text-sm text-white/70'>
               <span className='vx-icon vx-icon-041 size-sm text-white' />
               {t('h_footer_email')}
@@ -63,15 +69,13 @@ export const HomeFooter = () => {
           </div>
         </div>
 
-        <div className='mt-12 grid grid-cols-1 gap-6 lg:grid-cols-2'>
+        <div className='mt-12 flex flex-row flex-wrap justify-center gap-3'>
           <div className='space-y-4 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg backdrop-blur-lg w-64'>
             <p className='text-sm uppercase tracking-[0.15em] text-white/80'>
               {t('h_footer_beta_badge')}
             </p>
             <p className='text-xl font-semibold'>{t('h_footer_beta_title')}</p>
-            <p className='text-sm text-white/80'>
-              {t('h_footer_beta_desc')}
-            </p>
+            <p className='text-sm text-white/80'>{t('h_footer_beta_desc')}</p>
             <a
               href='/demo'
               className='inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-xl'
