@@ -52,18 +52,18 @@ export const HomeAbout = () => {
           <div className='absolute -left-6 -top-6 h-24 w-24 rounded-full bg-emerald-400/30 blur-3xl' />
           <div className='absolute -right-6 bottom-0 h-24 w-24 rounded-full bg-primary/30 blur-3xl' />
           <div className='relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-lg'>
-            <div className='relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f1f33]/50 shadow-inner aspect-[10/16]'>
+            <div className='relative flex items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-[#0f1f33]/50 shadow-inner aspect-[16/10]'>
               {aboutSlides.map((slide, index) => (
                 <img
                   key={index}
                   src={slide}
                   alt='Aplicación móvil Tryvoo'
-                  className={`absolute inset-0 mx-auto h-auto w-full object-contain transition-opacity duration-700 ${
+                  className={`absolute inset-0 mx-auto h-full w-full object-contain p-4 transition-opacity duration-700 ${
                     index === currentSlide ? 'opacity-100' : 'opacity-0'
                   }`}
                 />
               ))}
-              <div className='relative flex items-center justify-center gap-2 p-3'>
+              <div className='absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 bg-gradient-to-t from-[#0b1f33]/90 via-transparent to-transparent p-4'>
                 {aboutSlides.map((_, index) => (
                   <button
                     key={index}

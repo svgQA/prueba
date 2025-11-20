@@ -19,7 +19,7 @@ export const HomeHero = () => {
   return (
     <div id='inicio' className='relative w-full overflow-hidden bg-gradient-to-r from-[#0b1f33] via-[#0b1f33] to-[#0b1f33]'>
       <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.18),transparent_30%),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.25),transparent_25%)]' />
-      <div className='container relative mx-auto flex min-h-[90vh] flex-col-reverse items-center gap-16 px-4 pb-20 pt-10 sm:px-6 md:min-h-[92vh] md:flex-row md:items-stretch md:gap-12 md:px-8 lg:pt-14'>
+      <div className='container relative mx-auto flex min-h-[90vh] flex-col-reverse items-center gap-16 px-4 pb-20 pt-6 sm:px-6 md:min-h-[92vh] md:flex-row md:items-stretch md:gap-12 md:px-8 lg:pt-12'>
         <div className='flex w-full flex-col justify-center text-center text-white md:w-1/2 md:text-left'>
           <div className='mb-6 inline-flex items-center gap-2 self-center rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white md:self-start'>
             Gestión inteligente en campo

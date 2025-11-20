@@ -20,9 +20,7 @@ export const HomeHeader = () => {
     <header className='fixed inset-x-0 top-0 z-50 border-b border-white/40 bg-white/75 shadow-sm backdrop-blur-md'>
       <div className='mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8'>
         <div className='flex items-center gap-3'>
-          <div className='rounded-xl bg-gradient-to-br from-primary via-[#1b6bce] to-emerald-400 p-[6px] shadow-md ring-1 ring-white/40'>
-            <Logo slogan='Tryvoo' />
-          </div>
+          <Logo slogan='Tryvoo' color='text-[#0b1f33]' gradient />
         </div>
 
         <nav className='hidden lg:flex items-center gap-8 text-sm font-semibold text-[#0b1f33]'>
