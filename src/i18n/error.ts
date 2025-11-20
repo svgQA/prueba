@@ -188,8 +188,7 @@ export const error_es = {
     password_change_success: 'Contraseña cambiada exitosamente',
     user_profile_not_found: 'Perfil de usuario no encontrado',
     user_has_account: 'El usuario ya tiene una cuenta',
-    tenant_connection_failed:
-      'No se pudo conectar al microservicio del tenant',
+    tenant_connection_failed: 'No se pudo conectar al microservicio del tenant',
     invalid_user_type: 'Tipo de usuario inválido',
     invalid_user_data: 'Datos de usuario inválidos',
     user_replication_failed: 'Error al replicar los datos del usuario',

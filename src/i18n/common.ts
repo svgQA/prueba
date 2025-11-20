@@ -10,7 +10,7 @@ export const common_es = {
   CLOSED: 'Cerrado',
   SOLVE: 'Resolver',
   ADMIN: 'Administrador',
-  USER: 'Empleado', 
+  USER: 'Empleado',
   CLIENT: 'Cliente',
   operative: 'Operativo',
   setting: 'Configuraciones',
@@ -96,8 +96,8 @@ export const common_es = {
   mobile: 'Móvil',
   message: 'Mensaje',
   Hour: 'Hora',
-  "Quarter Day": 'Cuarto día',
-  "Half Day": 'Medio día'
+  'Quarter Day': 'Cuarto día',
+  'Half Day': 'Medio día',
 };
 
 export const common_en = {
@@ -198,6 +198,6 @@ export const common_en = {
   mobile: 'Mobile',
   message: 'Message',
   Hour: 'Hour',
-  "Quarter Day": 'Quarter day',
-  "Half Day": 'Half day',
+  'Quarter Day': 'Quarter day',
+  'Half Day': 'Half day',
 };
