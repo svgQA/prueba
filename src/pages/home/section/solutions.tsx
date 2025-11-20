@@ -25,9 +25,9 @@ export const HomeSolutions = () => {
         {tryvoo_solutions.map((item) => (
           <div
             key={item.id}
-            className='group relative flex flex-col overflow-hidden rounded-2xl border border-[#d7e3f2] bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl'
+            className='group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl'
           >
-            <div className='bg-primary/5 p-6 sm:p-8'>
+            <div className='bg-primary p-6 sm:p-8'>
               <img
                 src={item.image}
                 alt={item.titleKey ?? ''}
@@ -44,7 +44,7 @@ export const HomeSolutions = () => {
                 </p>
               </div>
               <div className='flex items-center gap-3 text-sm font-semibold text-primary'>
-                <span className='vox-icon vx-icon-008 size-sm text-primary' />
+                <span className='vx-icon vx-icon-008 size-sm text-primary' />
                 {t('h_solutions_ready')}
               </div>
             </div>

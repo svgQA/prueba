@@ -1,15 +1,6 @@
+import { BetaFormData, BetaService } from '@/services/beta';
 import { useState } from 'preact/hooks';
 import { useTranslation } from 'react-i18next';
-
-interface BetaFormData {
-  name: string;
-  email: string;
-  company: string;
-  role: string;
-  teamSize: string;
-  phone: string;
-  message: string;
-}
 
 const initialForm: BetaFormData = {
   name: '',
@@ -35,8 +26,9 @@ export const HomeBetaForm = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (event: Event) => {
+  const handleSubmit = async (event: Event) => {
     event.preventDefault();
+    await BetaService.request(form);
     setSubmitted(true);
   };
 
