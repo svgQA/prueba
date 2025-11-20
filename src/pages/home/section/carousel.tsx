@@ -6,7 +6,7 @@ export const HomeCarousel = () => {
   const { t } = useTranslation();
 
   return (
-    <div className='bg-white w-full flex flex-col items-center py-5'>
+    <div className='bg-white w-full flex flex-col items-center pt-14 pb-8'>
       <div className='mx-auto px-4 sm:px-6 lg:px-8 xl:px-16'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 justify-items-center'>
           {tryvoo_carousel.map((card) => (
@@ -33,14 +33,15 @@ export const HomeCarousel = () => {
           ))}
         </div>
       </div>
-
-      <Button
-        label={t('i_carousel_viewDetails')}
-        type='button'
-        id='schedule'
-        name='schedule'
-        className='bg-[#20314F] text-[#FFFF] text-base sm:text-xl rounded-full !p-3 sm:!p-5 !w-[200px] sm:!w-[300px] md:!w-[400px] mt-8'
-      />
+      {false && (
+        <Button
+          label={t('i_carousel_viewDetails')}
+          type='button'
+          id='schedule'
+          name='schedule'
+          className='bg-[#20314F] text-[#FFFF] text-base sm:text-xl rounded-full !p-3 sm:!p-5 !w-[200px] sm:!w-[300px] md:!w-[400px] mt-8'
+        />
+      )}
     </div>
   );
 };

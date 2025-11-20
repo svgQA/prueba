@@ -1,11 +1,25 @@
+import { useEffect, useState } from 'preact/hooks';
 import HomeMainDesktopImg from '@/assets/image/home-main-desktop.png';
 import BrandCarousel from './component/brand.carousel';
 
+const heroSlides = [HomeMainDesktopImg, HomeMainDesktopImg, HomeMainDesktopImg, HomeMainDesktopImg];
+
 export const HomeHero = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [showDemo, setShowDemo] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div id='inicio' className='relative w-full overflow-hidden bg-gradient-to-r from-[#0b1f33] via-[#0b1f33] to-[#0b1f33]'>
       <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(16,185,129,0.18),transparent_30%),radial-gradient(circle_at_80%_0%,rgba(59,130,246,0.25),transparent_25%)]' />
-      <div className='container relative mx-auto flex min-h-[90vh] flex-col-reverse items-center gap-12 px-4 pb-20 pt-10 sm:px-6 md:min-h-[92vh] md:flex-row md:items-stretch md:gap-10 md:px-8 lg:pt-16'>
+      <div className='container relative mx-auto flex min-h-[90vh] flex-col-reverse items-center gap-16 px-4 pb-20 pt-10 sm:px-6 md:min-h-[92vh] md:flex-row md:items-stretch md:gap-12 md:px-8 lg:pt-14'>
         <div className='flex w-full flex-col justify-center text-center text-white md:w-1/2 md:text-left'>
           <div className='mb-6 inline-flex items-center gap-2 self-center rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white md:self-start'>
             Gestión inteligente en campo
@@ -23,15 +37,16 @@ export const HomeHero = () => {
             >
               Únete a la beta
             </a>
-            <a
-              href='/demo'
+            <button
+              type='button'
+              onClick={() => setShowDemo(true)}
               className='rounded-full border border-white/60 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-white hover:text-[#0b1f33]'
             >
-              Ver demo guiada
-            </a>
+              Ver demo
+            </button>
           </div>
 
-          <div className='mt-10 grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2'>
+          <div className='mt-12 grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-2'>
             {[1, 2, 3, 4].map((item) => (
               <div
                 key={item}
@@ -52,11 +67,32 @@ export const HomeHero = () => {
           <div className='absolute -left-8 -top-6 h-44 w-44 rounded-full bg-primary/20 blur-3xl' />
           <div className='absolute -right-8 bottom-0 h-48 w-48 rounded-full bg-emerald-300/30 blur-3xl' />
           <div className='relative w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-4 shadow-2xl backdrop-blur-lg'>
-            <img
-              src={HomeMainDesktopImg}
-              alt='Tryvoo platform interface'
-              className='w-full rounded-2xl border border-white/10 shadow-xl'
-            />
+            <div className='relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f1f33]/60 shadow-xl aspect-[16/10]'>
+              {heroSlides.map((slide, index) => (
+                <img
+                  key={index}
+                  src={slide}
+                  alt='Tryvoo platform interface'
+                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+                    index === currentSlide ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              ))}
+              <div className='flex items-center justify-center gap-2 p-3'>
+                {heroSlides.map((_, index) => (
+                  <button
+                    key={index}
+                    type='button'
+                    onClick={() => setCurrentSlide(index)}
+                    className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                      index === currentSlide ? 'w-4 bg-white' : 'bg-white/40'
+                    }`}
+                  >
+                    <span className='sr-only'>Slide {index + 1}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className='mt-4 grid grid-cols-2 gap-3 rounded-2xl bg-white/10 p-4 text-white shadow-inner'>
               <div>
                 <p className='text-sm font-semibold'>Cobertura operativa</p>
@@ -82,6 +118,33 @@ export const HomeHero = () => {
       <div className='absolute bottom-0 left-0 w-full z-0'>
         <BrandCarousel />
       </div>
+
+      {showDemo && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm'>
+          <div className='relative w-full max-w-4xl overflow-hidden rounded-3xl bg-[#0b1f33] shadow-2xl ring-1 ring-white/10'>
+            <button
+              type='button'
+              onClick={() => setShowDemo(false)}
+              className='absolute right-3 top-3 z-10 rounded-full bg-white/10 p-2 text-white transition hover:bg-white/20'
+            >
+              <span className='sr-only'>Cerrar</span>
+              ✕
+            </button>
+            <div className='relative aspect-video overflow-hidden bg-gradient-to-br from-primary/30 via-white/5 to-emerald-300/20'>
+              <video
+                className='absolute inset-0 h-full w-full object-cover'
+                src='https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4'
+                poster={HomeMainDesktopImg}
+                controls
+              />
+            </div>
+            <div className='flex flex-col gap-1 px-6 py-4 text-left text-white/90'>
+              <p className='text-sm font-semibold uppercase tracking-[0.15em] text-white/70'>Demo integrada</p>
+              <p className='text-lg font-bold text-white'>Visualiza cómo Tryvoo orquesta turnos, rondas y formularios en segundos.</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

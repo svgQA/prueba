@@ -1,6 +1,19 @@
+import { useEffect, useState } from 'preact/hooks';
 import HomeAboutCenterImg from '@/assets/image/home-we-center.png';
 
+const aboutSlides = [HomeAboutCenterImg, HomeAboutCenterImg, HomeAboutCenterImg, HomeAboutCenterImg];
+
 export const HomeAbout = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % aboutSlides.length);
+    }, 4200);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div id='nosotros' className='relative flex flex-col items-center bg-[#0b1f33] px-4 py-16 text-white sm:px-6 md:px-8'>
       <div className='absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(255,255,255,0.08),transparent_35%),radial-gradient(circle_at_90%_0%,rgba(16,185,129,0.18),transparent_30%)]' />
@@ -39,7 +52,32 @@ export const HomeAbout = () => {
           <div className='absolute -left-6 -top-6 h-24 w-24 rounded-full bg-emerald-400/30 blur-3xl' />
           <div className='absolute -right-6 bottom-0 h-24 w-24 rounded-full bg-primary/30 blur-3xl' />
           <div className='relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-lg'>
-            <img src={HomeAboutCenterImg} alt='Aplicación móvil Tryvoo' className='mx-auto h-auto w-72 object-contain' />
+            <div className='relative overflow-hidden rounded-2xl border border-white/10 bg-[#0f1f33]/50 shadow-inner aspect-[10/16]'>
+              {aboutSlides.map((slide, index) => (
+                <img
+                  key={index}
+                  src={slide}
+                  alt='Aplicación móvil Tryvoo'
+                  className={`absolute inset-0 mx-auto h-auto w-full object-contain transition-opacity duration-700 ${
+                    index === currentSlide ? 'opacity-100' : 'opacity-0'
+                  }`}
+                />
+              ))}
+              <div className='relative flex items-center justify-center gap-2 p-3'>
+                {aboutSlides.map((_, index) => (
+                  <button
+                    key={index}
+                    type='button'
+                    onClick={() => setCurrentSlide(index)}
+                    className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                      index === currentSlide ? 'w-4 bg-white' : 'bg-white/40'
+                    }`}
+                  >
+                    <span className='sr-only'>Slide {index + 1}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className='mt-6 rounded-2xl bg-white/10 p-4 text-left shadow-inner'>
               <p className='text-sm uppercase tracking-wide text-emerald-200'>Operaciones críticas</p>
               <p className='text-lg font-semibold text-white'>Rondas, tareas y evidencia geolocalizada sin interrupciones.</p>

@@ -8,7 +8,6 @@ const navItems = [
   { id: 'features', label: 'Soluciones', href: '#soluciones' },
   { id: 'pros', label: 'Beneficios', href: '#beneficios' },
   { id: 'about', label: 'Nosotros', href: '#nosotros' },
-  { id: 'beta', label: 'Únete a la beta', href: '#beta' },
 ];
 
 export const HomeHeader = () => {
@@ -18,13 +17,11 @@ export const HomeHeader = () => {
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <header className='fixed inset-x-0 top-0 z-50 bg-white/80 backdrop-blur-md border-b border-white/40 shadow-sm'>
+    <header className='fixed inset-x-0 top-0 z-50 border-b border-white/40 bg-white/75 shadow-sm backdrop-blur-md'>
       <div className='mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8'>
         <div className='flex items-center gap-3'>
-          <Logo slogan='Tryvoo' />
-          <div className='flex flex-col leading-tight text-sm font-semibold text-[#0b1f33] uppercase tracking-wide'>
-            <span>Tryvoo</span>
-            <span className='text-[11px] text-[#0b1f33]/70'>Operaciones inteligentes</span>
+          <div className='rounded-xl bg-gradient-to-br from-primary via-[#1b6bce] to-emerald-400 p-[6px] shadow-md ring-1 ring-white/40'>
+            <Logo slogan='Tryvoo' />
           </div>
         </div>
 
@@ -43,12 +40,14 @@ export const HomeHeader = () => {
 
         <div className='hidden md:flex items-center gap-3'>
           <LanguageSwitcher borderless />
+          {/*
           <Link
             to='/demo'
             className='rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all duration-200'
           >
             Agendar demo
           </Link>
+          */}
           <a
             href='#beta'
             className='rounded-full border border-primary px-4 py-2 text-sm font-semibold text-primary hover:bg-primary hover:text-white transition-colors duration-200'
@@ -94,6 +93,7 @@ export const HomeHeader = () => {
             ))}
             <div className='flex items-center justify-between gap-3 pt-2'>
               <LanguageSwitcher />
+              {/*
               <Link
                 to='/demo'
                 className='rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-md'
@@ -101,6 +101,7 @@ export const HomeHeader = () => {
               >
                 Demo
               </Link>
+              */}
               <a
                 href='#beta'
                 onClick={closeMenu}

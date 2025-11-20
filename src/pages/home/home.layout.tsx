@@ -18,7 +18,7 @@ export const HomeLayout: FunctionComponent = () => {
   return (
     <section className='relative min-h-screen overflow-hidden bg-[#f8fbff] text-t-dark'>
       <HomeHeader />
-      <main className='pt-24 md:pt-28'>
+      <main className='pt-16 md:pt-20'>
         <HomeHero />
         <HomeCarousel />
         <HomePros />

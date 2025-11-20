@@ -1,6 +1,7 @@
 import socialIcon1 from '@/assets/image/icon1.svg';
 import socialIcon2 from '@/assets/image/icon2.svg';
 import socialIcon3 from '@/assets/image/icon3.svg';
+import HomeMainDesktopImg from '@/assets/image/home-main-desktop.png';
 import { Logo } from '@/components/common/logo/logo';
 
 const footerLinks = [
@@ -22,8 +23,8 @@ export const HomeFooter = () => {
   return (
     <footer className='bg-[#0b1f33] text-white'>
       <div className='mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8'>
-        <div className='grid grid-cols-1 gap-10 md:grid-cols-4 md:items-start'>
-          <div className='space-y-3'>
+        <div className='grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-start'>
+          <div className='space-y-3 lg:col-span-4'>
             <Logo slogan='Tryvoo' />
             <p className='text-sm text-white/80'>
               Plataforma modular de trazabilidad y control operativo para equipos en campo. Web + App con IA y capacidades offline.
@@ -38,31 +39,50 @@ export const HomeFooter = () => {
             </div>
           </div>
 
-          {footerLinks.map((section) => (
-            <div key={section.title} className='space-y-3'>
-              <h3 className='text-lg font-semibold'>{section.title}</h3>
-              <ul className='space-y-2 text-sm text-white/80'>
-                {section.items.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div className='grid grid-cols-2 gap-6 sm:grid-cols-3 lg:col-span-4 lg:grid-cols-3'>
+            {footerLinks.map((section) => (
+              <div key={section.title} className='space-y-3'>
+                <h3 className='text-lg font-semibold'>{section.title}</h3>
+                <ul className='space-y-2 text-sm text-white/80'>
+                  {section.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
 
-          <div className='space-y-4 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg backdrop-blur-lg'>
-            <p className='text-sm uppercase tracking-[0.15em] text-white/80'>Programa beta</p>
-            <p className='text-xl font-semibold'>Agendemos una demo</p>
-            <p className='text-sm text-white/80'>Descubre cómo Tryvoo reduce costos operativos en semanas, no meses.</p>
-            <a
-              href='/demo'
-              className='inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-xl'
-            >
-              Reservar espacio
-            </a>
-            <div className='flex gap-3 pt-2'>
-              <img src={socialIcon1} alt='LinkedIn' className='h-9 w-9 rounded-full bg-white/10 p-2' />
-              <img src={socialIcon2} alt='Twitter' className='h-9 w-9 rounded-full bg-white/10 p-2' />
-              <img src={socialIcon3} alt='Facebook' className='h-9 w-9 rounded-full bg-white/10 p-2' />
+          <div className='flex flex-col gap-5 lg:col-span-4'>
+            <div className='space-y-4 rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg backdrop-blur-lg'>
+              <p className='text-sm uppercase tracking-[0.15em] text-white/80'>Programa beta</p>
+              <p className='text-xl font-semibold'>Agendemos una demo</p>
+              <p className='text-sm text-white/80'>Descubre cómo Tryvoo reduce costos operativos en semanas, no meses.</p>
+              <a
+                href='/demo'
+                className='inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-xl'
+              >
+                Reservar espacio
+              </a>
+              <div className='flex gap-3 pt-2'>
+                <img src={socialIcon1} alt='LinkedIn' className='h-9 w-9 rounded-full bg-white/10 p-2' />
+                <img src={socialIcon2} alt='Twitter' className='h-9 w-9 rounded-full bg-white/10 p-2' />
+                <img src={socialIcon3} alt='Facebook' className='h-9 w-9 rounded-full bg-white/10 p-2' />
+              </div>
+            </div>
+
+            <div className='overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-primary/20 via-white/5 to-emerald-200/25 p-3 shadow-lg backdrop-blur-lg'>
+              <div className='relative aspect-video overflow-hidden rounded-xl border border-white/15 bg-black/20'>
+                <video
+                  className='absolute inset-0 h-full w-full object-cover'
+                  src='https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4'
+                  poster={HomeMainDesktopImg}
+                  controls
+                  loop
+                  muted
+                  playsInline
+                />
+              </div>
+              <p className='mt-3 text-sm text-white/80'>Explora la automatización de turnos, rondas y reportes con IA dentro de la plataforma.</p>
             </div>
           </div>
         </div>
