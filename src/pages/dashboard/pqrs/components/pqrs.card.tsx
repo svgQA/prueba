@@ -15,6 +15,7 @@ export interface IProps {
 
 export const PqrsCards = ({ pqrs, index }: IProps) => {
   const openModal = useSignal<boolean>(false);
+  const modalId = useSignal<number | undefined>();
 
   const getPriorityVariant = (type?: string | null) => {
     const variants: Record<string, string> = {
@@ -33,7 +34,10 @@ export const PqrsCards = ({ pqrs, index }: IProps) => {
         class='cursor-pointer hover:shadow-lg transition-shadow duration-200'
       >
         <Card color='mb-3 p-4 border border-gray-200 rounded-lg bg-white'>
-          <div class='space-y-3' onClick={() => (openModal.value = true)}>
+          <div class='space-y-3' onClick={() => {
+            openModal.value = true
+            modalId.value = pqrs.id
+          }}>
             <div class='flex justify-between items-start'>
               <div class='flex-1'>
                 <h4 class='font-medium text-gray-900 text-sm leading-tight'>
@@ -76,6 +80,7 @@ export const PqrsCards = ({ pqrs, index }: IProps) => {
           </div>
         </Card>
         <PqrsModal
+          id={modalId.value}
           showModal={openModal}
           closeModal={() => (openModal.value = false)}
         />

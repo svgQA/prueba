@@ -21,15 +21,19 @@ import { StageService } from '@/services/pqrs/stage';
 import { PqrsCards } from './components/pqrs.card';
 import { Badge } from '@/components/common/badge/badge';
 import { PqrsUpsert } from './components/pqrs.upsert';
+import { IOption } from '@/components/common/smart-selector/smart-select';
+import { uuid } from 'short-uuid';
+import { useTranslation } from 'react-i18next';
 
 interface ColumnConfig {
-  id: string;
   title: string;
   color: string;
   bgColor: string;
 }
 
 export const PqrsPage: FunctionComponent = () => {
+  const { t } = useTranslation();
+
   const pqrs = useSignal<ICPqrsRequest[]>([]);
   const loading = useSignal<boolean>(true);
   const groupedPqrs = useSignal<Record<string, ICPqrsRequest[]>>({});
@@ -72,18 +76,28 @@ export const PqrsPage: FunctionComponent = () => {
     loading.value = false;
   };
 
-  const getPqrsGrouped = async () => {
-    loading.value = true;
-    const responseStatus = await StageService.getStatusSimpleList();
-    if (!responseStatus.getStatus()) return;
+  const getStatus = async () => {
+    const response = await StageService.getSimpleList();
+    if (!response.getStatus()) return;
     groupedPqrs.value = {};
+    const list: IOption[] = response.getMany();
 
-    responseStatus.getMany().forEach((status) => {
-      const normalizedStatus = status.label.toLowerCase();
+    const createdStatus = list.find((item) => item.label === 'created') || { value: uuid(), label: 'created' };
+    const finishedStatus = list.find((item) => item.label === 'finished') || { value: uuid(), label: 'finished' };
+    const middleStatuses = list.filter((item) => item.label !== 'created' && item.label !== 'finished');
+    const orderedList = [createdStatus, ...middleStatuses, finishedStatus];
+
+    orderedList.forEach((statusItem) => {
+      const normalizedStatus = statusItem.label.toLowerCase();
       if (!groupedPqrs.value[normalizedStatus]) {
         groupedPqrs.value[normalizedStatus] = [];
       }
     });
+  }
+
+  const getPqrsGrouped = async () => {
+    loading.value = true;
+    await getStatus();
 
     pqrs.value.forEach((item: ICPqrsRequest) => {
       const normalizedStatus = item.status.toLowerCase();
@@ -100,7 +114,6 @@ export const PqrsPage: FunctionComponent = () => {
   const getColumns = (
     grouped: Record<string, ICPqrsRequest[]>
   ): ColumnConfig[] => {
-    const statusKeys = Object.keys(grouped);
     const colors = [
       { color: 'text-yellow-700', bgColor: 'bg-yellow-50' },
       { color: 'text-blue-700', bgColor: 'bg-blue-50' },
@@ -112,12 +125,13 @@ export const PqrsPage: FunctionComponent = () => {
       { color: 'text-pink-700', bgColor: 'bg-pink-50' },
     ];
 
-    return statusKeys.map((status, index) => ({
-      id: index.toString(),
-      title: status,
-      color: colors[index % colors.length].color,
-      bgColor: colors[index % colors.length].bgColor,
-    }));
+    return Object.entries(grouped).map(([status], index) => {
+      return {
+        title: status,
+        color: colors[index % colors.length].color,
+        bgColor: colors[index % colors.length].bgColor,
+      };
+    });
   };
 
   const closeModalUpsert = async () => {
@@ -150,11 +164,11 @@ export const PqrsPage: FunctionComponent = () => {
       </div>
 
       <div class='flex gap-6 overflow-x-auto vox-scroll-design pb-6'>
-        {columns.value.map((column) => {
+        {columns.value.map((column, index) => {
           const items = groupedPqrs.value[column.title] ?? [];
           return (
             <div
-              key={column.id}
+              key={index}
               class={`${column.bgColor} rounded-lg p-4 min-h-96 w-80 flex-shrink-0`}
             >
               <div class='flex items-center justify-between mb-4'>
@@ -164,14 +178,20 @@ export const PqrsPage: FunctionComponent = () => {
                   <div
                     class={`w-3 h-3 rounded-full ${column.color.replace('text-', 'bg-').replace('-700', '-500')}`}
                   />
-                  {column.title}
+                  {t(column.title)}
                 </h3>
                 <Badge label={`${items.length}`} />
               </div>
 
               <div class='space-y-2 max-h-96 overflow-y-auto vox-scroll-design'>
                 {items.map((item: ICPqrsRequest, index) => {
-                  return <PqrsCards key={item.id} pqrs={item} index={index} />;
+                  return (
+                    <PqrsCards
+                      key={item.id}
+                      pqrs={item}
+                      index={index}
+                    />
+                  );
                 })}
                 {items.length === 0 && (
                   <div class='text-center py-8 text-gray-400'>
