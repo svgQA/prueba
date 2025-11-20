@@ -52,28 +52,32 @@ export const HomeBetaForm = () => {
           <h2 className='text-3xl font-bold leading-tight md:text-4xl'>
             {t('h_beta_title')}
           </h2>
-          <p className='text-lg text-white/90'>
-            {t('h_beta_description')}
-          </p>
+          <p className='text-lg text-white/90'>{t('h_beta_description')}</p>
           <ul className='grid grid-cols-1 gap-3 text-sm text-white/90 sm:grid-cols-2'>
             <li className='flex items-start gap-3 rounded-xl bg-white/10 p-3'>
               <span className='vx-icon vx-icon-013 size-sm text-white' />
               <div>
-                <p className='font-semibold text-white'>{t('h_beta_item_onboarding_title')}</p>
+                <p className='font-semibold text-white'>
+                  {t('h_beta_item_onboarding_title')}
+                </p>
                 <p>{t('h_beta_item_onboarding_desc')}</p>
               </div>
             </li>
             <li className='flex items-start gap-3 rounded-xl bg-white/10 p-3'>
               <span className='vx-icon vx-icon-041 size-sm text-white' />
               <div>
-                <p className='font-semibold text-white'>{t('h_beta_item_feedback_title')}</p>
+                <p className='font-semibold text-white'>
+                  {t('h_beta_item_feedback_title')}
+                </p>
                 <p>{t('h_beta_item_feedback_desc')}</p>
               </div>
             </li>
             <li className='flex items-start gap-3 rounded-xl bg-white/10 p-3'>
               <span className='vx-icon vx-icon-007 size-sm text-white' />
               <div>
-                <p className='font-semibold text-white'>{t('h_beta_item_ai_title')}</p>
+                <p className='font-semibold text-white'>
+                  {t('h_beta_item_ai_title')}
+                </p>
                 <p>{t('h_beta_item_ai_desc')}</p>
               </div>
             </li>

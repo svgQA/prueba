@@ -35,9 +35,7 @@ export const HomeAbout = () => {
           <h2 className='text-3xl font-bold leading-tight sm:text-4xl'>
             {t('h_about_title')}
           </h2>
-          <p className='text-lg text-white/85'>
-            {t('h_about_description')}
-          </p>
+          <p className='text-lg text-white/85'>{t('h_about_description')}</p>
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
             <div className='rounded-2xl border border-white/15 bg-white/5 p-4 shadow-lg backdrop-blur-lg'>
               <p className='text-sm font-semibold text-emerald-200'>

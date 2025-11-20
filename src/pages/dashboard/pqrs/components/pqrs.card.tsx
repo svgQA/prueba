@@ -14,26 +14,40 @@ export interface IProps {
   columnColorClass?: string;
 }
 
-export const PqrsCards = ({ pqrs, index, columnColorClass = 'text-primary' }: IProps) => {
+export const PqrsCards = ({
+  pqrs,
+  index,
+  columnColorClass = 'text-primary',
+}: IProps) => {
   const openModal = useSignal<boolean>(false);
   const modalId = useSignal<number | undefined>();
   const borderColorClass = columnColorClass.replace('text-', 'border-');
 
-  const getBadgeStatus = (): 'error' | 'success' | 'warning' | 'info' | 'ternary' => {
+  const getBadgeStatus = ():
+    | 'error'
+    | 'success'
+    | 'warning'
+    | 'info'
+    | 'ternary' => {
     if (columnColorClass.includes('error')) return 'error';
-    if (columnColorClass.includes('secondary') || columnColorClass.includes('m6')) return 'success';
+    if (
+      columnColorClass.includes('secondary') ||
+      columnColorClass.includes('m6')
+    )
+      return 'success';
     if (columnColorClass.includes('caution')) return 'warning';
     if (columnColorClass.includes('ternary')) return 'ternary';
     return 'info';
   };
 
   const getTags = () => {
-    const allTags = (pqrs as any)?.inferences?.reduce((acc: string[], inf: any) => {
-      if (inf.inference?.etiquetas) {
-        return [...acc, ...inf.inference.etiquetas];
-      }
-      return acc;
-    }, []) || [];
+    const allTags =
+      (pqrs as any)?.inferences?.reduce((acc: string[], inf: any) => {
+        if (inf.inference?.etiquetas) {
+          return [...acc, ...inf.inference.etiquetas];
+        }
+        return acc;
+      }, []) || [];
 
     return [...new Set(allTags)].slice(0, 3);
   };
@@ -50,11 +64,7 @@ export const PqrsCards = ({ pqrs, index, columnColorClass = 'text-primary' }: IP
 
   return (
     <>
-      <Card
-        key={`pqrs-card-${index}`}
-        borderless={false}
-        shadow={true}
-      >
+      <Card key={`pqrs-card-${index}`} borderless={false} shadow={true}>
         <div
           class={`p-4 space-y-3 cursor-pointer hover:bg-gray-50 transition-colors border-l-4 ${borderColorClass}`}
           onClick={() => {
@@ -123,12 +133,16 @@ export const PqrsCards = ({ pqrs, index, columnColorClass = 'text-primary' }: IP
             {area && (
               <div class='flex items-center gap-1.5 text-gray-text-light'>
                 <span>🏢</span>
-                <span class='truncate capitalize'>{area.replace(/_/g, ' ')}</span>
+                <span class='truncate capitalize'>
+                  {area.replace(/_/g, ' ')}
+                </span>
               </div>
             )}
           </div>
 
-          {(tags.length > 0 || pqrs.extraData.hasFiles || typeof pqrs.extraData.daysToExpire === 'number') && (
+          {(tags.length > 0 ||
+            pqrs.extraData.hasFiles ||
+            typeof pqrs.extraData.daysToExpire === 'number') && (
             <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border'>
               {tags.map((tag, idx) => (
                 <span
@@ -145,15 +159,18 @@ export const PqrsCards = ({ pqrs, index, columnColorClass = 'text-primary' }: IP
                 </span>
               )}
 
-              {typeof pqrs.extraData.daysToExpire === 'number' && pqrs.extraData.daysToExpire <= 3 && (
-                <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium'>
-                  ⏰ {pqrs.extraData.daysToExpire}d
-                </span>
-              )}
+              {typeof pqrs.extraData.daysToExpire === 'number' &&
+                pqrs.extraData.daysToExpire <= 3 && (
+                  <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium'>
+                    ⏰ {pqrs.extraData.daysToExpire}d
+                  </span>
+                )}
             </div>
           )}
 
-          <div class={`h-1.5 -mx-0.5 -mb-0.5 mt-0 opacity-30 ${columnColorClass.replace('text-', 'bg-')}`} />
+          <div
+            class={`h-1.5 -mx-0.5 -mb-0.5 mt-0 opacity-30 ${columnColorClass.replace('text-', 'bg-')}`}
+          />
         </div>
 
         <PqrsModal

@@ -109,19 +109,27 @@ export const HomeHero = () => {
             </div>
             <div className='mt-4 grid grid-cols-2 gap-3 rounded-2xl bg-white/10 p-4 text-white shadow-inner'>
               <div>
-                <p className='text-sm font-semibold'>{t('h_hero_stat_coverage')}</p>
+                <p className='text-sm font-semibold'>
+                  {t('h_hero_stat_coverage')}
+                </p>
                 <p className='text-2xl font-bold'>24/7</p>
               </div>
               <div>
-                <p className='text-sm font-semibold'>{t('h_hero_stat_teams')}</p>
+                <p className='text-sm font-semibold'>
+                  {t('h_hero_stat_teams')}
+                </p>
                 <p className='text-2xl font-bold'>+300</p>
               </div>
               <div>
-                <p className='text-sm font-semibold'>{t('h_hero_stat_interventions')}</p>
+                <p className='text-sm font-semibold'>
+                  {t('h_hero_stat_interventions')}
+                </p>
                 <p className='text-2xl font-bold'>45%</p>
               </div>
               <div>
-                <p className='text-sm font-semibold'>{t('h_hero_stat_errors')}</p>
+                <p className='text-sm font-semibold'>
+                  {t('h_hero_stat_errors')}
+                </p>
                 <p className='text-2xl font-bold'>-30%</p>
               </div>
             </div>

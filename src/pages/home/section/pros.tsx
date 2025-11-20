@@ -18,9 +18,7 @@ export const HomePros = () => {
           <h2 className='text-3xl font-bold leading-tight sm:text-4xl'>
             {t('h_pros_title')}
           </h2>
-          <p className='text-lg text-gray-600'>
-            {t('h_pros_description')}
-          </p>
+          <p className='text-lg text-gray-600'>{t('h_pros_description')}</p>
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
             {tryvoo_pros.slice(0, 4).map((item, index) => (
               <div
@@ -38,11 +36,13 @@ export const HomePros = () => {
                       {t('h_pros_kpi', { number: index + 1 })}
                     </p>
                     <p className='text-base font-bold text-[#0b1f33]'>
-                      {t(item.titleKey)}
+                      {t(item.titleKey ?? '')}
                     </p>
                   </div>
                 </div>
-                <p className='mt-3 text-sm text-gray-600'>{t(item.subtitleKey)}</p>
+                <p className='mt-3 text-sm text-gray-600'>
+                  {t(item.subtitleKey ?? '')}
+                </p>
               </div>
             ))}
           </div>
@@ -59,19 +59,27 @@ export const HomePros = () => {
             />
             <div className='grid grid-cols-2 gap-4 border-t border-[#d7e3f2] bg-[#f7fbff] p-5 text-left'>
               <div>
-                <p className='text-sm text-gray-500'>{t('h_pros_stat_overtime')}</p>
+                <p className='text-sm text-gray-500'>
+                  {t('h_pros_stat_overtime')}
+                </p>
                 <p className='text-2xl font-bold text-primary'>-25%</p>
               </div>
               <div>
-                <p className='text-sm text-gray-500'>{t('h_pros_stat_scheduling')}</p>
+                <p className='text-sm text-gray-500'>
+                  {t('h_pros_stat_scheduling')}
+                </p>
                 <p className='text-2xl font-bold text-primary'>-30%</p>
               </div>
               <div>
-                <p className='text-sm text-gray-500'>{t('h_pros_stat_rounds')}</p>
+                <p className='text-sm text-gray-500'>
+                  {t('h_pros_stat_rounds')}
+                </p>
                 <p className='text-2xl font-bold text-primary'>+40%</p>
               </div>
               <div>
-                <p className='text-sm text-gray-500'>{t('h_pros_stat_reports')}</p>
+                <p className='text-sm text-gray-500'>
+                  {t('h_pros_stat_reports')}
+                </p>
                 <p className='text-2xl font-bold text-primary'>100%</p>
               </div>
             </div>

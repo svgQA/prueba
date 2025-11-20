@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Logo } from '@/components/common/logo/logo';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { app_environment } from '@/env.config';
+import { Link } from 'wouter';
 
 const navItems = [
   { id: 'hero', labelKey: 'h_nav_home', href: '#inicio' },
@@ -48,6 +49,14 @@ export const HomeHeader = () => {
             Agendar demo
           </Link>
           */}
+          {app_environment === 'dev' && (
+            <Link
+              to='/signin'
+              className='rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all duration-200'
+            >
+              Signin
+            </Link>
+          )}
           <a
             href='#beta'
             className='rounded-full border border-primary px-4 py-2 text-sm font-semibold text-primary hover:bg-primary hover:text-white transition-colors duration-200'

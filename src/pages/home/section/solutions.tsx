@@ -34,21 +34,21 @@ export const HomeSolutions = () => {
                 className='h-28 w-auto object-contain'
               />
             </div>
-              <div className='flex flex-1 flex-col justify-between space-y-3 p-6'>
-                <div>
-                  <h3 className='text-xl font-bold text-[#0b1f33]'>
+            <div className='flex flex-1 flex-col justify-between space-y-3 p-6'>
+              <div>
+                <h3 className='text-xl font-bold text-[#0b1f33]'>
                   {item.titleKey ? t(item.titleKey) : ''}
-                  </h3>
-                  <p className='mt-2 text-base text-gray-600'>
+                </h3>
+                <p className='mt-2 text-base text-gray-600'>
                   {item.subtitleKey ? t(item.subtitleKey) : ''}
-                  </p>
-                </div>
-                <div className='flex items-center gap-3 text-sm font-semibold text-primary'>
-                  <span className='vox-icon vx-icon-008 size-sm text-primary' />
+                </p>
+              </div>
+              <div className='flex items-center gap-3 text-sm font-semibold text-primary'>
+                <span className='vox-icon vx-icon-008 size-sm text-primary' />
                 {t('h_solutions_ready')}
-                </div>
               </div>
             </div>
+          </div>
         ))}
       </div>
     </div>
