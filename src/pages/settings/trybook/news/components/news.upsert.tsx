@@ -120,7 +120,10 @@ export const NewsForm: FunctionComponent = () => {
   };
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
+    <Section
+      className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
+      loading={loading.value}
+    >
       <Form
         onSubmit={handleSubmit}
         initialValues={initialValues}

@@ -618,67 +618,71 @@ const GanttComponent: ComponentType<GanttProps> = ({
     let filteredUsers =
       userLevelFilters.length > 0
         ? initialTasks.users.filter((user) => {
-          return userLevelFilters.every((filter) => {
-            const filterValue = filter.value as string[];
-            const userValue = filter.id === 'name' ? user.name : user.cardId;
+            return userLevelFilters.every((filter) => {
+              const filterValue = filter.value as string[];
+              const userValue = filter.id === 'name' ? user.name : user.cardId;
 
-            if (Array.isArray(filterValue)) {
-              return filterValue.some((val) =>
-                String(userValue)
-                  .toLowerCase()
-                  .includes(String(val).toLowerCase())
-              );
-            }
-            return String(userValue)
-              .toLowerCase()
-              .includes(String(filterValue).toLowerCase());
-          });
-        })
+              if (Array.isArray(filterValue)) {
+                return filterValue.some((val) =>
+                  String(userValue)
+                    .toLowerCase()
+                    .includes(String(val).toLowerCase())
+                );
+              }
+              return String(userValue)
+                .toLowerCase()
+                .includes(String(filterValue).toLowerCase());
+            });
+          })
         : initialTasks.users;
 
     filteredUsers =
       taskLevelFilters.length > 0
         ? filteredUsers.map((user) => {
-          const filteredTasks = user.tasks.filter((task) => {
-            return taskLevelFilters.every((filter) => {
-              const filterValue = filter.value as string[];
-              let taskValue = '';
+            const filteredTasks = user.tasks.filter((task) => {
+              return taskLevelFilters.every((filter) => {
+                const filterValue = filter.value as string[];
+                let taskValue = '';
 
-              switch (filter.id) {
-                case 'task.service':
-                  taskValue = task.name;
-                  break;
-                case 'task.contract':
-                  taskValue = task.contract;
-                  break;
-                case 'task.client':
-                  taskValue = task.client;
-                  break;
-                case 'task.status':
-                  taskValue = task.status;
-                  break;
-                default:
-                  return true;
-              }
+                switch (filter.id) {
+                  case 'task.service':
+                    taskValue = task.name;
+                    break;
+                  case 'task.contract':
+                    taskValue = task.contract;
+                    break;
+                  // case 'task.client':
+                  //   taskValue = task.client;
+                  //   break;
+                  case 'task.client_name':
+                    console.log('task.client_name', task.client_name);
+                    taskValue = task.client_name;
+                    break;
+                  case 'task.status':
+                    taskValue = task.status;
+                    break;
+                  default:
+                    return true;
+                }
 
-              if (Array.isArray(filterValue)) {
-                return filterValue.some((val) =>
-                  String(taskValue)
-                    .toLowerCase()
-                    .includes(String(val).toLowerCase())
-                );
-              }
-              return String(taskValue)
-                .toLowerCase()
-                .includes(String(filterValue).toLowerCase());
+                if (Array.isArray(filterValue)) {
+                  return filterValue.some((val) =>
+                    String(taskValue)
+                      .toLowerCase()
+                      .includes(String(val).toLowerCase())
+                  );
+                }
+                return String(taskValue)
+                  .toLowerCase()
+                  .includes(String(filterValue).toLowerCase());
+              });
             });
-          });
 
-          return {
-            ...user,
-            tasks: filteredTasks,
-          };
-        })
+            return {
+              ...user,
+              tasks: filteredTasks,
+            };
+          })
         : filteredUsers;
 
     filteredUsers = filteredUsers.filter((user) => user.tasks.length);
@@ -776,7 +780,7 @@ const GanttComponent: ComponentType<GanttProps> = ({
               { label: t('identifier'), id: 'cardId', type: 'text' },
               { label: t('service'), id: 'task.service', type: 'text' },
               { label: t('contract'), id: 'task.contract', type: 'text' },
-              { label: t('client'), id: 'task.client', type: 'text' },
+              { label: t('client'), id: 'task.client_name', type: 'text' },
             ]}
             onChange={setColumnFilters}
             group={group}

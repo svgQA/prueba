@@ -91,18 +91,18 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       model.points = points.value.map((point: XPoint) => {
         const model = point.tasks
           ? {
-            id: point.id,
-            latitude: point.position.lat,
-            longitude: point.position.lng,
-            task: point.tasks,
-            name: point.name || `Point ${point.id}`,
-          }
+              id: point.id,
+              latitude: point.position.lat,
+              longitude: point.position.lng,
+              task: point.tasks,
+              name: point.name || `Point ${point.id}`,
+            }
           : {
-            id: point.id,
-            latitude: point.position.lat,
-            longitude: point.position.lng,
-            name: point.name || `Point ${point.id}`,
-          };
+              id: point.id,
+              latitude: point.position.lat,
+              longitude: point.position.lng,
+              name: point.name || `Point ${point.id}`,
+            };
         return model;
       });
     }
@@ -203,7 +203,10 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   }, [selectedCompany, location]);
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
+    <Section
+      className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
+      loading={loading.value}
+    >
       <Form
         onSubmit={onSubmit}
         mutators={{
@@ -580,7 +583,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   draggable={true}
                   width='100%'
                   height='500px'
-                  clickPoint={() => { }}
+                  clickPoint={() => {}}
                   setName={true}
                 />
               </div>

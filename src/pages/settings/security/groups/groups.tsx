@@ -56,7 +56,7 @@ export const GroupSettingPage: FunctionComponent = () => {
   const deleteGroup = async (id: string) => {
     const response = await GeneralService.deleteGroup(id);
     if (!response.getStatus()) return;
-    ToastManager.success(t('smartGroup.deleted'));
+    ToastManager.success('s_deleted_success');
     getGroups();
   };
 

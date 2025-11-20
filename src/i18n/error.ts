@@ -134,7 +134,7 @@ export const error_es = {
     unknown_error: 'Error desconocido',
     typia_error: 'Parámetros de solicitud inválidos',
     unauthorized: 'No autorizado',
-    not_found_tenant:  'Tenant no encontrado',
+    not_found_tenant: 'Tenant no encontrado',
     not_found_company: 'Empresa no encontrada',
     invalid_tenant: 'ID de tenant inválido',
     invalid_company: 'ID de empresa inválido',
@@ -176,8 +176,7 @@ export const error_es = {
     user_creation_success: 'Usuario creado exitosamente',
     passwords_not_match: 'Las contraseñas no coinciden',
     email_phone_required: 'Se requiere correo electrónico o número de teléfono',
-    unknown_username:
-      'Nombre de usuario desconocido para este usuario',
+    unknown_username: 'Nombre de usuario desconocido para este usuario',
     signup_error: 'Error al registrar el usuario',
     unknown_signup_error: 'Error desconocido durante el registro',
     authentication_failed: 'Autenticación fallida',

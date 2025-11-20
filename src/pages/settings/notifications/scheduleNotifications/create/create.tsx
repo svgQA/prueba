@@ -29,7 +29,7 @@ export const ScheduledNotificationForm = () => {
   const fetchTemplates = async () => {
     loading.value = true;
     const response = await TemplateService.getTemplates();
-    if (!response.getStatus()) return loading.value = false;
+    if (!response.getStatus()) return (loading.value = false);
     const formatted = response.getMany().map((tpl: any) => ({
       label: tpl.title,
       value: tpl.id,

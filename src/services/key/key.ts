@@ -19,6 +19,14 @@ export class KeyService extends BaseService {
     return await super.make_request<IKeyResponse>(this.name, model);
   }
 
+  static async delete(id: number) {
+    const model: IMakeRequest = {
+      url: ['key', String(id)],
+      method: REQUEST_METHODS.DELETE,
+    };
+    return await super.make_request<IKeyResponse>(this.name, model);
+  }
+
   static async listAll() {
     const model: IMakeRequest = {
       url: ['key'],

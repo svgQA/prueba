@@ -62,12 +62,10 @@ export const getColumns = (
             : 'text-blue-600 bg-blue-100 border border-blue-200';
         const label = type === 'BAN' ? 'Ban' : 'Especial';
         return (
-          <span
-            className={`px-2 py-1 rounded-md text-sm font-medium ${color}`}
-          >
+          <span className={`px-2 py-1 rounded-md text-sm font-medium ${color}`}>
             {label}
           </span>
-        ); 
+        );
       },
     },
 

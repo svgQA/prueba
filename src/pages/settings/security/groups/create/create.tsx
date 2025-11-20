@@ -68,9 +68,9 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
 
   const getSmartGroupById = async () => {
     loading.value = true;
-    if (!id) return loading.value = false;
+    if (!id) return (loading.value = false);
     const response = await GeneralService.getSmartGroupById(id);
-    if (!response.getStatus()) return loading.value = false;
+    if (!response.getStatus()) return (loading.value = false);
 
     const smartGroup = response.getOne();
     name.value = smartGroup.name;
@@ -112,7 +112,7 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
           <GroupBuilder
             group={rootGroup}
             onChange={setRootGroup}
-            onRemove={() => { }}
+            onRemove={() => {}}
           />
         </div>
       </div>

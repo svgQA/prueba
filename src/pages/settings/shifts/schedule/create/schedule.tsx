@@ -73,10 +73,10 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
 
   const setInitialValues = async () => {
     loading.value = true;
-    if (!id) return   loading.value = false;
+    if (!id) return (loading.value = false);
 
     const request = await ScheduleService.getScheduleById(id);
-    if (!request.getStatus()) return loading.value = false;
+    if (!request.getStatus()) return (loading.value = false);
     const model = request.getOne();
 
     initialValues.value = {
@@ -103,7 +103,10 @@ export const ScheduleCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
+    <Section
+      className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
+      loading={loading.value}
+    >
       <Form<ICScheduleRequest>
         onSubmit={onSubmit}
         initialValues={initialValues.value}

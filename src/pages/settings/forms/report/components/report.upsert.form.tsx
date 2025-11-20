@@ -63,9 +63,9 @@ export const ReportUpsertForm = () => {
 
   const fetchInitialValues = async () => {
     loading.value = true;
-    if (!id) return loading.value = false;
+    if (!id) return (loading.value = false);
     const response = await ReportService.get_report_by_id(Number(id));
-    if (!response.getStatus()) return loading.value = false;
+    if (!response.getStatus()) return (loading.value = false);
     const initialData = response.getOne();
 
     setInitialValues({
@@ -136,7 +136,7 @@ export const ReportUpsertForm = () => {
     let response = id
       ? await ReportService.update_report(report, Number(id))
       : await ReportService.create_report(report);
-    if (!response.getStatus()) return loading.value = false;
+    if (!response.getStatus()) return (loading.value = false);
     ToastManager.success(id ? 's_updated_success' : 's_created_success');
     navigateUpsert('/forms/report');
     loading.value = false;
@@ -163,7 +163,10 @@ export const ReportUpsertForm = () => {
   }, []);
 
   return (
-    <Section className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
+    <Section
+      className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'
+      loading={loading.value}
+    >
       <Form
         onSubmit={handleSubmit}
         initialValues={initialValues}

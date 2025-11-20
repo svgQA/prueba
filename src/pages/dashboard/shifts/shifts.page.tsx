@@ -540,6 +540,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           name: shiftUpdate?.service?.name || '',
           progress: 0,
           service: shiftUpdate?.service?.name || '',
+          client_name: String(shiftUpdate?.service?.contract.client.id || ''),
         });
 
         setKeywordsSelected(shiftUpdate?.keywords || []);

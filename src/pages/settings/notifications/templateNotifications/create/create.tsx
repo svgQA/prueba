@@ -97,7 +97,7 @@ export const TemplateCreateForm = () => {
   };
 
   return (
-    <Section  loading={loading.value}>
+    <Section loading={loading.value}>
       <Form
         onSubmit={handleSubmit}
         render={({ handleSubmit }) => (

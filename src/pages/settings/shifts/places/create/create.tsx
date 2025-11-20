@@ -114,7 +114,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
       request = await PlaceService.updatePlace(data, id);
       message = 's_updated_success';
     }
-    if (!request.getStatus()) return loading.value = false;
+    if (!request.getStatus()) return (loading.value = false);
 
     ToastManager.success(message);
     go({
@@ -153,7 +153,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
 
   const setInitialValues = async () => {
     loading.value = true;
-    if (!id) return loading.value = false;
+    if (!id) return (loading.value = false);
 
     const request = await PlaceService.getPlaceById(id);
     let municipalityId = {
@@ -229,7 +229,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   }, [selectedCompany, location]);
 
   return (
-    <Section  loading={loading.value}>
+    <Section loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
