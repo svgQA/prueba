@@ -31,8 +31,8 @@ import { Signature } from '@/components/common/signature/signature';
 import { QrCode } from '@/components/common/qr/qrCode';
 import { Barcode } from '@/components/common/barcode/barcode';
 import { jsonToGzipBase64 } from '@/utils/utilities/blob';
-import { ReportService } from '@/services/form/reports';
-import { fileManager } from '@/utils/network/file/file';
+//import { ReportService } from '@/services/form/reports';
+//import { fileManager } from '@/utils/network/file/file';
 import { useUserStore } from '@/store/slices';
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
@@ -44,7 +44,7 @@ export const FormResponseSettingPage: FunctionComponent<
 > = ({ posFinishAction, type }: IFormResponseSettingPageProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const { getTenant, getCompanyId } = useUserStore();
+  const { getTenant } = useUserStore();
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev: any) =>
@@ -488,7 +488,7 @@ export const FormResponseSettingPage: FunctionComponent<
     posFinishAction();
   };
 
-  const handleGenerateReport = async () => {
+  /* const handleGenerateReport = async () => {
     const id = getResponseMode.value?.id;
     const reportResponse = await ReportService.generate_report_automatic_form(
       String(id)
@@ -503,7 +503,7 @@ export const FormResponseSettingPage: FunctionComponent<
       ),
     });
   };
-
+*/
   const handleShareReport = async () => {
     const id = getResponseMode.value?.id;
     const tenant = getTenant();

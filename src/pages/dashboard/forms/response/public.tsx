@@ -32,11 +32,9 @@ import { Signature } from '@/components/common/signature/signature';
 import { QrCode } from '@/components/common/qr/qrCode';
 import { Barcode } from '@/components/common/barcode/barcode';
 import { jsonToGzipBase64 } from '@/utils/utilities/blob';
-import { ReportService } from '@/services/form/reports';
-import { fileManager } from '@/utils/network/file/file';
+//import { ReportService } from '@/services/form/reports';
+//import { fileManager } from '@/utils/network/file/file';
 import { useUserStore } from '@/store/slices';
-import { jsPDF } from 'jspdf';
-import { toPng } from 'html-to-image';
 interface IResponseUser {
   name?: string;
   surname?: string;
@@ -57,12 +55,16 @@ interface IFormResponseSettingPageProps {
 
 export const FormResponsePublicPage: FunctionComponent<
   IFormResponseSettingPageProps
-> = ({ posFinishAction, type, user, company }: IFormResponseSettingPageProps) => {
+> = ({
+  posFinishAction,
+  type,
+  user,
+  company,
+}: IFormResponseSettingPageProps) => {
   const pageRef = useRef<HTMLDivElement | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [isExporting, setIsExporting] = useState(false);
-  const { getTenant, getCompanyId } = useUserStore();
+  const { getTenant } = useUserStore();
 
   const totalPages = getResponse.value?.pages.length ?? 0;
   const currentPageData = getResponse.value?.pages[currentPage];
@@ -141,9 +143,13 @@ export const FormResponsePublicPage: FunctionComponent<
       case ELEMENT_TYPE.TITLE:
         return (
           <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
-            <h2 class='text-xl font-bold text-slate-900 dark:text-white'>{element.label}</h2>
+            <h2 class='text-xl font-bold text-slate-900 dark:text-white'>
+              {element.label}
+            </h2>
             {element.description && (
-              <p class='mt-1 text-sm text-slate-600 dark:text-white/70'>{element.description}</p>
+              <p class='mt-1 text-sm text-slate-600 dark:text-white/70'>
+                {element.description}
+              </p>
             )}
           </div>
         );
@@ -526,22 +532,6 @@ export const FormResponsePublicPage: FunctionComponent<
     posFinishAction();
   };
 
-  const handleGenerateReport = async () => {
-    const id = getResponseMode.value?.id;
-    const reportResponse = await ReportService.generate_report_automatic_form(
-      String(id)
-    );
-    if (!reportResponse.getStatus())
-      return ToastManager.error('s_download_file_error');
-    await fileManager.downloadFile({
-      url: fileManager.getUrl(
-        getTenant(),
-        getCompanyId(),
-        reportResponse.getOne()
-      ),
-    });
-  };
-
   const handleShareReport = async () => {
     const id = getResponseMode.value?.id;
     const tenant = getTenant();
@@ -554,79 +544,15 @@ export const FormResponsePublicPage: FunctionComponent<
     //window.open(url, '_blank');
   };
 
-  const handleDownloadPdf = async () => {
-    if (!pageRef.current) return ToastManager.error('s_download_file_error');
-
-    setIsExporting(true);
-    let downloadSucceeded = false;
-
-    try {
-      await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
-
-      const dataUrl = await toPng(pageRef.current, {
-        quality: 1,
-        pixelRatio: 2,
-        cacheBust: true,
-        backgroundColor: '#f8fafc',
-        useCORS: true,
-        filter: (node) => {
-          // Evita imágenes con rutas locales u otros nodos que puedan romper el canvas
-          if (node instanceof HTMLImageElement && node.src.startsWith('file:')) {
-            return false;
-          }
-          return true;
-        },
-      });
-
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgProps = pdf.getImageProperties(dataUrl);
-      const pdfWidth = pageWidth;
-      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-      let heightLeft = pdfHeight;
-      let position = 0;
-
-      pdf.addImage(dataUrl, 'PNG', 0, position, pdfWidth, pdfHeight, undefined, 'FAST');
-      heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position = heightLeft - pdfHeight;
-        pdf.addPage();
-        pdf.addImage(dataUrl, 'PNG', 0, position, pdfWidth, pdfHeight, undefined, 'FAST');
-        heightLeft -= pageHeight;
-      }
-
-      pdf.save(`${getResponse.value?.label || 'respuesta'}-publica.pdf`);
-      downloadSucceeded = true;
-    } catch (error) {
-      console.error(error);
-      ToastManager.error('s_download_file_error');
-    } finally {
-      setIsExporting(false);
-      if (downloadSucceeded) {
-        ToastManager.success('s_download_file_success');
-      }
-    }
-  };
-
   return (
     <section className='relative min-h-screen overflow-hidden bg-gradient-to-br from-[#0b1f33] via-[#0f2747] to-[#0b1f33]'>
       <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.18),transparent_30%),radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.18),transparent_25%)]' />
       {getResponse.value && (
         <div
           ref={pageRef}
-          className={`relative mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-10 ${
-            isExporting ? 'max-w-5xl bg-white' : ''
-          }`}
-          style={{ backgroundColor: isExporting ? '#f8fafc' : undefined }}
+          className={`relative mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-10`}
         >
-          <div
-            className={`grid gap-6 ${
-              isExporting ? 'grid-cols-1' : 'lg:grid-cols-[1.25fr,0.9fr]'
-            }`}
-          >
+          <div className={`grid gap-6 lg:grid-cols-[1.25fr,0.9fr]`}>
             <div className='rounded-3xl border border-white/10 bg-white/5 p-6 text-white shadow-2xl backdrop-blur-md sm:p-8'>
               <div className='inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/80 ring-1 ring-white/15'>
                 {company?.name || 'Formulario público'}
@@ -642,17 +568,23 @@ export const FormResponsePublicPage: FunctionComponent<
 
               <div className='mt-8 grid grid-cols-2 gap-3 text-sm text-white/80 sm:grid-cols-3'>
                 <div className='rounded-2xl bg-white/5 p-4 ring-1 ring-white/10'>
-                  <p className='text-xs uppercase tracking-wide text-white/60'>Páginas</p>
+                  <p className='text-xs uppercase tracking-wide text-white/60'>
+                    Páginas
+                  </p>
                   <p className='text-2xl font-bold text-white'>{totalPages}</p>
                 </div>
                 <div className='rounded-2xl bg-white/5 p-4 ring-1 ring-white/10'>
-                  <p className='text-xs uppercase tracking-wide text-white/60'>En progreso</p>
+                  <p className='text-xs uppercase tracking-wide text-white/60'>
+                    En progreso
+                  </p>
                   <p className='text-2xl font-bold text-white'>
                     {currentPage + 1} / {totalPages || 1}
                   </p>
                 </div>
                 <div className='rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 sm:block hidden'>
-                  <p className='text-xs uppercase tracking-wide text-white/60'>Estado</p>
+                  <p className='text-xs uppercase tracking-wide text-white/60'>
+                    Estado
+                  </p>
                   <p className='text-2xl font-bold text-white'>
                     {getResponseMode.value?.hold ? 'Borrador' : 'Abierto'}
                   </p>
@@ -664,16 +596,24 @@ export const FormResponsePublicPage: FunctionComponent<
               <div className='flex items-center gap-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/10'>
                 <div className='flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-white/20 ring-2 ring-white/40'>
                   {avatar ? (
-                    <img src={avatar} alt={fullName} className='h-full w-full object-cover' />
+                    <img
+                      src={avatar}
+                      alt={fullName}
+                      className='h-full w-full object-cover'
+                    />
                   ) : (
-                    <span className='text-lg font-semibold'>{initials || 'UX'}</span>
+                    <span className='text-lg font-semibold'>
+                      {initials || 'UX'}
+                    </span>
                   )}
                 </div>
                 <div className='space-y-1'>
                   <p className='text-sm font-semibold text-white'>
                     {fullName || 'Usuario invitado'}
                   </p>
-                  <p className='text-xs text-white/80'>{user?.email || 'Correo no disponible'}</p>
+                  <p className='text-xs text-white/80'>
+                    {user?.email || 'Correo no disponible'}
+                  </p>
                 </div>
               </div>
 
@@ -689,9 +629,7 @@ export const FormResponsePublicPage: FunctionComponent<
               <div className='rounded-2xl bg-white/10 p-4 ring-1 ring-white/10'>
                 <div className='flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-white/70'>
                   <span>Progreso</span>
-                  <span className='text-white'>
-                    {progress}%
-                  </span>
+                  <span className='text-white'>{progress}%</span>
                 </div>
                 <div className='mt-3 h-2 w-full overflow-hidden rounded-full bg-white/20'>
                   <div
@@ -703,9 +641,9 @@ export const FormResponsePublicPage: FunctionComponent<
             </div>
           </div>
 
-            <div className='mt-10 rounded-3xl bg-white p-6 text-t-dark shadow-xl ring-1 ring-gray-100'>
-              <div className='mb-6 flex flex-col gap-4 border-b border-gray-100 pb-4 md:flex-row md:items-center md:justify-between'>
-                <div>
+          <div className='mt-10 rounded-3xl bg-white p-6 text-t-dark shadow-xl ring-1 ring-gray-100'>
+            <div className='mb-6 flex flex-col gap-4 border-b border-gray-100 pb-4 md:flex-row md:items-center md:justify-between'>
+              <div>
                 <p className='text-xs font-semibold uppercase tracking-wide text-primary'>
                   Página {currentPage + 1} de {totalPages}
                 </p>
@@ -748,7 +686,7 @@ export const FormResponsePublicPage: FunctionComponent<
                   />
                 </div>
               )}
-              </div>
+            </div>
 
             <div className='space-y-4'>
               {currentPageData?.elements.map((element) =>
@@ -761,7 +699,6 @@ export const FormResponsePublicPage: FunctionComponent<
                 <Button
                   name='btn-response-prev'
                   type='button'
-                  label='previus'
                   icon='003'
                   rounded
                   mode='primary'
@@ -772,7 +709,6 @@ export const FormResponsePublicPage: FunctionComponent<
                 <Button
                   name='btn-response-next'
                   type='button'
-                  label='next'
                   icon='004'
                   end
                   mode='primary'
@@ -780,16 +716,6 @@ export const FormResponsePublicPage: FunctionComponent<
                   className='flex w-40 items-center justify-center rounded-full bg-gradient-to-r from-primary to-blue-500 px-6 py-2 font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:saturate-50'
                   disabled={currentPage === totalPages - 1}
                   onClick={postPage}
-                />
-                <Button
-                  name='btn-response-download'
-                  type='button'
-                  label='Descargar PDF'
-                  icon='039'
-                  rounded
-                  mode='secondary'
-                  className='flex w-40 items-center justify-center rounded-full border border-primary bg-white px-6 py-2 font-semibold text-primary shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:translate-y-0 disabled:opacity-60 disabled:saturate-50'
-                  onClick={handleDownloadPdf}
                 />
               </div>
               <div className='flex items-center gap-3 text-sm text-slate-700'>
@@ -799,7 +725,9 @@ export const FormResponsePublicPage: FunctionComponent<
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-                <span className='font-semibold text-slate-900'>Avance {currentPage + 1} / {totalPages}</span>
+                <span className='font-semibold text-slate-900'>
+                  Avance {currentPage + 1} / {totalPages}
+                </span>
               </div>
             </div>
           </div>

@@ -28,7 +28,7 @@ export const ResponsePublicPage: FunctionComponent = () => {
   const company = useSignal<IResponseCompany | null>(null);
 
   useEffect(() => {
-    document.title = t('d_pageTitle');
+    document.title = t('p_response');
 
     // Capturar los parámetros de la URL
     const urlParams = new URLSearchParams(window.location.search);
