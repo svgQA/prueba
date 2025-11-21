@@ -111,19 +111,21 @@ export const FormResponsePublicPage: FunctionComponent<
       case ELEMENT_TYPE.SECTION:
         const isExpanded = expandedSections.includes(element.id);
         return (
-          <div class='mb-4 bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 bg-b-light text-slate-900 dark:bg-b-dark'>
             <span />
             <button
               onClick={() => toggleSection(element.id)}
-              class='w-full flex justify-between items-center p-4 rounded-lg border-0'
+              class='w-full flex justify-between items-center p-4 rounded-lg border-0 text-left'
             >
-              <span class='font-medium'>{element.label}</span>
-              <span class='transform transition-transform duration-200'>
+              <span class='font-medium text-slate-900 dark:text-white'>
+                {element.label}
+              </span>
+              <span class='transform transition-transform duration-200 text-slate-600 dark:text-white/70'>
                 {isExpanded ? '▼' : '▶'}
               </span>
             </button>
             {isExpanded && element.elements && (
-              <div class='pl-4 mt-2'>
+              <div class='pl-4 mt-2 text-slate-900 dark:text-white'>
                 {element.elements.map((el: IElement) =>
                   renderElement(el, page, element.id)
                 )}
@@ -133,13 +135,16 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.TITLE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
-            <h2 class='text-xl font-bold'>{element.label}</h2>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
+            <h2 class='text-xl font-bold text-slate-900 dark:text-white'>{element.label}</h2>
+            {element.description && (
+              <p class='mt-1 text-sm text-slate-600 dark:text-white/70'>{element.description}</p>
+            )}
           </div>
         );
       case ELEMENT_TYPE.INPUT:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <Input
               name={element.id}
               type='text'
@@ -158,7 +163,7 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.TEXT_AREA:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <TextArea
               name={element.id}
               label={element.label}
@@ -176,7 +181,7 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.NUMBER_INPUT:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <Input
               name={element.id}
               type='number'
@@ -195,7 +200,7 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.DROPDOWN:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <Select
               name={element.id}
               options={element?.options}
@@ -214,7 +219,7 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.RADIO_BUTTON:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <Radio
               name={element.id}
               label={element.label}
@@ -230,7 +235,7 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.CHECK_BOX:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <Checkbox
               name={element.id}
               label={element.label}
@@ -246,7 +251,7 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.IMAGE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <File
               name={element.id}
               onChange={handleInputChange}
@@ -263,7 +268,7 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.FILES:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <File
               name={element.id}
               onChange={handleInputChange}
@@ -280,7 +285,7 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.SWITCH:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <Switch
               name={element.id}
               label={element.label}
@@ -295,7 +300,7 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.RATING:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <Ranking
               id={element.id}
               name={element.id}
@@ -325,7 +330,7 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.DATE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <Input
               name={element.id}
               type='date'
@@ -344,7 +349,7 @@ export const FormResponsePublicPage: FunctionComponent<
         );
       case ELEMENT_TYPE.TIME:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <Input
               name={element.id}
               type='time'
@@ -364,7 +369,7 @@ export const FormResponsePublicPage: FunctionComponent<
 
       case ELEMENT_TYPE.AUDIO:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <AudioRecorder
               name={element.id}
               onChange={handleInputChange}
@@ -381,7 +386,7 @@ export const FormResponsePublicPage: FunctionComponent<
 
       case ELEMENT_TYPE.SIGNATURE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <Signature
               name={element.id}
               onChange={handleInputChange}
@@ -397,7 +402,7 @@ export const FormResponsePublicPage: FunctionComponent<
 
       case ELEMENT_TYPE.QR:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <QrCode
               name={element.id}
               onChange={handleInputChange}
@@ -413,7 +418,7 @@ export const FormResponsePublicPage: FunctionComponent<
 
       case ELEMENT_TYPE.BARCODE:
         return (
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
+          <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
             <Barcode
               name={element.id}
               onChange={handleInputChange}
@@ -429,7 +434,7 @@ export const FormResponsePublicPage: FunctionComponent<
 
       default:
         return (
-          <div className='bg-b-light text-t-dark dark:bg-b-dark p-3 my-3'>
+          <div className='bg-b-light text-slate-900 dark:bg-b-dark p-3 my-3'>
             <Input
               name={element.id}
               type='text'
@@ -632,11 +637,11 @@ export const FormResponsePublicPage: FunctionComponent<
                 <p className='text-xs font-semibold uppercase tracking-wide text-primary'>
                   Página {currentPage + 1} de {totalPages}
                 </p>
-                <h2 className='text-2xl font-bold text-t-dark'>
+                <h2 className='text-2xl font-bold text-slate-900'>
                   {currentPageData?.label}
                 </h2>
                 {getResponse.value.description && (
-                  <p className='mt-1 text-sm text-gray-600'>
+                  <p className='mt-1 text-sm text-gray-700'>
                     {getResponse.value.description}
                   </p>
                 )}
@@ -686,8 +691,9 @@ export const FormResponsePublicPage: FunctionComponent<
                   type='button'
                   label='previus'
                   icon='003'
-                  borderless
-                  textColor='text-primary'
+                  rounded
+                  mode='secondary'
+                  className='rounded-full border border-primary/30 bg-white px-5 py-2 font-semibold text-primary shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:translate-y-0 disabled:opacity-60'
                   onClick={prevPage}
                   disabled={currentPage === 0}
                 />
@@ -699,6 +705,7 @@ export const FormResponsePublicPage: FunctionComponent<
                   end
                   mode='primary'
                   rounded
+                  className='rounded-full bg-gradient-to-r from-primary to-blue-500 px-6 py-2 font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:saturate-50'
                   disabled={currentPage === totalPages - 1}
                   onClick={postPage}
                 />
