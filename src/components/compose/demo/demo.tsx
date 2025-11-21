@@ -52,12 +52,12 @@ const CustomDemoContainer = ({
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(255,255,255,0.05),transparent_36%),radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.15),transparent_30%)]' />
       </div>
 
-      <div className='relative z-10 flex w-full max-w-6xl flex-col gap-10 rounded-[32px] border border-white/10 bg-white/5 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-2xl md:flex-row md:p-10'>
+      <div className='relative z-10 flex w-full max-w-7xl flex-col gap-10 rounded-[32px] border border-white/10 bg-white/5 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-2xl md:flex-row md:p-10'>
         <div className='flex w-full flex-col justify-center gap-6 text-center text-white md:w-7/12 md:text-left'>
           <div className='flex flex-col gap-4'>
             {showLogo && (
-              <div className='flex items-center justify-center md:justify-start'>
-                <Logo title='Tryvoo' slogan='' />
+              <div className='flex items-center justify-center md:justify-start fill-white'>
+                <Logo title='Tryvoo' slogan='Gestión en campo' />
               </div>
             )}
             <div className='mx-auto flex max-w-xl items-center justify-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-white/80 md:mx-0'>
@@ -82,7 +82,9 @@ const CustomDemoContainer = ({
               </div>
               <div>
                 <p className='text-sm font-semibold text-white'>Setup guiado</p>
-                <p className='text-xs text-white/70'>Acompañamiento para configurar tu operación.</p>
+                <p className='text-xs text-white/70'>
+                  Acompañamiento para configurar tu operación.
+                </p>
               </div>
             </div>
             <div className='flex items-center gap-3 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10'>
@@ -90,18 +92,20 @@ const CustomDemoContainer = ({
                 📊
               </div>
               <div>
-                <p className='text-sm font-semibold text-white'>Indicadores clave</p>
-                <p className='text-xs text-white/70'>Métricas claras para tus decisiones.</p>
+                <p className='text-sm font-semibold text-white'>
+                  Indicadores clave
+                </p>
+                <p className='text-xs text-white/70'>
+                  Métricas claras para tus decisiones.
+                </p>
               </div>
             </div>
           </div>
         </div>
 
-        <div
-          className={`relative w-full md:w-[560px] ${formClassName}`}
-        >
+        <div className={`relative w-full md:w-[560px] ${formClassName}`}>
           <div className='absolute inset-0 -z-10 rounded-[28px] bg-gradient-to-br from-white/25 via-white/10 to-transparent opacity-70 blur-2xl' />
-          <div className='relative overflow-hidden rounded-[28px] border border-white/20 bg-white/85 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8'>
+          <div className='relative overflow-hidden rounded-sm border border-white/20 bg-white p-5 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8'>
             <div className='absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-cyan-300 to-emerald-300' />
             <div className='w-full h-full flex items-center justify-center'>
               {children}
