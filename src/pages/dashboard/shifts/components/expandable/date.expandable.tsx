@@ -309,6 +309,16 @@ const ShiftCard = ({
     }
   };
 
+  const formatResource = (resource: any) => {
+    if (Array.isArray(resource)) {
+      return resource;
+    }
+    if (typeof resource === 'object' && resource !== null) {
+      if (resource.tracking) return resource.tracking;
+    }
+    return [];
+  };
+
   return (
     <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-4 p-4'>
       <div>
@@ -366,7 +376,7 @@ const ShiftCard = ({
 
           {resource && (
             <div className='flex flex-col items-center mr-4 w-full'>
-              <ShowFiles resources={resource} />
+              <ShowFiles resources={formatResource(resource)} />
             </div>
           )}
 
