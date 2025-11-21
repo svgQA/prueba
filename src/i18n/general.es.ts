@@ -1,9 +1,9 @@
 export const general_es = {
   memos: {
     title: 'TR - Chat',
-    pageTitle: 'TR - Servicio de Memorandos',
+    pageTitle: 'TR - Servicio de memorandos',
     frequentQuestions: {
-      title: 'Preguntas Frecuentes',
+      title: 'Preguntas frecuentes',
       question1: '¿Cómo puedo empezar un nuevo proyecto?',
       question2: '¿Cuáles son las mejores prácticas de código?',
       question3: '¿Cómo puedo optimizar mi aplicación?',
@@ -14,11 +14,11 @@ export const general_es = {
       itsMe: 'SOY YO',
       other: 'OTRO',
       time: '10:15',
-      errorMessage: 'El mensaje tiene mala estructura',
+      errorMessage: 'El mensaje tiene una estructura incorrecta',
       view: {
-        users: 'Memo por Usuarios',
-        services: 'Memo por Servicios',
-        select: 'Seleccionar Memo',
+        users: 'Memo por usuarios',
+        services: 'Memo por servicios',
+        select: 'Seleccionar memo',
       },
     },
     pagination: {
@@ -33,12 +33,12 @@ export const general_es = {
     },
   },
   history: {
-    pageTitle: 'TR - Historial de Notificaciones',
+    pageTitle: 'TR - Historial de notificaciones',
     title: 'Historial de notificaciones',
     buttons: {
       all: 'Todos',
       read: 'Leídos',
-      unread: 'No Leídos',
+      unread: 'No leídos',
       reload: 'Recargar',
       executeReview: 'Ejecutar revisión',
     },
@@ -73,10 +73,10 @@ export const general_es = {
     },
   },
   users: {
-    pageTitle: 'TR - Servicio de Usuarios',
+    pageTitle: 'TR - Servicio de usuarios',
     client: {
       users_client: {
-        title: 'Usuarios del Cliente',
+        title: 'Usuarios del cliente',
       },
     },
   },
@@ -86,7 +86,12 @@ export const general_es = {
     view_denied: 'No tienes permiso para ver esta sección',
   },
   company: {
-    title_form: 'Nueva Empresa',
-    title_form_edit: 'Editar Empresa',
+    title_form: 'Nueva empresa',
+    title_form_edit: 'Editar empresa',
+  },
+  pqrs: {
+    pageTitle: 'TR - Servicio de PQRS',
+    created: 'Creadas',
+    finished: 'Finalizadas',
   },
 };

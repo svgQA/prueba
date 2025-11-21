@@ -604,7 +604,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                 name='view-mode'
                 borderless
                 icon='001'
-                placeholder='Select option'
+                placeholder={t('l_select_option')}
                 options={[
                   {
                     label: 'h_user',

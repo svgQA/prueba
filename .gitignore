@@ -25,6 +25,8 @@ vite.config.js
 *.sln
 *.sw?
 /test-results/
+*.png
+*.jpg
 /playwright-report/
 /blob-report/
 /playwright/.cache/

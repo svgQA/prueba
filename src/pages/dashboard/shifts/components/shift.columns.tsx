@@ -11,6 +11,7 @@ import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { FormattedDate, DateContrast } from '@/components/compose/forms';
 import { DateUtils } from '@/utils/utilities/dates';
 import { Badge } from '@/components/common/badge/badge';
+import { useTranslation } from 'react-i18next';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -281,11 +282,12 @@ export const getColumns = (
       cell: (info) => {
         const { id, checkIn, checkOut } = info.row.original;
         const s_id = String(id);
+        const { t } = useTranslation();
         const model = checkOut
           ? []
           : [
               {
-                label: !checkIn ? 'check_in' : 'check_out',
+                label: !checkIn ? t('h_check_in') : t('h_check_out'),
                 icon: 'vox-icon vx-icon-312 text-primary',
                 keyName: 'check',
                 onClick: () => {
