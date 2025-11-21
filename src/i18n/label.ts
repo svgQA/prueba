@@ -180,6 +180,7 @@ export const label_es = {
   l_icon: 'Ícono',
   l_filter: 'Filtrar por',
   l_no_has: 'No tiene',
+  l_select_option: 'Seleccionar opción',
 };
 
 export const label_en = {
@@ -362,4 +363,5 @@ export const label_en = {
   l_icon: 'Icon',
   l_filter: 'Filter by',
   l_no_has: 'No has',
+  l_select_option: 'Select option',
 };

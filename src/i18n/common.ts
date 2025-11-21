@@ -95,6 +95,7 @@ export const common_es = {
   web: 'Web',
   mobile: 'Móvil',
   message: 'Mensaje',
+  message_confirm: '¿Estás seguro de querer realizar esta acción?',
   Hour: 'Hora',
   "Quarter Day": 'Cuarto Día',
   "Half Day": 'Medio Día'
