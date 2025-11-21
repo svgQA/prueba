@@ -12,7 +12,7 @@ export const HomeCarousel = () => {
           {tryvoo_carousel.map((card) => (
             <div
               key={card.id}
-              className='mx-2 min-w-64 bg-white text-gray-700 hover:text-white hover:bg-blue-dark rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border-gray-200 border'
+              className='mx-2 min-w-64 bg-white text-gray-700 rounded-lg shadow-md overflow-hidden transition-shadow duration-300 border-gray-200 border hover:-translate-y-1 hover:shadow-xl'
             >
               <div className='flex items-center justify-center h-[25vh]'>
                 <img
@@ -22,7 +22,7 @@ export const HomeCarousel = () => {
                 />
               </div>
               <div className='p-6 space-y-3'>
-                <h3 className='text-xl font-bold text-center leading-tight text-ternary hover:text-white'>
+                <h3 className='text-xl font-bold text-center leading-tight text-ternary'>
                   {card.titleKey && t(card.titleKey)}
                 </h3>
                 <p className='text-base text-center leading-relaxed'>
