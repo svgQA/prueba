@@ -61,6 +61,7 @@ export const FormResponsePublicPage: FunctionComponent<
   const pageRef = useRef<HTMLDivElement | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [isExporting, setIsExporting] = useState(false);
   const { getTenant, getCompanyId } = useUserStore();
 
   const totalPages = getResponse.value?.pages.length ?? 0;
@@ -556,7 +557,12 @@ export const FormResponsePublicPage: FunctionComponent<
   const handleDownloadPdf = async () => {
     if (!pageRef.current) return ToastManager.error('s_download_file_error');
 
+    setIsExporting(true);
+    let downloadSucceeded = false;
+
     try {
+      await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
+
       const dataUrl = await toPng(pageRef.current, {
         quality: 1,
         pixelRatio: 2,
@@ -593,10 +599,15 @@ export const FormResponsePublicPage: FunctionComponent<
       }
 
       pdf.save(`${getResponse.value?.label || 'respuesta'}-publica.pdf`);
-      ToastManager.success('s_download_file_success');
+      downloadSucceeded = true;
     } catch (error) {
       console.error(error);
       ToastManager.error('s_download_file_error');
+    } finally {
+      setIsExporting(false);
+      if (downloadSucceeded) {
+        ToastManager.success('s_download_file_success');
+      }
     }
   };
 
@@ -606,9 +617,16 @@ export const FormResponsePublicPage: FunctionComponent<
       {getResponse.value && (
         <div
           ref={pageRef}
-          className='relative mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-10'
+          className={`relative mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-10 ${
+            isExporting ? 'max-w-5xl bg-white' : ''
+          }`}
+          style={{ backgroundColor: isExporting ? '#f8fafc' : undefined }}
         >
-          <div className='grid gap-6 lg:grid-cols-[1.25fr,0.9fr]'>
+          <div
+            className={`grid gap-6 ${
+              isExporting ? 'grid-cols-1' : 'lg:grid-cols-[1.25fr,0.9fr]'
+            }`}
+          >
             <div className='rounded-3xl border border-white/10 bg-white/5 p-6 text-white shadow-2xl backdrop-blur-md sm:p-8'>
               <div className='inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/80 ring-1 ring-white/15'>
                 {company?.name || 'Formulario público'}
