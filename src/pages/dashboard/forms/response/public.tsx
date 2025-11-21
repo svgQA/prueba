@@ -692,8 +692,8 @@ export const FormResponsePublicPage: FunctionComponent<
                   label='previus'
                   icon='003'
                   rounded
-                  mode='secondary'
-                  className='rounded-full border border-primary/30 bg-white px-5 py-2 font-semibold text-primary shadow-sm transition hover:-translate-y-0.5 hover:shadow-md disabled:translate-y-0 disabled:opacity-60'
+                  mode='primary'
+                  className='flex min-w-[120px] items-center justify-center rounded-full bg-gradient-to-r from-primary to-blue-500 px-6 py-2 font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:saturate-50'
                   onClick={prevPage}
                   disabled={currentPage === 0}
                 />
@@ -705,19 +705,19 @@ export const FormResponsePublicPage: FunctionComponent<
                   end
                   mode='primary'
                   rounded
-                  className='rounded-full bg-gradient-to-r from-primary to-blue-500 px-6 py-2 font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:saturate-50'
+                  className='flex min-w-[120px] items-center justify-center rounded-full bg-gradient-to-r from-primary to-blue-500 px-6 py-2 font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:saturate-50'
                   disabled={currentPage === totalPages - 1}
                   onClick={postPage}
                 />
               </div>
-              <div className='flex items-center gap-3 text-sm text-gray-600'>
+              <div className='flex items-center gap-3 text-sm text-slate-700'>
                 <div className='h-2 w-24 overflow-hidden rounded-full bg-white'>
                   <div
                     className='h-full rounded-full bg-gradient-to-r from-primary to-blue-400 transition-all duration-300'
                     style={{ width: `${progress}%` }}
                   />
                 </div>
-                <span className='font-semibold text-t-dark'>Avance {currentPage + 1} / {totalPages}</span>
+                <span className='font-semibold text-slate-900'>Avance {currentPage + 1} / {totalPages}</span>
               </div>
             </div>
           </div>
