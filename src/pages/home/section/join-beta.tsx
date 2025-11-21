@@ -130,6 +130,7 @@ export const HomeBetaForm = () => {
                 />
               </label>
             </div>
+
             <label className='text-sm font-semibold text-[#0b1f33]'>
               {t('h_beta_field_email')}
               <input
@@ -170,28 +171,30 @@ export const HomeBetaForm = () => {
               </label>
             </div>
 
-            <label className='text-sm font-semibold text-[#0b1f33]'>
-              {t('h_beta_field_team')}
-              <select
-                required
-                name='teamSize'
-                value={form.teamSize}
-                onInput={handleChange}
-                className='mt-2 w-full appearance-none rounded-lg border border-[#d7e3f2] bg-white px-3 py-2 pr-10 text-sm text-[#0b1f33] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30'
-                style={{
-                  backgroundImage:
-                    'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none"%3E%3Cpath d="M1 1.5L6 6.5L11 1.5" stroke="%230b1f33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/%3E%3C/svg%3E\')',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'right 0.75rem center',
-                }}
-              >
-                <option value=''>{t('h_beta_option_select')}</option>
-                <option value='0-50'>{t('h_beta_option_0_50')}</option>
-                <option value='51-150'>{t('h_beta_option_51_150')}</option>
-                <option value='151-300'>{t('h_beta_option_151_300')}</option>
-                <option value='300+'>{t('h_beta_option_300_plus')}</option>
-              </select>
-            </label>
+            <div className='py-2'>
+              <label className='text-sm font-semibold text-[#0b1f33]'>
+                {t('h_beta_field_team')}
+                <select
+                  required
+                  name='teamSize'
+                  value={form.teamSize}
+                  onInput={handleChange}
+                  className='mt-2 w-full appearance-none rounded-lg border border-[#d7e3f2] bg-white px-3 py-2 pr-10 text-sm text-[#0b1f33] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30'
+                  style={{
+                    backgroundImage:
+                      'url(\'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none"%3E%3Cpath d="M1 1.5L6 6.5L11 1.5" stroke="%230b1f33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/%3E%3C/svg%3E\')',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 0.75rem center',
+                  }}
+                >
+                  <option value=''>{t('h_beta_option_select')}</option>
+                  <option value='0-50'>{t('h_beta_option_0_50')}</option>
+                  <option value='51-150'>{t('h_beta_option_51_150')}</option>
+                  <option value='151-300'>{t('h_beta_option_151_300')}</option>
+                  <option value='300+'>{t('h_beta_option_300_plus')}</option>
+                </select>
+              </label>
+            </div>
 
             <label className='text-sm font-semibold text-[#0b1f33]'>
               {t('h_beta_field_message')}

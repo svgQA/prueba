@@ -123,7 +123,8 @@ export const HomeFooter = () => {
       <div className='border-t border-white/10'>
         <div className='mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-6 text-sm text-white/70 sm:flex-row sm:px-6 lg:px-8'>
           <p>
-            © {new Date().getFullYear()} Tryvoo. {t('h_footer_rights')}
+            © {new Date().getFullYear()} Tryvoo by Inndico 🦄.{' '}
+            {t('h_footer_rights')}
           </p>
           <div className='flex gap-4'>
             <a href='#' className='hover:text-white'>

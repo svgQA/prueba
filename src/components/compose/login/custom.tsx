@@ -46,7 +46,7 @@ const CustomLoginContainer = ({
         <div className='flex w-full flex-col justify-center gap-6 text-center text-white md:w-7/12 md:text-left'>
           <div className='flex flex-col gap-4'>
             {showLogo && (
-              <div className='flex items-center justify-center md:justify-start'>
+              <div className='flex items-center justify-center md:justify-start fill-white'>
                 <Logo title='' slogan='Gestiòn en campo' />
               </div>
             )}
@@ -74,8 +74,12 @@ const CustomLoginContainer = ({
                   ✓
                 </div>
                 <div>
-                  <p className='text-sm font-semibold text-white'>Gestión en tiempo real</p>
-                  <p className='text-xs text-white/70'>Coordina equipos y tareas desde un solo panel.</p>
+                  <p className='text-sm font-semibold text-white'>
+                    Gestión en tiempo real
+                  </p>
+                  <p className='text-xs text-white/70'>
+                    Coordina equipos y tareas desde un solo panel.
+                  </p>
                 </div>
               </div>
               <div className='flex items-center gap-3 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10'>
@@ -83,19 +87,21 @@ const CustomLoginContainer = ({
                   ★
                 </div>
                 <div>
-                  <p className='text-sm font-semibold text-white'>Experiencia segura</p>
-                  <p className='text-xs text-white/70'>Accede con confianza a un entorno protegido.</p>
+                  <p className='text-sm font-semibold text-white'>
+                    Experiencia segura
+                  </p>
+                  <p className='text-xs text-white/70'>
+                    Accede con confianza a un entorno protegido.
+                  </p>
                 </div>
               </div>
             </div>
           )}
         </div>
 
-        <div
-          className={`relative w-full md:w-[420px] ${formClassName}`}
-        >
+        <div className={`relative w-full md:w-[420px] ${formClassName}`}>
           <div className='absolute inset-0 -z-10 rounded-[28px] bg-gradient-to-br from-white/20 via-white/5 to-transparent opacity-70 blur-2xl' />
-          <div className='relative overflow-hidden rounded-[28px] border border-white/20 bg-white/80 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6'>
+          <div className='relative overflow-hidden rounded-sm border border-white/20 bg-white p-5 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6'>
             <div className='absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-emerald-300 to-cyan-400' />
             <div className='w-full h-full flex items-center justify-center'>
               {children}
