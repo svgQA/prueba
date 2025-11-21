@@ -508,12 +508,32 @@ export const FormResponseSettingPage: FunctionComponent<
     const id = getResponseMode.value?.id;
     const tenant = getTenant();
     const currentUrl = window.location.origin;
-    console.log('tenant', tenant);
-    console.log('id', id);
-    console.log('currentUrl', currentUrl);
-    const url = `/${currentUrl}/response?responseId=${id}&tenant=${tenant}`;
-    console.log('url', url);
-    //window.open(url, '_blank');
+
+    if (!id || !tenant) {
+      return ToastManager.error('s_getted_error');
+    }
+
+    const url = `${currentUrl}/response?responseId=${id}&tenant=${tenant}`;
+
+    try {
+      await navigator.clipboard.writeText(url);
+      ToastManager.success('s_url_copied');
+    } catch (error) {
+      // Fallback para navegadores que no soportan clipboard API
+      const textArea = document.createElement('textarea');
+      textArea.value = url;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        ToastManager.success('s_url_copied');
+      } catch (err) {
+        ToastManager.error('s_url_error');
+      }
+      document.body.removeChild(textArea);
+    }
   };
 
   return (
@@ -527,7 +547,7 @@ export const FormResponseSettingPage: FunctionComponent<
               </h1>
               {getResponseMode.value?.hold && (
                 <div className='mb-6 flex justify-end'>
-                 {/* <Button
+                  {/* <Button
                     type='button'
                     onClick={handleGenerateReport}
                     name='btn-response-preview'
@@ -535,7 +555,7 @@ export const FormResponseSettingPage: FunctionComponent<
                     label='h_generate_report'
                     className='mb-4'
                   /> */}
-                   <Button
+                  <Button
                     type='button'
                     onClick={handleShareReport}
                     name='btn-response-preview'
