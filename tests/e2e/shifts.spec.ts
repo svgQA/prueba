@@ -19,7 +19,7 @@ import {
       await shiftsLink.click();
       await page.waitForURL(/.*shifts.*|.*turnos.*/i, { timeout: 10000 });
       await page.waitForLoadState('networkidle');
-  }); test.skip('renders shifts summary and table controls', async ({ page }) => {
+  }); test('renders shifts summary and table controls', async ({ page }) => {
     const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });
     await page.waitForLoadState('networkidle');
     await shiftsLink.click();
@@ -45,7 +45,7 @@ import {
       await expect(searchInput).toBeEnabled();
       const createButton = page.locator('button[name="button-create-shift"]').first();
       await expect(createButton).toBeVisible({ timeout: 10000 });
-  }); test.skip('Create Clients and Rounds Prerequisite ', async ({ page }) => {
+  }); test('Create Clients and Rounds Prerequisite ', async ({ page }) => {
     try {
     test.setTimeout(120000); 
     await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -53,17 +53,15 @@ import {
     await page.getByRole('link', { name: /Clientes|Clients/i }).click();
     await page.waitForURL(/.*clients/); 
     await page.waitForLoadState('networkidle'); 
-    const newClientButton = page.locator('#trybook\\:notices\\:state\\:create');
-    await expect(newClientButton).toBeVisible({ timeout: 15000 });
-    await newClientButton.click();
+    await page.locator('[data-label="create"]').click();
     const nombreInput = page.getByRole('textbox', { name: /Nombre Email Teléfono|Name Email Phone/i });
     await expect(nombreInput).toBeVisible({ timeout: 10000 }); 
     await nombreInput.fill('NuevoPrePPPvioClient');
-    const emailInput = page.getByRole('textbox', { name: /Ingrese email...|Enter email.../i });
-    await emailInput.fill('Clientepppoo@gmail.com');
-    const telefonoInput = page.getByRole('textbox', { name: /Ingrese teléfono...|Enter phone number.../i });
-    await telefonoInput.fill('3113593236');
-    const descripcionInput = page.getByRole('textbox', { name: /Ingrese Descripción...|Enter Description.../i });
+    const emailInput = page.getByPlaceholder('Email');
+    await emailInput.fill('correo@gmail.com');
+    const telefonoInput = page.getByPlaceholder(/Telefono|Phone/i );
+    await telefonoInput.fill('+573113152469');
+    const descripcionInput = page.getByPlaceholder('Description');
     await descripcionInput.fill('PruebaCliente');
     await page.getByRole('button', { name: /Guardar|Save/i }).click();
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
@@ -108,7 +106,7 @@ import {
     } catch (error) {
       throw error;
     }
-  }); test.skip('Create Place and Contracts Prerequisite', async ({ page }) => {
+  }); test('Create Place and Contracts Prerequisite', async ({ page }) => {
     try {
     test.setTimeout(120000); 
     await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -211,7 +209,7 @@ import {
     } catch (error) {
     throw error;
     }
-  }); test.skip('Create Tasks and Timetable Prerequisite', async ({ page }) => {
+  }); test('Create Tasks and Timetable Prerequisite', async ({ page }) => {
     try {
     test.setTimeout(120000); 
     await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -250,7 +248,7 @@ import {
     } catch (error) {
     throw error;
   }
-  }); test.skip('Create Service Prerequisite', async ({ page }) => {
+  }); test('Create Service Prerequisite', async ({ page }) => {
     try {
     test.setTimeout(120000); 
     await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -306,7 +304,7 @@ import {
     } catch (error) {
     throw error;
     }
-  }); test.skip('Create Role and Users Prerequisite', async ({ page }) => {
+  }); test('Create Role and Users Prerequisite', async ({ page }) => {
     try {
     test.setTimeout(120000); 
     await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -321,7 +319,7 @@ import {
     await newRoleButton.click();
     const nombreInput = page.getByRole('textbox', { name: /Nombre|Name/i });
     await expect(nombreInput).toBeVisible({ timeout: 10000 });
-    await nombreInput.fill('pruebarol');
+    await nombreInput.fill('pruebaroD0');
     const descripcionInput = page.getByRole('textbox', { name: /Descripción|Description/i });
     await expect(descripcionInput).toBeVisible();
     await descripcionInput.fill('rolprueba'); 
@@ -345,18 +343,18 @@ import {
     await page.waitForURL(/.*users/);
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: 'Į' }).click();
-    const nombreInput = page.locator('input[name="name"]');
+    const nombreInput = page.locator('input[name="name"][type="text"]').first();
     await expect(nombreInput).toBeVisible({ timeout: 10000 });
-    await nombreInput.fill('usuarioprueba1');
-    await page.locator('input[name="surname"]').fill('PSdor'); 
-    await page.locator('input[name="email"]').fill(`psc${Date.now()}@test0.com`); 
-    await page.locator('input[name="phone"]').fill('+573113172556');
+    await nombreInput.fill('E2E');
+    await page.locator('input[name="surname"]').first().fill('Test');
+    await page.locator('input[name="email"]').first().fill(`01e2e-test@gmail.com`);
+    await page.locator('input[name="phone"]').first().fill('+573123243112');
     const docTypeSelect = page.locator('select[name="cardType"]');
     await expect(docTypeSelect).toBeVisible({ timeout: 10000 });
     await docTypeSelect.selectOption('1'); 
     const docNumberInput = page.locator('input[name="cardId"]');
     await expect(docNumberInput).toBeVisible();
-    await docNumberInput.fill('1059568235'); 
+    await docNumberInput.fill('105234692'); 
     const countryInput = page.getByRole('textbox', { name: /Country|País/i });
     await expect(countryInput).toBeVisible();
     await countryInput.fill('colombia');
@@ -377,19 +375,19 @@ import {
     const roleInput = page.locator('input[name="roles"]'); 
     await expect(roleInput).toBeVisible();
     await roleInput.click();
-    await roleInput.fill('pruebarol'); 
-    await page.getByText('pruebarol', { exact: true }).click()
+    await roleInput.fill('pruebaroD0'); 
+    await page.getByText('pruebaroD0', { exact: true }).click()
     const companyInput = page.locator('input[name="companies"]'); 
     await expect(companyInput).toBeVisible();
     await companyInput.click();
-    await companyInput.fill('Company 2');
-    await page.getByText('Company 2').nth(1).click(); 
+    await companyInput.fill('E2E-Test');
+    await page.getByText('E2E-Test').nth(1).click(); 
     await page.getByRole('button', { name: /Guardar|Save/i }).click();
     await expect(page.getByText(/Creado con éxito|Created successfully/i)).toBeVisible({ timeout: 15000 });
     } catch (error) {
     throw error;
     }
-  }); test.skip('Create a new shift', async ({ page }) => {
+  }); test('Create a new shift', async ({ page }) => {
     test.setTimeout(120000); 
     await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
     const createButton = page.locator('button[name="button-create-shift"]').first();
@@ -397,14 +395,14 @@ import {
     await createButton.click();
     await expect(page.getByRole('heading', { name: /Crear|Create/i })).toBeVisible({ timeout: 10000 });
     await page.getByRole('textbox', { name: /Empleado|Employee/i }).click();
-    await page.getByText('usuarioprueba1 PSdor').last().click();
+    await page.getByText('E2E Test').last().click();
     await page.getByRole('textbox', { name: /Servicio|Service/i }).click();
-    await page.getByText('PruebaServicio001').last().click();
+    await page.getByText('PruebaServicio5').last().click();
     await page.getByRole('textbox', { name: /Horario|Schedule/i }).click();
     await page.getByText('HorarioPrueba2').last().click(); 
     await page.getByLabel(/Tipo|Type/i ).selectOption('EXTERNAL');
-    await page.getByRole('textbox', { name: /Fecha de inicio|Start date/i }).fill('2025-11-06T17:00'); 
-    await page.getByRole('textbox', { name: /Fecha de fin|End date/i }).fill('2025-11-07T21:00'); 
+    await page.getByRole('textbox', { name: /Fecha de inicio|Start date/i }).fill('2025-11-21T17:00'); 
+    await page.getByRole('textbox', { name: /Fecha de fin|End date/i }).fill('2025-11-23T21:00'); 
     await page.getByRole('spinbutton', { name: /Tiempo Antes|Time Before/i }).click();
     await page.getByRole('spinbutton', { name: /Tiempo Antes|Time Before/i }).fill('5');
     await page.getByRole('textbox', { name: /Palabras clave|Keywords/i }).click();
@@ -416,7 +414,7 @@ import {
   }); test.skip('Validate shift scheduler view toggles', async ({ page }) => {
     await page.evaluate(() => { (document.body.style as any).zoom = 0.8; }); 
     await page.getByRole('button', { name: '˂' }).click();
-    await page.getByRole('cell', { name: 'usuarioprueba1 PSdor' }).locator('span').first().click();
+    await page.getByRole('cell', { name: 'E2E Test' }).locator('span').first().click();
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: 'ʣ' }).click();
     await page.waitForLoadState('networkidle');
@@ -431,9 +429,9 @@ import {
     await page.getByRole('row', { name: /usuarioprueba1 PSdor/i }).first().getByRole('checkbox').check();
     await page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i }).click();
   }); test.skip('Exercise Gantt timeline interactions (Drag and Drop)', async ({ page }) => {
-  }); test.skip('Edit an existing shift', async ({ page }) => {
+  }); test('Edit an existing shift', async ({ page }) => {
     const testRow = page.getByRole('row')
-    .filter({ hasText: /usuarioprueba1 PSdor/i })
+    .filter({ hasText: /E2E Test/i })
     .filter({ hasText: /Creado|Created/i })
     .first();
     await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });        
@@ -448,13 +446,13 @@ import {
     await page.waitForLoadState('networkidle');
   }); test.skip('Send a notification from Supervision panel', async ({ page }) => {
     const testRow = page.getByRole('row')
-    .filter({ hasText: /usuarioprueba1 PSdor/i })
+    .filter({ hasText: /E2E Test/i })
     .filter({ hasText: /Creado|Created/i })
     .first();
     await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
     const notifButton = page.getByRole('button', { name: /Notificaciones Supervisión|Remote Supervision/i });
     await notifButton.click();
-    const userRow = page.getByRole('row', { name: /usuarioprueba1 PSdor/i }).first();
+    const userRow = page.getByRole('row', { name: /E2E Test/i }).first();
     await expect(userRow).toBeVisible({ timeout: 15000 });
     const checkbox = userRow.getByRole('checkbox');
     await expect(checkbox).toBeEnabled(); 
@@ -470,9 +468,9 @@ import {
     await sendButton.click();   
     await expect(page.getByText(/Enviado con éxito|Sent successfully/i)).toBeVisible({ timeout: 20000 });
   }); test.skip('Validate live workforce mapping', async ({ page }) => {
-  }); test.skip('Delete an existing shift', async ({ page }) => {
+  }); test('Delete an existing shift', async ({ page }) => {
     const testRow = page.getByRole('row')
-      .filter({ hasText: /usuarioprueba1 PSdor/i })
+      .filter({ hasText: /E2E Test/i })
       .filter({ hasText: /Creado|Created/i })
       .first();
     await page.evaluate(() => { (document.body.style as any).zoom = 0.7; });
@@ -498,7 +496,7 @@ import {
       await expect(groupedRow).toBeVisible({ timeout: 10000 });
       const firstHeader = page.locator('thead th').first();
       await expect(firstHeader).toHaveText(/Servicio|Service/i);
-  }); test.skip('Guard mention pickers for shifts', async ({ page }) => {
+  }); test('Guard mention pickers for shifts', async ({ page }) => {
   try {
     const createButton = page.locator('button[name="button-create-shift"]').first();
     await expect(createButton).toBeVisible({ timeout: 10000 });
@@ -521,7 +519,7 @@ import {
     } catch (error) {
     throw error;
     }
-  }); test.skip('Delete Service, Shedules and Task Prerequisite', async ({ page }) => {
+  }); test('Delete Service, Shedules and Task Prerequisite', async ({ page }) => {
     try {
     test.setTimeout(120000);
     await page.getByRole('button', { name: 'Ʌ' }).click();
@@ -585,7 +583,7 @@ import {
   } catch (error) {
     throw error;
   }
-  }); test.skip('Delete Contracts, Places and Rounds Prerequisite', async ({ page }) => {
+  }); test('Delete Contracts, Places and Rounds Prerequisite', async ({ page }) => {
   try {
     test.setTimeout(120000);
     await page.getByRole('button', { name: 'Ʌ' }).click();

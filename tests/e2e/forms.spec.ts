@@ -52,8 +52,8 @@ test.describe('Forms', () => {
     await expect(newRoleButton).toBeVisible({ timeout: 15000 });
     await newRoleButton.click();
     await page.evaluate(() => { (document.body.style as any).zoom = 0.8; });
-    await page.locator('input[name="Nombre"]').fill('GrupoIP');
-    await page.locator('textarea[name="Nombre"]').fill('GrupoInteligentePrueba');
+    await page.locator('input[name="name"]').first().fill('GrupoIP');
+    await page.locator('textarea[name="description"]').fill('GrupoInteligentePrueba');
     await page.waitForTimeout(1000);
     const conditionButton = page.getByRole('button', { name: /condition/i });
     await expect(conditionButton).toBeVisible({ timeout: 10000 });
