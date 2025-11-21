@@ -1,6 +1,7 @@
 import { type FunctionComponent, useEffect } from 'preact/compat';
 import { useTranslation } from 'react-i18next';
 import { useSignal } from '@preact/signals';
+import { useLocation } from 'wouter';
 import { FormService } from '@/services/form/form';
 import {
   RESPONSE_MODE_SERVICE,
@@ -21,6 +22,7 @@ interface IResponseCompany {
 
 export const ResponsePublicPage: FunctionComponent = () => {
   const { t } = useTranslation();
+  const [_, navigate] = useLocation();
 
   const responseId = useSignal<string | null>(null);
   const tenant = useSignal<string | null>(null);
@@ -50,15 +52,17 @@ export const ResponsePublicPage: FunctionComponent = () => {
       responseId.value ?? '',
       tenant.value ?? ''
     );
-    if (response.getStatus()) {
-      const responseData: any = response.getOne();
-      user.value = responseData?.user ?? null;
-      company.value = responseData?.company ?? null;
-      setResponse(
-        { mode: RESPONSE_MODE_SERVICE.UPDATE, id: responseData.id },
-        responseData.structure
-      );
+    if (!response.getStatus()) {
+      navigate('/');
+      return;
     }
+    const responseData: any = response.getOne();
+    user.value = responseData?.user ?? null;
+    company.value = responseData?.company ?? null;
+    setResponse(
+      { mode: RESPONSE_MODE_SERVICE.UPDATE, id: responseData.id },
+      responseData.structure
+    );
   };
 
   return (
