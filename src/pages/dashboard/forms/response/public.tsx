@@ -562,6 +562,14 @@ export const FormResponsePublicPage: FunctionComponent<
         pixelRatio: 2,
         cacheBust: true,
         backgroundColor: '#f8fafc',
+        useCORS: true,
+        filter: (node) => {
+          // Evita imágenes con rutas locales u otros nodos que puedan romper el canvas
+          if (node instanceof HTMLImageElement && node.src.startsWith('file:')) {
+            return false;
+          }
+          return true;
+        },
       });
 
       const pdf = new jsPDF('p', 'mm', 'a4');
