@@ -39,7 +39,7 @@ interface IFormResponseSettingPageProps {
   type?: string;
 }
 
-export const FormResponseSettingPage: FunctionComponent<
+export const FormResponsePublicPage: FunctionComponent<
   IFormResponseSettingPageProps
 > = ({ posFinishAction, type }: IFormResponseSettingPageProps) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -527,7 +527,7 @@ export const FormResponseSettingPage: FunctionComponent<
               </h1>
               {getResponseMode.value?.hold && (
                 <div className='mb-6 flex justify-end'>
-                 {/* <Button
+                  {/* <Button
                     type='button'
                     onClick={handleGenerateReport}
                     name='btn-response-preview'
@@ -535,7 +535,7 @@ export const FormResponseSettingPage: FunctionComponent<
                     label='h_generate_report'
                     className='mb-4'
                   /> */}
-                   <Button
+                  <Button
                     type='button'
                     onClick={handleShareReport}
                     name='btn-response-preview'

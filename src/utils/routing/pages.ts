@@ -4,6 +4,7 @@ export enum PAGES_LIST {
   SIGNIN = '/signin',
   SIGNUP = '/signup',
   DEMO = '/demo',
+  RESPONSE = '/response',
   DASHBOARD = '/dashboard',
   SHIFTS = '/shifts',
   ACCESS = '/access',
