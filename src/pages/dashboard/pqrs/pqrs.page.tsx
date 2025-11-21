@@ -83,9 +83,17 @@ export const PqrsPage: FunctionComponent = () => {
     groupedPqrs.value = {};
     const list: IOption[] = response.getMany();
 
-    const createdStatus = list.find((item) => item.label === 'created') || { value: uuid(), label: 'created' };
-    const finishedStatus = list.find((item) => item.label === 'finished') || { value: uuid(), label: 'finished' };
-    const middleStatuses = list.filter((item) => item.label !== 'created' && item.label !== 'finished');
+    const createdStatus = list.find((item) => item.label === 'created') || {
+      value: uuid(),
+      label: 'created',
+    };
+    const finishedStatus = list.find((item) => item.label === 'finished') || {
+      value: uuid(),
+      label: 'finished',
+    };
+    const middleStatuses = list.filter(
+      (item) => item.label !== 'created' && item.label !== 'finished'
+    );
     const orderedList = [createdStatus, ...middleStatuses, finishedStatus];
 
     orderedList.forEach((statusItem) => {
@@ -94,7 +102,7 @@ export const PqrsPage: FunctionComponent = () => {
         groupedPqrs.value[normalizedStatus] = [];
       }
     });
-  }
+  };
 
   const getPqrsGrouped = async () => {
     loading.value = true;
@@ -133,7 +141,9 @@ export const PqrsPage: FunctionComponent = () => {
   };
 
   // Mapear colorClass a status del Badge
-  const getColumnBadgeStatus = (colorClass: string): 'error' | 'success' | 'warning' | 'info' | 'ternary' => {
+  const getColumnBadgeStatus = (
+    colorClass: string
+  ): 'error' | 'success' | 'warning' | 'info' | 'ternary' => {
     if (colorClass.includes('error')) return 'error';
     if (colorClass.includes('secondary')) return 'success';
     if (colorClass.includes('caution')) return 'warning';
@@ -185,19 +195,19 @@ export const PqrsPage: FunctionComponent = () => {
                   <div
                     class={`w-3 h-3 rounded-full flex-shrink-0 ${column.colorClass.replace('text-', 'bg-')}`}
                   />
-                  <TextEllipsis 
+                  <TextEllipsis
                     text={t(column.title)}
-                    maxWidth="100%"
+                    maxWidth='100%'
                     lines={1}
                   />
                 </h3>
-                <Badge 
+                <Badge
                   label={String(items.length)}
                   status={getColumnBadgeStatus(column.colorClass)}
                   outline
                   borderless
-                  size="xs"
-                  width="w-fit"
+                  size='xs'
+                  width='w-fit'
                 />
               </div>
 

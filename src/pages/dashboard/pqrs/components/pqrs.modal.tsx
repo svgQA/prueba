@@ -23,7 +23,13 @@ interface IProps {
   areas?: any;
 }
 
-export const PqrsModal = ({ showModal, closeModal, id, tags, areas }: IProps) => {
+export const PqrsModal = ({
+  showModal,
+  closeModal,
+  id,
+  tags,
+  areas,
+}: IProps) => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
 
@@ -51,7 +57,12 @@ export const PqrsModal = ({ showModal, closeModal, id, tags, areas }: IProps) =>
     { id: 'analysis', label: 'Análisis IA', icon: '311' },
   ];
 
-  const getBadgeStatus = (): 'error' | 'success' | 'warning' | 'info' | 'ternary' => {
+  const getBadgeStatus = ():
+    | 'error'
+    | 'success'
+    | 'warning'
+    | 'info'
+    | 'ternary' => {
     const requestType = pqrs.value?.extraData?.requestType?.toLowerCase();
     if (requestType === 'queja') return 'error';
     if (requestType === 'sugerencia') return 'success';
@@ -80,7 +91,9 @@ export const PqrsModal = ({ showModal, closeModal, id, tags, areas }: IProps) =>
               <div class='flex items-center gap-2 text-xs text-gray-text-light'>
                 {pqrs.value?.extraData?.ticketNumber && (
                   <>
-                    <span class='font-mono'>#{pqrs.value.extraData.ticketNumber}</span>
+                    <span class='font-mono'>
+                      #{pqrs.value.extraData.ticketNumber}
+                    </span>
                     {pqrs.value?.extraData?.accountNumber && (
                       <>
                         <span>•</span>
@@ -97,8 +110,8 @@ export const PqrsModal = ({ showModal, closeModal, id, tags, areas }: IProps) =>
                 label={pqrs.value.extraData.requestType}
                 status={getBadgeStatus()}
                 outline
-                size="sm"
-                width="w-fit"
+                size='sm'
+                width='w-fit'
               />
             )}
           </div>
@@ -129,7 +142,9 @@ export const PqrsModal = ({ showModal, closeModal, id, tags, areas }: IProps) =>
               {areas && (
                 <div class='flex items-center gap-1.5 text-gray-text-light'>
                   <span>🏢</span>
-                  <span class='truncate capitalize'>{areas.replace(/_/g, ' ')}</span>
+                  <span class='truncate capitalize'>
+                    {areas.replace(/_/g, ' ')}
+                  </span>
                 </div>
               )}
 
@@ -145,16 +160,19 @@ export const PqrsModal = ({ showModal, closeModal, id, tags, areas }: IProps) =>
               )}
             </div>
 
-            {(tags && tags.length > 0 || pqrs.value?.extraData?.hasFiles || typeof pqrs.value?.extraData?.daysToExpire === 'number') && (
+            {((tags && tags.length > 0) ||
+              pqrs.value?.extraData?.hasFiles ||
+              typeof pqrs.value?.extraData?.daysToExpire === 'number') && (
               <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border'>
-                {tags && tags.map((tag, idx) => (
-                  <span
-                    key={idx}
-                    class='px-2 py-0.5 bg-b-light text-gray-text-light text-xs rounded'
-                  >
-                    #{String(tag)}
-                  </span>
-                ))}
+                {tags &&
+                  tags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      class='px-2 py-0.5 bg-b-light text-gray-text-light text-xs rounded'
+                    >
+                      #{String(tag)}
+                    </span>
+                  ))}
 
                 {pqrs.value?.extraData?.hasFiles && (
                   <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1'>
@@ -162,11 +180,12 @@ export const PqrsModal = ({ showModal, closeModal, id, tags, areas }: IProps) =>
                   </span>
                 )}
 
-                {typeof pqrs.value?.extraData?.daysToExpire === 'number' && pqrs.value.extraData.daysToExpire <= 3 && (
-                  <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium'>
-                    ⏰ {pqrs.value.extraData.daysToExpire}d
-                  </span>
-                )}
+                {typeof pqrs.value?.extraData?.daysToExpire === 'number' &&
+                  pqrs.value.extraData.daysToExpire <= 3 && (
+                    <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium'>
+                      ⏰ {pqrs.value.extraData.daysToExpire}d
+                    </span>
+                  )}
               </div>
             )}
           </div>
@@ -178,10 +197,11 @@ export const PqrsModal = ({ showModal, closeModal, id, tags, areas }: IProps) =>
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                class={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${activeTab.value === tab.id
-                  ? 'bg-primary-opacity text-primary border-b-2 border-primary'
-                  : 'text-gray-text-light hover:text-t-light hover:bg-b-light'
-                  }`}
+                class={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+                  activeTab.value === tab.id
+                    ? 'bg-primary-opacity text-primary border-b-2 border-primary'
+                    : 'text-gray-text-light hover:text-t-light hover:bg-b-light'
+                }`}
                 onClick={() => (activeTab.value = tab.id)}
               >
                 <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>

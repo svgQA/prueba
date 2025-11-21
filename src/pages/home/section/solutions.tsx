@@ -1,49 +1,56 @@
-import { Button } from '@/components/common/button/button';
-import { tryvoo_solutions } from '../utils/data/solutions';
 import { useTranslation } from 'react-i18next';
+import { tryvoo_solutions } from '../utils/data/solutions';
 
 export const HomeSolutions = () => {
   const { t } = useTranslation();
 
   return (
-    <div className='flex flex-col items-center text-center bg-white text-ternary py-12'>
-      <span className='text-3xl font-bold mb-5 text-ternary'>
-        {t('i_solutions_title')}
-      </span>
-      <span className='text-xl text-gray-700'>{t('i_solutions_subtitle')}</span>
+    <div
+      id='soluciones'
+      className='flex flex-col items-center bg-white text-ternary py-16 sm:py-20 px-4 sm:px-6'
+    >
+      <div className='max-w-6xl text-center'>
+        <p className='inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-primary'>
+          {t('h_solutions_badge')}
+        </p>
+        <h2 className='mt-4 text-3xl font-bold leading-tight sm:text-4xl'>
+          {t('h_solutions_title')}
+        </h2>
+        <p className='mt-3 text-lg text-gray-600'>
+          {t('h_solutions_description')}
+        </p>
+      </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10 mb-10 px-4 w-full max-w-7xl'>
+      <div className='mt-12 grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-2'>
         {tryvoo_solutions.map((item) => (
           <div
             key={item.id}
-            className='hover:border-2 hover:border-primary border-gray-100 border flex flex-col sm:flex-row items-center shadow-lg rounded-lg w-full'
+            className='group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl'
           >
-            <div className='bg-primary rounded-lg w-full sm:w-1/3 h-48 sm:h-full flex items-center justify-center p-4'>
+            <div className='bg-primary p-6 sm:p-8'>
               <img
                 src={item.image}
-                alt={item.titleKey ? t(item.titleKey) : ''}
-                className='h-auto w-[80%] max-w-[150px] object-contain'
+                alt={item.titleKey ?? ''}
+                className='h-28 w-auto object-contain'
               />
             </div>
-            <div className='text-left w-full sm:w-2/3 p-6'>
-              <h2 className='text-xl sm:text-2xl font-semibold text-gray-800 mb-2'>
-                {item.titleKey && t(item.titleKey)}
-              </h2>
-              <p className='text-gray-700 text-base sm:text-lg'>
-                {item.subtitleKey && t(item.subtitleKey)}
-              </p>
+            <div className='flex flex-1 flex-col justify-between space-y-3 p-6'>
+              <div>
+                <h3 className='text-xl font-bold text-[#0b1f33]'>
+                  {item.titleKey ? t(item.titleKey) : ''}
+                </h3>
+                <p className='mt-2 text-base text-gray-600'>
+                  {item.subtitleKey ? t(item.subtitleKey) : ''}
+                </p>
+              </div>
+              <div className='flex items-center gap-3 text-sm font-semibold text-primary'>
+                <span className='vx-icon vx-icon-008 size-sm text-primary' />
+                {t('h_solutions_ready')}
+              </div>
             </div>
           </div>
         ))}
       </div>
-
-      <Button
-        label={t('i_solutions_button')}
-        type='button'
-        id='schedule'
-        name='schedule'
-        className='bg-[#20314F] text-[#FFF] mb-4 text-xl rounded-full !p-5'
-      />
     </div>
   );
 };

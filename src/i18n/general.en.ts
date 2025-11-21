@@ -93,5 +93,5 @@ export const general_en = {
     pageTitle: 'TR - PQRS Service',
     created: 'Created',
     finished: 'Finished',
-  }
+  },
 };
