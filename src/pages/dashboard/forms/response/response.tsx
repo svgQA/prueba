@@ -34,6 +34,7 @@ import { jsonToGzipBase64 } from '@/utils/utilities/blob';
 //import { ReportService } from '@/services/form/reports';
 //import { fileManager } from '@/utils/network/file/file';
 import { useUserStore } from '@/store/slices';
+import { useTranslation } from 'react-i18next';
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
   type?: string;
@@ -43,6 +44,7 @@ export const FormResponseSettingPage: FunctionComponent<
   IFormResponseSettingPageProps
 > = ({ posFinishAction, type }: IFormResponseSettingPageProps) => {
   const [currentPage, setCurrentPage] = useState(0);
+  const { t } = useTranslation();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const { getTenant } = useUserStore();
 
@@ -599,17 +601,19 @@ export const FormResponseSettingPage: FunctionComponent<
             )}
           </div>
 
-          {!(currentPage === getResponse.value.pages.length - 1) && (
+          {getResponse.value.pages.length > 1 && (
             <div className='flex justify-between items-center'>
               <Button
                 name='btn-response-prev'
                 type='button'
-                label='previus'
+                label='previous'
                 icon='003'
                 onClick={prevPage}
+                disabled={currentPage === 0}
               />
               <span className='text-sm'>
-                Page {currentPage + 1} of {getResponse.value.pages.length}
+                {t('page')} {currentPage + 1} {t('of')}{' '}
+                {getResponse.value.pages.length}
               </span>
               <Button
                 name='btn-response-next'
