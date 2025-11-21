@@ -17,6 +17,8 @@ export const buttons_es = {
   apply: 'Aplicar',
   btnSave: 'Guardar',
   btnUpdate: 'Actualizar',
+  page: 'Página',
+  of: 'de',
 };
 
 export const buttons_en = {
@@ -38,4 +40,6 @@ export const buttons_en = {
   apply: 'Apply',
   btnSave: 'Save',
   btnUpdate: 'Update',
+  page: 'Page',
+  of: 'of',
 };
