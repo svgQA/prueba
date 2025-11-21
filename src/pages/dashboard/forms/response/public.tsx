@@ -546,27 +546,46 @@ export const FormResponsePublicPage: FunctionComponent<
   };
 
   return (
-    <section className='min-h-screen bg-[#f8fbff] text-t-dark'>
+    <section className='relative min-h-screen overflow-hidden bg-gradient-to-br from-[#0b1f33] via-[#0f2747] to-[#0b1f33] text-white'>
+      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.18),transparent_30%),radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.18),transparent_25%)]' />
       {getResponse.value && (
-        <div className='max-w-5xl mx-auto px-4 py-8 md:px-8 md:py-12'>
-          <div className='relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#12264a] via-[#1f3b73] to-[#2d5bff] p-6 md:p-8 text-white shadow-2xl'>
-            <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_10%_20%,rgba(255,255,255,0.22),transparent_30%),radial-gradient(circle_at_80%_0,rgba(255,255,255,0.2),transparent_30%)]' />
-            <div className='relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between'>
-              <div className='space-y-2'>
-                <p className='inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/80 ring-1 ring-white/20 backdrop-blur'>
-                  {company?.name || 'Formulario público'}
-                </p>
-                <h1 className='text-3xl font-semibold leading-tight md:text-4xl'>
-                  {getResponse.value.label}
-                </h1>
-                {getResponse.value.description && (
-                  <p className='max-w-2xl text-sm text-white/80 md:text-base'>
-                    {getResponse.value.description}
-                  </p>
-                )}
+        <div className='relative mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-10'>
+          <div className='grid gap-6 lg:grid-cols-[1.25fr,0.9fr]'>
+            <div className='rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-md sm:p-8'>
+              <div className='inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/80 ring-1 ring-white/15'>
+                {company?.name || 'Formulario público'}
               </div>
+              <h1 className='mt-4 text-3xl font-extrabold leading-tight md:text-4xl'>
+                {getResponse.value.label}
+              </h1>
+              {getResponse.value.description && (
+                <p className='mt-3 max-w-2xl text-base leading-relaxed text-white/80'>
+                  {getResponse.value.description}
+                </p>
+              )}
 
-              <div className='flex items-center gap-4 rounded-2xl bg-white/10 p-4 backdrop-blur md:min-w-[260px]'>
+              <div className='mt-8 grid grid-cols-2 gap-3 text-sm text-white/80 sm:grid-cols-3'>
+                <div className='rounded-2xl bg-white/5 p-4 ring-1 ring-white/10'>
+                  <p className='text-xs uppercase tracking-wide text-white/60'>Páginas</p>
+                  <p className='text-2xl font-bold text-white'>{totalPages}</p>
+                </div>
+                <div className='rounded-2xl bg-white/5 p-4 ring-1 ring-white/10'>
+                  <p className='text-xs uppercase tracking-wide text-white/60'>En progreso</p>
+                  <p className='text-2xl font-bold text-white'>
+                    {currentPage + 1} / {totalPages || 1}
+                  </p>
+                </div>
+                <div className='rounded-2xl bg-white/5 p-4 ring-1 ring-white/10 sm:block hidden'>
+                  <p className='text-xs uppercase tracking-wide text-white/60'>Estado</p>
+                  <p className='text-2xl font-bold text-white'>
+                    {getResponseMode.value?.hold ? 'Borrador' : 'Abierto'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className='flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-md sm:p-8'>
+              <div className='flex items-center gap-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/10'>
                 <div className='flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-white/20 ring-2 ring-white/40'>
                   {avatar ? (
                     <img src={avatar} alt={fullName} className='h-full w-full object-cover' />
@@ -575,57 +594,72 @@ export const FormResponsePublicPage: FunctionComponent<
                   )}
                 </div>
                 <div className='space-y-1'>
-                  <p className='text-sm font-semibold'>{fullName || 'Usuario invitado'}</p>
+                  <p className='text-sm font-semibold text-white'>
+                    {fullName || 'Usuario invitado'}
+                  </p>
                   <p className='text-xs text-white/80'>{user?.email || 'Correo no disponible'}</p>
+                </div>
+              </div>
+
+              <div className='rounded-2xl bg-white/10 p-4 ring-1 ring-white/10'>
+                <p className='text-xs font-semibold uppercase tracking-wide text-white/70'>
+                  Compañía
+                </p>
+                <p className='text-lg font-bold text-white'>
+                  {company?.name || 'Compañía no disponible'}
+                </p>
+              </div>
+
+              <div className='rounded-2xl bg-white/10 p-4 ring-1 ring-white/10'>
+                <div className='flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-white/70'>
+                  <span>Progreso</span>
+                  <span className='text-white'>
+                    {progress}%
+                  </span>
+                </div>
+                <div className='mt-3 h-2 w-full overflow-hidden rounded-full bg-white/20'>
+                  <div
+                    className='h-full rounded-full bg-gradient-to-r from-primary to-emerald-300 shadow-lg transition-all duration-300'
+                    style={{ width: `${progress}%` }}
+                  />
                 </div>
               </div>
             </div>
           </div>
 
-          <div className='mt-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
-            <div className='space-y-1'>
-              <p className='text-xs font-medium uppercase tracking-wide text-[#1f3b73]'>
-                Página {currentPage + 1} de {totalPages}
-              </p>
-              <p className='text-lg font-semibold text-t-dark'>
-                {currentPageData?.label}
-              </p>
-            </div>
-            {type !== 'VIEW' && (
-              <div className='flex flex-wrap items-center gap-2'>
-                <Button
-                  type='button'
-                  onClick={finishResponse}
-                  name='btn-finish-response'
-                  icon='137'
-                  label='finish'
-                />
-                <Button
-                  type='button'
-                  onClick={saveResponse}
-                  name='btn-save-response'
-                  icon='134'
-                  label='save'
-                />
-              </div>
-            )}
-          </div>
-
-          <div className='mt-3 h-2 w-full overflow-hidden rounded-full bg-white/70 shadow-inner'>
-            <div
-              className='h-full rounded-full bg-gradient-to-r from-[#2d5bff] to-[#5c8dff] transition-all duration-300'
-              style={{ width: `${progress}%` }}
-            />
-          </div>
-
-          <div className='mt-6 rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-100'>
-            <div className='mb-6 flex items-center justify-between gap-4 border-b border-gray-100 pb-4'>
+          <div className='mt-10 rounded-3xl bg-white p-6 shadow-xl ring-1 ring-gray-100'>
+            <div className='mb-6 flex flex-col gap-4 border-b border-gray-100 pb-4 md:flex-row md:items-center md:justify-between'>
               <div>
-                <p className='text-sm font-semibold text-[#1f3b73]'>Sección</p>
-                <h2 className='text-xl font-bold text-t-dark'>
+                <p className='text-xs font-semibold uppercase tracking-wide text-primary'>
+                  Página {currentPage + 1} de {totalPages}
+                </p>
+                <h2 className='text-2xl font-bold text-t-dark'>
                   {currentPageData?.label}
                 </h2>
+                {getResponse.value.description && (
+                  <p className='mt-1 text-sm text-gray-600'>
+                    {getResponse.value.description}
+                  </p>
+                )}
               </div>
+              {type !== 'VIEW' && (
+                <div className='flex flex-wrap items-center gap-2'>
+                  <Button
+                    type='button'
+                    onClick={finishResponse}
+                    name='btn-finish-response'
+                    icon='137'
+                    label='finish'
+                  />
+                  <Button
+                    type='button'
+                    onClick={saveResponse}
+                    name='btn-save-response'
+                    icon='134'
+                    label='save'
+                  />
+                </div>
+              )}
               {getResponseMode.value?.hold && (
                 <div className='flex items-center gap-2'>
                   <Button
@@ -636,14 +670,6 @@ export const FormResponsePublicPage: FunctionComponent<
                     label='h_share_report'
                     className='mb-0'
                   />
-                  {/* <Button
-                    type='button'
-                    onClick={handleGenerateReport}
-                    name='btn-response-preview'
-                    icon='411'
-                    label='h_generate_report'
-                    className='mb-0'
-                  /> */}
                 </div>
               )}
             </div>
@@ -653,31 +679,37 @@ export const FormResponsePublicPage: FunctionComponent<
                 renderElement(element, getCurrentPage())
               )}
             </div>
-          </div>
 
-          <div className='mt-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
-            <div className='flex items-center gap-3'>
-              <Button
-                name='btn-response-prev'
-                type='button'
-                label='previus'
-                icon='003'
-                onClick={prevPage}
-                disabled={currentPage === 0}
-              />
-              <Button
-                name='btn-response-next'
-                type='button'
-                label='next'
-                icon='004'
-                end
-                disabled={currentPage === totalPages - 1}
-                onClick={postPage}
-              />
+            <div className='mt-8 flex flex-col gap-3 rounded-2xl bg-gray-50 p-4 md:flex-row md:items-center md:justify-between'>
+              <div className='flex items-center gap-3'>
+                <Button
+                  name='btn-response-prev'
+                  type='button'
+                  label='previus'
+                  icon='003'
+                  onClick={prevPage}
+                  disabled={currentPage === 0}
+                />
+                <Button
+                  name='btn-response-next'
+                  type='button'
+                  label='next'
+                  icon='004'
+                  end
+                  disabled={currentPage === totalPages - 1}
+                  onClick={postPage}
+                />
+              </div>
+              <div className='flex items-center gap-3 text-sm text-gray-600'>
+                <div className='h-2 w-24 overflow-hidden rounded-full bg-white'>
+                  <div
+                    className='h-full rounded-full bg-gradient-to-r from-primary to-blue-400 transition-all duration-300'
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <span className='font-semibold text-t-dark'>Avance {currentPage + 1} / {totalPages}</span>
+              </div>
             </div>
-            <span className='text-sm text-gray-600'>
-              Avance {currentPage + 1} / {totalPages}
-            </span>
           </div>
         </div>
       )}
