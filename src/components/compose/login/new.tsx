@@ -1,12 +1,10 @@
-import { Authenticator, Button, useAuthenticator } from '@aws-amplify/ui-react';
+import React, { useState, useEffect, FormEvent } from 'react';
+import { Button } from '@aws-amplify/ui-react';
+import { signIn, fetchAuthSession } from 'aws-amplify/auth';
 import { useLocation } from 'wouter';
 import { PAGES_LIST } from '@/utils/routing';
 import { Logo } from '@/components/common/logo/logo';
-import '@aws-amplify/ui-react/styles.css';
-import './styles.css';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
-// import i18n from '@/i18n';
 
 interface CustomLoginContainerProps {
   children: React.ReactNode;
@@ -101,10 +99,20 @@ const CustomLoginContainer = ({
 
         <div className={`relative w-full md:w-[420px] ${formClassName}`}>
           <div className='absolute inset-0 -z-10 rounded-[28px] bg-gradient-to-br from-white/20 via-white/5 to-transparent opacity-70 blur-2xl' />
-          <div className='relative overflow-hidden rounded-lg border border-white/20 bg-white min-h-[500px] p-5 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6'>
+          <div className='relative overflow-hidden rounded-lg bg-white p-5 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-6'>
             <div className='absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-emerald-300 to-cyan-400' />
-            <div className='w-full h-full flex items-center justify-center'>
-              {children}
+            <div className='w-full h-full flex items-center justify-evenly flex-col min-h-96'>
+              <div className='fill-primary'>
+                <Logo
+                  title='Tryvoo'
+                  slogan='Gestión en campo'
+                  color='text-primary'
+                />
+                <h3 className='mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl my-2 sm:my-3 text-ternary'>
+                  {t('i_signIn')}
+                </h3>
+              </div>
+              <div className='w-full min-h-64'>{children}</div>
             </div>
           </div>
         </div>
@@ -113,129 +121,125 @@ const CustomLoginContainer = ({
   );
 };
 
-const components = {
-  Header() {
-    const { t } = useTranslation();
-    return (
-      <div className='text-center flex flex-col items-center'>
-        <div className='fill-primary'>
-          <Logo title='Tryvoo' slogan='Gestión en campo' color='text-primary' />
-        </div>
-        <h3 className='mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl my-2 sm:my-3 text-ternary'>
-          {t('i_signIn')}
-        </h3>
-      </div>
-    );
-  },
-  Footer() {
-    return (
-      <div className='text-center' style={{ margin: '0.75rem 0' }}>
-        <p className='text-xs sm:text-sm md:text-base text-ternary'>
-          © {new Date().getFullYear()} Tryvoo
-        </p>
-      </div>
-    );
-  },
-  SignIn: {
-    Header() {
-      return null;
-    },
-    Footer() {
-      /*  const { t } = useTranslation();
-      return (
-        <div className='text-center'>
-          <button
-            onClick={() => {}}
-            className='text-xs sm:text-sm font-normal border-0 outline-none focus:outline-none hover:border-0 active:border-0 text-ternary'
-          >
-            {t('i_forgotPassword')}
-          </button>
-        </div>
-      );*/
-      return null;
-    },
-    SubmitButton() {
-      const { t } = useTranslation();
-      const { isPending, submitForm } = useAuthenticator((context) => [
-        context.isPending,
-      ]);
-
-      return (
-        <Button
-          className='mt-2 w-full rounded-2xl bg-primary px-4 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-white shadow-lg transition hover:translate-y-[-1px] hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 active:translate-y-0'
-          type='submit'
-          onClick={submitForm}
-          isLoading={isPending}
-        >
-          {t('i_signIn')}
-        </Button>
-      );
-    },
-  },
-};
-
-export const CustomLoginPage = () => {
+// --- Formulario de login totalmente custom ---
+const CustomSignInForm: React.FC = () => {
+  const { t } = useTranslation();
   const [_, navigate] = useLocation();
-  const { route } = useAuthenticator((context) => [context.route]);
-  // const { t } = useTranslation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError(null);
+
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    if (!trimmedEmail || !trimmedPassword) {
+      setError('Por favor completa todos los campos.');
+      return;
+    }
+
+    try {
+      setIsPending(true);
+      await signIn({
+        username: trimmedEmail,
+        password: trimmedPassword,
+      });
+
+      // Si el signIn es correcto, navegamos al dashboard
+      navigate(PAGES_LIST.DASHBOARD);
+    } catch (err: any) {
+      console.error(err);
+      setError(
+        err?.message ||
+          'Ha ocurrido un error al iniciar sesión. Inténtalo de nuevo.'
+      );
+    } finally {
+      setIsPending(false);
+    }
+  };
+
+  // Comprobamos si ya hay sesión activa para redirigir automáticamente
   useEffect(() => {
-    const handleFormSubmit = (event: Event) => {
-      const target = event.target as HTMLFormElement;
-
-      if (target && target.tagName === 'FORM') {
-        const passwordInput = target.querySelector(
-          'input[name="password"]'
-        ) as HTMLInputElement;
-
-        if (passwordInput) {
-          passwordInput.value = passwordInput.value.trim();
+    const checkSession = async () => {
+      try {
+        const session = await fetchAuthSession();
+        if (session?.tokens) {
+          navigate('/');
         }
+      } catch {
+        // si no hay sesión, no pasa nada
       }
     };
-    document.addEventListener('submit', handleFormSubmit, true);
-    return () => {
-      document.removeEventListener('submit', handleFormSubmit, true);
-    };
-  }, []);
 
-  if (route === 'authenticated') {
-    navigate(PAGES_LIST.DASHBOARD);
-    return null;
-  }
+    checkSession();
+  }, [navigate]);
 
   return (
+    <form onSubmit={handleSubmit} className='w-full space-y-4'>
+      <div>
+        <label className='block text-sm font-medium text-gray-700 mb-1'>
+          Correo electrónico
+        </label>
+        <input
+          type='email'
+          name='username'
+          value={email}
+          // @ts-ignore
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder='Introduce tu correo electrónico...'
+          className='w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
+        />
+      </div>
+
+      <div>
+        <label className='block text-sm font-medium text-gray-700 mb-1'>
+          Contraseña
+        </label>
+        <input
+          type='password'
+          name='password'
+          value={password}
+          // @ts-ignore
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder='Introduce tu contraseña...'
+          className='w-full rounded-xl border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary'
+        />
+      </div>
+
+      {error && <p className='text-xs text-red-500 mt-1'>{error}</p>}
+
+      <Button
+        className='w-full mt-4 px-4 py-2 bg-cyan-500 text-white font-medium rounded-md hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-colors duration-200'
+        type='submit'
+        isLoading={isPending}
+      >
+        {t('i_signIn')}
+      </Button>
+
+      {/* Si quieres el enlace de "Olvidé contraseña", lo puedes dejar aquí */}
+      {/*
+      <div className='text-center mt-2'>
+        <button
+          type='button'
+          onClick={() => {}}
+          className='text-xs sm:text-sm font-normal border-0 outline-none focus:outline-none hover:underline text-ternary'
+        >
+          {t('i_forgotPassword')}
+        </button>
+      </div>
+      */}
+    </form>
+  );
+};
+
+export const CustomLoginPage: React.FC = () => {
+  return (
     <CustomLoginContainer>
-      <Authenticator
-        hideSignUp={true}
-        components={components}
-        initialState='signIn'
-        loginMechanisms={['email']}
-        signUpAttributes={[]}
-        services={{
-          async validateCustomSignUp(): Promise<{ errors: string[] }> {
-            return { errors: [] };
-          },
-        }}
-        formFields={{
-          signIn: {
-            username: {
-              // label: t('h_email'),
-              // placeholder: t('p_email'),
-              label: 'Correo electrónico',
-              placeholder: 'Introduce tu correo electrónico...',
-            },
-            password: {
-              // label: t('h_password'),
-              // placeholder: t('p_enter_password'),
-              label: 'Contraseña',
-              placeholder: 'Introduce tu contraseña...',
-            },
-          },
-        }}
-        // i18nIsDynamicList={true}
-        // key={i18n.language}
-      />
+      <CustomSignInForm />
     </CustomLoginContainer>
   );
 };
