@@ -86,7 +86,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
 
   const setInitialValues = async () => {
     loading.value = true;
-    if (!id) return loading.value = false;
+    if (!id) return (loading.value = false);
     const userKeys = [
       'name',
       'description',

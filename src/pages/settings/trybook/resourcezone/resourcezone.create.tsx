@@ -82,9 +82,9 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
 
   const setInitialValues = useCallback(async () => {
     loading.value = true;
-    if (!id) return loading.value = false;
+    if (!id) return (loading.value = false);
     const req = await ResourceZoneService.getResourceZone(Number(id));
-    if (!req.getStatus()) return loading.value = false;
+    if (!req.getStatus()) return (loading.value = false);
 
     const model = req.getOne();
     initialValues.value = {
@@ -141,11 +141,11 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
     const selectedZone = rawZones.value.find((z) => z.id === selectedZoneId);
     if (!selectedZone) {
       ToastManager.error('s_select_valid_zone');
-      return loading.value = false;
+      return (loading.value = false);
     }
     if (String(selectedZone.type).toUpperCase() === 'PARKING') {
       ToastManager.error('s_zone_not_support_resources');
-      return loading.value = false;
+      return (loading.value = false);
     }
 
     const payload = {
@@ -175,7 +175,7 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
       ? await ResourceZoneService.updateResourceZone(Number(id), payload)
       : await ResourceZoneService.createResourceZone(payload);
 
-    if (!req.getStatus()) return loading.value = false;
+    if (!req.getStatus()) return (loading.value = false);
 
     ToastManager.success(id ? 's_updated_success' : 's_created_success');
     go({
@@ -188,7 +188,10 @@ export const ResourceZoneCreatePage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
+    <Section
+      className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
+      loading={loading.value}
+    >
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}

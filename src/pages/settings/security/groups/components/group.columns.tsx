@@ -39,13 +39,13 @@ export const columns: ColumnDef<any>[] = [
           <span
             className='vox-icon vx-icon-123 p-1 size-sm cursor-pointer'
             data-id={id}
-            data-type='place-update'
+            data-type='group-update'
             data-action={ROW_ACTIONS.UPDATE}
           ></span>
           <span
             className='vox-icon vx-icon-053 p-1 size-sm cursor-pointer'
             data-id={id}
-            data-type='place-delete'
+            data-type='group-delete'
             data-action={ROW_ACTIONS.DELETE}
           ></span>
         </div>

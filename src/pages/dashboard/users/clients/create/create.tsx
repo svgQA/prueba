@@ -47,6 +47,7 @@ type UserInList = {
   phone: string;
   email: string;
   address: string;
+  owner?: boolean | null;
 };
 
 export const ClientsCreateSettingPage: FunctionComponent = () => {
@@ -73,6 +74,14 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
     }
   }, [selectedCompany]);
 
+  const convertPhone = (phone: string): string => {
+    if (!phone) return '';
+    const trimmedPhone = phone.trim();
+    if (trimmedPhone.startsWith('+57')) return trimmedPhone;
+    if (trimmedPhone.startsWith('57')) return `+${trimmedPhone}`;
+    return `+57${trimmedPhone}`;
+  };
+
   const onSubmit = async (model: FormData) => {
     loading.value = true;
     let request;
@@ -82,7 +91,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
       name: model.name,
       description: model.description,
       email: model.email,
-      phone: model.phone,
+      phone: convertPhone(model.phone!!),
       groups: model.groups,
       users: usersList.value,
     };
@@ -204,6 +213,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
       return;
     }
 
+    userData.phone = convertPhone(userData.phone);
     const newUser: UserInList = {
       id: Date.now().toString(),
       oldUser: false,
@@ -287,6 +297,14 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
     getGroups();
   }, []);
 
+  const validatedPhone = (phone: string) => {
+    const trimmedPhone = phone.trim();
+    if (!/^\+?57\d{10}$/.test(trimmedPhone.replace(/\s/g, ''))) {
+      return 'El formato debe ser +57 seguido de 10 dígitos';
+    }
+    return '';
+  };
+
   return (
     <Section
       className='space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
@@ -297,8 +315,11 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
         initialValues={initialValues.value}
         validate={(values) => {
           const errors: Partial<FormData> = {};
-          if (!values.name) errors.name = 'Campo obligatorio';
-
+          if (!values.name) errors.name = t('missing_required_field');
+          if (values.phone) {
+            const phoneError = validatedPhone(values.phone!!);
+            if (phoneError) errors.phone = phoneError;
+          }
           return errors;
         }}
         render={({ handleSubmit, form, submitting, pristine, values }) => {
@@ -428,11 +449,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
               name='toggle-user-form'
               onClick={toggleUserForm}
               mode='primary'
-              label={
-                showUserForm.value
-                  ? 'h_hide_form'
-                  : 'h_add_user'
-              }
+              label={showUserForm.value ? 'h_hide_form' : 'h_add_user'}
             />
           </div>
         </div>
@@ -447,7 +464,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
               validate={(values) => {
                 const errors: Partial<UserFormData> = {};
                 if (!values.name) errors.name = t('missing_required_field');
-                if (!values.surname) errors.surname = t('missing_required_field');
+                if (!values.surname)
+                  errors.surname = t('missing_required_field');
                 if (!values.phone) errors.phone = t('missing_required_field');
                 if (!values.email) {
                   errors.email = t('missing_required_field');
@@ -460,7 +478,14 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                     ? t('email_have_client')
                     : t('email_already_in_list');
                 }
-                if (!values.address) errors.address = t('missing_required_field');
+                if (values.phone) {
+                  const phoneError = validatedPhone(values.phone!!);
+                  if (phoneError) errors.phone = phoneError;
+                }
+                if (!values.address)
+                  errors.address = t('missing_required_field');
+                if (!values.name) errors.name = t('missing_required_field');
+                if (!values.name) errors.surname = t('missing_required_field');
                 return errors;
               }}
               render={({ handleSubmit, submitting, pristine }) => (
@@ -576,6 +601,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                       mode='primary'
                       label='clean'
                       big={true}
+                      disabled={user.owner === true}
                     />
                   </div>
                 </div>

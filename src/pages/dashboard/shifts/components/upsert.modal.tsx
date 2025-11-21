@@ -152,9 +152,9 @@ export const TaskForm = ({
 
   const getInitialData = async () => {
     loading.value = true;
-    if (!shiftId) return loading.value = false;
+    if (!shiftId) return (loading.value = false);
     const response = await ShiftService.get_shift(shiftId);
-    if (!response.getStatus()) return loading.value = false;
+    if (!response.getStatus()) return (loading.value = false);
     const model = response.getOne();
 
     await onChangeService(model.service.id, true);

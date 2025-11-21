@@ -96,9 +96,9 @@ export const SiteCreatePage: FunctionComponent = () => {
 
   const setInitialValues = useCallback(async () => {
     loading.value = true;
-    if (!uuid) return loading.value = false;
+    if (!uuid) return (loading.value = false);
     const req = await SitesService.getSite(uuid);
-    if (!req.getStatus()) return loading.value = false;
+    if (!req.getStatus()) return (loading.value = false);
     const model = req.getOne();
 
     // si es OFFICE, primero cargar places del cliente (industriales)
@@ -201,7 +201,7 @@ export const SiteCreatePage: FunctionComponent = () => {
       ? await SitesService.updateSite(uuid, payload)
       : await SitesService.createSite(payload);
 
-    if (!req.getStatus()) return loading.value = false;
+    if (!req.getStatus()) return (loading.value = false);
 
     ToastManager.success(uuid ? 's_updated_success' : 's_created_success');
     go({
@@ -214,7 +214,10 @@ export const SiteCreatePage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
+    <Section
+      className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
+      loading={loading.value}
+    >
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}

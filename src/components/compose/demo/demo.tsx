@@ -43,29 +43,74 @@ const CustomDemoContainer = ({
 
   return (
     <div
-      className={`w-full min-h-screen flex flex-col md:flex-row bg-gradient-to-r from-cyan-500 to-emerald-400 items-center justify-center p-3 sm:p-4 md:p-8 overflow-x-hidden ${containerClassName}`}
+      className={`relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-gradient-to-br from-[#0b1f33] via-[#102a44] to-[#0b1f33] p-4 sm:p-6 md:p-10 ${containerClassName}`}
     >
-      <div className='flex items-center md:items-start w-full md:w-7/12 flex-col p-2 md:p-5 md:pl-14 mb-4 md:mb-0 text-center md:text-left'>
-        <div className='max-w-3xl text-white w-full'>
-          {showLogo && (
-            <div className='flex justify-center md:justify-start mb-3 md:mb-6 text-3xl'>
-              <Logo title='Tryvoo' slogan='' />
-            </div>
-          )}
-          <h1 className='text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4 w-full leading-tight'>
-            {title || t('i_demo_title')}
-          </h1>
-          <h4 className='text-white sm:text-xl md:text-xl lg:text-2xl leading-relaxed opacity-90 font-semibold max-w-2xl mx-auto md:mx-0'>
-            {subtitle || t('i_demo_subtitle')}
-          </h4>
-        </div>
+      <div className='pointer-events-none absolute inset-0 opacity-60'>
+        <div className='absolute -left-12 -top-24 h-52 w-52 rounded-full bg-primary/25 blur-3xl' />
+        <div className='absolute bottom-0 left-10 h-48 w-48 rounded-full bg-emerald-300/25 blur-3xl' />
+        <div className='absolute right-[-6%] top-14 h-80 w-80 rounded-full bg-cyan-400/25 blur-[110px]' />
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_20%_25%,rgba(255,255,255,0.05),transparent_36%),radial-gradient(circle_at_80%_0%,rgba(16,185,129,0.15),transparent_30%)]' />
       </div>
 
-      <div
-        className={`bg-white flex items-center justify-center px-6 py-6 sm:px-8 sm:py-8 rounded-lg w-full md:w-[600px] ${formClassName}`}
-      >
-        <div className='w-full h-full flex items-center justify-center'>
-          {children}
+      <div className='relative z-10 flex w-full max-w-7xl flex-col gap-10 rounded-[32px] border border-white/10 bg-white/5 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-2xl md:flex-row md:p-10'>
+        <div className='flex w-full flex-col justify-center gap-6 text-center text-white md:w-7/12 md:text-left'>
+          <div className='flex flex-col gap-4'>
+            {showLogo && (
+              <div className='flex items-center justify-center md:justify-start fill-white'>
+                <Logo title='Tryvoo' slogan='Gestión en campo' />
+              </div>
+            )}
+            <div className='mx-auto flex max-w-xl items-center justify-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-white/80 md:mx-0'>
+              <span className='inline-block h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.8)]'></span>
+              Demo exclusiva
+            </div>
+          </div>
+
+          <div className='space-y-4'>
+            <h1 className='text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl lg:text-6xl'>
+              {title || t('i_demo_title')}
+            </h1>
+            <h4 className='mx-auto max-w-2xl text-lg leading-relaxed text-white/80 md:mx-0 md:text-xl'>
+              {subtitle || t('i_demo_subtitle')}
+            </h4>
+          </div>
+
+          <div className='grid gap-3 rounded-3xl border border-white/10 bg-white/5 p-4 text-left shadow-lg backdrop-blur-xl sm:grid-cols-2'>
+            <div className='flex items-center gap-3 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10'>
+              <div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/25 text-white'>
+                🚀
+              </div>
+              <div>
+                <p className='text-sm font-semibold text-white'>Setup guiado</p>
+                <p className='text-xs text-white/70'>
+                  Acompañamiento para configurar tu operación.
+                </p>
+              </div>
+            </div>
+            <div className='flex items-center gap-3 rounded-2xl bg-white/5 p-4 ring-1 ring-white/10'>
+              <div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-400/20 text-emerald-200'>
+                📊
+              </div>
+              <div>
+                <p className='text-sm font-semibold text-white'>
+                  Indicadores clave
+                </p>
+                <p className='text-xs text-white/70'>
+                  Métricas claras para tus decisiones.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={`relative w-full md:w-[560px] ${formClassName}`}>
+          <div className='absolute inset-0 -z-10 rounded-[28px] bg-gradient-to-br from-white/25 via-white/10 to-transparent opacity-70 blur-2xl' />
+          <div className='relative overflow-hidden rounded-sm border border-white/20 bg-white p-5 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8'>
+            <div className='absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary via-cyan-300 to-emerald-300' />
+            <div className='w-full h-full flex items-center justify-center'>
+              {children}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -76,10 +121,9 @@ export const DemoForm = () => {
   const { t } = useTranslation();
 
   const onSubmit = async (model: Record<string, any>, form: any) => {
-    
     const data = {
       ...model,
-      phone:  `+57${model.phone}`,
+      phone: `+57${model.phone}`,
     };
     const response = await TenantService.create_demo(data as DemoFormData);
     if (response.getStatus()) {

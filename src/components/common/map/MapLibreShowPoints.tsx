@@ -132,7 +132,11 @@ export const MapLibreShowPoints = ({
         : '#EA4335';
 
     const pointData = point as any;
-    const pointName = pointData?.name || (isUserLocation ? t('maps.admin_name') : t('maps.pointName') + `${index + 1}`);
+    const pointName =
+      pointData?.name ||
+      (isUserLocation
+        ? t('maps.admin_name')
+        : t('maps.pointName') + `${index + 1}`);
     const shiftId = pointData?.shift;
     const serviceName = pointData?.service;
     const contractName = pointData?.contract;

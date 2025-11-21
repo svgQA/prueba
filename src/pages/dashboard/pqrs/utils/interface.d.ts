@@ -1,11 +1,11 @@
-import { IPresignedRequest, IPresignedResponse } from "@/types/file";
+import { IPresignedRequest, IPresignedResponse } from '@/types/file';
 
 export interface ICPqrsRequest {
-    id?: number;
-    extraData: ICPqrs;
-    filesBedrock?: IPresignedResponse[] | null;
-    resources?: IPresignedRequest[] | null;
-    status: string;
+  id?: number;
+  extraData: ICPqrs;
+  filesBedrock?: IPresignedResponse[] | null;
+  resource?: IPresignedRequest[] | null;
+  status: string;
 }
 
 export interface ICPqrs {

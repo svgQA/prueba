@@ -1,7 +1,7 @@
 export const maps_es = {
   maps: {
     pointName: 'Punto',
-    admin_name: 'Tu Ubicación',
+    admin_name: 'Tu ubicación',
     connect: {
       success: 'Ubicación establecida correctamente',
       error: 'Error al obtener la ubicación',
@@ -12,11 +12,11 @@ export const maps_es = {
         'Debes autorizar el acceso a tu ubicación para usar esta función',
       success_point: 'Punto actualizado correctamente',
       error_point: 'Por favor ingrese coordenadas válidas',
-      error_radial_point: 'Punto del lugar no se debe mover',
+      error_radial_point: 'Punto del lugar no debe moverse',
       error_delete_point: 'No se pudo encontrar el punto para eliminar',
       success_point_remove: 'Punto eliminado correctamente',
       success_create_point: 'Punto creado correctamente',
-      error_name: 'Nombre es requerido',
+      error_name: 'El nombre es requerido',
     },
   },
 };

@@ -159,7 +159,9 @@ export const CompanySettingPage: FunctionComponent = () => {
                   />
                   <div className='flex flex-col justify-between gap-4'>
                     <h2 className='text-2xl font-bold'>
-                      {isEditing.value ? t('company.title_form_edit') : t('company.title_form')}
+                      {isEditing.value
+                        ? t('company.title_form_edit')
+                        : t('company.title_form')}
                     </h2>
                     <div className='grid grid-cols-2 gap-4'>
                       <div>

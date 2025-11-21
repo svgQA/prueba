@@ -1,6 +1,6 @@
 import { expect, Page } from '@playwright/test';
 
-const baseURL = process.env.BASE_URL || 'http://localhost:3050';
+//const baseURL = process.env.BASE_URL || 'http://localhost:3050';
 
 const translationMap: Record<string, string[]> = {
   h_memos_total: ['Memorandos Totales Hoy', 'Total Memos Today'],
@@ -116,9 +116,10 @@ export async function login(page: Page) {
     throw new Error('E2E_EMAIL and E2E_PASSWORD must be set');
   }
 
-  await page.goto(baseURL, { timeout: 60000, waitUntil: 'domcontentloaded' });
+  //await page.goto(baseURL, { timeout: 60000, waitUntil: 'domcontentloaded' });
+  await page.goto('/', { timeout: 60000, waitUntil: 'domcontentloaded' });
   
-  await page.goto(appUrl);
+  //await page.goto(appUrl);
   const signInButton = page.getByRole('link', { name: /Sign In|Iniciar sesión/i });  await expect(signInButton).toBeVisible({ timeout: 15000 });
   await expect(signInButton).toBeVisible({ timeout: 15000 });
   await signInButton.click();
@@ -137,7 +138,7 @@ export async function login(page: Page) {
   await ensureDashboardLoaded(page);
 }
 
-export const appUrl = baseURL;
+//export const appUrl = baseURL;
 
 export async function ensureDashboardLoaded(page: Page) {
   await page.waitForURL(/\/dashboard/, { timeout: 30000 });

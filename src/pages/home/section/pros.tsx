@@ -1,83 +1,89 @@
+import { useTranslation } from 'react-i18next';
 import HomeTryvooDesktopImg from '@/assets/image/home-desktop-with-tryvoo.png';
 import { tryvoo_pros } from '../utils/data/pros';
-import { Button } from '@/components/common/button/button';
-import { useTranslation } from 'react-i18next';
 
 export const HomePros = () => {
   const { t } = useTranslation();
 
   return (
-    <div className='bg-white text-center text-gray-500 py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-8'>
-      <div className='max-w-7xl mx-auto'>
-        <h2 className='text-ternary text-3xl sm:text-4xl md:text-5xl font-bold mb-4 tracking-tight'>
-          {t('i_pros_title')}
-        </h2>
-        <span className='text-xl sm:text-2xl md:text-3xl block mb-12 text-gray-600 font-light'>
-          {t('i_pros_subtitle')}
-        </span>
-
-        <div className='flex flex-col md:flex-row'>
-          <div className='w-full md:w-1/2 flex flex-col items-center'>
-            <div className='w-full max-w-md mx-auto transform hover:scale-105 transition-transform duration-300'>
-              <img
-                src={HomeTryvooDesktopImg}
-                alt=''
-                className='w-full h-auto object-contain'
-              />
-            </div>
-            <div className='mt-8 md:mt-12 text-left w-full max-w-md'>
-              <span className='font-bold text-2xl sm:text-3xl md:text-4xl block mb-6 text-gray-800'>
-                {t('i_pros_stats')}
-              </span>
-              <p className='text-lg sm:text-xl md:text-2xl text-gray-600 leading-relaxed'>
-                {t('i_pros_description')}
-              </p>
-            </div>
-          </div>
-
-          <div className='w-full md:w-1/2 mt-10 md:mt-0'>
-            <div className='bg-white rounded-2xl shadow-md overflow-hidden border-2 border-gray-100'>
-              {tryvoo_pros.map((item: any, index: number) => (
-                <div
-                  key={index}
-                  className='transition-all duration-300 hover:bg-gray-50'
-                >
-                  <div className='flex items-center p-6 sm:p-8'>
-                    <div className='w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100'>
-                      <img
-                        src={item.image}
-                        alt={t(item.titleKey)}
-                        className='w-full h-full object-cover'
-                      />
-                    </div>
-
-                    <div className='ml-6 sm:ml-8 flex-1'>
-                      <h3 className='font-bold text-gray-800 text-xl sm:text-2xl md:text-3xl mb-3'>
-                        {t(item.titleKey)}
-                      </h3>
-                      <p className='text-gray-600 text-base sm:text-lg md:text-xl leading-relaxed'>
-                        {t(item.subtitleKey)}
-                      </p>
-                    </div>
+    <div
+      id='beneficios'
+      className='bg-gradient-to-b from-white to-[#eef4ff] text-gray-800 py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-8'
+    >
+      <div className='mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-2 md:items-center'>
+        <div className='space-y-6'>
+          <p className='inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.15em] text-primary'>
+            {t('h_pros_badge')}
+          </p>
+          <h2 className='text-3xl font-bold leading-tight sm:text-4xl'>
+            {t('h_pros_title')}
+          </h2>
+          <p className='text-lg text-gray-600'>{t('h_pros_description')}</p>
+          <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+            {tryvoo_pros.slice(0, 4).map((item, index) => (
+              <div
+                key={item.titleKey}
+                className='group rounded-2xl border border-[#d7e3f2] bg-white p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl'
+              >
+                <div className='flex items-center gap-3'>
+                  <img
+                    src={item.image}
+                    alt=''
+                    className='h-12 w-12 rounded-xl object-contain'
+                  />
+                  <div>
+                    <p className='text-sm font-semibold text-primary'>
+                      {t('h_pros_kpi', { number: index + 1 })}
+                    </p>
+                    <p className='text-base font-bold text-[#0b1f33]'>
+                      {t(item.titleKey ?? '')}
+                    </p>
                   </div>
-
-                  {index !== tryvoo_pros.length - 1 && (
-                    <div className='w-[90%] h-px bg-gray-200 mx-auto'></div>
-                  )}
                 </div>
-              ))}
-            </div>
+                <p className='mt-3 text-sm text-gray-600'>
+                  {t(item.subtitleKey ?? '')}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div className='mt-16 sm:mt-20 md:mt-24 flex justify-center'>
-          <Button
-            label={t('i_button')}
-            type='button'
-            id='schedule'
-            name='schedule'
-            className='bg-[#20314F] text-white text-lg sm:text-xl md:text-2xl rounded-full px-8 sm:px-10 py-4 sm:py-5 transition-all duration-300 hover:bg-opacity-90 hover:shadow-lg min-w-[200px] max-w-[400px]'
-          />
+        <div className='relative'>
+          <div className='absolute -left-6 -top-6 h-32 w-32 rounded-full bg-primary/15 blur-3xl' />
+          <div className='absolute -right-6 bottom-0 h-32 w-32 rounded-full bg-emerald-300/25 blur-3xl' />
+          <div className='relative overflow-hidden rounded-3xl border border-[#d7e3f2] bg-white shadow-2xl'>
+            <img
+              src={HomeTryvooDesktopImg}
+              alt='Dashboard de Tryvoo'
+              className='w-full object-contain'
+            />
+            <div className='grid grid-cols-2 gap-4 border-t border-[#d7e3f2] bg-[#f7fbff] p-5 text-left'>
+              <div>
+                <p className='text-sm text-gray-500'>
+                  {t('h_pros_stat_overtime')}
+                </p>
+                <p className='text-2xl font-bold text-primary'>-25%</p>
+              </div>
+              <div>
+                <p className='text-sm text-gray-500'>
+                  {t('h_pros_stat_scheduling')}
+                </p>
+                <p className='text-2xl font-bold text-primary'>-30%</p>
+              </div>
+              <div>
+                <p className='text-sm text-gray-500'>
+                  {t('h_pros_stat_rounds')}
+                </p>
+                <p className='text-2xl font-bold text-primary'>+40%</p>
+              </div>
+              <div>
+                <p className='text-sm text-gray-500'>
+                  {t('h_pros_stat_reports')}
+                </p>
+                <p className='text-2xl font-bold text-primary'>100%</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

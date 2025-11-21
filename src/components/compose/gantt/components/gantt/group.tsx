@@ -2,8 +2,8 @@ import { useState } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
 import { Switch } from '@/components/common/switch/switch';
 import { ViewMode } from '../../types/public-types';
-import { Chip } from '@/components/common/chip/chip';
-import { useTranslation } from 'react-i18next';
+// import { Chip } from '@/components/common/chip/chip';
+// import { useTranslation } from 'react-i18next';
 
 interface IGroupProps {
   className?: string;
@@ -21,7 +21,7 @@ export const Group = ({
   status,
 }: IGroupProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   return (
     <div
@@ -30,7 +30,7 @@ export const Group = ({
       onMouseLeave={() => setIsOpen(false)}
     >
       <div className='flex items-center gap-2'>
-        <Chip label={t(status)}></Chip>
+        {/* <Chip label={t(status)}></Chip> */}
         <Button
           id='show-task-list'
           name='show-task-list'

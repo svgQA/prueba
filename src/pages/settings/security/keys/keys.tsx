@@ -11,6 +11,8 @@ import { KeyService } from '@/services';
 import { IKeyResponse } from '@/types/key/key.response';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useUserStore } from '@/store/slices';
+import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { showAlert } from '@/components/common/show-alert/show-alert';
 
 export const KeysSettingPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -44,6 +46,31 @@ export const KeysSettingPage: FunctionalComponent = () => {
     await fetchKeys();
   };
 
+  const deleteGroup = async (id: number) => {
+    const response = await KeyService.delete(id);
+    if (!response.getStatus()) return;
+    ToastManager.success('s_deleted_success');
+    fetchKeys();
+  };
+
+  const handleOnClick = async (action: any) => {
+    switch (action.action) {
+      // case ROW_ACTIONS.UPDATE:
+      //   update(action.id);
+      //   break;
+      case ROW_ACTIONS.DELETE:
+        showAlert({
+          title: t('a_title_delete'),
+          message: t('a_message_delete', {
+            name: action.name,
+          }),
+          onConfirm: () => deleteGroup(Number(action.id)),
+          onCancel: () => {},
+        });
+        break;
+    }
+  };
+
   return (
     <Section className='space-y-4'>
       <div className='flex items-end gap-2'>
@@ -67,7 +94,12 @@ export const KeysSettingPage: FunctionalComponent = () => {
             />
           </div>
         </div>
-        <Table data={keys.value} columns={columns} loading={loading.value} />
+        <Table
+          data={keys.value}
+          columns={columns}
+          loading={loading.value}
+          onClickAction={handleOnClick}
+        />
       </div>
     </Section>
   );

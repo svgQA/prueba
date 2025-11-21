@@ -38,13 +38,13 @@ const BAN_TYPE_OPTIONS: IOption[] = [
 
 type FormData = {
   subjectType: IOption; // 'internal' | 'external'
-  user?: IOption;       // interno
-  cardId?: string;      // externo
-  username?: string;    // externo
+  user?: IOption; // interno
+  cardId?: string; // externo
+  username?: string; // externo
   reason?: string;
-  expiresAt?: string;   // datetime-local
-  isActive?: IOption;   // 1/0
-  banType?: IOption;    // 'BAN' | 'SPECIAL'
+  expiresAt?: string; // datetime-local
+  isActive?: IOption; // 1/0
+  banType?: IOption; // 'BAN' | 'SPECIAL'
 };
 
 export const AccessBanForm: FunctionComponent = () => {
@@ -55,9 +55,9 @@ export const AccessBanForm: FunctionComponent = () => {
   const loading = useSignal<boolean>(false);
   const users = useSignal<IOption[]>([]);
   const initialValues = useSignal<Partial<FormData>>({
-    subjectType: SUBJECT_TYPE[0],   // Interno por defecto
-    isActive: ACTIVE_OPTIONS[0],    // Activo
-    banType: BAN_TYPE_OPTIONS[0],   // BAN por defecto
+    subjectType: SUBJECT_TYPE[0], // Interno por defecto
+    isActive: ACTIVE_OPTIONS[0], // Activo
+    banType: BAN_TYPE_OPTIONS[0], // BAN por defecto
   });
 
   // ─────────────────────────────────────────────
@@ -168,7 +168,9 @@ export const AccessBanForm: FunctionComponent = () => {
       cardId: !isInternal ? data.cardId!.trim() : undefined,
       username: !isInternal ? data.username!.trim() : undefined,
       reason: data.reason?.trim() || undefined,
-      expiresAt: data.expiresAt ? new Date(data.expiresAt).toISOString() : undefined,
+      expiresAt: data.expiresAt
+        ? new Date(data.expiresAt).toISOString()
+        : undefined,
       isActive: data.isActive?.value === 1,
       // Nuevo: tipo de ban
       type: (data.banType?.value as AccessBanType) ?? 'ban',
@@ -197,7 +199,10 @@ export const AccessBanForm: FunctionComponent = () => {
   // UI
   // ─────────────────────────────────────────────
   return (
-    <Section className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design' loading={loading.value}>
+    <Section
+      className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
+      loading={loading.value}
+    >
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -223,7 +228,10 @@ export const AccessBanForm: FunctionComponent = () => {
               <div className='grid grid-cols-4 gap-3'>
                 {/* Interno / Externo */}
                 <div className='col-span-2'>
-                  <Field<IOption> name='subjectType' initialValue={SUBJECT_TYPE[0]}>
+                  <Field<IOption>
+                    name='subjectType'
+                    initialValue={SUBJECT_TYPE[0]}
+                  >
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
@@ -252,7 +260,10 @@ export const AccessBanForm: FunctionComponent = () => {
 
                 {/* Tipo de ban (BAN / SPECIAL) */}
                 <div className='col-span-2'>
-                  <Field<IOption> name='banType' initialValue={BAN_TYPE_OPTIONS[0]}>
+                  <Field<IOption>
+                    name='banType'
+                    initialValue={BAN_TYPE_OPTIONS[0]}
+                  >
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
@@ -359,7 +370,10 @@ export const AccessBanForm: FunctionComponent = () => {
 
                 {/* Estado */}
                 <div className='col-span-2'>
-                  <Field<IOption> name='isActive' initialValue={ACTIVE_OPTIONS[0]}>
+                  <Field<IOption>
+                    name='isActive'
+                    initialValue={ACTIVE_OPTIONS[0]}
+                  >
                     {({ input, meta }) => (
                       <SmartSelector
                         {...input}
