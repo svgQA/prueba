@@ -8,11 +8,24 @@ import {
 } from '../dashboard/forms/response/store/response';
 import { FormResponsePublicPage } from '../dashboard/forms/response/public';
 
+interface IResponseUser {
+  name?: string;
+  surname?: string;
+  email?: string;
+  image?: { file?: string };
+}
+
+interface IResponseCompany {
+  name?: string;
+}
+
 export const ResponsePublicPage: FunctionComponent = () => {
   const { t } = useTranslation();
 
   const responseId = useSignal<string | null>(null);
   const tenant = useSignal<string | null>(null);
+  const user = useSignal<IResponseUser | null>(null);
+  const company = useSignal<IResponseCompany | null>(null);
 
   useEffect(() => {
     document.title = t('d_pageTitle');
@@ -38,21 +51,22 @@ export const ResponsePublicPage: FunctionComponent = () => {
       tenant.value ?? ''
     );
     if (response.getStatus()) {
-      console.log('response:', response.getOne());
+      const responseData: any = response.getOne();
+      user.value = responseData?.user ?? null;
+      company.value = responseData?.company ?? null;
       setResponse(
-        { mode: RESPONSE_MODE_SERVICE.UPDATE, id: response.getOne().id },
-        response.getOne().structure
+        { mode: RESPONSE_MODE_SERVICE.UPDATE, id: responseData.id },
+        responseData.structure
       );
     }
   };
 
   return (
-    <>
-      <h1>Response</h1>
-      {responseId.value && <p>Response ID: {responseId.value}</p>}
-      {tenant.value && <p>Tenant: {tenant.value}</p>}
-
-      <FormResponsePublicPage posFinishAction={() => {}} type='VIEW' />
-    </>
+    <FormResponsePublicPage
+      posFinishAction={() => {}}
+      type='VIEW'
+      user={user.value}
+      company={company.value}
+    />
   );
 };
