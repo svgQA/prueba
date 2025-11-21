@@ -1,5 +1,9 @@
 appId: com.inndico.voxline
 ---
-- launchApp:
-    clearState: false
-- inspectScreen: {}
+- tapOn: "Tryvoo"
+- tapOn: "Ingrese su correo electrónico"
+- inputText: "sixto.orobio@gmail.com"
+- tapOn: "Ingrese su contraseña"
+- inputText: "Tryvoo*12345"
+- hideKeyboard
+- tapOn: "Iniciar sesión"

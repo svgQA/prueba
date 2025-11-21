@@ -247,8 +247,7 @@ import {
     await page.waitForLoadState('networkidle');
     await page.getByRole('button', { name: /save|guardar/i }).click();
     await page.waitForTimeout(2000);
-    
-  } catch (error) {
+    } catch (error) {
     throw error;
   }
   }); test.skip('Create Service Prerequisite', async ({ page }) => {
