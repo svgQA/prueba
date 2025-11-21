@@ -1,4 +1,4 @@
-import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import { Authenticator, Button, useAuthenticator } from '@aws-amplify/ui-react';
 import { useLocation } from 'wouter';
 import { PAGES_LIST } from '@/utils/routing';
 import { Logo } from '@/components/common/logo/logo';
@@ -147,6 +147,21 @@ const components = {
         </div>
       );*/
       return null;
+    },
+    SubmitButton() {
+      const { t } = useTranslation();
+      const { isPending, submitForm } = useAuthenticator((context) => [context.isPending]);
+
+      return (
+        <Button
+          className='mt-2 w-full rounded-2xl bg-primary px-4 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-white shadow-lg transition hover:translate-y-[-1px] hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 active:translate-y-0'
+          type='submit'
+          onClick={submitForm}
+          isLoading={isPending}
+        >
+          {t('i_signIn')}
+        </Button>
+      );
     },
   },
 };
