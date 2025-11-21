@@ -523,8 +523,8 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               disabled={status.value === 'RESOLVED'}
               onClick={() =>
                 showAlert({
-                  title: status.value || 'CREATED',
-                  message: `${t('message.confirm')} ${status.value}`,
+                  title: status.value ? `${t(status.value)}` : '',
+                  message: `${t('message_confirm')}`,
                   onConfirm: () => handleCheck(),
                   onCancel: () => {},
                 })

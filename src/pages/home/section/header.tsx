@@ -54,7 +54,7 @@ export const HomeHeader = () => {
               to='/signin'
               className='rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white shadow-md hover:shadow-lg transition-all duration-200'
             >
-              Signin
+              {t('i_signIn')}
             </Link>
           )}
           <a
