@@ -153,8 +153,8 @@ export const home_es = {
 
   h_footer_intro:
     'Plataforma modular de trazabilidad y control operativo para equipos en campo. Web + App con IA y capacidades offline.',
-  h_footer_email: 'soporte@tryvoo.com',
-  h_footer_phone: '+57 300 000 0000',
+  h_footer_email: 'contacto@inndi.co',
+  h_footer_phone: '+57 313 719 0438',
   h_footer_product: 'Producto',
   h_footer_item_shifts: 'Turnos y rondas',
   h_footer_item_reports: 'Reportes y formularios',
@@ -331,8 +331,8 @@ export const home_en = {
 
   h_footer_intro:
     'Modular platform for traceability and operational control for field teams. Web + App with AI and offline capabilities.',
-  h_footer_email: 'soporte@tryvoo.com',
-  h_footer_phone: '+57 300 000 0000',
+  h_footer_email: 'contacto@inndi.co',
+  h_footer_phone: '+57 313 719 0438',
   h_footer_product: 'Product',
   h_footer_item_shifts: 'Shifts and patrols',
   h_footer_item_reports: 'Reports and forms',

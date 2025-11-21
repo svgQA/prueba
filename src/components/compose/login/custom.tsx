@@ -38,8 +38,8 @@ const CustomLoginContainer = ({
       <div className='flex items-center md:items-start w-full md:w-7/12 flex-col p-2 md:p-5 md:pl-14 mb-4 md:mb-0 text-center md:text-left'>
         <div className='max-w-3xl text-white w-full'>
           {showLogo && (
-            <div className='flex justify-center md:justify-start mb-3 md:mb-6'>
-              <Logo title='' slogan='' />
+            <div className='flex justify-center md:justify-start mb-3 md:mb-6 fill-white'>
+              <Logo title='' slogan='Gestiòn en campo' />
             </div>
           )}
           <h1 className='text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-2 md:mb-4 w-full leading-tight'>
@@ -81,7 +81,9 @@ const components = {
     const { t } = useTranslation();
     return (
       <div className='text-center flex flex-col items-center'>
-        <Logo title='Tryvoo' slogan='' color='text-primary' />
+        <div className='fill-primary'>
+          <Logo title='Tryvoo' slogan='Gestión en campo' color='text-primary' />
+        </div>
         <h3 className='mb-3 sm:mb-4 text-lg sm:text-xl md:text-2xl my-2 sm:my-3 text-ternary'>
           {t('i_signIn')}
         </h3>
