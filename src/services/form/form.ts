@@ -149,7 +149,7 @@ export class FormService extends BaseService {
     };
     return await super.make_request<IOption>(this.sname, model);
   }
-
+  //TODO; Esta duplicado este metodo en el core, revisar si se puede eliminar
   static async get_one_response(id: string) {
     const model: IMakeRequest = {
       url: ['response', 'structure', id],
@@ -164,5 +164,14 @@ export class FormService extends BaseService {
       method: REQUEST_METHODS.GET,
     };
     return await super.make_request<IResponseStructure>(this.sname, model);
+  }
+
+  static async get_structure_public(id: string, tenant: string) {
+    const model: IMakeRequest = {
+      url: ['response', 'public', 'structure'],
+      method: REQUEST_METHODS.POST,
+      data: { id, tenant },
+    };
+    return await super.make_request(this.sname, model, false);
   }
 }

@@ -29,6 +29,7 @@ export const HomeBetaForm = () => {
   const handleSubmit = async (event: Event) => {
     event.preventDefault();
     await BetaService.request(form);
+    setForm(initialForm);
     setSubmitted(true);
   };
 

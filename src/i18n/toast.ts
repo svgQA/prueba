@@ -72,6 +72,7 @@ export const toast_es = {
   s_select_valid_zone: 'Seleccione una zona válida',
   s_zone_not_support_resources:
     'La zona seleccionada no admite recursos (tipo PARKING)',
+  s_url_copied: 'URL copiada al portapapeles',
 };
 
 export const toast_en = {
@@ -149,4 +150,5 @@ export const toast_en = {
   s_zone_not_support_resources:
     'The selected zone does not support resources (type PARKING)',
   s_title: 'Report',
+  s_url_copied: 'URL copied to clipboard',
 };
