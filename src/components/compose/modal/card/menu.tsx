@@ -17,19 +17,19 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
         <div className='flex flex-col mt-2'>
           <div className='flex flex-row items-center justify-between'>
             <h2 className='text-sm font-bold mb-1'>{t(label)}</h2>
-            {setting &&
-              setting.show &&
-              validateSettingModuleState(setting.id) && (
-                <Link to={_to} id={setting.id}>
-                  <span
-                    data-to={_to}
-                    data-label={label}
-                    data-description='Settings'
-                    id={setting.id}
-                    className={`${selected.id === setting.id ? 'bg-primary bg-opacity-30 !text-primary' : ''} vox-icon vx-icon-168 size-sm cursor-pointer p-2 rounded`}
-                  />
-                </Link>
-              )}
+            {setting && setting.show && (
+              // TODO: Activar esto para los permisos
+              // validateSettingModuleState(setting.id) && (
+              <Link to={_to} id={setting.id}>
+                <span
+                  data-to={_to}
+                  data-label={label}
+                  data-description='Settings'
+                  id={setting.id}
+                  className={`${selected.id === setting.id ? 'bg-primary bg-opacity-30 !text-primary' : ''} vox-icon vx-icon-168 size-sm cursor-pointer p-2 rounded`}
+                />
+              </Link>
+            )}
           </div>
           {menus.map((menu: IMenu) => {
             const to = `${base}${menu.base}${menu.to}`;

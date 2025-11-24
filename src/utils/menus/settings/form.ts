@@ -8,7 +8,7 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
   show: true,
   id: 'forms:state',
   setting: {
-    to: '/algo/',
+    to: PAGES_LIST_ROUTER.dashboard.setting.forms.settings,
     label: 'setting',
     id: 'form:tools:state',
     show: true,

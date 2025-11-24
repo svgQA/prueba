@@ -8,7 +8,7 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
   show: true,
   id: 'notification:state',
   setting: {
-    to: '/algo/',
+    to: PAGES_LIST_ROUTER.dashboard.setting.notification.settings,
     label: 'setting',
     id: 'notification:tools:state',
     show: true,

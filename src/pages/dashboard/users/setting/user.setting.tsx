@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useUserStore } from '@/store/slices';
 
-export const UserSettingsPage: FunctionComponent = () => {
+export const SUserSettingsPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const settingsIds = useSignal<{ user: number }>({ user: 0 });
   const initialValues: Signal<IUserSetting> = useSignal({
@@ -70,9 +70,9 @@ export const UserSettingsPage: FunctionComponent = () => {
         initialValues={initialValues.value}
         render={({ handleSubmit, form, submitting, pristine }) => (
           <form
-            id='form-settings-users'
             onSubmit={handleSubmit}
             className='space-y-6'
+            id='form-settings-users'
           >
             <h2 className='text-lg font-bold'>{t('setting')}</h2>
             <div className='grid grid-cols-1 gap-3'>
@@ -90,6 +90,7 @@ export const UserSettingsPage: FunctionComponent = () => {
                 </Field>
               </div>
             </div>
+
             <h2 className='text-lg font-bold'>{t('m_module')}</h2>
             <div className='grid grid-cols-7 gap-4 flex-wrap'>
               <div className='col-span-1'>
@@ -219,6 +220,7 @@ export const UserSettingsPage: FunctionComponent = () => {
               onClickClean={() => {
                 form.reset();
               }}
+              top={false}
               submitting={submitting}
               pristine={pristine}
               form='form-settings-users'

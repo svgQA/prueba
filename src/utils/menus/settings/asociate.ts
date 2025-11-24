@@ -6,6 +6,12 @@ export const MODAL_SETTING_ASSOCIATE: IModalSidebarMenu = {
   label: 'g_associate',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   id: 'asociate:state',
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.asociate.settings,
+    label: 'setting',
+    id: 'asociate:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '096',

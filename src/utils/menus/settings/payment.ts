@@ -6,6 +6,12 @@ export const MODAL_SETTING_PAYMENT: IModalSidebarMenu = {
   label: 'g_payment',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   id: 'payment:state',
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.payment.settings,
+    label: 'setting',
+    id: 'payment:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '056',
