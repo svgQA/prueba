@@ -9,7 +9,7 @@ import {
 import { Checkbox } from '@/components/common/checkbox/checkbox';
 import { Radio } from '@/components/common/radio/radio';
 import { TextArea } from '@/components/common/text.area/text.area';
-import { TargetedEvent, useState } from 'preact/compat';
+import { TargetedEvent, useMemo, useState } from 'preact/compat';
 import { useRef } from 'preact/hooks';
 import {
   getResponse,
@@ -35,6 +35,8 @@ import { jsonToGzipBase64 } from '@/utils/utilities/blob';
 //import { ReportService } from '@/services/form/reports';
 //import { fileManager } from '@/utils/network/file/file';
 import { useUserStore } from '@/store/slices';
+import { MapLibreShowPoints } from '@/components/common/map/MapLibreShowPoints';
+import { MapPoint } from '@/components/common/map/utils/interface';
 interface IResponseUser {
   name?: string;
   surname?: string;
@@ -68,9 +70,87 @@ export const FormResponsePublicPage: FunctionComponent<
 
   const totalPages = getResponse.value?.pages.length ?? 0;
   const currentPageData = getResponse.value?.pages[currentPage];
-  const progress = totalPages
-    ? Math.round(((currentPage + 1) / totalPages) * 100)
+  const defaultCoordinates = useMemo(
+    () => ({ lat: 4.670355108326989, lng: -74.08689346772478 }),
+    []
+  );
+
+  const { totalQuestions, answeredQuestions } = useMemo(() => {
+    const pages = getResponse.value?.pages ?? [];
+
+    const isValueFilled = (value: unknown): boolean => {
+      if (value === null || value === undefined) return false;
+      if (typeof value === 'string') return value.trim().length > 0;
+      if (typeof value === 'number') return true;
+      if (typeof value === 'boolean') return true;
+      if (Array.isArray(value)) return value.length > 0;
+      if (typeof value === 'object') {
+        return Object.values(value).some((nested) => isValueFilled(nested));
+      }
+      return false;
+    };
+
+    const traverseElements = (elements: IElement[] = []) => {
+      return elements.reduce(
+        (acc, element) => {
+          if (element.invisible) return acc;
+          if (element.type === ELEMENT_TYPE.SECTION && element.elements) {
+            const nested = traverseElements(element.elements);
+            return {
+              total: acc.total + nested.total,
+              answered: acc.answered + nested.answered,
+            };
+          }
+          return {
+            total: acc.total + 1,
+            answered: acc.answered + (isValueFilled((element as any).value) ? 1 : 0),
+          };
+        },
+        { total: 0, answered: 0 }
+      );
+    };
+
+    return pages.reduce(
+      (acc, page) => {
+        const counters = traverseElements(page.elements as IElement[]);
+        return {
+          total: acc.total + counters.total,
+          answered: acc.answered + counters.answered,
+        };
+      },
+      { total: 0, answered: 0 }
+    );
+  }, [getResponse.value]);
+
+  const responsesProgress = totalQuestions
+    ? Math.round((answeredQuestions / totalQuestions) * 100)
     : 0;
+
+  const rawLatitude = (getResponse.value as any)?.latitude ??
+    (getResponse.value as any)?.lat;
+  const rawLongitude = (getResponse.value as any)?.longitude ??
+    (getResponse.value as any)?.lng;
+
+  const latitude = useMemo(() => {
+    const parsed = Number(rawLatitude);
+    return Number.isFinite(parsed) ? parsed : defaultCoordinates.lat;
+  }, [rawLatitude, defaultCoordinates.lat]);
+
+  const longitude = useMemo(() => {
+    const parsed = Number(rawLongitude);
+    return Number.isFinite(parsed) ? parsed : defaultCoordinates.lng;
+  }, [rawLongitude, defaultCoordinates.lng]);
+
+  const mapPoints: MapPoint[] = useMemo(
+    () => [
+      {
+        id: 1,
+        position: { lat: latitude, lng: longitude },
+        name: getResponse.value?.label ?? 'Ubicación',
+      },
+    ],
+    [latitude, longitude, getResponse.value?.label]
+  );
 
   const avatar = user?.image?.file;
   const fullName = [user?.name, user?.surname].filter(Boolean).join(' ');
@@ -81,6 +161,14 @@ export const FormResponsePublicPage: FunctionComponent<
     .join('')
     .slice(0, 2)
     .toUpperCase();
+
+  const formatDate = (date?: Date | string) => {
+    if (!date) return 'No disponible';
+    const parsed = new Date(date);
+    return Number.isNaN(parsed.getTime())
+      ? 'No disponible'
+      : parsed.toLocaleString();
+  };
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev: any) =>
@@ -93,7 +181,6 @@ export const FormResponsePublicPage: FunctionComponent<
   const handleInputChange = (
     e: TargetedEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    // console.log('handleInputChange', e);
     const model = handleChange(e);
     if (!model.page) return;
     updateResponse(
@@ -494,7 +581,6 @@ export const FormResponsePublicPage: FunctionComponent<
 
   const saveResponse = async () => {
     if (!getResponse.value || !getResponseMode?.value?.id) return;
-    // console.log('saveResponse', getResponse.value);
 
     // TODO: No borrar esta parte que es para guardar donde se puede dejar como se quiera
     // el formulario
@@ -536,12 +622,9 @@ export const FormResponsePublicPage: FunctionComponent<
     const id = getResponseMode.value?.id;
     const tenant = getTenant();
     const currentUrl = window.location.origin;
-    console.log('tenant', tenant);
-    console.log('id', id);
-    console.log('currentUrl', currentUrl);
-    const url = `/${currentUrl}/response?responseId=${id}&tenant=${tenant}`;
-    console.log('url', url);
-    //window.open(url, '_blank');
+    if (!id || !tenant) return;
+    const url = `${currentUrl}/response?responseId=${id}&tenant=${tenant}`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -557,7 +640,7 @@ export const FormResponsePublicPage: FunctionComponent<
               <div className='inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white/80 ring-1 ring-white/15'>
                 {company?.name || 'Formulario público'}
               </div>
-              <h1 className='mt-4 text-3xl font-extrabold leading-tight md:text-4xl'>
+              <h1 className='mt-4 text-2xl font-extrabold leading-tight md:text-3xl'>
                 {getResponse.value.label}
               </h1>
               {getResponse.value.description && (
@@ -566,16 +649,19 @@ export const FormResponsePublicPage: FunctionComponent<
                 </p>
               )}
 
-              <div className='mt-8 grid grid-cols-2 gap-3 text-sm text-white/80 sm:grid-cols-3'>
+              <div className='mt-4 flex flex-wrap gap-2 text-xs uppercase tracking-wide text-white/80'>
+                <span className='rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/15'>
+                  Creado: <span className='font-semibold text-white'>{formatDate((getResponse.value as any)?.createdAt)}</span>
+                </span>
+                <span className='rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/15'>
+                  Actualizado: <span className='font-semibold text-white'>{formatDate((getResponse.value as any)?.updatedAt)}</span>
+                </span>
+              </div>
+
+              <div className='mt-6 grid grid-cols-2 gap-3 text-sm text-white/80 sm:grid-cols-2'>
                 <div className='rounded-2xl bg-white/5 p-4 ring-1 ring-white/10'>
                   <p className='text-xs uppercase tracking-wide text-white/60'>
                     Páginas
-                  </p>
-                  <p className='text-2xl font-bold text-white'>{totalPages}</p>
-                </div>
-                <div className='rounded-2xl bg-white/5 p-4 ring-1 ring-white/10'>
-                  <p className='text-xs uppercase tracking-wide text-white/60'>
-                    En progreso
                   </p>
                   <p className='text-2xl font-bold text-white'>
                     {currentPage + 1} / {totalPages || 1}
@@ -628,13 +714,33 @@ export const FormResponsePublicPage: FunctionComponent<
 
               <div className='rounded-2xl bg-white/10 p-4 ring-1 ring-white/10'>
                 <div className='flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-white/70'>
-                  <span>Progreso</span>
-                  <span className='text-white'>{progress}%</span>
+                  <span>Respuestas</span>
+                  <span className='text-white'>
+                    {answeredQuestions} / {totalQuestions || 0}
+                  </span>
                 </div>
                 <div className='mt-3 h-2 w-full overflow-hidden rounded-full bg-white/20'>
                   <div
                     className='h-full rounded-full bg-gradient-to-r from-primary to-emerald-300 shadow-lg transition-all duration-300'
-                    style={{ width: `${progress}%` }}
+                    style={{ width: `${responsesProgress}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className='rounded-2xl bg-white/10 p-3 ring-1 ring-white/10'>
+                <p className='text-xs font-semibold uppercase tracking-wide text-white/70'>
+                  Ubicación
+                </p>
+                <div className='mt-3 h-44 overflow-hidden rounded-xl ring-1 ring-white/10'>
+                  <MapLibreShowPoints
+                    pointsRef={mapPoints}
+                    center={{ lat: latitude, lng: longitude }}
+                    height='180px'
+                    width='100%'
+                    radius={0}
+                    adminUser={false}
+                    radialPoint={null}
+                    sendPoints={() => {}}
                   />
                 </div>
               </div>
@@ -722,11 +828,11 @@ export const FormResponsePublicPage: FunctionComponent<
                 <div className='h-2 w-24 overflow-hidden rounded-full bg-white'>
                   <div
                     className='h-full rounded-full bg-gradient-to-r from-primary to-blue-400 transition-all duration-300'
-                    style={{ width: `${progress}%` }}
+                    style={{ width: `${responsesProgress}%` }}
                   />
                 </div>
                 <span className='font-semibold text-slate-900'>
-                  Avance {currentPage + 1} / {totalPages}
+                  Respuestas {answeredQuestions} / {totalQuestions || 0}
                 </span>
               </div>
             </div>
