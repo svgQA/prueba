@@ -46,6 +46,8 @@ interface IResponseUser {
 
 interface IResponseCompany {
   name?: string;
+  logo?: string;
+  image?: { file?: string };
 }
 
 interface IFormResponseSettingPageProps {
@@ -75,9 +77,7 @@ export const FormResponsePublicPage: FunctionComponent<
     []
   );
 
-  const { totalQuestions, answeredQuestions } = useMemo(() => {
-    const pages = getResponse.value?.pages ?? [];
-
+  const getQuestionStats = (pages: IElement[][] = []) => {
     const isValueFilled = (value: unknown): boolean => {
       if (value === null || value === undefined) return false;
       if (typeof value === 'string') return value.trim().length > 0;
@@ -111,8 +111,8 @@ export const FormResponsePublicPage: FunctionComponent<
     };
 
     return pages.reduce(
-      (acc, page) => {
-        const counters = traverseElements(page.elements as IElement[]);
+      (acc, pageElements) => {
+        const counters = traverseElements(pageElements);
         return {
           total: acc.total + counters.total,
           answered: acc.answered + counters.answered,
@@ -120,7 +120,11 @@ export const FormResponsePublicPage: FunctionComponent<
       },
       { total: 0, answered: 0 }
     );
-  }, [getResponse.value]);
+  };
+
+  const { totalQuestions, answeredQuestions } = getQuestionStats(
+    (getResponse.value?.pages ?? []).map((page) => page.elements as IElement[])
+  );
 
   const responsesProgress = totalQuestions
     ? Math.round((answeredQuestions / totalQuestions) * 100)
@@ -161,6 +165,16 @@ export const FormResponsePublicPage: FunctionComponent<
     .join('')
     .slice(0, 2)
     .toUpperCase();
+  const companyLogo = company?.logo || company?.image?.file;
+  const companyInitials = company?.name
+    ? company.name
+        .split(' ')
+        .filter(Boolean)
+        .map((part) => part[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : 'CO';
 
   const formatDate = (date?: Date | string) => {
     if (!date) return 'No disponible';
@@ -676,9 +690,46 @@ export const FormResponsePublicPage: FunctionComponent<
                   </p>
                 </div>
               </div>
+
+              <div className='mt-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/10'>
+                <div className='flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-white/70'>
+                  <span>Respuestas</span>
+                  <span className='text-white'>
+                    {answeredQuestions} / {totalQuestions || 0}
+                  </span>
+                </div>
+                <div className='mt-3 h-2 w-full overflow-hidden rounded-full bg-white/20'>
+                  <div
+                    className='h-full rounded-full bg-gradient-to-r from-primary to-emerald-300 shadow-lg transition-all duration-300'
+                    style={{ width: `${responsesProgress}%` }}
+                  />
+                </div>
+              </div>
             </div>
 
             <div className='flex flex-col gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 text-white shadow-2xl backdrop-blur-md sm:p-8'>
+              <div className='flex items-center gap-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/10'>
+                <div className='flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-white/20 ring-2 ring-white/40'>
+                  {companyLogo ? (
+                    <img
+                      src={companyLogo}
+                      alt={company?.name || 'Logo de la empresa'}
+                      className='h-full w-full object-cover'
+                    />
+                  ) : (
+                    <span className='text-lg font-semibold'>{companyInitials}</span>
+                  )}
+                </div>
+                <div className='space-y-1'>
+                  <p className='text-xs font-semibold uppercase tracking-wide text-white/70'>
+                    Identidad
+                  </p>
+                  <p className='text-sm font-semibold text-white'>
+                    {company?.name || 'Compañía no disponible'}
+                  </p>
+                </div>
+              </div>
+
               <div className='flex items-center gap-4 rounded-2xl bg-white/10 p-4 ring-1 ring-white/10'>
                 <div className='flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-white/20 ring-2 ring-white/40'>
                   {avatar ? (
@@ -710,21 +761,6 @@ export const FormResponsePublicPage: FunctionComponent<
                 <p className='text-lg font-bold text-white'>
                   {company?.name || 'Compañía no disponible'}
                 </p>
-              </div>
-
-              <div className='rounded-2xl bg-white/10 p-4 ring-1 ring-white/10'>
-                <div className='flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-white/70'>
-                  <span>Respuestas</span>
-                  <span className='text-white'>
-                    {answeredQuestions} / {totalQuestions || 0}
-                  </span>
-                </div>
-                <div className='mt-3 h-2 w-full overflow-hidden rounded-full bg-white/20'>
-                  <div
-                    className='h-full rounded-full bg-gradient-to-r from-primary to-emerald-300 shadow-lg transition-all duration-300'
-                    style={{ width: `${responsesProgress}%` }}
-                  />
-                </div>
               </div>
 
               <div className='rounded-2xl bg-white/10 p-3 ring-1 ring-white/10'>
