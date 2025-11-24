@@ -13,11 +13,13 @@ import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices/access/user.slice';
 
 import { Form, Field } from 'react-final-form';
+import { FieldArray } from 'react-final-form-arrays';
+import arrayMutators from 'final-form-arrays';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'wouter';
 
 import { StageService } from '@/services/pqrs/stage';
-import { IResourceStage, IStages, Methods } from '../utils/interface';
+import { IResourceStage, IStages } from '../utils/interface';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { Button } from '@/components/common/button/button';
@@ -66,6 +68,7 @@ export const StageForm: FunctionComponent = () => {
         outputFormat: '',
         resultText: '',
         prompt: '',
+        resources: [],
         nextStageId: null,
         prevStageId: null,
         errorStageId: null,
@@ -91,6 +94,11 @@ export const StageForm: FunctionComponent = () => {
           : initialData.prompt)
       : '';
 
+    const resourcesForForm = (initialData.resource || []).map((res: IResourceStage) => ({
+      method: res.method ? { value: res.method, label: res.method } : null,
+      requestUrl: res.requestUrl || '',
+    }));
+
     setInitialValues({
       stageName: initialData.stageName || '',
       goal: initialData.goal || '',
@@ -98,6 +106,7 @@ export const StageForm: FunctionComponent = () => {
       outputFormat: initialData.outputFormat || '',
       resultText: initialData.resultText || '',
       prompt: promptValue || null,
+      resources: resourcesForForm,
       nextStageId: findStageOption(initialData.nextStageId),
       prevStageId: findStageOption(initialData.prevStageId),
       errorStageId: findStageOption(initialData.errorStageId),
@@ -106,31 +115,17 @@ export const StageForm: FunctionComponent = () => {
     loading.value = false;
   };
 
-  const addResource = () => {
-    resource.value = [
-      ...resource.value,
-      { method: 'GET' as Methods, requestUrl: '' },
-    ];
-  };
-
-  const removeResource = (index: number) => {
-    resource.value = resource.value.filter((_, i) => i !== index);
-  };
-
-  const updateResource = (index: number, field: 'method' | 'requestUrl', value: any) => {
-    const updated = [...resource.value];
-    if (field === 'method') {
-      updated[index] = { ...updated[index], method: value?.value || value };
-    } else {
-      updated[index] = { ...updated[index], requestUrl: value };
-    }
-    resource.value = updated;
-  };
-
   const handleSubmit = async (model: any) => {
     loading.value = true;
     let promptValue = model.prompt;
     if (typeof model.prompt === 'string' && model.prompt.trim()) promptValue = JSON.parse(model.prompt);
+
+    const resources = (model.resources || [])
+      .filter((res: any) => res.method && res.requestUrl) 
+      .map((res: any) => ({
+        method: res.method?.value || res.method,
+        requestUrl: res.requestUrl,
+      }));
 
     let stage: IStages = {
       stageName: model.stageName,
@@ -138,7 +133,7 @@ export const StageForm: FunctionComponent = () => {
       goal: model.goal,
       executionNotes: model.executionNotes,
       prompt: promptValue,
-      resource: resource.value,
+      resource: resources,
       nextStageId: model.nextStageId?.value || null,
       prevStageId: model.prevStageId?.value || null,
       errorStageId: model.errorStageId?.value || null,
@@ -173,6 +168,7 @@ export const StageForm: FunctionComponent = () => {
       <Form
         onSubmit={handleSubmit}
         initialValues={initialValues}
+        mutators={{ ...arrayMutators }}
         render={({ handleSubmit, form, submitting, pristine }) => (
           <form
             onSubmit={handleSubmit}
@@ -330,70 +326,80 @@ export const StageForm: FunctionComponent = () => {
                   <Button
                     name='add-resource-button'
                     type='button'
-                    onClick={addResource}
+                    onClick={() => form.mutators.push('resources', { method: null, requestUrl: '' })}
                     disabled={loading.value}
                     className='px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed'
                     label='add'
                   />
                 </div>
 
-                {resource.value.length === 0 ? (
-                  <p className='text-sm text-gray-500 italic text-center py-4'>
-                    {t('pqrs.no_resources_added')}
-                  </p>
-                ) : (
-                  <div className='space-y-4'>
-                    {resource.value.map((res, index) => (
-                      <div key={index} className='border rounded-lg p-4 bg-gray-50'>
-                        <div className='grid grid-cols-4 gap-4'>
-                          <div className='col-span-1'>
-                            <SmartSelector
-                              name={`resource-method-${index}`}
-                              value={{ value: res.method, label: res.method }}
-                              onChange={(option: any) => updateResource(index, 'method', option)}
-                              id={`select-resource-method-${index}`}
-                              icon='191'
-                              label='h_method'
-                              options={[
-                                { value: 'GET', label: 'GET' },
-                                { value: 'POST', label: 'POST' },
-                              ]}
-                              menuPortalTarget={document.body}
-                              placeholder='p_select'
-                            />
-                          </div>
-
-                          <div className='col-span-3'>
-                            <div className='flex gap-2'>
-                              <div className='flex-1'>
-                                <Input
-                                  name={`resource-requestUrl-${index}`}
-                                  value={res.requestUrl}
-                                  onChange={(e: any) => updateResource(index, 'requestUrl', e.target.value)}
-                                  icon='120'
-                                  type='text'
-                                  placeholder={t('h_request_url')}
-                                  label={t('h_request_url')}
-                                  disabled={loading.value}
-                                />
+                <FieldArray name='resources'>
+                  {({ fields }) =>
+                    fields.length === 0 ? (
+                      <p className='text-sm text-gray-500 italic text-center py-4'>
+                        {t('pqrs.no_resources_added')}
+                      </p>
+                    ) : (
+                      <div className='space-y-4'>
+                        {fields.map((name, index) => (
+                          <div key={name} className='border rounded-lg p-4 bg-gray-50'>
+                            <div className='grid grid-cols-4 gap-4'>
+                              <div className='col-span-1'>
+                                <Field name={`${name}.method`}>
+                                  {({ input, meta }) => (
+                                    <SmartSelector
+                                      {...input}
+                                      meta={meta}
+                                      id={`select-resource-method-${index}`}
+                                      icon='191'
+                                      label='h_method'
+                                      options={[
+                                        { value: 'GET', label: 'GET' },
+                                        { value: 'POST', label: 'POST' },
+                                      ]}
+                                      menuPortalTarget={document.body}
+                                      placeholder='p_select'
+                                    />
+                                  )}
+                                </Field>
                               </div>
-                              <div className='mt-6'>
-                                <Button
-                                  name='remove-resource-button'
-                                  type='button'
-                                  onClick={() => removeResource(index)}
-                                  disabled={loading.value}
-                                  label='remove'
-                                  icon='312'
-                                />
+
+                              <div className='col-span-3'>
+                                <div className='flex gap-2'>
+                                  <div className='flex-1'>
+                                    <Field<string> name={`${name}.requestUrl`}>
+                                      {({ input, meta }) => (
+                                        <Input
+                                          {...input}
+                                          icon='120'
+                                          type='text'
+                                          placeholder={t('h_request_url')}
+                                          label={t('h_request_url')}
+                                          meta={meta}
+                                          disabled={loading.value}
+                                        />
+                                      )}
+                                    </Field>
+                                  </div>
+                                  <div className='mt-6'>
+                                    <Button
+                                      name='remove-resource-button'
+                                      type='button'
+                                      onClick={() => fields.remove(index)}
+                                      disabled={loading.value}
+                                      label='remove'
+                                      icon='312'
+                                    />
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    )
+                  }
+                </FieldArray>
               </div>
             </div>
           </form>
