@@ -16,6 +16,7 @@ import {
 } from '@/store/signals/modals';
 import { IMenu } from '@/components/common/utils/interface';
 import { validateSettingModuleState } from '@/store/signals/access/permission';
+import { Button } from '@/components/common/button/button';
 
 export const SettingsModal = () => {
   const { user } = useUserStore();
@@ -90,36 +91,38 @@ export const SettingsModal = () => {
       onClose={toggleSettingModal}
       name='setting-modal'
       id='setting-modal'
-      expandable
       theme
       setExpandable={setExpand}
       header={
         <div className='flex flex-row w-full items-center justify-between px-3'>
-          <MenuButtons goBack={goBack} goForward={goForward} />
+          <MenuButtons goBack={goBack} goForward={goForward}>
+            <div className='flex items-center justify-between md:hidden'>
+              <Button
+                id='setting-open-close-menu'
+                name='setting-open-close-menu'
+                onClick={() => setShowMobileMenu((state) => !state)}
+                type='button'
+                rounded
+                transparent
+                borderless
+                icon='011'
+              />
+            </div>
+          </MenuButtons>
           <LanguageSwitcher />
         </div>
       }
     >
       <div className='flex flex-col w-full h-full gap-3 md:gap-6'>
-        <div className='flex items-center justify-between md:hidden px-3'>
-          <button
-            type='button'
-            className='px-3 py-2 text-sm font-semibold border-2 rounded-lg border-b-light-light dark:border-b-dark-light bg-white dark:bg-dark-bg'
-            onClick={() => setShowMobileMenu((state) => !state)}
-          >
-            {showMobileMenu ? 'Cerrar menú' : 'Abrir menú'}
-          </button>
-        </div>
-
         <div className='flex flex-col w-full h-full gap-4 md:gap-6 md:flex-row relative'>
           <div
             onClick={(event) => {
               selectMenu(event);
               setShowMobileMenu(false);
             }}
-            className={`${showMobileMenu ? 'flex fixed inset-0 z-30 p-4 shadow-2xl' : 'hidden md:flex'} w-full ${
+            className={`${showMobileMenu ? 'flex fixed inset-0 z-30 p-2 shadow-2xl max-h-[99vh]' : 'hidden md:flex'} w-full ${
               showMobileMenu ? 'max-w-full sm:max-w-xl' : 'max-w-80'
-            } md:max-w-80 md:min-w-60 border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex-col gap-1 bg-white dark:bg-dark-bg text-dark dark:text-white md:static md:p-0 md:shadow-none rounded-lg md:rounded-none mx-auto md:mx-0`}
+            } md:max-w-80 md:min-w-60  border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex-col gap-1 dark:bg-dark-bg text-dark dark:text-white md:static md:p-0 md:shadow-none rounded-lg md:rounded-none mx-auto md:mx-0 dark:bg-b-dark-light bg-white`}
           >
             <CardSettingUser
               id='user-information'
