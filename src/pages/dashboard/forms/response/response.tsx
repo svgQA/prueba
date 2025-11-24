@@ -36,6 +36,10 @@ import { jsonToGzipBase64 } from '@/utils/utilities/blob';
 import { useUserStore } from '@/store/slices';
 import { useTranslation } from 'react-i18next';
 import { ReportService } from '@/services/report/report';
+import {
+  openLoading,
+  closeLoading,
+} from '@/store/signals/modals/loading.signal';
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
   type?: string;
@@ -47,6 +51,7 @@ export const FormResponseSettingPage: FunctionComponent<
   const [currentPage, setCurrentPage] = useState(0);
   const { t } = useTranslation();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [isDownloading, setIsDownloading] = useState(false);
   const { getTenant } = useUserStore();
 
   const toggleSection = (sectionId: string) => {
@@ -544,6 +549,11 @@ export const FormResponseSettingPage: FunctionComponent<
       return ToastManager.error('s_getted_error');
     }
 
+    if (isDownloading) return;
+
+    setIsDownloading(true);
+    openLoading();
+
     try {
       // Preparar los datos para el servicio
       const structure = getResponse.value;
@@ -582,7 +592,8 @@ export const FormResponseSettingPage: FunctionComponent<
       });
 
       if (!response.getStatus()) {
-        return ToastManager.error('s_download_file_error');
+        ToastManager.error('s_download_file_error');
+        return;
       }
 
       const result = response.getOne();
@@ -614,6 +625,9 @@ export const FormResponseSettingPage: FunctionComponent<
     } catch (error) {
       console.error('Error downloading report:', error);
       ToastManager.error('s_download_file_error');
+    } finally {
+      setIsDownloading(false);
+      closeLoading();
     }
   };
 
@@ -652,6 +666,7 @@ export const FormResponseSettingPage: FunctionComponent<
                     icon='411'
                     label='h_download_report'
                     className='mb-4'
+                    disabled={isDownloading}
                   />
                 </div>
               )}
