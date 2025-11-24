@@ -117,7 +117,9 @@ export const SettingsModal = () => {
               selectMenu(event);
               setShowMobileMenu(false);
             }}
-            className={`${showMobileMenu ? 'flex fixed inset-0 z-30 p-4 shadow-2xl' : 'hidden md:flex'} w-full max-w-80 md:max-w-80 md:min-w-60 border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex-col gap-1 bg-white dark:bg-dark-bg md:static md:p-0 md:shadow-none rounded-lg md:rounded-none mx-auto md:mx-0`}
+            className={`${showMobileMenu ? 'flex fixed inset-0 z-30 p-4 shadow-2xl' : 'hidden md:flex'} w-full ${
+              showMobileMenu ? 'max-w-full sm:max-w-xl' : 'max-w-80'
+            } md:max-w-80 md:min-w-60 border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex-col gap-1 bg-white dark:bg-dark-bg text-dark dark:text-white md:static md:p-0 md:shadow-none rounded-lg md:rounded-none mx-auto md:mx-0`}
           >
             <CardSettingUser
               id='user-information'
@@ -127,7 +129,11 @@ export const SettingsModal = () => {
               image={user?.image || ''}
               rol={user?.userType || ''}
             />
-            <MenuList menuSettings={MODAL_SIDEBAR_MENUS} expand={expand} />
+            <MenuList
+              menuSettings={MODAL_SIDEBAR_MENUS}
+              expand={expand}
+              mobileColumns={showMobileMenu}
+            />
           </div>
           <div
             className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} ${showMobileMenu ? 'opacity-20 pointer-events-none md:opacity-100 md:pointer-events-auto' : ''}`}
