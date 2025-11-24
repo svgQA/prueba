@@ -14,9 +14,9 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
 
     return (
       <Card id={id} name={id} borderless rounded={false} transparent>
-        <div className='flex flex-col mt-2'>
-          <div className='flex flex-row items-center justify-between'>
-            <h2 className='text-sm font-bold mb-1'>{t(label)}</h2>
+        <div className='flex flex-col mt-1 sm:mt-2'>
+          <div className='flex flex-row items-center justify-between min-h-[28px] sm:min-h-0'>
+            <h2 className='hidden md:block text-sm font-bold mb-1'>{t(label)}</h2>
             {setting &&
               setting.show &&
               validateSettingModuleState(setting.id) && (
@@ -41,10 +41,11 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
                 data-label={menu.label}
                 data-description={menu.description}
                 id={menu.id}
-                className={`${selected.id === menu.id ? 'bg-primary bg-opacity-30 !text-primary' : ''} flex flex-row px-2 py-1 text-sm items-center my-0.5 rounded-md`}
+                className={`${selected.id === menu.id ? 'bg-primary bg-opacity-30 !text-primary' : ''} flex flex-row items-center justify-center md:justify-start px-2 py-1 text-sm my-0.5 rounded-md`}
+                title={t(menu.label)}
               >
-                <span className={`vx-icon vx-icon-${menu.icon} size-sm mr-2`} />
-                {t(menu.label)}
+                <span className={`vx-icon vx-icon-${menu.icon} size-sm mr-0 sm:mr-2`} />
+                <span className='hidden sm:inline'>{t(menu.label)}</span>
               </Link>
             ) : null;
           })}
