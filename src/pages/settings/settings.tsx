@@ -99,27 +99,29 @@ export const SettingsModal = () => {
         </div>
       }
     >
-      <div
-        onClick={selectMenu}
-        className='max-w-80 min-w-60 border-r-2 border-r-b-light-light dark:border-b-dark-light flex flex-col gap-1'
-      >
-        <CardSettingUser
-          id='user-information'
-          name='user-information'
-          company='Inndico'
-          username={`${user?.name} ${user?.surname}`}
-          image={user?.image || ''}
-          rol={user?.userType || ''}
-        />
-        <MenuList menuSettings={MODAL_SIDEBAR_MENUS} expand={expand} />
-      </div>
-      <div
-        className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'}`}
-        onClick={selectMenu}
-      >
-        <CardSettingHeader id='setting-header' name='setting-header' />
-        <div className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-light'>
-          <RoutingContent />
+      <div className='flex flex-col w-full h-full gap-4 md:gap-6 md:flex-row'>
+        <div
+          onClick={selectMenu}
+          className='w-full md:max-w-80 md:min-w-60 border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex flex-col gap-1'
+        >
+          <CardSettingUser
+            id='user-information'
+            name='user-information'
+            company='Inndico'
+            username={`${user?.name} ${user?.surname}`}
+            image={user?.image || ''}
+            rol={user?.userType || ''}
+          />
+          <MenuList menuSettings={MODAL_SIDEBAR_MENUS} expand={expand} />
+        </div>
+        <div
+          className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'}`}
+          onClick={selectMenu}
+        >
+          <CardSettingHeader id='setting-header' name='setting-header' />
+          <div className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-light'>
+            <RoutingContent />
+          </div>
         </div>
       </div>
     </Modal>
