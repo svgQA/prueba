@@ -50,7 +50,7 @@ export const ShiftFormContent = ({
       id='form-shift-create-update'
       onKeyDown={preventKeyDown}
     >
-      <div className='grid grid-cols-2 gap-3 z-50 grid-cols-en'>
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-3 z-50 grid-cols-en'>
         <div class='col-span-1'>
           <Field<IOption> name='employeeId' validate={required}>
             {({ input, meta }) => (

@@ -140,7 +140,7 @@ const SupervisorInfo = ({
             )}
           </div>
           <div className='w-full h-9/12 flex'>
-            <div className='w-1/2 grid grid-cols-2 gap-1 p-2'>
+            <div className='w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-1 p-2'>
               <InfoContainer
                 header='h_supervisor'
                 label={memo?.extraData?.company?.name}

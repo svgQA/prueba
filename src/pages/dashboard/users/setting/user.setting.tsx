@@ -92,7 +92,7 @@ export const SUserSettingsPage: FunctionComponent = () => {
             </div>
 
             <h2 className='text-lg font-bold'>{t('m_module')}</h2>
-            <div className='grid grid-cols-7 gap-4 flex-wrap'>
+            <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4 flex-wrap'>
               <div className='col-span-1'>
                 <Field name='allow_areas' type='checkbox'>
                   {({ input }) => (
