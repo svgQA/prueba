@@ -37,6 +37,7 @@ import { jsonToGzipBase64 } from '@/utils/utilities/blob';
 import { useUserStore } from '@/store/slices';
 import { MapLibreShowPoints } from '@/components/common/map/MapLibreShowPoints';
 import { MapPoint } from '@/components/common/map/utils/interface';
+
 interface IResponseUser {
   name?: string;
   surname?: string;
@@ -67,11 +68,12 @@ export const FormResponsePublicPage: FunctionComponent<
 }: IFormResponseSettingPageProps) => {
   const pageRef = useRef<HTMLDivElement | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [_, setExpandedSections] = useState<string[]>([]);
   const { getTenant } = useUserStore();
 
   const totalPages = getResponse.value?.pages.length ?? 0;
   const currentPageData = getResponse.value?.pages[currentPage];
+
   const defaultCoordinates = useMemo(
     () => ({ lat: 4.670355108326989, lng: -74.08689346772478 }),
     []
@@ -90,12 +92,12 @@ export const FormResponsePublicPage: FunctionComponent<
       return false;
     };
 
-    const traverseElements = (elements: IElement[] = []) => {
+    const traverseElements = (elements: IElement[] = []): any => {
       return elements.reduce(
         (acc, element) => {
           if (element.invisible) return acc;
           if (element.type === ELEMENT_TYPE.SECTION && element.elements) {
-            const nested = traverseElements(element.elements);
+            const nested = traverseElements(element.elements as IElement[]);
             return {
               total: acc.total + nested.total,
               answered: acc.answered + nested.answered,
@@ -103,14 +105,15 @@ export const FormResponsePublicPage: FunctionComponent<
           }
           return {
             total: acc.total + 1,
-            answered: acc.answered + (isValueFilled((element as any).value) ? 1 : 0),
+            answered:
+              acc.answered + (isValueFilled((element as any).value) ? 1 : 0),
           };
         },
         { total: 0, answered: 0 }
       );
     };
 
-    return pages.reduce(
+    const counter = pages.reduce(
       (acc, pageElements) => {
         const counters = traverseElements(pageElements);
         return {
@@ -120,6 +123,12 @@ export const FormResponsePublicPage: FunctionComponent<
       },
       { total: 0, answered: 0 }
     );
+
+    // 🔧 Devolvemos las mismas claves que usamos luego:
+    return {
+      totalQuestions: counter.total,
+      answeredQuestions: counter.answered,
+    };
   };
 
   const { totalQuestions, answeredQuestions } = getQuestionStats(
@@ -130,10 +139,10 @@ export const FormResponsePublicPage: FunctionComponent<
     ? Math.round((answeredQuestions / totalQuestions) * 100)
     : 0;
 
-  const rawLatitude = (getResponse.value as any)?.latitude ??
-    (getResponse.value as any)?.lat;
-  const rawLongitude = (getResponse.value as any)?.longitude ??
-    (getResponse.value as any)?.lng;
+  const rawLatitude =
+    (getResponse.value as any)?.latitude ?? (getResponse.value as any)?.lat;
+  const rawLongitude =
+    (getResponse.value as any)?.longitude ?? (getResponse.value as any)?.lng;
 
   const latitude = useMemo(() => {
     const parsed = Number(rawLatitude);
@@ -216,8 +225,8 @@ export const FormResponsePublicPage: FunctionComponent<
     const required = element.required;
 
     switch (element.type) {
-      case ELEMENT_TYPE.SECTION:
-        const isExpanded = expandedSections.includes(element.id);
+      case ELEMENT_TYPE.SECTION: {
+        const isExpanded = true; // expandedSections.includes(element.id);
         return (
           <div class='mb-4 bg-b-light text-slate-900 dark:bg-b-dark'>
             <span />
@@ -241,6 +250,7 @@ export const FormResponsePublicPage: FunctionComponent<
             )}
           </div>
         );
+      }
       case ELEMENT_TYPE.TITLE:
         return (
           <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
@@ -406,7 +416,6 @@ export const FormResponsePublicPage: FunctionComponent<
               disabled={disabled}
               data-page={page}
               data-section={section}
-              // required={required}
             />
           </div>
         );
@@ -436,7 +445,6 @@ export const FormResponsePublicPage: FunctionComponent<
               error={element.value_error}
               dataPage={page}
               dataSection={section}
-              // required={required}
             />
           </div>
         );
@@ -478,7 +486,6 @@ export const FormResponsePublicPage: FunctionComponent<
             />
           </div>
         );
-
       case ELEMENT_TYPE.AUDIO:
         return (
           <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
@@ -491,11 +498,9 @@ export const FormResponsePublicPage: FunctionComponent<
               data-section={section}
               disabled={disabled}
               area='form'
-              // required={required}
             />
           </div>
         );
-
       case ELEMENT_TYPE.SIGNATURE:
         return (
           <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
@@ -507,11 +512,9 @@ export const FormResponsePublicPage: FunctionComponent<
               label={element.label}
               data-section={section}
               disabled={disabled}
-              // required={required}
             />
           </div>
         );
-
       case ELEMENT_TYPE.QR:
         return (
           <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
@@ -523,11 +526,9 @@ export const FormResponsePublicPage: FunctionComponent<
               label={element.label}
               data-section={section}
               disabled={disabled}
-              // required={required}
             />
           </div>
         );
-
       case ELEMENT_TYPE.BARCODE:
         return (
           <div class='mb-4 p-4 rounded-lg bg-b-light text-slate-900 dark:bg-b-dark'>
@@ -539,11 +540,9 @@ export const FormResponsePublicPage: FunctionComponent<
               label={element.label}
               data-section={section}
               disabled={disabled}
-              // required={required}
             />
           </div>
         );
-
       default:
         return (
           <div className='bg-b-light text-slate-900 dark:bg-b-dark p-3 my-3'>
@@ -557,24 +556,9 @@ export const FormResponsePublicPage: FunctionComponent<
               error={element.value_error}
               data-page={page}
               data-section={section}
-              // required={required}
             />
           </div>
         );
-        {
-          /*(
-          <div class='mb-4 p-4 rounded-lg bg-b-light text-t-dark dark:bg-b-dark'>
-            {element.type}
-            <label class='block text-sm font-medium mb-1'>
-              {element.label}
-            </label>
-            {element.description && (
-              <p class='text-sm mb-2'>{element.description}</p>
-            )}
-          </div>
-        );
-        */
-        }
     }
   };
 
@@ -596,8 +580,6 @@ export const FormResponsePublicPage: FunctionComponent<
   const saveResponse = async () => {
     if (!getResponse.value || !getResponseMode?.value?.id) return;
 
-    // TODO: No borrar esta parte que es para guardar donde se puede dejar como se quiera
-    // el formulario
     const [structure, error] = responseValidation(getResponse.value);
     if (error) {
       setSingleResponse(structure as IResponse);
@@ -665,10 +647,16 @@ export const FormResponsePublicPage: FunctionComponent<
 
               <div className='mt-4 flex flex-wrap gap-2 text-xs uppercase tracking-wide text-white/80'>
                 <span className='rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/15'>
-                  Creado: <span className='font-semibold text-white'>{formatDate((getResponse.value as any)?.createdAt)}</span>
+                  Creado:{' '}
+                  <span className='font-semibold text-white'>
+                    {formatDate((getResponse.value as any)?.createdAt)}
+                  </span>
                 </span>
                 <span className='rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/15'>
-                  Actualizado: <span className='font-semibold text-white'>{formatDate((getResponse.value as any)?.updatedAt)}</span>
+                  Actualizado:{' '}
+                  <span className='font-semibold text-white'>
+                    {formatDate((getResponse.value as any)?.updatedAt)}
+                  </span>
                 </span>
               </div>
 
@@ -698,6 +686,7 @@ export const FormResponsePublicPage: FunctionComponent<
                     {answeredQuestions} / {totalQuestions || 0}
                   </span>
                 </div>
+                {responsesProgress}
                 <div className='mt-3 h-2 w-full overflow-hidden rounded-full bg-white/20'>
                   <div
                     className='h-full rounded-full bg-gradient-to-r from-primary to-emerald-300 shadow-lg transition-all duration-300'
@@ -717,7 +706,9 @@ export const FormResponsePublicPage: FunctionComponent<
                       className='h-full w-full object-cover'
                     />
                   ) : (
-                    <span className='text-lg font-semibold'>{companyInitials}</span>
+                    <span className='text-lg font-semibold'>
+                      {companyInitials}
+                    </span>
                   )}
                 </div>
                 <div className='space-y-1'>
@@ -776,7 +767,8 @@ export const FormResponsePublicPage: FunctionComponent<
                     radius={0}
                     adminUser={false}
                     radialPoint={null}
-                    sendPoints={() => {}}
+                    sendPoints={(_: any) => {}}
+                    name='public-map'
                   />
                 </div>
               </div>
