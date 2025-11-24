@@ -35,6 +35,11 @@ import { jsonToGzipBase64 } from '@/utils/utilities/blob';
 //import { fileManager } from '@/utils/network/file/file';
 import { useUserStore } from '@/store/slices';
 import { useTranslation } from 'react-i18next';
+import { ReportService } from '@/services/report/report';
+import {
+  openLoading,
+  closeLoading,
+} from '@/store/signals/modals/loading.signal';
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
   type?: string;
@@ -46,6 +51,7 @@ export const FormResponseSettingPage: FunctionComponent<
   const [currentPage, setCurrentPage] = useState(0);
   const { t } = useTranslation();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [isDownloading, setIsDownloading] = useState(false);
   const { getTenant } = useUserStore();
 
   const toggleSection = (sectionId: string) => {
@@ -538,6 +544,93 @@ export const FormResponseSettingPage: FunctionComponent<
     }
   };
 
+  const handleDownloadReport = async () => {
+    if (!getResponse.value || !getResponseMode.value?.id) {
+      return ToastManager.error('s_getted_error');
+    }
+
+    if (isDownloading) return;
+
+    setIsDownloading(true);
+    openLoading();
+
+    try {
+      // Preparar los datos para el servicio
+      const structure = getResponse.value;
+      const responseId = getResponseMode.value.id;
+
+      // Obtener datos del usuario actual del store (valores por defecto si no hay datos específicos)
+      const { getUser, getSelectedCompany } = useUserStore.getState();
+      const currentUser = getUser();
+      const selectedCompany = getSelectedCompany();
+
+      const user = currentUser
+        ? {
+            name: currentUser.name || '',
+            surname: currentUser.surname || '',
+            email: currentUser.email || '',
+          }
+        : {
+            name: '',
+            surname: '',
+            email: '',
+          };
+
+      const company = selectedCompany
+        ? {
+            name: selectedCompany.label || 'Compañía no disponible',
+          }
+        : {
+            name: 'Compañía no disponible',
+          };
+
+      const response = await ReportService.download_one_form_response_public({
+        structure,
+        user,
+        company,
+        id: responseId,
+      });
+
+      if (!response.getStatus()) {
+        ToastManager.error('s_download_file_error');
+        return;
+      }
+
+      const result = response.getOne();
+      if (result.success && result.data) {
+        // Convertir base64 a blob y descargar
+        const byteCharacters = atob(result.data.buffer);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], {
+          type: result.data.mimeType || 'application/pdf',
+        });
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = result.data.filename || 'formulario.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        ToastManager.success('s_download_file_success');
+      } else {
+        ToastManager.error('s_download_file_error');
+      }
+    } catch (error) {
+      console.error('Error downloading report:', error);
+      ToastManager.error('s_download_file_error');
+    } finally {
+      setIsDownloading(false);
+      closeLoading();
+    }
+  };
+
   return (
     <section className='pt-5 max-h-[72vh] overflow-auto vox-scroll-design'>
       {getResponse.value && (
@@ -564,6 +657,16 @@ export const FormResponseSettingPage: FunctionComponent<
                     icon='411'
                     label='h_share_report'
                     className='mb-4'
+                  />
+
+                  <Button
+                    type='button'
+                    onClick={handleDownloadReport}
+                    name='btn-response-download'
+                    icon='411'
+                    label='h_download_report'
+                    className='mb-4'
+                    disabled={isDownloading}
                   />
                 </div>
               )}
