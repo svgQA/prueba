@@ -65,7 +65,7 @@ export const StageForm: FunctionComponent = () => {
         executionNotes: '',
         outputFormat: '',
         resultText: '',
-        prompt: null,
+        prompt: '',
         nextStageId: null,
         prevStageId: null,
         errorStageId: null,
@@ -85,13 +85,19 @@ export const StageForm: FunctionComponent = () => {
       return stageList.value.find(stage => stage.value === stageId) || null;
     };
 
+    const promptValue = initialData.prompt 
+      ? (typeof initialData.prompt === 'object' 
+          ? JSON.stringify(initialData.prompt, null, 2) 
+          : initialData.prompt)
+      : '';
+
     setInitialValues({
       stageName: initialData.stageName || '',
       goal: initialData.goal || '',
       executionNotes: initialData.executionNotes || '',
       outputFormat: initialData.outputFormat || '',
       resultText: initialData.resultText || '',
-      prompt: initialData.prompt || null,
+      prompt: promptValue || null,
       nextStageId: findStageOption(initialData.nextStageId),
       prevStageId: findStageOption(initialData.prevStageId),
       errorStageId: findStageOption(initialData.errorStageId),
@@ -123,13 +129,15 @@ export const StageForm: FunctionComponent = () => {
 
   const handleSubmit = async (model: any) => {
     loading.value = true;
+    let promptValue = model.prompt;
+    if (typeof model.prompt === 'string' && model.prompt.trim()) promptValue = JSON.parse(model.prompt);
 
     let stage: IStages = {
       stageName: model.stageName,
-      status: model.status,
+      status: model.status?.replace(/\s+/g, '_') || model.status,
       goal: model.goal,
       executionNotes: model.executionNotes,
-      prompt: model.prompt,
+      prompt: promptValue,
       resource: resource.value,
       nextStageId: model.nextStageId?.value || null,
       prevStageId: model.prevStageId?.value || null,
