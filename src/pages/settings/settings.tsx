@@ -20,6 +20,7 @@ import { validateSettingModuleState } from '@/store/signals/access/permission';
 export const SettingsModal = () => {
   const { user } = useUserStore();
   const [expand, setExpand] = useState<boolean>(false);
+  const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
 
   const { go, goBack, goForward, current, created, settings } = useNavigation();
 
@@ -99,28 +100,40 @@ export const SettingsModal = () => {
         </div>
       }
     >
-      <div className='flex flex-col w-full h-full gap-4 md:gap-6 md:flex-row'>
-        <div
-          onClick={selectMenu}
-          className='w-full md:max-w-80 md:min-w-60 border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex flex-col gap-1'
-        >
-          <CardSettingUser
-            id='user-information'
-            name='user-information'
-            company='Inndico'
-            username={`${user?.name} ${user?.surname}`}
-            image={user?.image || ''}
-            rol={user?.userType || ''}
-          />
-          <MenuList menuSettings={MODAL_SIDEBAR_MENUS} expand={expand} />
+      <div className='flex flex-col w-full h-full gap-3 md:gap-6'>
+        <div className='flex items-center justify-between md:hidden px-3'>
+          <button
+            type='button'
+            className='px-3 py-2 text-sm font-semibold border-2 rounded-lg border-b-light-light dark:border-b-dark-light'
+            onClick={() => setShowMobileMenu((state) => !state)}
+          >
+            {showMobileMenu ? 'Cerrar menú' : 'Abrir menú'}
+          </button>
         </div>
-        <div
-          className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'}`}
-          onClick={selectMenu}
-        >
-          <CardSettingHeader id='setting-header' name='setting-header' />
-          <div className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-light'>
-            <RoutingContent />
+
+        <div className='flex flex-col w-full h-full gap-4 md:gap-6 md:flex-row relative'>
+          <div
+            onClick={selectMenu}
+            className={`w-full md:max-w-80 md:min-w-60 border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex flex-col gap-1 bg-white dark:bg-dark-bg md:static md:flex ${showMobileMenu ? 'flex absolute z-20 top-0 left-0 p-3 shadow-xl rounded-lg max-h-full overflow-y-auto' : 'hidden'}`}
+          >
+            <CardSettingUser
+              id='user-information'
+              name='user-information'
+              company='Inndico'
+              username={`${user?.name} ${user?.surname}`}
+              image={user?.image || ''}
+              rol={user?.userType || ''}
+            />
+            <MenuList menuSettings={MODAL_SIDEBAR_MENUS} expand={expand} />
+          </div>
+          <div
+            className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} ${showMobileMenu ? 'opacity-20 pointer-events-none md:opacity-100 md:pointer-events-auto' : ''}`}
+            onClick={() => setShowMobileMenu(false)}
+          >
+            <CardSettingHeader id='setting-header' name='setting-header' />
+            <div className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-light'>
+              <RoutingContent />
+            </div>
           </div>
         </div>
       </div>
