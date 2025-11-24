@@ -9,6 +9,7 @@ export interface IStages {
   nextStageId?: number | null;
   prevStageId?: number | null;
   errorStageId?: number | null;
+  visibility?: boolean;
 }
 
 export interface IResourceStage {

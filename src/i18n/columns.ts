@@ -193,6 +193,7 @@ export const columns_es = {
   h_task_list: 'Lista de Tareas',
   h_method: 'Método',
   h_request_url: 'URL de la solicitud',
+  h_visibility: 'visualizar',
 };
 
 export const columns_en = {
@@ -390,4 +391,5 @@ export const columns_en = {
   h_task_list: 'Task list',
   h_method: 'Method',
   h_request_url: 'Request URL',
+  h_visibility: 'Visibility',
 };

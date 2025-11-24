@@ -23,6 +23,7 @@ import { IResourceStage, IStages } from '../utils/interface';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { Button } from '@/components/common/button/button';
+import { Switch } from '@/components/common/switch/switch';
 
 export const StageForm: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -73,6 +74,7 @@ export const StageForm: FunctionComponent = () => {
         prevStageId: null,
         errorStageId: null,
         status: 'active',
+        visibility: true,
       });
       return (loading.value = false);
     }
@@ -111,6 +113,7 @@ export const StageForm: FunctionComponent = () => {
       prevStageId: findStageOption(initialData.prevStageId),
       errorStageId: findStageOption(initialData.errorStageId),
       status: initialData.status || 'active',
+      visibility: initialData.visibility ?? true,
     });
     loading.value = false;
   };
@@ -137,6 +140,7 @@ export const StageForm: FunctionComponent = () => {
       nextStageId: model.nextStageId?.value || null,
       prevStageId: model.prevStageId?.value || null,
       errorStageId: model.errorStageId?.value || null,
+      visibility: model.visibility ?? true,
     };
 
     let response = id
@@ -212,6 +216,21 @@ export const StageForm: FunctionComponent = () => {
                       type='text'
                       disabled={loading.value}
                       required
+                    />
+                  )}
+                </Field>
+              </div>
+
+              <div className='col-span-3'>
+                <Field<boolean> name='visibility' type='checkbox'>
+                  {({ input }) => (
+                    <Switch
+                      id='visibility-switch'
+                      name={input.name}
+                      label='h_visibility'
+                      value={input.checked}
+                      onChange={input.onChange}
+                      disabled={loading.value}
                     />
                   )}
                 </Field>
