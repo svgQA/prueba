@@ -13,7 +13,6 @@ import ReactFlow, {
 } from 'reactflow';
 
 import { useTranslation } from 'react-i18next';
-import { Section } from '@/components/common/section/section';
 import { IStages } from '../utils/interface';
 
 import 'reactflow/dist/style.css';
@@ -160,7 +159,7 @@ export const StageFlow: FunctionComponent<StageFlowProps> = ({ stages }) => {
 
   if (!stages.length) {
     return (
-      <Section className='p-6'>
+      <section>
         <div className='flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-10 text-center'>
           <div className='flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-inner shadow-slate-200'>
             <i className='vox-icon vx-icon-191 text-2xl text-primary' />
@@ -178,27 +177,13 @@ export const StageFlow: FunctionComponent<StageFlowProps> = ({ stages }) => {
             </p>
           </div>
         </div>
-      </Section>
+      </section>
     );
   }
 
   return (
-    <Section className='space-y-3 p-4'>
-      <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
-        <div className='space-y-1'>
-          <p className='text-xs font-semibold uppercase tracking-[0.08em] text-primary'>
-            Flow
-          </p>
-          <h2 className='text-xl font-semibold text-slate-900'>
-            {t('h_flow_view', 'Mapa visual de etapas')}
-          </h2>
-          <p className='text-sm text-slate-500'>
-            {t(
-              'i_flow_view_subtitle',
-              'Observa cómo las etapas se conectan con rutas principales y de error.'
-            )}
-          </p>
-        </div>
+    <section>
+      <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between absolute'>
         <div className='flex items-center gap-2 rounded-full bg-slate-100/80 px-3 py-2 text-xs text-slate-600 shadow-inner'>
           <span className='flex items-center gap-1'>
             <span className='h-2 w-2 rounded-full bg-emerald-500' />
@@ -215,7 +200,7 @@ export const StageFlow: FunctionComponent<StageFlowProps> = ({ stages }) => {
         </div>
       </div>
 
-      <div className='h-[70vh] overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-b from-white via-white to-slate-50 shadow-xl shadow-slate-200/40'>
+      <div className='h-[68vh] overflow-hidden rounded-2xl bg-gradient-to-b dark:from-b-dark dark:to-b-dark-light from-white via-white to-slate-50'>
         <ReactFlowProvider>
           <ReactFlow
             nodes={layout.nodes}
@@ -230,12 +215,13 @@ export const StageFlow: FunctionComponent<StageFlowProps> = ({ stages }) => {
               zoomable
               nodeColor='#94a3b8'
               maskColor='rgba(148,163,184,0.08)'
+              position='top-right'
             />
             <Controls position='bottom-right' showInteractive={false} />
-            <Background gap={20} size={1} color='#e2e8f0' />
+            <Background gap={10} size={0.4} color='#e2e8f0' />
           </ReactFlow>
         </ReactFlowProvider>
       </div>
-    </Section>
+    </section>
   );
 };

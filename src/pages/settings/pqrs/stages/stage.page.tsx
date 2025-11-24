@@ -82,6 +82,7 @@ export const StagePage: FunctionalComponent = () => {
 
   return (
     <Section
+      className='relative'
       header={
         <div className='inline-flex items-center rounded-full p-1 text-sm font-medium'>
           {[
