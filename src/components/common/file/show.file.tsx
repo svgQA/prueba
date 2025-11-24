@@ -73,7 +73,7 @@ const showFiles = ({
 
   return (
     <div
-      className='relative w-full flex justify-center items-center bg-b-light-light dark:bg-b-dark-dark'
+      className={`relative w-full flex justify-center items-center ${resources.length > 0 ? 'bg-b-light-light dark:bg-b-dark-dark' : ''}`}
       ref={containerRef}
     >
       {visibleFiles && resources.length > 0 && (
