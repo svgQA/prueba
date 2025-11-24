@@ -93,7 +93,7 @@ export const TenantsModal: FunctionComponent<ITenantsModalProps> = ({
         className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'}`}
       >
         <div className='w-full p-4 flex flex-col h-full'>
-          <div className='flex border-b mb-4'>
+          <div className='flex flex-wrap border-b mb-4 gap-2'>
             <button
               className={`px-4 py-2 ${activeTab === 'tenant' ? 'border-b-2 border-primary' : ''}`}
               onClick={() => setActiveTab('tenant')}

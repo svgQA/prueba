@@ -375,7 +375,7 @@ export const MemosPage: FunctionComponent = () => {
     <Section
       className={
         currentView.value === VIEW_NAME.CHAT
-          ? 'flex flex-row h-[94.5vh]'
+          ? 'flex flex-col lg:flex-row h-auto lg:h-[94.5vh]'
           : 'mr-3 my-1 relative'
       }
       padding={currentView.value !== VIEW_NAME.CHAT}
@@ -389,8 +389,8 @@ export const MemosPage: FunctionComponent = () => {
       <div
         className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}
       >
-        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 top-0 pl-1'>
-          <div className='flex flex-row items-center justify-between'>
+        <div className='py-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between overflow-visible xl:absolute relative z-10 top-0 pl-1'>
+          <div className='flex flex-wrap items-center justify-between gap-2 sm:gap-3'>
             {buttonMenu}
             <NotificationBanner
               ref={notificationBannerRef}
