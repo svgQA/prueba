@@ -40,10 +40,6 @@ export const ResponsePublicPage: FunctionComponent = () => {
     responseId.value = responseIdParam;
     tenant.value = tenantParam;
 
-    // Log para verificar que se capturaron correctamente
-    console.log('responseId:', responseIdParam);
-    console.log('tenant:', tenantParam);
-
     getResponse();
   }, [t]);
 
