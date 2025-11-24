@@ -84,4 +84,25 @@ export class ReportService extends BaseService {
     };
     return await super.make_request<IPresignedRequest>(this.sname, model);
   }
+
+  static async download_one_form_response_public(data: {
+    structure: any;
+    user?: any;
+    company?: any;
+    id?: string;
+  }) {
+    const model: IMakeRequest = {
+      url: ['response', 'download', 'public'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<{
+      success: boolean;
+      data: {
+        filename: string;
+        mimeType: string;
+        buffer: string;
+      };
+    }>(this.sname, model);
+  }
 }

@@ -55,6 +55,9 @@ export const ResponsePublicPage: FunctionComponent = () => {
     const responseData: any = response.getOne();
     user.value = responseData?.user ?? null;
     company.value = responseData?.company ?? null;
+    console.log('responseData:', responseData);
+    console.log('responseData.user:', user);
+    console.log('responseData.company:', company);
     setResponse(
       { mode: RESPONSE_MODE_SERVICE.UPDATE, id: responseData.id },
       responseData.structure

@@ -29,6 +29,7 @@ export const columns_es = {
   h_report: 'Reporte',
   h_generate_report: 'Generar reporte',
   h_share_report: 'Compartir reporte',
+  h_download_report: 'Descargar reporte',
   h_round: 'Ronda',
   h_task: 'Tareas',
   h_identification: 'Identificación',
@@ -190,6 +191,9 @@ export const columns_es = {
   h_week: 'Semana',
   h_month: 'Mes',
   h_task_list: 'Lista de Tareas',
+  h_method: 'Método',
+  h_request_url: 'URL de la solicitud',
+  h_visibility: 'visualizar',
 };
 
 export const columns_en = {
@@ -225,6 +229,7 @@ export const columns_en = {
   h_report: 'Report',
   h_generate_report: 'Generate report',
   h_share_report: 'Share report',
+  h_download_report: 'Download report',
   h_round: 'Round',
   h_task: 'Tasks',
   h_identification: 'Identifier',
@@ -384,4 +389,7 @@ export const columns_en = {
   h_week: 'Week',
   h_month: 'Month',
   h_task_list: 'Task list',
+  h_method: 'Method',
+  h_request_url: 'Request URL',
+  h_visibility: 'Visibility',
 };
