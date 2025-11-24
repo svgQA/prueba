@@ -16,7 +16,7 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
       <Card id={id} name={id} borderless rounded={false} transparent>
         <div className='flex flex-col mt-1 sm:mt-2'>
           <div className='flex flex-row items-center justify-between min-h-[28px] sm:min-h-0'>
-            <h2 className='hidden md:block text-sm font-bold mb-1'>{t(label)}</h2>
+            <h2 className='text-sm font-bold mb-1 sm:mb-2'>{t(label)}</h2>
             {setting &&
               setting.show &&
               validateSettingModuleState(setting.id) && (
@@ -26,7 +26,7 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
                     data-label={label}
                     data-description='Settings'
                     id={setting.id}
-                    className={`${selected.id === setting.id ? 'bg-primary bg-opacity-30 !text-primary' : ''} vox-icon vx-icon-168 size-sm cursor-pointer p-2 rounded`}
+                    className={`${selected.id === setting.id ? 'bg-primary bg-opacity-30 text-primary' : ''} vox-icon vx-icon-168 size-sm cursor-pointer p-2 rounded transition-colors`}
                   />
                 </Link>
               )}
@@ -41,11 +41,11 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = memo(
                 data-label={menu.label}
                 data-description={menu.description}
                 id={menu.id}
-                className={`${selected.id === menu.id ? 'bg-primary bg-opacity-30 !text-primary' : ''} flex flex-row items-center justify-center md:justify-start px-2 py-1 text-sm my-0.5 rounded-md`}
+                className={`${selected.id === menu.id ? 'bg-primary bg-opacity-30 text-primary' : ''} flex flex-row items-center justify-center md:justify-start px-2 py-1 text-sm my-0.5 rounded-md transition-colors`}
                 title={t(menu.label)}
               >
-                <span className={`vx-icon vx-icon-${menu.icon} size-sm mr-0 sm:mr-2`} />
-                <span className='hidden sm:inline'>{t(menu.label)}</span>
+                <span className={`vx-icon vx-icon-${menu.icon} size-sm mr-0 sm:mr-2 ${selected.id === menu.id ? 'text-primary' : ''}`} />
+                <span className='hidden sm:inline text-left'>{t(menu.label)}</span>
               </Link>
             ) : null;
           })}

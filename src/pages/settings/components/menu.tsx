@@ -13,7 +13,7 @@ export const MenuList = memo(({ menuSettings, expand }: Props) => {
   const { current } = useNavigation();
   return (
     <div
-      className={`vox-scroll-design ${expand ? 'max-h-[98vh]' : 'max-h-[69vh]'} overflow-y-scroll px-2 sm:px-4 flex flex-row flex-wrap md:flex-col gap-2 py-3 sm:py-4`}
+      className={`vox-scroll-design ${expand ? 'max-h-[98vh]' : 'max-h-[69vh]'} overflow-y-scroll px-2 sm:px-4 flex flex-col gap-2 py-3 sm:py-4`}
     >
       {menuSettings.map((menu: IModalSidebarMenu) => {
         return menu.show && validateSettingModuleState(menu.id) ? (

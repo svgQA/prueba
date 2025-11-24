@@ -104,7 +104,7 @@ export const SettingsModal = () => {
         <div className='flex items-center justify-between md:hidden px-3'>
           <button
             type='button'
-            className='px-3 py-2 text-sm font-semibold border-2 rounded-lg border-b-light-light dark:border-b-dark-light'
+            className='px-3 py-2 text-sm font-semibold border-2 rounded-lg border-b-light-light dark:border-b-dark-light bg-white dark:bg-dark-bg'
             onClick={() => setShowMobileMenu((state) => !state)}
           >
             {showMobileMenu ? 'Cerrar menú' : 'Abrir menú'}
@@ -113,8 +113,11 @@ export const SettingsModal = () => {
 
         <div className='flex flex-col w-full h-full gap-4 md:gap-6 md:flex-row relative'>
           <div
-            onClick={selectMenu}
-            className={`w-full md:max-w-80 md:min-w-60 border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex flex-col gap-1 bg-white dark:bg-dark-bg md:static md:flex ${showMobileMenu ? 'flex absolute z-20 top-0 left-0 p-3 shadow-xl rounded-lg max-h-full overflow-y-auto' : 'hidden'}`}
+            onClick={(event) => {
+              selectMenu(event);
+              setShowMobileMenu(false);
+            }}
+            className={`${showMobileMenu ? 'flex fixed inset-0 z-30 p-4 shadow-2xl' : 'hidden md:flex'} w-full max-w-80 md:max-w-80 md:min-w-60 border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex-col gap-1 bg-white dark:bg-dark-bg md:static md:p-0 md:shadow-none rounded-lg md:rounded-none mx-auto md:mx-0`}
           >
             <CardSettingUser
               id='user-information'
