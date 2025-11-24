@@ -277,6 +277,7 @@ export const MemosPage: FunctionComponent = () => {
           selected={currentView.value === VIEW_NAME.PANIC}
           icon='359'
         />
+
         {/* <Button
           name='button-change-scheduler'
           onClick={() => {
