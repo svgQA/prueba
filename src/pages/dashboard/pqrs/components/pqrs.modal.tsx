@@ -128,7 +128,7 @@ export const PqrsModal = ({
           )}
 
           <div class='space-y-2'>
-            <div class='grid grid-cols-3 gap-3 text-xs'>
+            <div class='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs'>
               {pqrs.value?.extraData?.filingDate && (
                 <div class='flex items-center gap-1.5 text-gray-text-light'>
                   <span>📅</span>

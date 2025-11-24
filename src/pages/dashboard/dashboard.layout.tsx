@@ -249,9 +249,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           menus={SIDEBAR_MENUS}
           isNavigation
         />
-        <div className='flex flex-col pl-[4.5rem]'>
-          <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
-            <div className='flex flex-row px-6 gap-4 justify-between items-center'>
+        <div className='flex flex-col lg:pl-[4.5rem]'>
+          <header className='h-auto lg:h-14 flex flex-col lg:flex-row items-stretch lg:items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
+            <div className='flex flex-wrap px-4 sm:px-6 gap-3 sm:gap-4 justify-between items-center w-full lg:w-auto'>
               <Panic
                 icon='001'
                 emitPanic={(panic: IPanic) => {
@@ -263,31 +263,33 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                 }}
               />
               <LanguageSwitcher borderless />
-              <CustomSwitcher
-                options={companies}
-                value={selectedCompany?.value}
-                onChange={handleCompanyChange}
-                icon='023'
-                borderless
-              />
-              <CustomSwitcher
-                options={places}
-                value={selectedPlace?.value}
-                onChange={handlePlaceChange}
-                icon='103'
-                borderless
-              />
-              <CustomSwitcher
-                options={clients.value.map((client) => ({
-                  label: client.name,
-                  value: client.id,
-                }))}
-                value={clients.value[0]?.id}
-                onChange={() => {}}
-                icon='023'
-                borderless
-              />
-              <div className='flex flex-row gap-4 items-center justify-center'>
+              <div className='flex flex-wrap gap-3 sm:gap-4 items-center justify-end flex-1 min-w-[220px]'>
+                <CustomSwitcher
+                  options={companies}
+                  value={selectedCompany?.value}
+                  onChange={handleCompanyChange}
+                  icon='023'
+                  borderless
+                />
+                <CustomSwitcher
+                  options={places}
+                  value={selectedPlace?.value}
+                  onChange={handlePlaceChange}
+                  icon='103'
+                  borderless
+                />
+                <CustomSwitcher
+                  options={clients.value.map((client) => ({
+                    label: client.name,
+                    value: client.id,
+                  }))}
+                  value={clients.value[0]?.id}
+                  onChange={() => {}}
+                  icon='023'
+                  borderless
+                />
+              </div>
+              <div className='flex flex-row gap-3 sm:gap-4 items-center justify-center w-full lg:w-auto'>
                 <ThemeButton unpadded />
                 <Notifications icon='317' iconSize='xsm' />
                 <Dropdown

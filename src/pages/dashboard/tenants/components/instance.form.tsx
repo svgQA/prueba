@@ -20,7 +20,7 @@ export const CreateInstanceForm: FunctionComponent<
         onSubmit={onSubmit}
         render={({ handleSubmit }) => (
           <form onSubmit={handleSubmit} className='mb-8'>
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <Field<string> name='name' validate={required}>
                 {({ input, meta }) => (
                   <Input
