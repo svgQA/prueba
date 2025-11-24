@@ -17,9 +17,10 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'wouter';
 
 import { StageService } from '@/services/pqrs/stage';
-import { IStages } from '../utils/interface';
+import { IResourceStage, IStages, Methods } from '../utils/interface';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { Button } from '@/components/common/button/button';
 
 export const StageForm: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -29,6 +30,7 @@ export const StageForm: FunctionComponent = () => {
   const [initialValues, setInitialValues] = useState<any>();
   const loading = useSignal<boolean>(false);
   const stageList = useSignal<IOption[]>([]);
+  const resource = useSignal<IResourceStage[]>([]);
 
   useEffect(() => {
     document.title = 'h_stages';
@@ -38,10 +40,14 @@ export const StageForm: FunctionComponent = () => {
   const { selectedCompany } = useUserStore();
   useEffect(() => {
     if (selectedCompany) {
-      fetchInitialValues();
-      getSimpleStageList();
+      loadData();
     }
   }, [selectedCompany, id]);
+
+  const loadData = async () => {
+    await getSimpleStageList();
+    await fetchInitialValues();
+  };
 
   const getSimpleStageList = async () => {
     const response = await StageService.getSimpleList();
@@ -52,6 +58,7 @@ export const StageForm: FunctionComponent = () => {
   const fetchInitialValues = async () => {
     loading.value = true;
     if (!id) {
+      resource.value = [];
       setInitialValues({
         stageName: '',
         goal: '',
@@ -71,6 +78,13 @@ export const StageForm: FunctionComponent = () => {
     if (!response.getStatus()) return (loading.value = false);
     const initialData = response.getOne();
 
+    resource.value = initialData.resource || [];
+
+    const findStageOption = (stageId: number | null) => {
+      if (!stageId || !stageList.value.length) return null;
+      return stageList.value.find(stage => stage.value === stageId) || null;
+    };
+
     setInitialValues({
       stageName: initialData.stageName || '',
       goal: initialData.goal || '',
@@ -78,27 +92,48 @@ export const StageForm: FunctionComponent = () => {
       outputFormat: initialData.outputFormat || '',
       resultText: initialData.resultText || '',
       prompt: initialData.prompt || null,
-      nextStageId: initialData.nextStageId || null,
-      prevStageId: initialData.prevStageId || null,
-      errorStageId: initialData.errorStageId || null,
+      nextStageId: findStageOption(initialData.nextStageId),
+      prevStageId: findStageOption(initialData.prevStageId),
+      errorStageId: findStageOption(initialData.errorStageId),
       status: initialData.status || 'active',
     });
     loading.value = false;
   };
 
-  const handleSubmit = async (model: any, _form?: any) => {
+  const addResource = () => {
+    resource.value = [
+      ...resource.value,
+      { method: 'GET' as Methods, requestUrl: '' },
+    ];
+  };
+
+  const removeResource = (index: number) => {
+    resource.value = resource.value.filter((_, i) => i !== index);
+  };
+
+  const updateResource = (index: number, field: 'method' | 'requestUrl', value: any) => {
+    const updated = [...resource.value];
+    if (field === 'method') {
+      updated[index] = { ...updated[index], method: value?.value || value };
+    } else {
+      updated[index] = { ...updated[index], requestUrl: value };
+    }
+    resource.value = updated;
+  };
+
+  const handleSubmit = async (model: any) => {
     loading.value = true;
+
     let stage: IStages = {
       stageName: model.stageName,
+      status: model.status,
       goal: model.goal,
       executionNotes: model.executionNotes,
-      outputFormat: model.outputFormat,
-      resultText: model.resultText,
       prompt: model.prompt,
-      nextStageId: model.nextStageId.value,
-      prevStageId: model.prevStageId.value,
-      errorStageId: model.errorStageId.value,
-      status: model.status,
+      resource: resource.value,
+      nextStageId: model.nextStageId?.value || null,
+      prevStageId: model.prevStageId?.value || null,
+      errorStageId: model.errorStageId?.value || null,
     };
 
     let response = id
@@ -143,7 +178,7 @@ export const StageForm: FunctionComponent = () => {
               form='form-stages-upsert'
               label={id ? 'edit' : 'save'}
             />
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-3 gap-4'>
               <div className='col-span-2'>
                 <Field<string> name='stageName'>
                   {({ input, meta }) => (
@@ -161,138 +196,7 @@ export const StageForm: FunctionComponent = () => {
                 </Field>
               </div>
 
-              <div className='col-span-2'>
-                <Field<string> name='goal'>
-                  {({ input, meta }) => (
-                    <TextArea
-                      {...input}
-                      icon='120'
-                      type='text'
-                      placeholder={t('h_goal')}
-                      label={t('h_goal')}
-                      meta={meta}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
-              </div>
-
-              <div className='col-span-2'>
-                <Field<string> name='executionNotes'>
-                  {({ input, meta }) => (
-                    <TextArea
-                      {...input}
-                      icon='120'
-                      type='text'
-                      placeholder={t('h_execution_notes')}
-                      label={t('h_execution_notes')}
-                      meta={meta}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
-              </div>
-
-              <div className='col-span-2'>
-                <Field<string> name='outputFormat'>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      placeholder={t('h_output_format')}
-                      label={t('h_output_format')}
-                      meta={meta}
-                      icon='120'
-                      type='text'
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
-              </div>
-
-              <div className='col-span-2'>
-                <Field<string> name='resultText'>
-                  {({ input, meta }) => (
-                    <TextArea
-                      {...input}
-                      icon='120'
-                      type='text'
-                      placeholder={t('h_result_text')}
-                      label={t('h_result_text')}
-                      meta={meta}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
-              </div>
-
-              <div className='col-span-2'>
-                <Field<string> name='prompt'>
-                  {({ input, meta }) => (
-                    <TextArea
-                      {...input}
-                      icon='120'
-                      type='text'
-                      placeholder={t('h_prompt')}
-                      label={t('h_prompt')}
-                      meta={meta}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
-              </div>
-
               <div className='col-span-1'>
-                <Field<IOption> name='nextStageId'>
-                  {({ input, meta }) => (
-                    <SmartSelector
-                      {...input}
-                      meta={meta}
-                      id='select-next-stageId'
-                      icon='191'
-                      label='h_next_stage'
-                      options={stageList.value || []}
-                      menuPortalTarget={document.body}
-                      placeholder='p_select'
-                    />
-                  )}
-                </Field>
-              </div>
-
-              <div className='col-span-1'>
-                <Field<IOption> name='prevStageId'>
-                  {({ input, meta }) => (
-                    <SmartSelector
-                      {...input}
-                      meta={meta}
-                      id='select-prev-stageId'
-                      icon='191'
-                      label='h_prev_stage'
-                      options={stageList.value || []}
-                      menuPortalTarget={document.body}
-                      placeholder='p_select'
-                    />
-                  )}
-                </Field>
-              </div>
-
-              <div className='col-span-2'>
-                <Field<IOption> name='errorStageId'>
-                  {({ input, meta }) => (
-                    <SmartSelector
-                      {...input}
-                      meta={meta}
-                      id='select-error-stageId'
-                      icon='191'
-                      label='h_error_stage'
-                      options={stageList.value || []}
-                      menuPortalTarget={document.body}
-                      placeholder='p_select'
-                    />
-                  )}
-                </Field>
-              </div>
-
-              <div className='col-span-2'>
                 <Field<string> name='status'>
                   {({ input, meta }) => (
                     <Input
@@ -308,10 +212,186 @@ export const StageForm: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
+
+              <div className='col-span-3'>
+                <Field<string> name='goal'>
+                  {({ input, meta }) => (
+                    <TextArea
+                      {...input}
+                      icon='120'
+                      type='text'
+                      placeholder={t('h_goal')}
+                      label={t('h_goal')}
+                      meta={meta}
+                      disabled={loading.value}
+                    />
+                  )}
+                </Field>
+              </div>
+
+              <div className='col-span-3'>
+                <Field<string> name='executionNotes'>
+                  {({ input, meta }) => (
+                    <TextArea
+                      {...input}
+                      icon='120'
+                      type='text'
+                      placeholder={t('h_execution_notes')}
+                      label={t('h_execution_notes')}
+                      meta={meta}
+                      disabled={loading.value}
+                    />
+                  )}
+                </Field>
+              </div>
+
+              <div className='col-span-3'>
+                <Field<string> name='prompt'>
+                  {({ input, meta }) => (
+                    <TextArea
+                      {...input}
+                      icon='120'
+                      type='text'
+                      placeholder={t('h_prompt')}
+                      label={t('h_prompt')}
+                      meta={meta}
+                      disabled={loading.value}
+                    />
+                  )}
+                </Field>
+              </div>
+
+              {stageList.value && stageList.value.length > 0 && (
+                <>
+                  <div className='col-span-1'>
+                    <Field<IOption> name='nextStageId'>
+                      {({ input, meta }) => (
+                        <SmartSelector
+                          {...input}
+                          meta={meta}
+                          id='select-next-stageId'
+                          icon='191'
+                          label='h_next_stage'
+                          options={stageList.value || []}
+                          menuPortalTarget={document.body}
+                          placeholder='p_select'
+                        />
+                      )}
+                    </Field>
+                  </div>
+
+                  <div className='col-span-1'>
+                    <Field<IOption> name='prevStageId'>
+                      {({ input, meta }) => (
+                        <SmartSelector
+                          {...input}
+                          meta={meta}
+                          id='select-prev-stageId'
+                          icon='191'
+                          label='h_prev_stage'
+                          options={stageList.value || []}
+                          menuPortalTarget={document.body}
+                          placeholder='p_select'
+                        />
+                      )}
+                    </Field>
+                  </div>
+
+                  <div className='col-span-1'>
+                    <Field<IOption> name='errorStageId'>
+                      {({ input, meta }) => (
+                        <SmartSelector
+                          {...input}
+                          meta={meta}
+                          id='select-error-stageId'
+                          icon='191'
+                          label='h_error_stage'
+                          options={stageList.value || []}
+                          menuPortalTarget={document.body}
+                          placeholder='p_select'
+                        />
+                      )}
+                    </Field>
+                  </div>
+                </>
+              )}
+
+              <div className='col-span-3 border-t pt-4'>
+                <div className='flex items-center justify-between mb-3'>
+                  <h3 className='text-sm font-medium'>{t('h_resource')}</h3>
+                  <Button
+                    name='add-resource-button'
+                    type='button'
+                    onClick={addResource}
+                    disabled={loading.value}
+                    className='px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed'
+                    label='add'
+                  />
+                </div>
+
+                {resource.value.length === 0 ? (
+                  <p className='text-sm text-gray-500 italic text-center py-4'>
+                    {t('pqrs.no_resources_added')}
+                  </p>
+                ) : (
+                  <div className='space-y-4'>
+                    {resource.value.map((res, index) => (
+                      <div key={index} className='border rounded-lg p-4 bg-gray-50'>
+                        <div className='grid grid-cols-4 gap-4'>
+                          <div className='col-span-1'>
+                            <SmartSelector
+                              name={`resource-method-${index}`}
+                              value={{ value: res.method, label: res.method }}
+                              onChange={(option: any) => updateResource(index, 'method', option)}
+                              id={`select-resource-method-${index}`}
+                              icon='191'
+                              label='h_method'
+                              options={[
+                                { value: 'GET', label: 'GET' },
+                                { value: 'POST', label: 'POST' },
+                              ]}
+                              menuPortalTarget={document.body}
+                              placeholder='p_select'
+                            />
+                          </div>
+
+                          <div className='col-span-3'>
+                            <div className='flex gap-2'>
+                              <div className='flex-1'>
+                                <Input
+                                  name={`resource-requestUrl-${index}`}
+                                  value={res.requestUrl}
+                                  onChange={(e: any) => updateResource(index, 'requestUrl', e.target.value)}
+                                  icon='120'
+                                  type='text'
+                                  placeholder={t('h_request_url')}
+                                  label={t('h_request_url')}
+                                  disabled={loading.value}
+                                />
+                              </div>
+                              <div className='mt-6'>
+                                <Button
+                                  name='remove-resource-button'
+                                  type='button'
+                                  onClick={() => removeResource(index)}
+                                  disabled={loading.value}
+                                  label='remove'
+                                  icon='312'
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </form>
-        )}
+        )
+        }
       />
-    </Section>
+    </Section >
   );
 };

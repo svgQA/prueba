@@ -1,13 +1,22 @@
 export interface IStages {
   id?: number;
-  prompt: any;
   stageName: string;
+  status: string;
   executionNotes?: string | null;
   goal?: string | null;
-  resultText?: string | null;
-  outputFormat?: string | null;
+  prompt: any;
+  resource?: IResourceStage[] | null;
   nextStageId?: number | null;
   prevStageId?: number | null;
   errorStageId?: number | null;
-  status: string;
+}
+
+export interface IResourceStage {
+  method: Methods;
+  requestUrl: string;
+}
+
+export enum Methods {
+  GET = 'GET',
+  POST = 'POST',
 }

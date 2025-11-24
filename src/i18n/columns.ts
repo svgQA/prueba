@@ -191,6 +191,8 @@ export const columns_es = {
   h_week: 'Semana',
   h_month: 'Mes',
   h_task_list: 'Lista de Tareas',
+  h_method: 'Método',
+  h_request_url: 'URL de la solicitud',
 };
 
 export const columns_en = {
@@ -386,4 +388,6 @@ export const columns_en = {
   h_week: 'Week',
   h_month: 'Month',
   h_task_list: 'Task list',
+  h_method: 'Method',
+  h_request_url: 'Request URL',
 };
