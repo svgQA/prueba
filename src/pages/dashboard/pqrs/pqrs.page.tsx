@@ -43,6 +43,7 @@ export const PqrsPage: FunctionComponent = () => {
   const columns = useSignal<ColumnConfig[]>([]);
   const openModalUpsert = useSignal<boolean>(false);
   const viewMode = useSignal<ViewMode>('cards');
+  const lastUpdated = useSignal<Date | null>(null);
 
   useEffect(() => {
     Promise.all([fetchingAllData()]);
@@ -70,14 +71,18 @@ export const PqrsPage: FunctionComponent = () => {
   const fetchingAllData = async () => {
     await getPqrs();
     await getPqrsGrouped();
+    lastUpdated.value = new Date();
   };
 
   const getPqrs = async () => {
     loading.value = true;
-    const response = await PqrsService.get_all();
-    if (!response.getStatus()) return;
-    pqrs.value = response.getMany();
-    loading.value = false;
+    try {
+      const response = await PqrsService.get_all();
+      if (!response.getStatus()) return;
+      pqrs.value = response.getMany();
+    } finally {
+      loading.value = false;
+    }
   };
 
   const getStatus = async () => {
@@ -109,18 +114,21 @@ export const PqrsPage: FunctionComponent = () => {
 
   const getPqrsGrouped = async () => {
     loading.value = true;
-    await getStatus();
+    try {
+      await getStatus();
 
-    pqrs.value.forEach((item: ICPqrsRequest) => {
-      const normalizedStatus = item.status.toLowerCase();
-      if (!groupedPqrs.value[normalizedStatus]) {
-        groupedPqrs.value[normalizedStatus] = [];
-      }
-      groupedPqrs.value[normalizedStatus].push(item);
-    });
+      pqrs.value.forEach((item: ICPqrsRequest) => {
+        const normalizedStatus = item.status.toLowerCase();
+        if (!groupedPqrs.value[normalizedStatus]) {
+          groupedPqrs.value[normalizedStatus] = [];
+        }
+        groupedPqrs.value[normalizedStatus].push(item);
+      });
 
-    columns.value = getColumns(groupedPqrs.value);
-    loading.value = false;
+      columns.value = getColumns(groupedPqrs.value);
+    } finally {
+      loading.value = false;
+    }
   };
 
   const getColumns = (
@@ -378,6 +386,16 @@ export const PqrsPage: FunctionComponent = () => {
             Alterna entre la vista de tarjetas y un dashboard preliminar para planificar los
             indicadores de atención al cliente.
           </p>
+          <div class='flex flex-wrap items-center gap-2 mt-2 text-xs text-gray-text-light'>
+            <span class='px-2 py-1 rounded-full bg-b-light border border-gray-border/70'>
+              Total de casos: {pqrs.value.length}
+            </span>
+            {lastUpdated.value && (
+              <span class='px-2 py-1 rounded-full bg-b-light border border-gray-border/70'>
+                Actualizado: {lastUpdated.value.toLocaleString()}
+              </span>
+            )}
+          </div>
         </div>
 
         <div class='flex items-center gap-3'>
@@ -471,6 +489,12 @@ export const PqrsPage: FunctionComponent = () => {
               </div>
             );
           })}
+          {!loading.value && columns.value.length === 0 && (
+            <div class='text-center py-8 text-gray-text-light opacity-70 border border-dashed border-gray-border rounded-lg bg-white/60 w-full'>
+              <p class='text-sm font-medium text-t-light'>Aún no hay estados configurados</p>
+              <p class='text-xs mt-1'>Actualiza o crea un caso para ver columnas disponibles.</p>
+            </div>
+          )}
         </div>
       )}
 
