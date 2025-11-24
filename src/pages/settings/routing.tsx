@@ -54,13 +54,10 @@ import { TaskSettingPage } from './shifts/task/task';
 import { TaskCreateSettingPage } from './shifts/task/create/task';
 import { ScheduleSettingPage } from './shifts/schedule/schedule';
 import { ScheduleCreateSettingPage } from './shifts/schedule/create/schedule';
-import { ShiftSettingPage } from './shifts/setting/setting';
-import { GeneralSettingPage } from './general/setting/setting';
 import { UserAreasPage } from '../dashboard/users/areas/user.areas';
 import { UserGroupsPage } from '../dashboard/users/groups/user.groups';
 import { UserRolesPage } from '../dashboard/users/roles/roles';
 import { UserPasswordPage } from '../dashboard/users/password/user.password';
-import { UserSettingsPage } from '../dashboard/users/setting/user.setting';
 import { ScheduledNotificationsPage } from './notifications/scheduleNotifications/scheduledNotifications';
 import { TemplateNotificationPage } from './notifications/templateNotifications/templateNotifications';
 import { TemplateCreateForm } from './notifications/templateNotifications/create/create';
@@ -92,6 +89,20 @@ import { ClientsSettingPage } from '../dashboard/users/clients/clients';
 import { ClientsCreateSettingPage } from '../dashboard/users/clients/create/create';
 import { StageForm } from './pqrs/stages/components/stages.upsert';
 import { StagePage } from './pqrs/stages/stage.page';
+import { SGeneralSettingPage } from './general/setting/setting';
+import { SSecuritySettingPage } from './security/setting/setting';
+import { SShiftSettingPage } from './shifts/setting/setting';
+import { SUserSettingsPage } from '../dashboard/users/setting/user.setting';
+import { SSalesSettingPage } from './sales/setting/setting';
+import { SAsociateSettingPage } from './asociate/setting/setting';
+import { SAccessSettingPage } from './access/setting/setting';
+import { SNotificationSettingPage } from './notifications/setting/setting';
+import { SAdminSettingPage } from './admin/setting/setting';
+import { SPaymentSettingPage } from './payment/setting/setting';
+import { SFormSettingPage } from './forms/setting/setting';
+import { SIotSettingPage } from './iot/setting/setting';
+import { SIASettingPage } from './ia/setting/setting';
+import { SMemoSettingPage } from './memo/setting/setting';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -102,6 +113,12 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.admin.analytic.to}
           component={lazy(() =>
             Promise.resolve({ default: AnalyticAdminSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.admin.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: SAdminSettingPage })
           )}
         />
         <Route
@@ -120,7 +137,7 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.setting.settings}
           component={lazy(() =>
-            Promise.resolve({ default: GeneralSettingPage })
+            Promise.resolve({ default: SGeneralSettingPage })
           )}
         />
         <Route
@@ -170,6 +187,12 @@ export const RoutingContent = memo(() => {
         />
         {/* SECURITY MENU */}
         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.security.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: SSecuritySettingPage })
+          )}
+        />
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.security.keys.to}
           component={lazy(() => Promise.resolve({ default: KeysSettingPage }))}
         />
@@ -205,6 +228,12 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.payment.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: SPaymentSettingPage })
+          )}
+        />
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.payment.payment.to}
           component={lazy(() =>
             Promise.resolve({ default: PaymentSettingPage })
@@ -214,6 +243,10 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.form.to}
           component={lazy(() => Promise.resolve({ default: FormSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.forms.settings}
+          component={lazy(() => Promise.resolve({ default: SFormSettingPage }))}
         />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.forms.form.create.to}
@@ -278,6 +311,10 @@ export const RoutingContent = memo(() => {
           )}
         />
         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.iot.settings}
+          component={lazy(() => Promise.resolve({ default: SIotSettingPage }))}
+        />
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.iot.iot.to}
           component={lazy(() => Promise.resolve({ default: IotSettingPage }))}
         />
@@ -292,10 +329,16 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.ia.ia.to}
           component={lazy(() => Promise.resolve({ default: IASettingPage }))}
         />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.ia.settings}
+          component={lazy(() => Promise.resolve({ default: SIASettingPage }))}
+        />
         {/* SHIFTS MENU */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.settings}
-          component={lazy(() => Promise.resolve({ default: ShiftSettingPage }))}
+          component={lazy(() =>
+            Promise.resolve({ default: SShiftSettingPage })
+          )}
         />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.shifts.rounds.to}
@@ -375,6 +418,10 @@ export const RoutingContent = memo(() => {
           component={lazy(() =>
             Promise.resolve({ default: NoveltySettingPage })
           )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.memo.settings}
+          component={lazy(() => Promise.resolve({ default: SMemoSettingPage }))}
         />
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.memo.novelty.create.to}
@@ -473,6 +520,12 @@ export const RoutingContent = memo(() => {
           component={lazy(() => Promise.resolve({ default: UserAreasPage }))}
         />
         <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: SUserSettingsPage })
+          )}
+        />
+        <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.users.groups.to}
           component={lazy(() => Promise.resolve({ default: UserGroupsPage }))}
         />
@@ -519,14 +572,22 @@ export const RoutingContent = memo(() => {
           component={lazy(() => Promise.resolve({ default: UserPasswordPage }))}
         />
         <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.users.settings.to}
-          component={lazy(() => Promise.resolve({ default: UserSettingsPage }))}
+          path={PAGES_LIST_ROUTER.dashboard.setting.users.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: SUserSettingsPage })
+          )}
         />
 
         {/* SALES MENU */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.sales.sales.to}
           component={lazy(() => Promise.resolve({ default: SalesSettingPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.sales.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: SSalesSettingPage })
+          )}
         />
         {/* ASOCIATE MENU */}
         <Route
@@ -535,11 +596,23 @@ export const RoutingContent = memo(() => {
             Promise.resolve({ default: ResourcesSettingPage })
           )}
         />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.asociate.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: SAsociateSettingPage })
+          )}
+        />
         {/* ACCESS MENU */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.access.resource.to}
           component={lazy(() =>
             Promise.resolve({ default: ResourceSettingPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.access.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: SAccessSettingPage })
           )}
         />
         <Route
@@ -588,6 +661,12 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.to}
           component={lazy(() =>
             Promise.resolve({ default: ScheduledNotificationsPage })
+          )}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.notification.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: SNotificationSettingPage })
           )}
         />
         <Route

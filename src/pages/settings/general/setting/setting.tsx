@@ -7,13 +7,6 @@ import { Switch } from '@/components/common/switch/switch';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useEffect, useState } from 'preact/hooks';
 import { useSignal, Signal } from '@preact/signals';
-import {
-  CURRENCY,
-  IAppSetting,
-  IGeneralSetting,
-  LANGUAGE,
-  TIME_ZONE,
-} from '@/types/settings';
 import { ModuleService } from '@/services';
 import { Dropdown } from '@/components/common/dropdown/dropdown';
 import { Preview } from './preview';
@@ -21,8 +14,15 @@ import { useTranslation } from 'react-i18next';
 import { StatusButton } from '../../components/custom.button';
 import { ColorPicker } from '@/components/common/color-picker/color-picker';
 import { useUserStore } from '@/store/slices';
+import {
+  CURRENCY,
+  IAppSetting,
+  IGeneralSetting,
+  LANGUAGE,
+  TIME_ZONE,
+} from '@/types/settings';
 
-export const GeneralSettingPage: FunctionComponent = () => {
+export const SGeneralSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const [iconPreview, setIconPreview] = useState<string>('');
   const [logoPreview, setLogoPreview] = useState<string>('');

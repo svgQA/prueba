@@ -26,7 +26,7 @@ export const CreateTenantForm: FunctionComponent<ICreateTenantFormProps> = ({
         onSubmit={onFormSubmit}
         render={({ handleSubmit }) => (
           <form onSubmit={handleSubmit} className='mb-8'>
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <div className='col-span-1'>
                 <h1>[TENANT] {t('h_tenant_info')}</h1>
                 <Field<string> name='name' validate={required}>

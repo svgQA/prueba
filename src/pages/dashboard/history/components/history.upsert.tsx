@@ -120,7 +120,7 @@ export const HistoryForm = ({ closed, onClose, id }: IProps) => {
               id='form-access-create-update'
               onKeyDown={preventKeyDown}
             >
-              <div className='grid grid-cols-2 gap-4'>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 <div className='col-span-1'>
                   <Field<string> name='title'>
                     {({ input, meta }) => (

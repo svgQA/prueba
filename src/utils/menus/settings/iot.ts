@@ -6,6 +6,12 @@ export const MODAL_SETTING_IOT: IModalSidebarMenu = {
   label: 'g_iot',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   id: 'iot:state',
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.iot.settings,
+    label: 'setting',
+    id: 'iot:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '247',

@@ -1,7 +1,7 @@
 import { Button } from '@/components/common/button/button';
 import { memo } from 'preact/compat';
 
-export const MenuButtons = memo(({ goBack, goForward }: any) => (
+export const MenuButtons = memo(({ goBack, goForward, children }: any) => (
   <div className='flex items-center justify-center gap-5'>
     <Button
       id='setting-go-back'
@@ -23,5 +23,6 @@ export const MenuButtons = memo(({ goBack, goForward }: any) => (
       borderless
       icon='004'
     />
+    {children}
   </div>
 ));

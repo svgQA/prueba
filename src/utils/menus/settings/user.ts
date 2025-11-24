@@ -6,9 +6,10 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
   label: 'g_user',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   setting: {
-    to: PAGES_LIST_ROUTER.dashboard.setting.users.settings.to,
+    to: PAGES_LIST_ROUTER.dashboard.setting.users.settings,
     label: 'setting',
-    id: 'user:tools:state',
+    id: 'users:tools:state',
+    show: true,
   },
   show: true,
   id: 'user:state',

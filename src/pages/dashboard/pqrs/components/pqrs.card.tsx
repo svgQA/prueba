@@ -119,7 +119,7 @@ export const PqrsCards = ({
           )}
 
           {/* Metadata Grid */}
-          <div class='grid grid-cols-2 gap-2 text-xs'>
+          <div class='grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs'>
             {pqrs.extraData.filingDate && (
               <div class='flex items-center gap-1.5 text-gray-text-light'>
                 <span>📅</span>

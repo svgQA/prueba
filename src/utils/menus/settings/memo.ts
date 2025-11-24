@@ -8,7 +8,7 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
   show: true,
   id: 'memo:state',
   setting: {
-    to: '/algo/',
+    to: PAGES_LIST_ROUTER.dashboard.setting.memo.settings,
     label: 'setting',
     id: 'memo:tools:state',
     show: true,

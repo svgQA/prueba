@@ -6,7 +6,7 @@ export interface ICardSettingMenuProps {
   menus: IMenu[];
   label: string;
   base: string;
-  selected: IMenu;
+  // selected: IMenu;
   setting?: IMenu;
 }
 

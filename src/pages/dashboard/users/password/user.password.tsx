@@ -68,9 +68,9 @@ export const UserPasswordPage: FunctionComponent = () => {
   };
 
   return (
-    <Section className='pt-2 px-40'>
-      <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-row items-center justify-between'>
+    <Section className='pt-2 px-4 sm:px-8 lg:px-20 xl:px-40'>
+      <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center overflow-visible xl:absolute relative z-20'>
+        <div className='flex flex-wrap items-center justify-between gap-2'>
           <h1 className='text-2xl font-bold text-primary'>
             {t('change_password')}
           </h1>
