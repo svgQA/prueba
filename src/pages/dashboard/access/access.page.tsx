@@ -145,7 +145,7 @@ export const AccessPage: FunctionalComponent = () => {
   };
 
   return (
-    <Section>
+    <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
           title='h_accessess_total'

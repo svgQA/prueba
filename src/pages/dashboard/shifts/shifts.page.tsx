@@ -425,7 +425,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const buttonMenu = useMemo(
     () => (
-      <div className='flex items-center gap-2 mr-2'>
+      <div className='flex items-center gap-2 ml-1'>
         <Button
           name='button-change-table'
           onClick={() => {
@@ -623,6 +623,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       shift.id === row.id ? updatedRow : shift
     );
   };
+
   const deleteShift = async (id: string) => {
     const response = await ShiftService.deleteActivity(id);
     if (!response.getStatus()) return;

@@ -13,9 +13,7 @@ import ReactFlow, {
 } from 'reactflow';
 
 import { useTranslation } from 'react-i18next';
-
 import { Section } from '@/components/common/section/section';
-
 import { IStages } from '../utils/interface';
 
 import 'reactflow/dist/style.css';
@@ -29,9 +27,12 @@ type StageNodeData = {
 
 const getStatusStyles = (status?: string) => {
   const normalized = status?.toLowerCase();
-  if (normalized === 'active') return 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100';
-  if (normalized === 'draft') return 'bg-amber-50 text-amber-700 ring-1 ring-amber-100';
-  if (normalized === 'inactive') return 'bg-slate-100 text-slate-600 ring-1 ring-slate-200';
+  if (normalized === 'active')
+    return 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100';
+  if (normalized === 'draft')
+    return 'bg-amber-50 text-amber-700 ring-1 ring-amber-100';
+  if (normalized === 'inactive')
+    return 'bg-slate-100 text-slate-600 ring-1 ring-slate-200';
   return 'bg-sky-50 text-sky-700 ring-1 ring-sky-100';
 };
 
@@ -42,10 +43,16 @@ const StageNode: FunctionComponent<NodeProps<StageNodeData>> = ({ data }) => {
     <div className='rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-[0_14px_40px_rgba(15,23,42,0.08)] backdrop-blur-sm w-[240px]'>
       <div className='flex items-start justify-between gap-2'>
         <div className='flex flex-col gap-1'>
-          <span className='text-sm font-semibold text-slate-900 leading-tight'>{label}</span>
-          {goal && <p className='text-xs text-slate-500 line-clamp-2'>{goal}</p>}
+          <span className='text-sm font-semibold text-slate-900 leading-tight'>
+            {label}
+          </span>
+          {goal && (
+            <p className='text-xs text-slate-500 line-clamp-2'>{goal}</p>
+          )}
         </div>
-        <span className={`px-2 py-1 text-[11px] font-semibold rounded-full ${getStatusStyles(status)}`}>
+        <span
+          className={`px-2 py-1 text-[11px] font-semibold rounded-full ${getStatusStyles(status)}`}
+        >
           {status || '—'}
         </span>
       </div>
@@ -70,7 +77,10 @@ export const StageFlow: FunctionComponent<StageFlowProps> = ({ stages }) => {
   const { t } = useTranslation();
 
   const layout = useMemo(() => {
-    const columns = Math.max(1, Math.ceil(Math.sqrt(Math.max(stages.length, 1))));
+    const columns = Math.max(
+      1,
+      Math.ceil(Math.sqrt(Math.max(stages.length, 1)))
+    );
     const spacingX = 320;
     const spacingY = 220;
 
@@ -97,27 +107,31 @@ export const StageFlow: FunctionComponent<StageFlowProps> = ({ stages }) => {
       const source = stage.id ? String(stage.id) : undefined;
       if (!source) return;
 
-      const connections: Array<{ key: string; target?: number | null; color: string; label: string }>
-        = [
-          {
-            key: 'next',
-            target: stage.nextStageId,
-            color: '#22c55e',
-            label: t('h_next_stage'),
-          },
-          {
-            key: 'prev',
-            target: stage.prevStageId,
-            color: '#0ea5e9',
-            label: t('h_prev_stage'),
-          },
-          {
-            key: 'error',
-            target: stage.errorStageId,
-            color: '#f97316',
-            label: t('h_error_stage'),
-          },
-        ];
+      const connections: Array<{
+        key: string;
+        target?: number | null;
+        color: string;
+        label: string;
+      }> = [
+        {
+          key: 'next',
+          target: stage.nextStageId,
+          color: '#22c55e',
+          label: t('h_next_stage'),
+        },
+        {
+          key: 'prev',
+          target: stage.prevStageId,
+          color: '#0ea5e9',
+          label: t('h_prev_stage'),
+        },
+        {
+          key: 'error',
+          target: stage.errorStageId,
+          color: '#f97316',
+          label: t('h_error_stage'),
+        },
+      ];
 
       connections.forEach(({ key, target, color, label }) => {
         if (!target) return;
@@ -152,9 +166,15 @@ export const StageFlow: FunctionComponent<StageFlowProps> = ({ stages }) => {
             <i className='vox-icon vx-icon-191 text-2xl text-primary' />
           </div>
           <div className='space-y-1'>
-            <h3 className='text-lg font-semibold text-slate-900'>{t('h_stages')}</h3>
+            <h3 className='text-lg font-semibold text-slate-900'>
+              {t('h_stages')}
+            </h3>
             <p className='max-w-xl text-sm text-slate-500'>
-              {t('i_stages_empty', 'Crea etapas para visualizar cómo se conectan dentro del flujo de PQRS.')}<span className='sr-only'>.</span>
+              {t(
+                'i_stages_empty',
+                'Crea etapas para visualizar cómo se conectan dentro del flujo de PQRS.'
+              )}
+              <span className='sr-only'>.</span>
             </p>
           </div>
         </div>
@@ -166,12 +186,16 @@ export const StageFlow: FunctionComponent<StageFlowProps> = ({ stages }) => {
     <Section className='space-y-3 p-4'>
       <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
         <div className='space-y-1'>
-          <p className='text-xs font-semibold uppercase tracking-[0.08em] text-primary'>Flow</p>
-          <h2 className='text-xl font-semibold text-slate-900'>{t('h_flow_view', 'Mapa visual de etapas')}</h2>
+          <p className='text-xs font-semibold uppercase tracking-[0.08em] text-primary'>
+            Flow
+          </p>
+          <h2 className='text-xl font-semibold text-slate-900'>
+            {t('h_flow_view', 'Mapa visual de etapas')}
+          </h2>
           <p className='text-sm text-slate-500'>
             {t(
               'i_flow_view_subtitle',
-              'Observa cómo las etapas se conectan con rutas principales y de error.',
+              'Observa cómo las etapas se conectan con rutas principales y de error.'
             )}
           </p>
         </div>
@@ -201,7 +225,12 @@ export const StageFlow: FunctionComponent<StageFlowProps> = ({ stages }) => {
             proOptions={{ hideAttribution: true }}
             defaultEdgeOptions={{ type: 'smoothstep' }}
           >
-            <MiniMap pannable zoomable nodeColor='#94a3b8' maskColor='rgba(148,163,184,0.08)' />
+            <MiniMap
+              pannable
+              zoomable
+              nodeColor='#94a3b8'
+              maskColor='rgba(148,163,184,0.08)'
+            />
             <Controls position='bottom-right' showInteractive={false} />
             <Background gap={20} size={1} color='#e2e8f0' />
           </ReactFlow>

@@ -19,11 +19,16 @@ import { useNavigation } from '@/utils/hooks/navigation';
 import { IStages } from './utils/interface';
 import { StageFlow } from './components/stage.flow';
 
+enum StageView {
+  TABLE,
+  FLOW,
+}
+
 export const StagePage: FunctionalComponent = () => {
   const { t } = useTranslation();
   const { go } = useNavigation();
   const stages = useSignal<IStages[]>([]);
-  const view = useSignal<'table' | 'flow'>('table');
+  const view = useSignal<StageView>(StageView.TABLE);
 
   const { selectedCompany } = useUserStore();
   useEffect(() => {
@@ -34,7 +39,7 @@ export const StagePage: FunctionalComponent = () => {
   }, [selectedCompany, location]);
 
   const fetchInitialData = async () => {
-    const [stageResponse] = await Promise.all([StageService.get_all()]);
+    const stageResponse = await StageService.get_all();
 
     if (stageResponse.getStatus()) {
       stages.value = stageResponse.getMany();
@@ -76,29 +81,19 @@ export const StagePage: FunctionalComponent = () => {
   };
 
   return (
-    <Section className='space-y-4 p-4'>
-      <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
-        <div className='space-y-1'>
-          <p className='text-xs font-semibold uppercase tracking-[0.08em] text-primary'>PQRS</p>
-          <h1 className='text-2xl font-semibold text-slate-900'>{t('h_stages')}</h1>
-          <p className='text-sm text-slate-500'>
-            {t(
-              'i_stages_overview',
-              'Administra tus etapas en una tabla o explóralas como un flujo visual.',
-            )}
-          </p>
-        </div>
-        <div className='inline-flex items-center rounded-full bg-slate-100 p-1 text-sm font-medium text-slate-600 shadow-inner'>
+    <Section
+      header={
+        <div className='inline-flex items-center rounded-full p-1 text-sm font-medium'>
           {[
-            { id: 'table', label: t('table', 'Tabla') },
-            { id: 'flow', label: t('flow', 'Flujo') },
+            { id: StageView.TABLE, label: t('table', 'Tabla') },
+            { id: StageView.FLOW, label: t('flow', 'Flujo') },
           ].map((option) => {
             const isActive = view.value === option.id;
             return (
               <button
                 key={option.id}
-                onClick={() => (view.value = option.id as 'table' | 'flow')}
-                className={`relative rounded-full px-4 py-2 transition-colors duration-200 ${
+                onClick={() => (view.value = option.id)}
+                className={`relative rounded-full px-4 py-2 transition-colors duration-200 mx-1 ${
                   isActive
                     ? 'bg-white text-slate-900 shadow-sm'
                     : 'text-slate-500 hover:text-slate-700'
@@ -110,9 +105,9 @@ export const StagePage: FunctionalComponent = () => {
             );
           })}
         </div>
-      </div>
-
-      {view.value === 'table' ? (
+      }
+    >
+      {view.value === StageView.TABLE ? (
         <Table<IStages>
           data={stages.value}
           columns={getColumns(onClickAction)}
@@ -122,6 +117,7 @@ export const StagePage: FunctionalComponent = () => {
             id: false,
           }}
           absolute
+          unsearch
         />
       ) : (
         <StageFlow stages={stages.value} />

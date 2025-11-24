@@ -148,7 +148,7 @@ export const CorrespondencePage: FunctionalComponent = () => {
   };
 
   return (
-    <Section>
+    <Section padding>
       {/* Tarjetas superiores, como en Access o Shifts */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData

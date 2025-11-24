@@ -165,7 +165,7 @@ export const FormsPage: FunctionComponent = () => {
 
   const buttonMenu = useMemo(
     () => (
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-2 ml-1'>
         <Button
           name='button-change-table'
           onClick={() => {
