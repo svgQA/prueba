@@ -66,12 +66,27 @@ export const PqrsCards = ({
     <>
       <Card key={`pqrs-card-${index}`} borderless={false} shadow={true}>
         <div
-          class={`p-4 space-y-3 cursor-pointer hover:bg-gray-50 transition-colors border-l-4 ${borderColorClass}`}
+          class={`p-4 space-y-3 cursor-pointer bg-white hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgba(0,0,0,0.06)] transition-all duration-200 border border-gray-border rounded-lg border-l-4 ${borderColorClass}`}
           onClick={() => {
             openModal.value = true;
             modalId.value = pqrs.id;
           }}
         >
+          <div class='flex items-center justify-between text-[11px] uppercase tracking-wide text-gray-text-light'>
+            <div class='flex items-center gap-2'>
+              <span
+                class={`w-2 h-2 rounded-full ${columnColorClass.replace('text-', 'bg-')} shadow-inner`}
+              />
+              <span class='font-semibold text-t-light'>Estado</span>
+              <span class='px-2 py-1 bg-b-light rounded-full border border-gray-border text-[11px] capitalize'>
+                {pqrs.status || 'Sin estado'}
+              </span>
+            </div>
+            <span class='text-[10px] bg-b-light px-2 py-0.5 rounded-full border border-gray-border'>
+              #{index + 1}
+            </span>
+          </div>
+
           <div class='flex items-start justify-between gap-3'>
             <div class='flex-1 min-w-0'>
               <TextEllipsis
