@@ -20,6 +20,7 @@ export const PAGES_LIST_ROUTER = {
       base: '/setting',
       users: {
         base: '/users',
+        settings: '/users/settings',
         password: {
           base: '/password',
           to: '/users/password',
@@ -64,13 +65,10 @@ export const PAGES_LIST_ROUTER = {
           base: '/groups',
           to: '/users/groups',
         },
-        settings: {
-          base: '/settings',
-          to: '/users/settings',
-        },
       },
       admin: {
         base: '/admin',
+        settings: '/admin/settings',
         analytic: {
           base: '/',
           to: '/admin',
@@ -86,6 +84,7 @@ export const PAGES_LIST_ROUTER = {
       },
       memo: {
         base: '/memo',
+        settings: '/memo/settings',
         novelty: {
           base: '/novelty',
           to: '/memo/novelty',
@@ -277,6 +276,7 @@ export const PAGES_LIST_ROUTER = {
       },
       security: {
         base: '/security',
+        settings: '/security/settings',
         keys: {
           base: '/',
           to: '/security',
@@ -304,6 +304,7 @@ export const PAGES_LIST_ROUTER = {
       },
       payment: {
         base: '/payment',
+        settings: '/payment/settings',
         payment: {
           base: '/',
           to: '/payment',
@@ -355,6 +356,7 @@ export const PAGES_LIST_ROUTER = {
       },
       asociate: {
         base: '/asociate',
+        settings: '/asociate/settings',
         resources: {
           base: '/',
           to: '/asociate',
@@ -362,6 +364,7 @@ export const PAGES_LIST_ROUTER = {
       },
       access: {
         base: '/access',
+        settings: '/access/settings',
         resource: {
           base: '/',
           to: '/access',
@@ -398,6 +401,7 @@ export const PAGES_LIST_ROUTER = {
       },
       ia: {
         base: '/ia',
+        settings: '/ia/settings',
         ia: {
           base: '/',
           to: '/ia',
@@ -405,6 +409,7 @@ export const PAGES_LIST_ROUTER = {
       },
       sales: {
         base: '/sales',
+        settings: '/sales/settings',
         sales: {
           base: '/',
           to: '/sales',
@@ -412,6 +417,7 @@ export const PAGES_LIST_ROUTER = {
       },
       iot: {
         base: '/iot',
+        settings: '/iot/settings',
         iot: {
           base: '/',
           to: '/iot',
@@ -427,6 +433,7 @@ export const PAGES_LIST_ROUTER = {
       },
       trybook: {
         base: '/trybook',
+        settings: '/trybook/settings',
         residences: {
           base: '/residence',
           to: '/trybook/residence',
@@ -502,6 +509,7 @@ export const PAGES_LIST_ROUTER = {
       },
       pqrs: {
         base: '/pqrs',
+        settings: '/pqrs/settings',
         stages: {
           base: '/stages',
           to: '/pqrs/stages',

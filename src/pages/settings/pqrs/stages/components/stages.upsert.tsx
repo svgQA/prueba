@@ -87,19 +87,21 @@ export const StageForm: FunctionComponent = () => {
 
     const findStageOption = (stageId: number | null) => {
       if (!stageId || !stageList.value.length) return null;
-      return stageList.value.find(stage => stage.value === stageId) || null;
+      return stageList.value.find((stage) => stage.value === stageId) || null;
     };
 
-    const promptValue = initialData.prompt 
-      ? (typeof initialData.prompt === 'object' 
-          ? JSON.stringify(initialData.prompt, null, 2) 
-          : initialData.prompt)
+    const promptValue = initialData.prompt
+      ? typeof initialData.prompt === 'object'
+        ? JSON.stringify(initialData.prompt, null, 2)
+        : initialData.prompt
       : '';
 
-    const resourcesForForm = (initialData.resource || []).map((res: IResourceStage) => ({
-      method: res.method ? { value: res.method, label: res.method } : null,
-      requestUrl: res.requestUrl || '',
-    }));
+    const resourcesForForm = (initialData.resource || []).map(
+      (res: IResourceStage) => ({
+        method: res.method ? { value: res.method, label: res.method } : null,
+        requestUrl: res.requestUrl || '',
+      })
+    );
 
     setInitialValues({
       stageName: initialData.stageName || '',
@@ -121,10 +123,11 @@ export const StageForm: FunctionComponent = () => {
   const handleSubmit = async (model: any) => {
     loading.value = true;
     let promptValue = model.prompt;
-    if (typeof model.prompt === 'string' && model.prompt.trim()) promptValue = JSON.parse(model.prompt);
+    if (typeof model.prompt === 'string' && model.prompt.trim())
+      promptValue = JSON.parse(model.prompt);
 
     const resources = (model.resources || [])
-      .filter((res: any) => res.method && res.requestUrl) 
+      .filter((res: any) => res.method && res.requestUrl)
       .map((res: any) => ({
         method: res.method?.value || res.method,
         requestUrl: res.requestUrl,
@@ -345,7 +348,12 @@ export const StageForm: FunctionComponent = () => {
                   <Button
                     name='add-resource-button'
                     type='button'
-                    onClick={() => form.mutators.push('resources', { method: null, requestUrl: '' })}
+                    onClick={() =>
+                      form.mutators.push('resources', {
+                        method: null,
+                        requestUrl: '',
+                      })
+                    }
                     disabled={loading.value}
                     className='px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed'
                     label='add'
@@ -361,7 +369,10 @@ export const StageForm: FunctionComponent = () => {
                     ) : (
                       <div className='space-y-4'>
                         {fields.map((name, index) => (
-                          <div key={name} className='border rounded-lg p-4 bg-gray-50'>
+                          <div
+                            key={name}
+                            className='border rounded-lg p-4 bg-gray-50'
+                          >
                             <div className='grid grid-cols-4 gap-4'>
                               <div className='col-span-1'>
                                 <Field name={`${name}.method`}>
@@ -422,9 +433,8 @@ export const StageForm: FunctionComponent = () => {
               </div>
             </div>
           </form>
-        )
-        }
+        )}
       />
-    </Section >
+    </Section>
   );
 };

@@ -8,7 +8,7 @@ export const MODAL_SETTING_PQRS: IModalSidebarMenu = {
   show: true,
   id: 'pqrs:state',
   setting: {
-    to: '/algo/',
+    to: PAGES_LIST_ROUTER.dashboard.setting.pqrs.settings,
     label: 'setting',
     id: 'pqrs:tools:state',
     show: true,

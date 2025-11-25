@@ -1,6 +1,0 @@
-appId: com.inndico.voxline
----
-- runFlow:
-    when:
-      notVisible: "Tryvoo"
-    file: ./launch-app.yaml

@@ -32,7 +32,7 @@ const TextInformation = ({ label, value }: ITextInformationProps) => {
 const PqrsGeneralModal = ({ pqrs }: IProps) => {
   return (
     <div class='space-y-4'>
-      <div class='grid grid-cols-4 gap-6'>
+      <div class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
         {pqrs.value?.extraData?.contractNumber && (
           <TextInformation
             label='Contrato'

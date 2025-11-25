@@ -11,6 +11,7 @@ import {
   setIsInErrorState,
   setTypeOfError,
 } from '@/store/signals/service/service.signals';
+import { IModuleResponse } from '@/services';
 
 export interface IRequestModelOutput {
   header: Record<string, string>;
@@ -18,6 +19,14 @@ export interface IRequestModelOutput {
   url: string;
   method: REQUEST_METHODS;
 }
+
+export type ModuleType =
+  | 'general'
+  | 'shift'
+  | 'memo'
+  | 'app'
+  | 'user'
+  | 'notification';
 
 export class BaseService {
   protected static prefix: string = 'api';
@@ -55,6 +64,23 @@ export class BaseService {
     const urlBase = VOS_SERVICES[base];
     const urlTotal = `${urlBase}/${subdirectory}`;
     return urlTotal;
+  }
+
+  static async setSetting<T>(module: ModuleType, data: T, id: number) {
+    const model: IMakeRequest = {
+      url: ['module', module, String(id)],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await this.make_request<IModuleResponse<T>>('module', model);
+  }
+
+  static async getSetting<T>(module: ModuleType) {
+    const model: IMakeRequest = {
+      url: ['module'],
+      params: { type: module.toUpperCase() },
+    };
+    return await this.make_request<IModuleResponse<T>>('module', model);
   }
 
   protected static make_request_model(

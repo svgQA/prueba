@@ -87,7 +87,7 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
         )}
 
         {(data.area || data.subarea) && (
-          <div class='grid grid-cols-2 gap-3'>
+          <div class='grid grid-cols-1 sm:grid-cols-2 gap-3'>
             {data.area && (
               <div>
                 <span class='text-xs font-medium text-gray-500 block mb-1'>
@@ -158,7 +158,7 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
             <label class='block text-xs font-medium text-orange-800 mb-2'>
               Banderas de Alerta
             </label>
-            <div class='grid grid-cols-2 gap-2 text-xs'>
+            <div class='grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs'>
               {Object.entries(data.banderas).map(
                 ([key, value]: [string, any]) => (
                   <div key={key} class='flex items-center gap-2'>

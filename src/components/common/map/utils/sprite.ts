@@ -57,9 +57,9 @@ export function ensureFootprintsLayer(map: maplibregl.Map) {
 
 export function pushFootprint(map: maplibregl.Map, coord: number[]) {
   const src = map.getSource('footprints') as maplibregl.GeoJSONSource;
-  const fc = (src._data ?? (src as any)._data) as
-    | GeoJSON.FeatureCollection
-    | undefined;
+  const fc = (src._data ?? (src as any)._data) as any;
+  // | GeoJSON.FeatureCollection
+  // | undefined;
   const data = fc ?? { type: 'FeatureCollection', features: [] };
   data.features = [
     ...data.features,

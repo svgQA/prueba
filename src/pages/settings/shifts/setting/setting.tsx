@@ -13,7 +13,7 @@ import { StatusButton } from '../../components/custom.button';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
 
-export const ShiftSettingPage: FunctionComponent = () => {
+export const SShiftSettingPage: FunctionComponent = () => {
   const settingsIds = useSignal<{ shift: number }>({ shift: 0 });
   const initialValues: Signal<IShiftSetting> = useSignal({
     name: '',

@@ -155,9 +155,9 @@ export const ShiftForm = ({
           </h2>
         </div>
 
-        <div className='flex items-center gap-4 mb-6 px-5 py-2 justify-between'>
-          <div className='flex flex-row items-center justify-evenly w-4/12'>
-            <div className='w-20 h-20 rounded-full flex items-center justify-center bg-b-light dark:bg-b-dark-light'>
+        <div className='flex flex-col lg:flex-row items-center gap-4 lg:gap-6 mb-6 px-5 py-2 justify-between'>
+          <div className='flex flex-col sm:flex-row items-center justify-center sm:justify-evenly gap-4 w-full lg:w-7/12'>
+            <div className='w-20 h-20 rounded-full flex items-center justify-center bg-b-light dark:bg-b-dark-light shrink-0'>
               <Avatar
                 src={taskData.employeeImage}
                 name={taskData.employeeName}
@@ -165,7 +165,7 @@ export const ShiftForm = ({
                 square
               />
             </div>
-            <div className='px-4'>
+            <div className='px-0 sm:px-4 text-center sm:text-left'>
               <h3 className='text-xl font-medium text-gray-700 dark:text-gray-200'>
                 {taskData.employeeName} {taskData.employeeSurname}
               </h3>
@@ -179,7 +179,7 @@ export const ShiftForm = ({
               </div>
             </div>
           </div>
-          <div className='flex py-3 w-5/12 justify-end items-center gap-2'>
+          <div className='flex py-3 w-full lg:w-5/12 justify-end items-center gap-2 flex-wrap'>
             {showReplicateForm.value ? (
               <>
                 <Button

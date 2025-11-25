@@ -165,7 +165,7 @@ export const FormsPage: FunctionComponent = () => {
 
   const buttonMenu = useMemo(
     () => (
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-2 ml-1'>
         <Button
           name='button-change-table'
           onClick={() => {
@@ -244,8 +244,8 @@ export const FormsPage: FunctionComponent = () => {
       </div>
 
       <div className='max-h-screen'>
-        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
-          <div className='flex flex-row items-center justify-between'>
+        <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
+          <div className='flex flex-wrap items-center justify-between gap-2 sm:gap-3 w-full'>
             {buttonMenu}
           </div>
         </div>

@@ -7,6 +7,12 @@ export const MODAL_SETTING_ADMIN: IModalSidebarMenu = {
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: false,
   id: 'admin:state',
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.admin.settings,
+    label: 'setting',
+    id: 'admin:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '023',

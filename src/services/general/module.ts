@@ -1,15 +1,13 @@
 import {
   IAppSetting,
   IGeneralSetting,
+  IMemoSetting,
+  INotificationSetting,
   IShiftSetting,
   IUserSetting,
 } from '@/types/settings';
 import { BaseService } from '@/utils/network';
-import {
-  IMakeRequest,
-  REQUEST_METHODS,
-  VoxServices,
-} from '@/utils/network/types';
+import { VoxServices } from '@/utils/network/types';
 
 export interface IModuleRequest<T = any> {
   id?: number;
@@ -29,100 +27,59 @@ export interface IModuleResponse<T = any> {
 
 export class ModuleService extends BaseService {
   static sname: VoxServices = 'module';
+  // APP
   static async getAppSetting() {
-    const model: IMakeRequest = {
-      url: ['module'],
-      params: {
-        type: 'APP',
-      },
-    };
-    return await super.make_request<IModuleResponse<IAppSetting>>(
-      this.sname,
-      model
-    );
+    return await this.getSetting<IAppSetting>('app');
   }
-
-  static async getUserSetting() {
-    const model: IMakeRequest = {
-      url: ['module'],
-      params: { type: 'USER' },
-    };
-    return await super.make_request<IModuleResponse<IUserSetting>>(
-      this.sname,
-      model
-    );
-  }
-
-  static async getShiftSetting() {
-    const model: IMakeRequest = {
-      url: ['module'],
-      params: { type: 'SHIFT' },
-    };
-    return await super.make_request<IModuleResponse<IShiftSetting>>(
-      this.sname,
-      model
-    );
-  }
-
-  static async getGeneralSetting() {
-    const model: IMakeRequest = {
-      url: ['module'],
-      params: { type: 'GENERAL' },
-    };
-    return await super.make_request<IModuleResponse<IGeneralSetting>>(
-      this.sname,
-      model
-    );
-  }
-
-  static async setUserSetting(data: IUserSetting, id: number) {
-    const model: IMakeRequest = {
-      url: ['module', 'user', String(id)],
-      method: REQUEST_METHODS.POST,
-      data,
-    };
-    return await super.make_request<IModuleResponse<IUserSetting>>(
-      this.sname,
-      model
-    );
-  }
-
   static async setAppSetting(data: IAppSetting, id: number) {
-    const model: IMakeRequest = {
-      url: ['module', 'app', String(id)],
-      method: REQUEST_METHODS.POST,
-      data,
-    };
-    return await super.make_request<IModuleResponse<IAppSetting>>(
-      this.sname,
-      model
-    );
+    return await this.setSetting<IAppSetting>('app', data, id);
   }
 
-  static async setGeneralSetting(data: IGeneralSetting, id: number) {
-    const model: IMakeRequest = {
-      url: ['module', 'general', String(id)],
-      method: REQUEST_METHODS.POST,
-      data,
-    };
-    return await super.make_request<IModuleResponse<IGeneralSetting>>(
-      this.sname,
-      model
-    );
+  // USER
+  static async getUserSetting() {
+    return await this.getSetting<IUserSetting>('user');
+  }
+  static async setUserSetting(data: IUserSetting, id: number) {
+    return await this.setSetting<IUserSetting>('user', data, id);
   }
 
+  // SHIFT
+  static async getShiftSetting() {
+    return await this.getSetting<IShiftSetting>('shift');
+  }
   static async setShiftSetting(data: IShiftSetting, id: number) {
-    const model: IMakeRequest = {
-      url: ['module', 'shift', String(id)],
-      method: REQUEST_METHODS.POST,
+    return await this.setSetting<IShiftSetting>('shift', data, id);
+  }
+
+  // GENERAL
+  static async getGeneralSetting() {
+    return await this.getSetting<IGeneralSetting>('general');
+  }
+  static async setGeneralSetting(data: IGeneralSetting, id: number) {
+    return await this.setSetting<IGeneralSetting>('general', data, id);
+  }
+
+  // MEMO
+  static async getMemoSetting() {
+    return await this.getSetting<IMemoSetting>('memo');
+  }
+  static async setMemoSetting(data: IMemoSetting, id: number) {
+    return await this.setSetting<IMemoSetting>('memo', data, id);
+  }
+
+  // NOTIFICATION
+  static async getNotificationSetting() {
+    return await this.getSetting<INotificationSetting>('notification');
+  }
+  static async setNotificationSetting(data: INotificationSetting, id: number) {
+    return await this.setSetting<INotificationSetting>(
+      'notification',
       data,
-    };
-    return await super.make_request<IModuleResponse<IShiftSetting>>(
-      this.sname,
-      model
+      id
     );
   }
 
+  /*
   static async setModule(data: IModuleRequest) {
     const model: IMakeRequest = {
       url: ['module'],
@@ -154,4 +111,5 @@ export class ModuleService extends BaseService {
     };
     return await super.make_request<IModuleResponse>(this.sname, model);
   }
+  */
 }
