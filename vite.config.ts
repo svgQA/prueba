@@ -61,6 +61,9 @@ export default defineConfig(({ mode }) => {
             if (id.includes('tanstack')) {
               return '@tanstack-base'; // 55.80 kB
             }
+            if (id.includes('html')) {
+              return '@html-base'; // 55.80 kB
+            }
             if (id.includes('qrcode')) {
               return '@qrcode-base'; // 24.56 kB
             }
@@ -76,11 +79,17 @@ export default defineConfig(({ mode }) => {
             if (id.includes('exceljs')) {
               return '@excel-base';
             }
+            if (id.includes('react-final')) {
+              return '@react-final-base';
+            }
             if (id.includes('@fullcalendar')) {
               return '@calendar-base'; // 257.94 kB
             }
             if (id.includes('maplibre-gl')) {
               return '@maplibre-gl-base'; // 148.81 kB
+            }
+            if (id.includes('textarea-caret')) {
+              return '@caret-base'; // 148.81 kB
             }
             if (id.includes('socket.io-client')) {
               return '@socket-io-client-base'; // 148.81 kB
@@ -108,6 +117,12 @@ export default defineConfig(({ mode }) => {
             }
             if (id.includes('@pdfme/ui')) {
               return '@pdfme/ui';
+            }
+            if (id.includes('reactflow')) {
+              return '@reactflow/ui';
+            }
+            if (id.includes('grafana')) {
+              return '@grafana/sx';
             }
             if (id.includes('@grafana')) {
               return '@grafana';
