@@ -1,5 +1,5 @@
 import { CardSettingMenu, IModalSidebarMenu } from '@/components/compose/modal';
-// import { validateSettingModuleState } from '@/store/signals/access/permission';
+import { validateSettingModuleState } from '@/store/signals/access/permission';
 import { memo } from 'preact/compat';
 
 interface Props {
@@ -19,7 +19,7 @@ export const MenuList = memo(
         } py-3 sm:py-4`}
       >
         {menuSettings.map((menu: IModalSidebarMenu) => {
-          return menu.show /* && validateSettingModuleState(menu.id) */ ? (
+          return menu.show && validateSettingModuleState(menu.id) ? (
             <CardSettingMenu
               key={menu.id}
               id={menu.id}

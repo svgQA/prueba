@@ -4,7 +4,7 @@ import { Link } from 'wouter';
 import { IMenu } from '@/components/common/utils/interface';
 import { Card } from '@/components/common/card/card';
 import { useTranslation } from 'react-i18next';
-// import { validateSettingModuleState } from '@/store/signals/access/permission';
+import { validateSettingModuleState } from '@/store/signals/access/permission';
 import { useNavigation } from '@/utils/hooks/navigation';
 
 export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = ({
@@ -24,7 +24,8 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = ({
         <div className='flex flex-row items-center justify-between min-h-[28px] sm:min-h-0'>
           <h2 className='text-sm font-bold mb-1 sm:mb-2'>{t(label)}</h2>
           {setting &&
-            setting.show /* && validateSettingModuleState(setting.id) */ && (
+            setting.show &&
+            validateSettingModuleState(setting.id) && (
               <Link to={_to} id={setting.id}>
                 <span
                   data-to={_to}
@@ -38,7 +39,7 @@ export const CardSettingMenu: FunctionComponent<ICardSettingMenuProps> = ({
         </div>
         {menus.map((menu: IMenu) => {
           const to = `${base}${menu.base}${menu.to}`;
-          return menu.show /* && validateSettingModuleState(menu.id)*/ ? (
+          return menu.show && validateSettingModuleState(menu.id) ? (
             <Link
               to={to}
               key={menu.id}
