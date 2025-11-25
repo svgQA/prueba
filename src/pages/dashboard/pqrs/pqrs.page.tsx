@@ -32,7 +32,10 @@ interface ColumnConfig {
   bgColorClass: string;
 }
 
-type ViewMode = 'cards' | 'dashboard';
+enum ViewMode {
+  CARDS,
+  DASHBOARD,
+}
 
 export const PqrsPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -42,7 +45,7 @@ export const PqrsPage: FunctionComponent = () => {
   const groupedPqrs = useSignal<Record<string, ICPqrsRequest[]>>({});
   const columns = useSignal<ColumnConfig[]>([]);
   const openModalUpsert = useSignal<boolean>(false);
-  const viewMode = useSignal<ViewMode>('cards');
+  const viewMode = useSignal<ViewMode>(ViewMode.DASHBOARD);
   const lastUpdated = useSignal<Date | null>(null);
 
   useEffect(() => {
@@ -167,73 +170,69 @@ export const PqrsPage: FunctionComponent = () => {
     await fetchingAllData();
   };
 
-  const SkeletonBlock = ({
-    className = '',
-  }: {
-    className?: string;
-  }) => <div class={`animate-pulse bg-gray-100 rounded ${className}`} />;
+  const SkeletonBlock = ({ className = '' }: { className?: string }) => (
+    <div
+      class={`animate-pulse bg-gray-100 dark:bg-b-dark-light rounded ${className}`}
+    />
+  );
 
   const DashboardPreview = () => (
     <div class='grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6'>
       <div class='xl:col-span-2 space-y-6'>
-        <div class='bg-white border border-gray-border rounded-xl p-6 shadow-sm'>
+        <div class='bg-white rounded-xl p-6 shadow-sm dark:bg-b-dark-light dark:text-white text-b-dark'>
           <div class='flex items-start justify-between flex-wrap gap-4'>
             <div>
-              <p class='text-xs uppercase text-gray-text-light tracking-wide'>
-                Resumen operativo
-              </p>
-              <h2 class='text-xl font-semibold text-t-light'>Dashboard de atención</h2>
-              <p class='text-sm text-gray-text-light mt-1 max-w-xl'>
-                Usa este espacio para visualizar el desempeño de PQRS: números atendidos
-                por mes, resoluciones automáticas con IA y desglose por áreas o niveles de
-                prioridad.
+              <p class='text-xs uppercase tracking-wide'>Resumen operativo</p>
+              <h2 class='text-xl font-semibold'>Dashboard de atención</h2>
+              <p class='text-sm mt-1 max-w-xl'>
+                Usa este espacio para visualizar el desempeño de PQRS: números
+                atendidos por mes, resoluciones automáticas con IA y desglose
+                por áreas o niveles de prioridad.
               </p>
             </div>
-            <div class='flex items-center gap-2 bg-b-light border border-gray-border rounded-full px-4 py-2 text-xs text-gray-text-light'>
+            <div class='flex items-center gap-2 bg-b-light dark:bg-b-dark rounded-full px-4 py-2 text-xs'>
               <span class='w-2 h-2 rounded-full bg-primary animate-pulse'></span>
               Diseño previo — listo para conectar con el backend
             </div>
           </div>
 
           <div class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6'>
-            {[{
-              title: 'Atenciones del mes',
-              helper: 'Incluye totales y porcentaje vs. mes anterior',
-            },
-            {
-              title: 'Resueltas por IA',
-              helper: 'Qué porcentaje resolvió el chatbot o agente virtual',
-            },
-            {
-              title: 'Prioridad alta',
-              helper: 'Cuántas solicitudes críticas siguen abiertas',
-            },
-            {
-              title: 'Área con más casos',
-              helper: 'Top 3 áreas con mayor volumen y tiempos de respuesta',
-            },
-            {
-              title: 'SLA promedio',
-              helper: 'Duración desde radicación hasta resolución',
-            },
-            {
-              title: 'Satisfacción',
-              helper: 'NPS/CSAT asociado a casos atendidos',
-            }].map((card, idx) => (
+            {[
+              {
+                title: 'Atenciones del mes',
+                helper: 'Incluye totales y porcentaje vs. mes anterior',
+              },
+              {
+                title: 'Resueltas por IA',
+                helper: 'Qué porcentaje resolvió el chatbot o agente virtual',
+              },
+              {
+                title: 'Prioridad alta',
+                helper: 'Cuántas solicitudes críticas siguen abiertas',
+              },
+              {
+                title: 'Área con más casos',
+                helper: 'Top 3 áreas con mayor volumen y tiempos de respuesta',
+              },
+              {
+                title: 'SLA promedio',
+                helper: 'Duración desde radicación hasta resolución',
+              },
+              {
+                title: 'Satisfacción',
+                helper: 'NPS/CSAT asociado a casos atendidos',
+              },
+            ].map((card, idx) => (
               <div
                 key={`${card.title}-${idx}`}
-                class='p-4 rounded-lg border border-gray-border bg-b-light/60 hover:bg-b-light transition-colors shadow-[0_4px_16px_rgba(0,0,0,0.04)]'
+                class='p-4 rounded-lg transition-colors shadow-[0_4px_16px_rgba(0,0,0,0.04)] dark:bg-b-dark bg-b-light'
               >
                 <div class='flex items-start justify-between gap-3'>
                   <div>
-                    <p class='text-xs text-gray-text-light uppercase tracking-wide'>
-                      {card.title}
-                    </p>
-                    <p class='text-[13px] text-gray-text-light mt-1 leading-snug'>
-                      {card.helper}
-                    </p>
+                    <p class='text-xs uppercase tracking-wide'>{card.title}</p>
+                    <p class='text-[13px] mt-1 leading-snug'>{card.helper}</p>
                   </div>
-                  <span class='px-2 py-1 text-[11px] rounded-full bg-primary-opacity text-primary border border-primary/30'>
+                  <span class='px-2 py-1 text-[11px] rounded-full bg-primary text-white border border-primary/30'>
                     Placeholder
                   </span>
                 </div>
@@ -248,24 +247,29 @@ export const PqrsPage: FunctionComponent = () => {
         </div>
 
         <div class='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-          <div class='p-6 rounded-xl bg-white border border-gray-border shadow-sm'>
+          <div class='p-6 rounded-xl bg-white shadow-sm dark:bg-b-dark-light dark:text-white text-b-dark'>
             <div class='flex items-start justify-between gap-2'>
               <div>
-                <p class='text-xs text-gray-text-light uppercase tracking-wide'>
-                  Gráfica sugerida
-                </p>
-                <h3 class='text-lg font-semibold text-t-light'>
+                <p class='text-xs uppercase tracking-wide'>Gráfica sugerida</p>
+                <h3 class='text-lg font-semibold'>
                   Distribución por estado y prioridad
                 </h3>
-                <p class='text-sm text-gray-text-light'>
-                  Aquí podría ir una gráfica de barras apiladas con estados (creado, en
-                  proceso, finalizado) y prioridades alta/media/baja.
+                <p class='text-sm'>
+                  Aquí podría ir una gráfica de barras apiladas con estados
+                  (creado, en proceso, finalizado) y prioridades
+                  alta/media/baja.
                 </p>
               </div>
-              <Badge label='Gráfico' status='info' outline size='xs' width='w-fit' />
+              <Badge
+                label='Gráfico'
+                status='info'
+                outline
+                size='xs'
+                width='w-fit'
+              />
             </div>
 
-            <div class='mt-4 h-52 rounded-lg border border-gray-border bg-b-light flex items-center justify-center'>
+            <div class='mt-4 h-52 rounded-lg bg-b-light flex items-center justify-center dark:bg-b-dark'>
               <div class='w-full px-4 space-y-3'>
                 <SkeletonBlock className='h-4 w-1/2' />
                 <SkeletonBlock className='h-4 w-2/3' />
@@ -274,24 +278,28 @@ export const PqrsPage: FunctionComponent = () => {
             </div>
           </div>
 
-          <div class='p-6 rounded-xl bg-white border border-gray-border shadow-sm'>
-            <div class='flex items-start justify-between gap-2'>
+          <div class='p-6 rounded-xl bg-white shadow-sm dark:bg-b-dark-light dark:text-white text-b-dark'>
+            <div class='flex items-start justify-between gap-2 '>
               <div>
-                <p class='text-xs text-gray-text-light uppercase tracking-wide'>
-                  Tendencia semanal
-                </p>
-                <h3 class='text-lg font-semibold text-t-light'>
+                <p class='text-xs uppercase tracking-wide'>Tendencia semanal</p>
+                <h3 class='text-lg font-semibold'>
                   Tiempo de respuesta y casos por día
                 </h3>
-                <p class='text-sm text-gray-text-light'>
-                  Reserva este espacio para una gráfica de líneas con casos atendidos y
-                  tiempos promedio de resolución.
+                <p class='text-sm'>
+                  Reserva este espacio para una gráfica de líneas con casos
+                  atendidos y tiempos promedio de resolución.
                 </p>
               </div>
-              <Badge label='Línea' status='secondary' outline size='xs' width='w-fit' />
+              <Badge
+                label='Línea'
+                status='success'
+                outline
+                size='xs'
+                width='w-fit'
+              />
             </div>
 
-            <div class='mt-4 h-52 rounded-lg border border-gray-border bg-b-light flex items-center justify-center'>
+            <div class='mt-4 h-52 rounded-lg dark:bg-b-dark bg-b-light flex items-center justify-center'>
               <div class='w-full px-4 space-y-3'>
                 <SkeletonBlock className='h-4 w-2/5' />
                 <SkeletonBlock className='h-28 w-full' />
@@ -302,27 +310,30 @@ export const PqrsPage: FunctionComponent = () => {
       </div>
 
       <div class='space-y-6'>
-        <div class='p-6 rounded-xl bg-white border border-gray-border shadow-sm'>
+        <div class='p-6 rounded-xl bg-white shadow-sm dark:bg-b-dark-light dark:text-white text-b-dark'>
           <div class='flex items-start justify-between gap-2'>
             <div>
-              <p class='text-xs text-gray-text-light uppercase tracking-wide'>
-                Tablas recomendadas
-              </p>
-              <h3 class='text-lg font-semibold text-t-light'>
-                Casos por agente o área
-              </h3>
-              <p class='text-sm text-gray-text-light'>
-                Ideal para listar detalle de casos abiertos, SLA, responsable y prioridad.
+              <p class='text-xs uppercase tracking-wide'>Tablas recomendadas</p>
+              <h3 class='text-lg font-semibold'>Casos por agente o área</h3>
+              <p class='text-sm'>
+                Ideal para listar detalle de casos abiertos, SLA, responsable y
+                prioridad.
               </p>
             </div>
-            <Badge label='Tabla' status='warning' outline size='xs' width='w-fit' />
+            <Badge
+              label='Tabla'
+              status='warning'
+              outline
+              size='xs'
+              width='w-fit'
+            />
           </div>
 
           <div class='mt-4 space-y-3'>
             {[...Array(5)].map((_, idx) => (
               <div
                 key={`row-${idx}`}
-                class='flex items-center justify-between gap-3 p-3 rounded-lg border border-gray-border bg-b-light/60'
+                class='flex items-center justify-between gap-3 p-3 rounded-lg dark:bg-b-dark bg-b-light'
               >
                 <div class='flex items-center gap-3'>
                   <SkeletonBlock className='h-10 w-10 rounded-full' />
@@ -341,27 +352,29 @@ export const PqrsPage: FunctionComponent = () => {
           </div>
         </div>
 
-        <div class='p-6 rounded-xl bg-white border border-gray-border shadow-sm'>
+        <div class='p-6 bg-white shadow-sm dark:bg-b-dark-light dark:text-white text-b-dark'>
           <div class='flex items-start justify-between gap-2'>
             <div>
-              <p class='text-xs text-gray-text-light uppercase tracking-wide'>
-                Alertas clave
-              </p>
-              <h3 class='text-lg font-semibold text-t-light'>
-                Casos a punto de vencer
-              </h3>
-              <p class='text-sm text-gray-text-light'>
+              <p class='text-xs uppercase tracking-wide'>Alertas clave</p>
+              <h3 class='text-lg font-semibold'>Casos a punto de vencer</h3>
+              <p class='text-sm'>
                 Lista de casos con fecha límite cercana para priorizar acciones.
               </p>
             </div>
-            <Badge label='Recordatorios' status='error' outline size='xs' width='w-fit' />
+            <Badge
+              label='Recordatorios'
+              status='error'
+              outline
+              size='xs'
+              width='w-fit'
+            />
           </div>
 
           <div class='mt-4 space-y-3'>
             {[...Array(3)].map((_, idx) => (
               <div
                 key={`alert-${idx}`}
-                class='p-3 rounded-lg border border-error-opacity bg-error-opacity/20 text-error'
+                class='p-3 rounded-lg dark:bg-b-dark bg-b-light text-error'
               >
                 <div class='flex items-center justify-between'>
                   <SkeletonBlock className='h-3 w-40 bg-error/30' />
@@ -380,18 +393,15 @@ export const PqrsPage: FunctionComponent = () => {
     <div class='p-6 h-full space-y-4'>
       <div class='flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
         <div>
-          <p class='text-xs uppercase text-gray-text-light tracking-wide'>PQRS</p>
-          <h1 class='text-2xl font-bold text-t-light'>Gestión y experiencia</h1>
-          <p class='text-sm text-gray-text-light max-w-2xl'>
-            Alterna entre la vista de tarjetas y un dashboard preliminar para planificar los
-            indicadores de atención al cliente.
-          </p>
+          <h1 class='text-2xl font-bold text-t-light dark:text-white'>
+            Gestión y experiencia
+          </h1>
           <div class='flex flex-wrap items-center gap-2 mt-2 text-xs text-gray-text-light'>
-            <span class='px-2 py-1 rounded-full bg-b-light border border-gray-border/70'>
+            <span class='px-2 py-1 rounded-full bg-b-light dark:bg-b-dark-light dark:text-white'>
               Total de casos: {pqrs.value.length}
             </span>
             {lastUpdated.value && (
-              <span class='px-2 py-1 rounded-full bg-b-light border border-gray-border/70'>
+              <span class='px-2 py-1 rounded-full bg-b-light dark:bg-b-dark-light dark:text-white'>
                 Actualizado: {lastUpdated.value.toLocaleString()}
               </span>
             )}
@@ -399,24 +409,6 @@ export const PqrsPage: FunctionComponent = () => {
         </div>
 
         <div class='flex items-center gap-3'>
-          <div class='bg-b-light border border-gray-border rounded-full p-1 flex gap-1'>
-            {[{ id: 'cards', label: 'Tarjetas' }, { id: 'dashboard', label: 'Dashboard' }].map(
-              (option) => (
-                <button
-                  key={option.id}
-                  class={`px-4 py-2 text-sm font-medium rounded-full transition-all shadow-sm ${
-                    viewMode.value === option.id
-                      ? 'bg-primary text-white shadow-primary/20'
-                      : 'text-gray-text-light hover:text-t-light'
-                  }`}
-                  onClick={() => (viewMode.value = option.id as ViewMode)}
-                >
-                  {option.label}
-                </button>
-              )
-            )}
-          </div>
-
           <div class='flex gap-2'>
             <Button
               name='btn-refresh'
@@ -433,10 +425,28 @@ export const PqrsPage: FunctionComponent = () => {
               iconSize='sm'
             />
           </div>
+          <div class='bg-b-light dark:bg-b-dark-light rounded-full p-1 flex gap-1'>
+            {[
+              { id: ViewMode.CARDS, label: 'Tarjetas' },
+              { id: ViewMode.DASHBOARD, label: 'Dashboard' },
+            ].map((option) => (
+              <button
+                key={option.id}
+                class={`px-4 py-2 text-sm font-medium rounded-full transition-all shadow-sm ${
+                  viewMode.value === option.id
+                    ? 'bg-primary text-white shadow-primary/20'
+                    : 'text-gray-text-light hover:text-t-light dark:text-white'
+                }`}
+                onClick={() => (viewMode.value = option.id as ViewMode)}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {viewMode.value === 'cards' && (
+      {viewMode.value === ViewMode.CARDS && (
         <div class='flex gap-6 overflow-x-auto vox-scroll-design pb-6'>
           {columns.value.map((column, index) => {
             const items = groupedPqrs.value[column.title] ?? [];
@@ -482,7 +492,9 @@ export const PqrsPage: FunctionComponent = () => {
                   {items.length === 0 && (
                     <div class='text-center py-8 text-gray-text-light opacity-60 border border-dashed border-gray-border rounded-lg bg-white/60'>
                       <p class='text-sm'>No hay PQRS en esta columna</p>
-                      <p class='text-xs mt-1'>Crea un nuevo caso para empezar.</p>
+                      <p class='text-xs mt-1'>
+                        Crea un nuevo caso para empezar.
+                      </p>
                     </div>
                   )}
                 </div>
@@ -491,14 +503,18 @@ export const PqrsPage: FunctionComponent = () => {
           })}
           {!loading.value && columns.value.length === 0 && (
             <div class='text-center py-8 text-gray-text-light opacity-70 border border-dashed border-gray-border rounded-lg bg-white/60 w-full'>
-              <p class='text-sm font-medium text-t-light'>Aún no hay estados configurados</p>
-              <p class='text-xs mt-1'>Actualiza o crea un caso para ver columnas disponibles.</p>
+              <p class='text-sm font-medium text-t-light'>
+                Aún no hay estados configurados
+              </p>
+              <p class='text-xs mt-1'>
+                Actualiza o crea un caso para ver columnas disponibles.
+              </p>
             </div>
           )}
         </div>
       )}
 
-      {viewMode.value === 'dashboard' && <DashboardPreview />}
+      {viewMode.value === ViewMode.DASHBOARD && <DashboardPreview />}
 
       <PqrsUpsert
         showModal={openModalUpsert}
