@@ -25,6 +25,7 @@ import { PqrsUpsert } from './components/pqrs.upsert';
 import { IOption } from '@/components/common/smart-selector/smart-select';
 import { uuid } from 'short-uuid';
 import { useTranslation } from 'react-i18next';
+import { PqrsModal } from './components/pqrs.modal';
 
 interface ColumnConfig {
   title: string;
@@ -45,8 +46,10 @@ export const PqrsPage: FunctionComponent = () => {
   const groupedPqrs = useSignal<Record<string, ICPqrsRequest[]>>({});
   const columns = useSignal<ColumnConfig[]>([]);
   const openModalUpsert = useSignal<boolean>(false);
-  const viewMode = useSignal<ViewMode>(ViewMode.DASHBOARD);
+  const openModalData = useSignal<boolean>(false);
+  const viewMode = useSignal<ViewMode>(ViewMode.CARDS);
   const lastUpdated = useSignal<Date | null>(null);
+  const pqrsSelected = useSignal<any>({ id: 0, tags: [], area: {} });
 
   useEffect(() => {
     Promise.all([fetchingAllData()]);
@@ -389,10 +392,15 @@ export const PqrsPage: FunctionComponent = () => {
     </div>
   );
 
+  const cardOnClick = (id: number, tags: unknown[], areas: any) => {
+    pqrsSelected.value = { id, tags, areas };
+    openModalData.value = true;
+  };
+
   return (
     <div class='p-6 h-full space-y-4'>
-      <div class='flex flex-col gap-2 md:flex-row md:items-center md:justify-between'>
-        <div>
+      <div class='flex flex-col gap-2 justify-center md:flex-row md:items-center md:justify-between w-full'>
+        <div class='w-full md:w-1/2 flex flex-row md:flex-col justify-between'>
           <h1 class='text-2xl font-bold text-t-light dark:text-white'>
             Gestión y experiencia
           </h1>
@@ -408,7 +416,7 @@ export const PqrsPage: FunctionComponent = () => {
           </div>
         </div>
 
-        <div class='flex items-center gap-3'>
+        <div class='flex justify-between items-center md:justify-end gap-3 md:w-1/2'>
           <div class='flex gap-2'>
             <Button
               name='btn-refresh'
@@ -447,12 +455,12 @@ export const PqrsPage: FunctionComponent = () => {
       </div>
 
       {viewMode.value === ViewMode.CARDS && (
-        <div class='flex gap-6 overflow-x-auto vox-scroll-design pb-6'>
+        <div class='flex flex-row flex-wrap gap-2 w-full justify-center'>
           {columns.value.map((column, index) => {
             const items = groupedPqrs.value[column.title] ?? [];
             return (
               <div
-                key={index}
+                key={`${column.colorClass}-${index}`}
                 class={`${column.bgColorClass} rounded-xl p-4 min-h-96 w-80 flex-shrink-0 border border-gray-border/60 shadow-[0_8px_24px_rgba(0,0,0,0.05)] backdrop-blur-sm`}
               >
                 <div class='flex items-center justify-between mb-4 gap-2'>
@@ -482,10 +490,11 @@ export const PqrsPage: FunctionComponent = () => {
                   {items.map((item: ICPqrsRequest, index) => {
                     return (
                       <PqrsCards
-                        key={item.id}
+                        key={`${item.id}-${index}`}
                         pqrs={item}
                         index={index}
                         columnColorClass={column.colorClass}
+                        onClick={cardOnClick}
                       />
                     );
                   })}
@@ -518,7 +527,15 @@ export const PqrsPage: FunctionComponent = () => {
 
       <PqrsUpsert
         showModal={openModalUpsert}
-        closeModal={() => Promise.all([closeModalUpsert()])}
+        closeModal={() => closeModalUpsert()}
+      />
+
+      <PqrsModal
+        id={pqrsSelected.value.id}
+        tags={pqrsSelected.value.tags}
+        areas={pqrsSelected.value.areas}
+        showModal={openModalData}
+        closeModal={() => (openModalData.value = false)}
       />
 
       {loading.value && (

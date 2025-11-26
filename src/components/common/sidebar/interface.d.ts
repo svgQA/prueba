@@ -12,4 +12,5 @@ export interface ISidebarProps extends IComponentProps {
   onHandlerClick?: (menu: string) => void;
   position?: 'fixed' | 'relative' | 'relative' | 'static' | 'sticky';
   hasSettings?: boolean;
+  isOpen?: boolean;
 }
