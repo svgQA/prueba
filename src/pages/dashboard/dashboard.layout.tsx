@@ -109,6 +109,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     const modalPanic = useSignal<IPanic | undefined>(undefined);
     const [modalKey, setModalKey] = useState(0);
     const openModalTenant = useSignal<boolean>(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
@@ -240,6 +241,10 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setAllPermissions(permissions.model);
     };
 
+    const toggleSidebar = () => {
+      setSidebarOpen((prev) => !prev);
+    };
+
     return (
       <section>
         <Sidebar
@@ -248,22 +253,36 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           onSettingHandler={toggleSettingModal}
           menus={SIDEBAR_MENUS}
           isNavigation
+          isOpen={isSidebarOpen}
         />
         <div className='flex flex-col lg:pl-[4.5rem]'>
-          <header className='h-auto lg:h-14 flex flex-col lg:flex-row items-stretch lg:items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
-            <div className='flex flex-wrap px-4 sm:px-6 gap-3 sm:gap-4 justify-between items-center w-full lg:w-auto'>
-              <Panic
-                icon='001'
-                emitPanic={(panic: IPanic) => {
-                  setTimeout(() => {
-                    setModalKey((prev) => prev + 1);
-                    modalPanic.value = panic;
-                    isModalOpen.value = true;
-                  }, 300);
-                }}
-              />
-              <LanguageSwitcher borderless />
-              <div className='flex flex-wrap gap-3 sm:gap-4 items-center justify-end flex-1 min-w-[220px]'>
+          <header className='h-auto lg:h-14 sticky top-0 bg-b-content dark:bg-b-dark z-10'>
+            <div className='flex items-center justify-between gap-4 px-4 sm:px-6'>
+              <div className='flex items-center gap-3 sm:gap-4'>
+                <button
+                  type='button'
+                  className='flex flex-col items-center justify-center gap-1 p-2 rounded-md bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100 lg:hidden'
+                  onClick={toggleSidebar}
+                  aria-label='Toggle sidebar'
+                  aria-expanded={isSidebarOpen}
+                >
+                  <span className='block h-0.5 w-6 bg-current rounded-full'></span>
+                  <span className='block h-0.5 w-6 bg-current rounded-full'></span>
+                  <span className='block h-0.5 w-6 bg-current rounded-full'></span>
+                </button>
+                <Panic
+                  icon='001'
+                  emitPanic={(panic: IPanic) => {
+                    setTimeout(() => {
+                      setModalKey((prev) => prev + 1);
+                      modalPanic.value = panic;
+                      isModalOpen.value = true;
+                    }, 300);
+                  }}
+                />
+                <LanguageSwitcher borderless />
+              </div>
+              <div className='flex items-center gap-3 sm:gap-4 flex-1 justify-center lg:justify-end min-w-0 overflow-x-auto whitespace-nowrap'>
                 <CustomSwitcher
                   options={companies}
                   value={selectedCompany?.value}
@@ -289,7 +308,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                   borderless
                 />
               </div>
-              <div className='flex flex-row gap-3 sm:gap-4 items-center justify-center w-full lg:w-auto'>
+              <div className='flex items-center gap-3 sm:gap-4 justify-end'>
                 <ThemeButton unpadded />
                 <Notifications icon='317' iconSize='xsm' />
                 <Dropdown
