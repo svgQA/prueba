@@ -200,17 +200,17 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
   };
 
   return (
-    <div class='border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow'>
+    <div class='border border-gray-200 dark:border-b-dark-light rounded-lg p-4 hover:shadow-lg transition-shadow bg-white dark:bg-b-dark'>
       <div class='flex items-start justify-between mb-3'>
         <div class='flex-1'>
-          <h4 class='font-semibold text-gray-900 text-sm mb-1'>
+          <h4 class='font-semibold text-gray-900 dark:text-white text-sm mb-1'>
             {inference.stage.stageName}
           </h4>
-          <p class='text-xs text-gray-500 leading-relaxed'>
+          <p class='text-xs text-gray-500 dark:text-b-light-dark leading-relaxed'>
             {inference.stage.goal}
           </p>
         </div>
-        <span class='text-xs text-gray-400 ml-2 whitespace-nowrap'>
+        <span class='text-xs text-gray-400 dark:text-b-light-dark ml-2 whitespace-nowrap'>
           {new Date(inference.createdAt).toLocaleDateString()}
         </span>
       </div>
@@ -228,10 +228,10 @@ const PqrsInferenceModal = ({ pqrs }: IProps) => {
       {inferences.length > 0 ? (
         <div class='space-y-4'>
           <div class='flex items-center justify-between mb-2'>
-            <h4 class='font-semibold text-gray-900 text-sm uppercase tracking-wide'>
+            <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide'>
               Análisis de IA
             </h4>
-            <span class='text-xs text-gray-500'>
+            <span class='text-xs text-gray-500 dark:text-b-light-dark'>
               {inferences.length} análisis realizados
             </span>
           </div>
@@ -241,15 +241,15 @@ const PqrsInferenceModal = ({ pqrs }: IProps) => {
           ))}
         </div>
       ) : (
-        <div class='text-center py-8'>
+        <div class='text-center py-10 bg-b-light dark:bg-b-dark rounded-lg border border-dashed border-gray-border dark:border-b-dark-light'>
           <svg
-            class='w-12 h-12 text-gray-300 mx-auto mb-3'
+            class='w-12 h-12 text-gray-300 dark:text-b-light-dark mx-auto mb-3'
             fill='currentColor'
             viewBox='0 0 20 20'
           >
             <path d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' />
           </svg>
-          <p class='text-sm text-gray-500'>No hay análisis de IA disponible</p>
+          <p class='text-sm text-gray-500 dark:text-b-light-dark'>No hay análisis de IA disponible</p>
         </div>
       )}
     </div>
