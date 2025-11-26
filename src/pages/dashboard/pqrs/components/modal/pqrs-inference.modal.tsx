@@ -249,7 +249,9 @@ const PqrsInferenceModal = ({ pqrs }: IProps) => {
           >
             <path d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' />
           </svg>
-          <p class='text-sm text-gray-500 dark:text-b-light-dark'>No hay análisis de IA disponible</p>
+          <p class='text-sm text-gray-500 dark:text-b-light-dark'>
+            No hay análisis de IA disponible
+          </p>
         </div>
       )}
     </div>

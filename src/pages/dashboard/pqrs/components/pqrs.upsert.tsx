@@ -97,7 +97,8 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
               {t('h_pqrs_details')}
             </h3>
             <p className='text-sm text-gray-text-light dark:text-b-light-dark'>
-              Comparte los detalles del caso y adjunta archivos antes de enviarlo a IA.
+              Comparte los detalles del caso y adjunta archivos antes de
+              enviarlo a IA.
             </p>
           </div>
           <div className='hidden sm:flex items-center gap-2 px-3 py-2 rounded-full bg-primary-opacity text-primary text-xs font-medium border border-primary/40'>
@@ -123,7 +124,9 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
               <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 z-50 bg-b-light dark:bg-b-dark-light p-4 rounded-xl border border-gray-border dark:border-b-dark-light shadow-sm'>
                 <div className='lg:col-span-2 space-y-3'>
                   <div className='flex items-center justify-between'>
-                    <p className='text-sm font-semibold text-t-light dark:text-white'>Descripción del caso</p>
+                    <p className='text-sm font-semibold text-t-light dark:text-white'>
+                      Descripción del caso
+                    </p>
                     <span className='text-[11px] text-gray-text-light dark:text-b-light-dark bg-white/80 dark:bg-b-dark px-2 py-1 rounded-full border border-gray-border/60'>
                       Sé específico y conciso
                     </span>
@@ -149,7 +152,8 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                     Adjuntos
                   </div>
                   <p className='text-xs text-gray-text-light dark:text-b-light-dark'>
-                    Agrega capturas, videos o documentos que ayuden a contextualizar la solicitud.
+                    Agrega capturas, videos o documentos que ayuden a
+                    contextualizar la solicitud.
                   </p>
                   <div className='rounded-lg border border-dashed border-gray-border dark:border-b-dark-light p-3 bg-white dark:bg-b-dark shadow-inner'>
                     <Field name='attachments'>
@@ -172,7 +176,12 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
               </div>
 
               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3'>
-                {["Claridad en el asunto", "Datos de contacto", "Tiempo transcurrido", "Impacto en el cliente"].map((tip) => (
+                {[
+                  'Claridad en el asunto',
+                  'Datos de contacto',
+                  'Tiempo transcurrido',
+                  'Impacto en el cliente',
+                ].map((tip) => (
                   <div
                     key={tip}
                     className='flex items-center gap-2 p-3 rounded-lg bg-b-light dark:bg-b-dark-light border border-gray-border dark:border-b-dark-light text-xs text-gray-text-light dark:text-b-light-dark'

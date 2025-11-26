@@ -83,7 +83,8 @@ export const PqrsModal = ({
             {t('h_pqrs_details')}
           </h3>
           <p className='text-sm text-gray-text-light dark:text-b-light-dark'>
-            Visualiza los datos clave del caso y el análisis de IA con una vista más legible.
+            Visualiza los datos clave del caso y el análisis de IA con una vista
+            más legible.
           </p>
         </div>
       }
