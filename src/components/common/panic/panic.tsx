@@ -117,6 +117,7 @@ const Panic = (_panic: IPanicProps) => {
           icon='020'
           iconSize='xsm'
           borderless
+          transparent
           unpadded
           iconColor='text-red-500'
           onClick={() => (isOpen.value = !isOpen.value)}
