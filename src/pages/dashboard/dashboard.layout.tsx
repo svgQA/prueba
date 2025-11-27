@@ -257,8 +257,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         />
         <div className='flex flex-col lg:pl-[4.5rem]'>
           <header className='h-auto lg:h-14 sticky top-0 bg-b-content dark:bg-b-dark z-10'>
-            <div className='flex items-center justify-between gap-4 px-4 sm:px-6'>
-              <div className='flex items-center gap-3 sm:gap-4'>
+            <div className='flex items-center w-full justify-end px-10 h-13'>
+              <div className='flex items-center gap-2 px-2'>
                 <button
                   type='button'
                   className='flex flex-col items-center justify-center gap-1 p-2 rounded-md bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100 lg:hidden'
@@ -270,19 +270,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                   <span className='block h-0.5 w-6 bg-current rounded-full'></span>
                   <span className='block h-0.5 w-6 bg-current rounded-full'></span>
                 </button>
-                <Panic
-                  icon='001'
-                  emitPanic={(panic: IPanic) => {
-                    setTimeout(() => {
-                      setModalKey((prev) => prev + 1);
-                      modalPanic.value = panic;
-                      isModalOpen.value = true;
-                    }, 300);
-                  }}
-                />
                 <LanguageSwitcher borderless />
-              </div>
-              <div className='flex items-center gap-3 sm:gap-4 flex-1 justify-center lg:justify-end min-w-0 overflow-x-auto whitespace-nowrap'>
                 <CustomSwitcher
                   options={companies}
                   value={selectedCompany?.value}
@@ -308,7 +296,18 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                   borderless
                 />
               </div>
-              <div className='flex items-center gap-3 sm:gap-4 justify-end'>
+
+              <div className='flex items-center gap-2 px-3'>
+                <Panic
+                  icon='001'
+                  emitPanic={(panic: IPanic) => {
+                    setTimeout(() => {
+                      setModalKey((prev) => prev + 1);
+                      modalPanic.value = panic;
+                      isModalOpen.value = true;
+                    }, 300);
+                  }}
+                />
                 <ThemeButton unpadded />
                 <Notifications icon='317' iconSize='xsm' />
                 <Dropdown
