@@ -13,6 +13,7 @@ import { CustomLoginPage } from '@/components/compose/login/custom';
 import { getIsInErrorState } from './store/signals/service/service.signals';
 import { ToastContainer } from 'react-toastify';
 import { ModalBaseService } from './components/compose/base-service/base-service';
+import { Spinner } from './components/common/spinner/spinner';
 import 'react-toastify/dist/ReactToastify.css';
 
 Amplify.configure(AWS_AMPLIFY_SETTINGS);
@@ -47,6 +48,7 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
         </Router>
       </Switch>
       <ModalBaseService isOpen={getIsInErrorState()} />
+      <Spinner />
       <ToastContainer />
     </section>
   );
