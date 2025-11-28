@@ -24,6 +24,7 @@ import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { Button } from '@/components/common/button/button';
 import { Switch } from '@/components/common/switch/switch';
+import { AreaService } from '@/services/general/area';
 
 export const StageForm: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -33,6 +34,7 @@ export const StageForm: FunctionComponent = () => {
   const [initialValues, setInitialValues] = useState<any>();
   const loading = useSignal<boolean>(false);
   const stageList = useSignal<IOption[]>([]);
+  const areaList = useSignal<IOption[]>([]);
   const resource = useSignal<IResourceStage[]>([]);
 
   useEffect(() => {
@@ -49,6 +51,7 @@ export const StageForm: FunctionComponent = () => {
 
   const loadData = async () => {
     await getSimpleStageList();
+    await getSimpleAreaList();
     await fetchInitialValues();
   };
 
@@ -56,6 +59,12 @@ export const StageForm: FunctionComponent = () => {
     const response = await StageService.getSimpleList();
     if (!response.getStatus()) return;
     stageList.value = response.getMany();
+  };
+
+  const getSimpleAreaList = async () => {
+    const response = await AreaService.get_simple_List();
+    if (!response.getStatus()) return;
+    areaList.value = response.getMany();
   };
 
   const fetchInitialValues = async () => {
@@ -116,6 +125,10 @@ export const StageForm: FunctionComponent = () => {
       errorStageId: findStageOption(initialData.errorStageId),
       status: initialData.status || 'active',
       visibility: initialData.visibility ?? true,
+      hasArea: initialData.areaId ? true : false,
+      areaId: initialData.areaId
+        ? areaList.value.find((area) => area.value === initialData.areaId) || null
+        : null,
     });
     loading.value = false;
   };
@@ -140,9 +153,10 @@ export const StageForm: FunctionComponent = () => {
       executionNotes: model.executionNotes,
       prompt: promptValue,
       resource: resources,
-      nextStageId: model.nextStageId?.value || null,
-      prevStageId: model.prevStageId?.value || null,
-      errorStageId: model.errorStageId?.value || null,
+      nextStageId: model.hasArea ? null : model.nextStageId?.value || null,
+      prevStageId: model.hasArea ? null : model.prevStageId?.value || null,
+      errorStageId: model.hasArea ? null : model.errorStageId?.value || null,
+      areaId: model.hasArea ? model.areaId?.value || null : null,
       visibility: model.visibility ?? true,
     };
 
@@ -287,59 +301,93 @@ export const StageForm: FunctionComponent = () => {
                 </Field>
               </div>
 
-              {stageList.value && stageList.value.length > 0 && (
-                <>
-                  <div className='col-span-1'>
-                    <Field<IOption> name='nextStageId'>
-                      {({ input, meta }) => (
-                        <SmartSelector
-                          {...input}
-                          meta={meta}
-                          id='select-next-stageId'
-                          icon='191'
-                          label='h_next_stage'
-                          options={stageList.value || []}
-                          menuPortalTarget={document.body}
-                          placeholder='p_select'
-                        />
-                      )}
-                    </Field>
-                  </div>
+              <div className='col-span-3'>
+                <Field<boolean> name='hasArea' type='checkbox' initialValue={false}>
+                  {({ input }) => (
+                    <Switch
+                      id='has-area-switch'
+                      name={input.name}
+                      label='¿Anexar área al stage?'
+                      value={input.checked}
+                      onChange={input.onChange}
+                      disabled={loading.value}
+                    />
+                  )}
+                </Field>
+              </div>
 
-                  <div className='col-span-1'>
-                    <Field<IOption> name='prevStageId'>
-                      {({ input, meta }) => (
-                        <SmartSelector
-                          {...input}
-                          meta={meta}
-                          id='select-prev-stageId'
-                          icon='191'
-                          label='h_prev_stage'
-                          options={stageList.value || []}
-                          menuPortalTarget={document.body}
-                          placeholder='p_select'
-                        />
-                      )}
-                    </Field>
-                  </div>
+              {form.getState().values.hasArea ? (
+                <div className='col-span-3'>
+                  <Field<IOption> name='areaId'>
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        id='select-areaId'
+                        icon='191'
+                        label='h_area'
+                        options={areaList.value || []}
+                        menuPortalTarget={document.body}
+                        placeholder='p_select'
+                      />
+                    )}
+                  </Field>
+                </div>
+              ) : (
+                stageList.value && stageList.value.length > 0 && (
+                  <>
+                    <div className='col-span-1'>
+                      <Field<IOption> name='nextStageId'>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            meta={meta}
+                            id='select-next-stageId'
+                            icon='191'
+                            label='h_next_stage'
+                            options={stageList.value || []}
+                            menuPortalTarget={document.body}
+                            placeholder='p_select'
+                          />
+                        )}
+                      </Field>
+                    </div>
 
-                  <div className='col-span-1'>
-                    <Field<IOption> name='errorStageId'>
-                      {({ input, meta }) => (
-                        <SmartSelector
-                          {...input}
-                          meta={meta}
-                          id='select-error-stageId'
-                          icon='191'
-                          label='h_error_stage'
-                          options={stageList.value || []}
-                          menuPortalTarget={document.body}
-                          placeholder='p_select'
-                        />
-                      )}
-                    </Field>
-                  </div>
-                </>
+                    <div className='col-span-1'>
+                      <Field<IOption> name='prevStageId'>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            meta={meta}
+                            id='select-prev-stageId'
+                            icon='191'
+                            label='h_prev_stage'
+                            options={stageList.value || []}
+                            menuPortalTarget={document.body}
+                            placeholder='p_select'
+                          />
+                        )}
+                      </Field>
+                    </div>
+
+                    <div className='col-span-1'>
+                      <Field<IOption> name='errorStageId'>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            meta={meta}
+                            id='select-error-stageId'
+                            icon='191'
+                            label='h_error_stage'
+                            options={stageList.value || []}
+                            menuPortalTarget={document.body}
+                            placeholder='p_select'
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  </>
+                )
               )}
 
               <div className='col-span-3 border-t pt-4'>
