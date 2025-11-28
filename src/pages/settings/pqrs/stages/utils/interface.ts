@@ -10,6 +10,7 @@ export interface IStages {
   prevStageId?: number | null;
   errorStageId?: number | null;
   visibility?: boolean;
+  areaId?: number | null;
 }
 
 export interface IResourceStage {
