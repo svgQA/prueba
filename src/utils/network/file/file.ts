@@ -1,5 +1,5 @@
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { IExcelGenerate } from './interface';
+import { IExcelGenerate, IBase64DownloadResult } from './interface';
 import ExcelJS from 'exceljs';
 import i18n from '@/i18n';
 import { IPresignedRequest } from '@/types/file';
@@ -222,5 +222,48 @@ export class fileManager {
     }
 
     return extension;
+  }
+
+  /**
+   * Converts base64 string to blob and triggers file download
+   * @param result - Object containing base64 data, mimeType and filename
+   * @param defaultType - Default MIME type if not provided in result (default: 'application/pdf')
+   * @param defaultFilename - Default filename if not provided in result (default: 'file.pdf')
+   */
+  static downloadBase64File(
+    result: IBase64DownloadResult,
+    defaultType: string = 'application/pdf',
+    defaultFilename: string = 'file.pdf'
+  ): void {
+    if (!result?.data?.buffer) {
+      ToastManager.error('s_download_file_error');
+      return;
+    }
+
+    try {
+      const byteCharacters = atob(result.data.buffer);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], {
+        type: result.data.mimeType || defaultType,
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = result.data.filename || defaultFilename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      ToastManager.success('s_download_file_success');
+    } catch (error) {
+      console.error('Error downloading base64 file:', error);
+      ToastManager.error('s_download_file_error');
+    }
   }
 }
