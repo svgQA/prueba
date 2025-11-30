@@ -1,11 +1,14 @@
 export interface IShiftReportRequest {
-  shiftId: string;
+  shiftId: number;
   type: ReportType;
+  shift?: any;
 }
 
 export interface IMemoReportRequest {
-  memoId: string;
+  memoId: number;
   type: ReportType;
+  memo?: any;
+  history?: any;
 }
 
 export interface IResponseReportRequest {

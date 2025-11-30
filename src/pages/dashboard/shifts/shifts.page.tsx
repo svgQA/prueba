@@ -48,6 +48,10 @@ import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
 import { getLocation } from '@/utils/utilities/location';
 import { useUserStore } from '@/store/slices';
 import { modulesReport } from '@/types/form';
+import {
+  closeSpinner,
+  openSpinner,
+} from '@/store/signals/modals/spinner.signal';
 // import { merge } from 'lodash';
 
 /**
@@ -61,6 +65,11 @@ import {
   MessageEvent,
   MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
+import { fileManager } from '@/utils/network/file/file';
+import { ReportService } from '@/services/report/report';
+import { memo } from '@tanstack/react-table';
+import { IShiftReportRequest } from '@/types/report/report.request';
+import { ReportType } from '@/types/report/report.enum';
 
 enum VIEW_NAME {
   TABLE,
@@ -577,6 +586,9 @@ export const ShiftsPage: FunctionalComponent = () => {
       case ROW_ACTIONS.CHECK_OUT:
         handleCheck('CHECK_OUT', Number(params.id));
         break;
+      case ROW_ACTIONS.DOWNLOAD:
+        handleDownloadShift(Number(params.id));
+        break;
     }
   };
 
@@ -629,6 +641,33 @@ export const ShiftsPage: FunctionalComponent = () => {
     if (!response.getStatus()) return;
     ToastManager.success('s_deleted_success');
     fetchInitialData();
+  };
+
+  const handleDownloadShift = async (shiftId: number) => {
+    openSpinner();
+
+    const shift = shifts.value.find((shift) => shift.id === shiftId);
+
+    const data: IShiftReportRequest = {
+      shiftId: shiftId,
+      type: ReportType.Shift,
+      shift: shift,
+    };
+
+    const response = await ReportService.download_one_module_pdf(data);
+
+    if (!response.getStatus()) {
+      ToastManager.error('s_download_file_error');
+      return;
+    }
+
+    fileManager.downloadBase64File(
+      response.getOne(),
+      'application/pdf',
+      'response.pdf'
+    );
+
+    closeSpinner();
   };
 
   return (

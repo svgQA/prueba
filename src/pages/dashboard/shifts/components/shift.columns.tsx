@@ -336,6 +336,18 @@ export const getColumns = (
               });
             },
           },
+          {
+            label: 'download',
+            keyName: 'download',
+            icon: 'vox-icon vx-icon-411 text-primary',
+            onClick: () => {
+              onClickAction({
+                id: s_id,
+                type: 'shift',
+                action: ROW_ACTIONS.DOWNLOAD,
+              });
+            },
+          },
         ];
 
         return <DropdownActionsMenu actions={actions} />;

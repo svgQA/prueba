@@ -10,6 +10,14 @@ import { DateUtils } from '@/utils/utilities/dates';
 import ShowFiles from '@/components/common/file/show.file';
 import { useTranslation } from 'react-i18next';
 import { useSignal } from '@preact/signals';
+import {
+  closeSpinner,
+  openSpinner,
+} from '@/store/signals/modals/spinner.signal';
+import { fileManager } from '@/utils/network/file/file';
+import { ReportService } from '@/services/report/report';
+import { ReportType } from '@/types/report/report.enum';
+import { IMemoReportRequest } from '@/types/report/report.request';
 
 const InfoContainer = ({
   label,
@@ -107,6 +115,35 @@ const SupervisorInfo = ({
     }
   };
 
+  const handleDownloadMemo = async () => {
+    openSpinner();
+
+    const history = await MemoService.getMemosByHistory(memo.id.toString());
+
+    const data: IMemoReportRequest = {
+      memoId: memo.id,
+      type: ReportType.Memo,
+      memo: memo,
+      history: history.getMany(),
+    };
+
+    const response = await ReportService.download_one_module_pdf(data);
+
+    if (!response.getStatus()) {
+      ToastManager.error('s_download_file_error');
+      closeSpinner();
+      return;
+    }
+
+    fileManager.downloadBase64File(
+      response.getOne(),
+      'application/pdf',
+      'response.pdf'
+    );
+
+    closeSpinner();
+  };
+
   return (
     <div className='w-full rounded-lg shadow-sm'>
       <div className='flex flex-row gap-4 w-full'>
@@ -138,6 +175,14 @@ const SupervisorInfo = ({
                 permissions={{ name: 'memo', state: 'close' }}
               />
             )}
+            <Button
+              type='button'
+              onClick={handleDownloadMemo}
+              name='btn-memo-download'
+              icon='411'
+              label='h_download_memo'
+              className='mb-4'
+            />
           </div>
           <div className='w-full h-9/12 flex'>
             <div className='w-full lg:w-1/2 grid grid-cols-1 sm:grid-cols-2 gap-1 p-2'>
