@@ -9,4 +9,5 @@ export enum ROW_ACTIONS {
   CHECK_IN,
   CHECK_OUT,
   VIEW,
+  DOWNLOAD,
 }
