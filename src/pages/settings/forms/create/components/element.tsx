@@ -12,10 +12,8 @@ import { moveElement, updateForm, updateSectionForm } from '../store/question';
 import { ELEMENT_TYPE_VALUES, REGEX_PATTERNS } from '../store/constant';
 import { validateSelectedElement } from '../store/control';
 import { toggleListModal } from '../../lists/store/list';
-import { ToastManager } from '@/utils/toast/toast-manager';
 import { IElementError } from '@/types/form/error.type';
 import { TextArea } from '@/components/common/text.area/text.area';
-import { useUserStore } from '@/store/slices';
 import type { RefCallback } from 'preact';
 
 const ItemType = {
@@ -31,7 +29,6 @@ export const FormElement = ({
   onSelect,
   onDelete,
 }: IElementProps) => {
-  const { getToken, getTenant, getCompanyId } = useUserStore();
   const openModalList = () => {
     toggleListModal({ question: question.id, page, section, field: 'options' });
   };
@@ -68,44 +65,6 @@ export const FormElement = ({
   const onChangeMulty = (value: IOption[], name?: string) => {
     if (!name) return;
     updateForm(question.id, page, section)(name, value);
-  };
-
-  const onTestUrl = (event: string) => {
-    const urlPattern = /^(https?:\/\/)?([\da-z.-]+)(:\d+)?([/\w .-]*)*\/?$/;
-    const isURL = urlPattern.test(event);
-
-    if (!isURL) {
-      ToastManager.error('s_url_error');
-      return;
-    }
-    const headers = {
-      'Content-Type': 'application/json',
-      Authorization: getToken(),
-      'voxline-tenant': getTenant(),
-      'voxline-company': getCompanyId(),
-    };
-
-    fetch(event, {
-      headers: headers,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (
-          !Array.isArray(data) ||
-          !data.every(
-            (item) =>
-              typeof item === 'object' && 'label' in item && 'value' in item
-          )
-        ) {
-          ToastManager.error('s_structure_error');
-          return;
-        }
-        ToastManager.success('s_structure_success');
-        updateForm(question.id, page, section)('options', data.slice(0, 10));
-      })
-      .catch(() => {
-        ToastManager.error('s_getted_error');
-      });
   };
 
   const handleInputChange = (
@@ -331,8 +290,6 @@ export const FormElement = ({
                         onChange={handleInputChange}
                         id={`se-form-${question.id}-element-options-url`}
                         icon='104'
-                        buttonIcon='210'
-                        onClick={onTestUrl}
                         value={question.url}
                         button
                         borderless

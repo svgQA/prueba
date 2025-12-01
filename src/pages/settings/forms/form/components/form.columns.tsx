@@ -3,7 +3,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Avatar } from '@/components/common/Avatar';
-import { Button } from '@/components/common/button/button';
 import {
   DropdownActionsMenu,
   IDropdownAction,
@@ -134,19 +133,6 @@ export const getColumns = (
 
       return (
         <div className='w-full flex justify-center items-center'>
-          <Button
-            name='continue'
-            label='l_response'
-            icon='030'
-            unpadded
-            onClick={() => {
-              onClickAction({
-                id: String(id),
-                type: 'form',
-                action: ROW_ACTIONS.RESPONSE,
-              });
-            }}
-          ></Button>
           <DropdownActionsMenu actions={actions} />
         </div>
       );
