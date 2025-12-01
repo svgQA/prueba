@@ -127,7 +127,8 @@ export const StageForm: FunctionComponent = () => {
       visibility: initialData.visibility ?? true,
       hasArea: initialData.areaId ? true : false,
       areaId: initialData.areaId
-        ? areaList.value.find((area) => area.value === initialData.areaId) || null
+        ? areaList.value.find((area) => area.value === initialData.areaId) ||
+          null
         : null,
     });
     loading.value = false;
@@ -302,7 +303,11 @@ export const StageForm: FunctionComponent = () => {
               </div>
 
               <div className='col-span-3'>
-                <Field<boolean> name='hasArea' type='checkbox' initialValue={false}>
+                <Field<boolean>
+                  name='hasArea'
+                  type='checkbox'
+                  initialValue={false}
+                >
                   {({ input }) => (
                     <Switch
                       id='has-area-switch'
@@ -334,7 +339,8 @@ export const StageForm: FunctionComponent = () => {
                   </Field>
                 </div>
               ) : (
-                stageList.value && stageList.value.length > 0 && (
+                stageList.value &&
+                stageList.value.length > 0 && (
                   <>
                     <div className='col-span-1'>
                       <Field<IOption> name='nextStageId'>

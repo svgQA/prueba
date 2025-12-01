@@ -59,7 +59,7 @@ export const getColumns = (
       cell: (info) => {
         const areaId = info.getValue();
         return <Badge label={areaId ? 'yes' : 'no'} />;
-      }
+      },
     },
     {
       id: 'action',
