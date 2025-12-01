@@ -5,12 +5,16 @@ import { ICPqrsRequest } from '../utils/interface';
 import { Badge } from '@/components/common/badge/badge';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { useCallback } from 'preact/compat';
+import { Button } from '@/components/common/button/button';
+import { PqrsAiService } from '@/services/pqrs/ai-pqrs';
 
 export interface IProps {
   pqrs: ICPqrsRequest;
   index: number;
   columnColorClass?: string;
   onClick?: (id: number, tags: unknown[], area: any) => void;
+  onRetry?: (id: number) => void;
+  onContinue?: (id: number) => void;
 }
 
 export const PqrsCards = ({
@@ -57,8 +61,18 @@ export const PqrsCards = ({
     return areaInference?.inference?.area || (pqrs as any)?.area || null;
   }, []);
 
+  const onExecuteButtonByStage = async (id: number, type: 'RETRY' | 'CONTINUE') => {
+    const stageId = type === 'RETRY' ?
+      pqrs.inferences[pqrs.inferences.length - 1]?.stage?.prevStageId :
+      pqrs.inferences[pqrs.inferences.length - 1]?.stage?.nextStageId;
+    await PqrsAiService.execute_ai_process_again(String(stageId), id)
+  }
+
   const tags = getTags();
   const area = getArea();
+  const pqrsButtonByStage =
+    pqrs.status?.toLowerCase() === 'error' ||
+    pqrs.inferences[pqrs.inferences.length - 1]?.stage?.type === "MANUAL";
 
   return (
     <Card key={`pqrs-card-${index}`} borderless={false} shadow={true}>
@@ -147,28 +161,54 @@ export const PqrsCards = ({
         {(tags.length > 0 ||
           pqrs?.extraData?.hasFiles ||
           typeof pqrs?.extraData?.daysToExpire === 'number') && (
-          <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border'>
-            {tags.map((tag, idx) => (
-              <span
-                key={idx}
-                class='px-2 py-0.5 bg-b-light text-gray-text-light text-xs rounded'
-              >
-                #{String(tag)}
-              </span>
-            ))}
+            <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border'>
+              {tags.map((tag, idx) => (
+                <span
+                  key={idx}
+                  class='px-2 py-0.5 bg-b-light text-gray-text-light text-xs rounded'
+                >
+                  #{String(tag)}
+                </span>
+              ))}
 
-            {pqrs?.extraData?.hasFiles && (
-              <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1'>
-                📎 Archivos
-              </span>
-            )}
-
-            {typeof pqrs?.extraData?.daysToExpire === 'number' &&
-              pqrs?.extraData?.daysToExpire <= 3 && (
-                <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium'>
-                  ⏰ {pqrs?.extraData?.daysToExpire}d
+              {pqrs?.extraData?.hasFiles && (
+                <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1'>
+                  📎 Archivos
                 </span>
               )}
+
+              {typeof pqrs?.extraData?.daysToExpire === 'number' &&
+                pqrs?.extraData?.daysToExpire <= 3 && (
+                  <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium'>
+                    ⏰ {pqrs?.extraData?.daysToExpire}d
+                  </span>
+                )}
+            </div>
+          )}
+
+        {/* Actions Stage */}
+        {pqrsButtonByStage && (
+          <div class='flex gap-2 pt-2'>
+            <Button
+              name='retry-button'
+              label='h_retry'
+              onClick={(e: Event) => {
+                e.stopPropagation();
+                if (pqrs.id) onExecuteButtonByStage(pqrs.id, 'RETRY');
+              }}
+              className='flex-1 py-1.5 text-xs bg-primary text-white rounded hover:bg-primary-dark transition-colors'
+              icon='refresh'
+            />
+            <Button
+              name='continue-button'
+              label='h_continue'
+              onClick={(e: Event) => {
+                e.stopPropagation();
+                if (pqrs.id) onExecuteButtonByStage(pqrs.id, 'CONTINUE');
+              }}
+              className='flex-1 py-1.5 text-xs bg-secondary text-white rounded hover:bg-secondary-dark transition-colors'
+              icon='arrow-right'
+            />
           </div>
         )}
 

@@ -6,6 +6,7 @@ export interface ICPqrsRequest {
   filesBedrock?: IPresignedResponse[] | null;
   resource?: IPresignedRequest[] | null;
   status: string;
+  inferences: any;
 }
 
 export interface ICPqrs {

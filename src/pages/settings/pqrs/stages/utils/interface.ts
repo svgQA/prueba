@@ -11,6 +11,7 @@ export interface IStages {
   errorStageId?: number | null;
   visibility?: boolean;
   areaId?: number | null;
+  type?: TypesOfStages | null;
 }
 
 export interface IResourceStage {
@@ -21,4 +22,9 @@ export interface IResourceStage {
 export enum Methods {
   GET = 'GET',
   POST = 'POST',
+}
+
+export enum TypesOfStages {
+  CONTINUE = 'CONTINUE',
+  MANUAL = 'MANUAL',
 }

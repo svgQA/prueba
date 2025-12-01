@@ -6,7 +6,7 @@ import {
   IDropdownAction,
 } from '@/components/common/table/components/dropdown.actions.menu';
 
-import { IStages } from '../utils/interface';
+import { IStages, TypesOfStages } from '../utils/interface';
 import { Badge } from '@/components/common/badge/badge';
 
 export const getColumns = (
@@ -49,6 +49,17 @@ export const getColumns = (
       size: 100,
       header: 'h_status',
       enableGrouping: true,
+    },
+    {
+      id: 'type',
+      accessorKey: 'type',
+      size: 100,
+      header: 'h_type',
+      enableGrouping: true,
+      cell: (info) => {
+        const type = info.getValue();
+        return <Badge label={type === TypesOfStages.CONTINUE ? 'h_automatic' : 'h_manual'} />;
+      },
     },
     {
       id: 'area',
