@@ -10,6 +10,7 @@ import {
   IResponseReportRequest,
   IShiftReportRequest,
 } from '@/types/report/report.request';
+import { ReportType } from '@/types/report/report.enum';
 
 export class ReportService extends BaseService {
   static sname: VoxServices = 'report';
@@ -21,6 +22,23 @@ export class ReportService extends BaseService {
       url: ['generate-report', 'download_one_module_pdf'],
       method: REQUEST_METHODS.POST,
       data,
+    };
+    return await super.make_request<IOnePdfResponseModel>(this.sname, model);
+  }
+  static async download_module_pdf(
+    data:
+      | IShiftReportRequest[]
+      | IMemoReportRequest[]
+      | IResponseReportRequest[],
+    type: ReportType
+  ) {
+    const model: IMakeRequest = {
+      url: ['generate-report', 'download_module_pdf'],
+      method: REQUEST_METHODS.POST,
+      data: {
+        data: data,
+        type: type,
+      },
     };
     return await super.make_request<IOnePdfResponseModel>(this.sname, model);
   }

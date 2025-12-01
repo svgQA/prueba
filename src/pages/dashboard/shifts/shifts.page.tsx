@@ -67,7 +67,6 @@ import {
 } from '@/utils/socket/manager/types';
 import { fileManager } from '@/utils/network/file/file';
 import { ReportService } from '@/services/report/report';
-import { memo } from '@tanstack/react-table';
 import { IShiftReportRequest } from '@/types/report/report.request';
 import { ReportType } from '@/types/report/report.enum';
 
@@ -657,6 +656,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     const response = await ReportService.download_one_module_pdf(data);
 
     if (!response.getStatus()) {
+      closeSpinner();
       ToastManager.error('s_download_file_error');
       return;
     }

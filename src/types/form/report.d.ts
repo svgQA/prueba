@@ -59,6 +59,7 @@ export enum modulesReport {
   Form = 'Form',
   Access = 'Access',
   Correspondence = 'Correspondence',
+  Response = 'Response',
 }
 
 export enum ReportFilter {
