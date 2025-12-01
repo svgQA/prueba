@@ -134,19 +134,6 @@ export const getColumns = (
 
       return (
         <div className='w-full flex justify-center items-center'>
-          <Button
-            name='continue'
-            label='l_response'
-            icon='030'
-            unpadded
-            onClick={() => {
-              onClickAction({
-                id: String(id),
-                type: 'form',
-                action: ROW_ACTIONS.RESPONSE,
-              });
-            }}
-          ></Button>
           <DropdownActionsMenu actions={actions} />
         </div>
       );

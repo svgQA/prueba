@@ -331,8 +331,6 @@ export const FormElement = ({
                         onChange={handleInputChange}
                         id={`se-form-${question.id}-element-options-url`}
                         icon='104'
-                        buttonIcon='210'
-                        onClick={onTestUrl}
                         value={question.url}
                         button
                         borderless
