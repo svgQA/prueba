@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { MentionOption } from '../mention-editor';
 import { selectPriority } from '@/pages/settings/memo/novelty/create/create';
 import { getPermissionByModuleState } from '@/store/signals/access/permission';
+import { closeSpinner, openSpinner } from '@/store/signals/modals';
 
 interface ReportFinishedSubmit {
   form: any;
@@ -35,7 +36,7 @@ export enum SelectCheckType {
 
 export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const { t } = useTranslation();
-  const { selectedCompany, getTenant, getCompanyId } = useUserStore();
+  const { selectedCompany } = useUserStore();
 
   const [isOpen, setIsOpen] = useState(false);
   const loading = useSignal(false);
@@ -68,7 +69,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
 
   const getFormatOptions = () => {
     if (modules == modulesReport.Form) {
-      checkListSelected.value = SelectCheckType.INTERNO;
+      checkListSelected.value = SelectCheckType.CLIENTE;
       return;
     }
 
@@ -123,15 +124,17 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     loading.value = false;
   };
 
+  //TODO: refactorizar evitar los callbacks hell
   const handleFinishedSubmit = async ({
     form,
     report,
     startDate = new Date(),
     endDate = new Date(),
   }: ReportFinishedSubmit) => {
+    openSpinner();
     let reportResponse = await (checkListSelected.value ===
       SelectCheckType.CLIENTE && report
-      ? ReportService.create_report_automatic(report)
+      ? ReportService.create_report_automatic({ ...report, module: modules })
       : ReportService.create_report_automatic_excel({
           mod: modules,
           startDate,
@@ -144,9 +147,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
           ? reportResponse.getOne()
           : reportResponse.getMany();
       checkListSelected.value === SelectCheckType.CLIENTE
-        ? await fileManager.downloadFile({
-            url: fileManager.getUrl(getTenant(), getCompanyId(), info),
-          })
+        ? fileManager.downloadBase64File(info, 'application/pdf', 'report.pdf')
         : await fileManager.generateExcel(
             [
               {
@@ -156,6 +157,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
             ],
             'report'
           );
+      closeSpinner();
       setIsOpen(false);
       form.reset();
     }
@@ -171,6 +173,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       [modulesReport.Form]: t('t_inspect'),
       [modulesReport.Access]: t('t_access'),
       [modulesReport.Correspondence]: t('t_inbox'),
+      [modulesReport.Response]: t('t_response'),
     };
     const header = headers[modules];
     if (startDate && endDate)
@@ -392,10 +395,9 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                           <DateField name='end' label='h_date_end' />
                         </div>
 
-                        {checkListSelected.value ===
+                        {/* {checkListSelected.value ===
                           SelectCheckType.CLIENTE && (
                           <div class='col-span-1'>
-                            {/* Nuevo checkbox para enviar email */}
                             <div className='col-span-2 flex items-center'>
                               <Field<boolean> name='sendEmail' type='checkbox'>
                                 {({ input }) => (
@@ -414,7 +416,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
                               </Field>
                             </div>
                           </div>
-                        )}
+                        )} */}
                       </div>
                     )}
                   </form>

@@ -105,4 +105,5 @@ export interface ICReportAiRequest {
   user?: IOption;
   sendEmail?: boolean;
   priority?: IOption;
+  module?: string;
 }

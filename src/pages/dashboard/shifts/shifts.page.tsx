@@ -657,6 +657,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     const response = await ReportService.download_one_module_pdf(data);
 
     if (!response.getStatus()) {
+      closeSpinner();
       ToastManager.error('s_download_file_error');
       return;
     }
