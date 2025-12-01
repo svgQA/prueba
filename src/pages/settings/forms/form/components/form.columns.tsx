@@ -3,7 +3,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Avatar } from '@/components/common/Avatar';
-import { Button } from '@/components/common/button/button';
 import {
   DropdownActionsMenu,
   IDropdownAction,
