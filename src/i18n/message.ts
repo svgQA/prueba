@@ -23,6 +23,8 @@ export const message_es = {
   i_ai_subtitle:
     '"Recibe recomendaciones automáticas y soporte para tus operativos directamente en el terreno."',
   i_offline_title: 'Sincronización sin conexión:',
+  a_title_delete: 'Eliminar',
+  a_message_delete: '¿Desea eliminar?',
   i_offline_subtitle:
     '"Sigue gestionando incluso sin internet, y los datos se sincronizan al restaurar la conexión."',
   i_scalability_title: 'Escalabilidad:',
@@ -199,6 +201,8 @@ export const message_en = {
     'Optimize the management of activities, resources and assets, even without connectivity for your business.',
   i_demoButton: 'Schedule a Free Demo',
   i_pros_title: 'Why Tryvoo?',
+  a_title_delete: 'Delete',
+  a_message_delete: 'Do you want delete?',
   i_pros_subtitle: 'Simplify. Optimize. Grow.',
   i_pros_stats:
     '60% of companies in LATAM are looking for tools that improve traceability and reduce operational costs',
