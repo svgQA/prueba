@@ -67,6 +67,7 @@ import {
 } from '@/utils/socket/manager/types';
 import { fileManager } from '@/utils/network/file/file';
 import { ReportService } from '@/services/report/report';
+// import { memo } from '@tanstack/react-table';
 import { IShiftReportRequest } from '@/types/report/report.request';
 import { ReportType } from '@/types/report/report.enum';
 

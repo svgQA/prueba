@@ -212,7 +212,8 @@ export const QrCode = ({
   return (
     <div className='w-full h-full flex flex-col items-center'>
       {label && <label className='mb-2 font-medium'>{t(label)}</label>}
-      {onChange && (
+      {value && <label className='mb-2 font-medium'>{value}</label>}
+      {onChange && !value && (
         <Button
           name='btn-response-qr'
           type='button'
