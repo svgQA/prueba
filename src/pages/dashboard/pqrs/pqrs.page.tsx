@@ -131,7 +131,7 @@ export const PqrsPage: FunctionComponent = () => {
           && (
             normalizedStatus !== 'created' 
             && normalizedStatus !== 'finished'
-            && normalizedStatus !== 'manual'
+            && normalizedStatus !== 'error'
           )
         ) {
           const lastInference = item.inferences[item.inferences.length - 1];
