@@ -196,6 +196,9 @@ export const columns_es = {
   h_method: 'Método',
   h_request_url: 'URL de la solicitud',
   h_visibility: 'visualizar',
+  h_automatic: 'Automatico',
+  h_manual: 'Manual',
+  h_area: 'Area',
 };
 
 export const columns_en = {
@@ -396,4 +399,7 @@ export const columns_en = {
   h_method: 'Method',
   h_request_url: 'Request URL',
   h_visibility: 'Visibility',
+  h_automatic: 'Automatic',
+  h_manual: 'Manual',
+  h_area: 'Area'
 };

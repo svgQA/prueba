@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'wouter';
 
 import { StageService } from '@/services/pqrs/stage';
-import { IResourceStage, IStages } from '../utils/interface';
+import { IResourceStage, IStages, TypesOfStages } from '../utils/interface';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { Button } from '@/components/common/button/button';
@@ -126,9 +126,15 @@ export const StageForm: FunctionComponent = () => {
       status: initialData.status || 'active',
       visibility: initialData.visibility ?? true,
       hasArea: initialData.areaId ? true : false,
+      type: initialData.type
+        ? {
+          value: initialData.type,
+          label: initialData.type === TypesOfStages.CONTINUE ? t('h_automatic') : t('h_manual')
+        }
+        : null,
       areaId: initialData.areaId
         ? areaList.value.find((area) => area.value === initialData.areaId) ||
-          null
+        null
         : null,
     });
     loading.value = false;
@@ -160,6 +166,7 @@ export const StageForm: FunctionComponent = () => {
       errorStageId: null,
       areaId: model.hasArea ? model.areaId?.value || null : null,
       visibility: model.visibility ?? true,
+      type: model.type?.value || null,
     };
 
     let response = id
@@ -298,6 +305,32 @@ export const StageForm: FunctionComponent = () => {
                       label={t('h_prompt')}
                       meta={meta}
                       disabled={loading.value}
+                    />
+                  )}
+                </Field>
+              </div>
+
+              <div className='col-span-3'>
+                <Field name='type'>
+                  {({ input, meta }) => (
+                    <SmartSelector
+                      {...input}
+                      meta={meta}
+                      id={`select-stage-type`}
+                      icon='191'
+                      label='h_type'
+                      options={[
+                        {
+                          value: TypesOfStages.CONTINUE,
+                          label: t('h_automatic')
+                        },
+                        {
+                          value: TypesOfStages.MANUAL,
+                          label: t('h_manual')
+                        },
+                      ]}
+                      menuPortalTarget={document.body}
+                      placeholder='p_select'
                     />
                   )}
                 </Field>
