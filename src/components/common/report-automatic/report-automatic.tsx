@@ -36,7 +36,7 @@ export enum SelectCheckType {
 
 export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
   const { t } = useTranslation();
-  const { selectedCompany, getTenant, getCompanyId } = useUserStore();
+  const { selectedCompany } = useUserStore();
 
   const [isOpen, setIsOpen] = useState(false);
   const loading = useSignal(false);
@@ -173,6 +173,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       [modulesReport.Form]: t('t_inspect'),
       [modulesReport.Access]: t('t_access'),
       [modulesReport.Correspondence]: t('t_inbox'),
+      [modulesReport.Response]: t('t_response'),
     };
     const header = headers[modules];
     if (startDate && endDate)
