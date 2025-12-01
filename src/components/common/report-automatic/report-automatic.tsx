@@ -157,10 +157,10 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
             ],
             'report'
           );
-      closeSpinner();
       setIsOpen(false);
       form.reset();
     }
+    closeSpinner();
   };
 
   const getHeaderExcel = (
