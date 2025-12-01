@@ -156,7 +156,8 @@ export const StageForm: FunctionComponent = () => {
       resource: resources,
       nextStageId: model.hasArea ? null : model.nextStageId?.value || null,
       prevStageId: model.hasArea ? null : model.prevStageId?.value || null,
-      errorStageId: model.hasArea ? null : model.errorStageId?.value || null,
+      // errorStageId: model.hasArea ? null : model.errorStageId?.value || null,
+      errorStageId: null,
       areaId: model.hasArea ? model.areaId?.value || null : null,
       visibility: model.visibility ?? true,
     };
@@ -376,7 +377,7 @@ export const StageForm: FunctionComponent = () => {
                       </Field>
                     </div>
 
-                    <div className='col-span-1'>
+                    {/* <div className='col-span-1'>
                       <Field<IOption> name='errorStageId'>
                         {({ input, meta }) => (
                           <SmartSelector
@@ -391,7 +392,7 @@ export const StageForm: FunctionComponent = () => {
                           />
                         )}
                       </Field>
-                    </div>
+                    </div> */}
                   </>
                 )
               )}
