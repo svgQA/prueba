@@ -5,13 +5,14 @@ import { Modal } from '@/components/common/modal/modal';
 import { useTranslation } from 'react-i18next';
 import { Field, Form } from 'react-final-form';
 import { TextArea } from '@/components/common/text.area/text.area';
-import { useMemo } from 'preact/hooks';
+import { useMemo, useCallback } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
 import { File } from '@/components/common/file/file';
 import { IPresignedRequest } from '@/types/file';
 import { fileManager } from '@/utils/network/file/file';
 import { useUserStore } from '@/store/slices';
 import { PqrsAiService } from '@/services/pqrs/ai-pqrs';
+import { Loading } from '@/components/common/loading/loading';
 
 interface IProps {
   showModal: Signal<boolean>;
@@ -36,7 +37,10 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
       description += `\n\nAttachments:\n` + getUrls.join('\n');
     }
     const response = await PqrsAiService.execute_ai_pqrs({ description });
-    if (!response.getStatus()) return;
+    if (!response.getStatus()) {
+      loading.value = false;
+      return;
+    }
     closeModal();
     loading.value = false;
   };
@@ -46,14 +50,25 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
     files.value = [...files.value, fileInput];
   };
 
+  const handleOnClose = useCallback(() => {
+    files.value = [];
+    closeModal();
+  }, [closeModal]);
+
+  const preventKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  }, []);
+
   const footerContent = useMemo(
     () => (
-      <div className='flex justify-end items-center gap-2 p-4'>
+      <div className='flex justify-end items-center gap-2 p-4 bg-white dark:bg-b-dark-light border-t border-gray-border dark:border-b-dark-light rounded-b-xl'>
         <Button
           name='btn-form-pqrs-close'
           label='cancel'
           type='button'
-          onClick={() => closeModal()}
+          onClick={handleOnClose}
           icon='041'
         />
         <Button
@@ -65,64 +80,123 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
         />
       </div>
     ),
-    []
+    [handleOnClose]
   );
 
   return (
     <Modal
       open={showModal.value}
-      onClose={closeModal}
+      onClose={handleOnClose}
       name='modal-pqrs-details'
-      width='w-2/3'
+      width='w-11/12 max-w-5xl'
       position='fixed'
-      header={<h3 className='text-xl font-medium'>{t('h_pqrs_details')}</h3>}
+      header={
+        <div className='flex items-center justify-between w-full gap-3'>
+          <div>
+            <h3 className='text-xl font-semibold text-t-light dark:text-white'>
+              {t('h_pqrs_details')}
+            </h3>
+            <p className='text-sm text-gray-text-light dark:text-b-light-dark'>
+              Comparte los detalles del caso y adjunta archivos antes de
+              enviarlo a IA.
+            </p>
+          </div>
+          <div className='hidden sm:flex items-center gap-2 px-3 py-2 rounded-full bg-primary-opacity text-primary text-xs font-medium border border-primary/40'>
+            <span className='vox-icon vx-icon-201 text-base'></span>
+            Redacción asistida
+          </div>
+        </div>
+      }
       footer={footerContent}
     >
-      <Form
-        onSubmit={handleSubmit}
-        render={({ handleSubmit }) => (
-          <form
-            onSubmit={handleSubmit}
-            className='space-y-6'
-            id='form-pqrs-upsert'
-          >
-            <div className='grid grid-cols-2 gap-4'>
-              <div className='col-span-2'>
-                <Field<string> name='description'>
-                  {({ input, meta }) => (
-                    <TextArea
-                      {...input}
-                      icon='120'
-                      type='text'
-                      placeholder={t('h_description')}
-                      label={t('h_description')}
-                      meta={meta}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
+      <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design bg-white dark:bg-b-dark'>
+        {loading.value && <Loading />}
+
+        <Form
+          onSubmit={handleSubmit}
+          render={({ handleSubmit }) => (
+            <form
+              onSubmit={handleSubmit}
+              className='space-y-6'
+              id='form-pqrs-upsert'
+              onKeyDown={preventKeyDown}
+            >
+              <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 z-50 bg-b-light dark:bg-b-dark-light p-4 rounded-xl border border-gray-border dark:border-b-dark-light shadow-sm'>
+                <div className='lg:col-span-2 space-y-3'>
+                  <div className='flex items-center justify-between'>
+                    <p className='text-sm font-semibold text-t-light dark:text-white'>
+                      Descripción del caso
+                    </p>
+                    <span className='text-[11px] text-gray-text-light dark:text-b-light-dark bg-white/80 dark:bg-b-dark px-2 py-1 rounded-full border border-gray-border/60'>
+                      Sé específico y conciso
+                    </span>
+                  </div>
+                  <Field<string> name='description'>
+                    {({ input, meta }) => (
+                      <TextArea
+                        {...input}
+                        icon='120'
+                        type='text'
+                        placeholder={t('h_description')}
+                        label={t('h_description')}
+                        meta={meta}
+                        disabled={loading.value}
+                        className='bg-white dark:bg-b-dark text-t-light dark:text-white'
+                      />
+                    )}
+                  </Field>
+                </div>
+                <div className='lg:col-span-1 space-y-3'>
+                  <div className='flex items-center gap-2 text-sm font-semibold text-t-light dark:text-white'>
+                    <span className='vox-icon vx-icon-284 text-primary'></span>
+                    Adjuntos
+                  </div>
+                  <p className='text-xs text-gray-text-light dark:text-b-light-dark'>
+                    Agrega capturas, videos o documentos que ayuden a
+                    contextualizar la solicitud.
+                  </p>
+                  <div className='rounded-lg border border-dashed border-gray-border dark:border-b-dark-light p-3 bg-white dark:bg-b-dark shadow-inner'>
+                    <Field name='attachments'>
+                      {() => (
+                        <File
+                          name='attachments'
+                          onChange={handleAttachmentUpload}
+                          value={files.value}
+                          accept='image/*, video/*'
+                          label='h_attachment'
+                          area='trybook'
+                          showFiles={true}
+                          multiple={true}
+                          disabled={loading.value}
+                        />
+                      )}
+                    </Field>
+                  </div>
+                </div>
               </div>
-              <div className='col-span-1'>
-                <Field name='attachments'>
-                  {() => (
-                    <File
-                      name='attachments'
-                      onChange={handleAttachmentUpload}
-                      value={files.value}
-                      accept='image/*, video/*'
-                      label='h_attachment'
-                      area='trybook'
-                      showFiles={true}
-                      multiple={true}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
+
+              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3'>
+                {[
+                  'Claridad en el asunto',
+                  'Datos de contacto',
+                  'Tiempo transcurrido',
+                  'Impacto en el cliente',
+                ].map((tip) => (
+                  <div
+                    key={tip}
+                    className='flex items-center gap-2 p-3 rounded-lg bg-b-light dark:bg-b-dark-light border border-gray-border dark:border-b-dark-light text-xs text-gray-text-light dark:text-b-light-dark'
+                  >
+                    <span className='w-6 h-6 rounded-full bg-primary-opacity text-primary flex items-center justify-center text-xs font-semibold'>
+                      ✓
+                    </span>
+                    <span className='leading-snug'>{tip}</span>
+                  </div>
+                ))}
               </div>
-            </div>
-          </form>
-        )}
-      />
+            </form>
+          )}
+        />
+      </div>
     </Modal>
   );
 };

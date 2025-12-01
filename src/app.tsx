@@ -3,6 +3,7 @@ import { Route, Router, Switch } from 'wouter';
 import { PAGES_LIST } from '@/utils/routing';
 import { HomeLayout } from '@/pages/home/home.layout';
 import DemoPage from '@/pages/demo';
+import { ResponsePublicPage } from '@/pages/response';
 import { AWS_AMPLIFY_SETTINGS } from './aws-exports';
 import { AuthAmplifyProps } from './utils/types/auth.interface';
 import { DashboardLayout } from './pages/dashboard/dashboard.layout';
@@ -12,6 +13,7 @@ import { CustomLoginPage } from '@/components/compose/login/custom';
 import { getIsInErrorState } from './store/signals/service/service.signals';
 import { ToastContainer } from 'react-toastify';
 import { ModalBaseService } from './components/compose/base-service/base-service';
+import { Spinner } from './components/common/spinner/spinner';
 import 'react-toastify/dist/ReactToastify.css';
 
 Amplify.configure(AWS_AMPLIFY_SETTINGS);
@@ -36,6 +38,7 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
       <Switch>
         <Route path={PAGES_LIST.HOME} component={HomeLayout} />
         <Route path={PAGES_LIST.DEMO} component={DemoPage} />
+        <Route path={PAGES_LIST.RESPONSE} component={ResponsePublicPage} />
         <Router base={PAGES_LIST.DASHBOARD}>
           <div className='w-full h-full'>
             <Authenticator.Provider>
@@ -45,6 +48,7 @@ export const App: FunctionComponent<AuthAmplifyProps> = (props) => {
         </Router>
       </Switch>
       <ModalBaseService isOpen={getIsInErrorState()} />
+      <Spinner />
       <ToastContainer />
     </section>
   );

@@ -20,9 +20,11 @@ const TextInformation = ({ label, value }: ITextInformationProps) => {
   const { t } = useTranslation();
 
   return (
-    <div>
-      <label class='text-xs font-medium text-gray-500'>{t(label)}</label>
-      <p class='text-sm text-gray-900'>
+    <div class='p-3 rounded-lg bg-white dark:bg-b-dark border border-gray-border dark:border-b-dark-light shadow-sm'>
+      <label class='text-[11px] font-semibold text-gray-500 dark:text-b-light-dark tracking-wide uppercase'>
+        {t(label)}
+      </label>
+      <p class='text-sm text-t-light dark:text-white mt-1'>
         {(typeof value === 'string' ? t(value) : value) || 'N/A'}
       </p>
     </div>
@@ -32,7 +34,7 @@ const TextInformation = ({ label, value }: ITextInformationProps) => {
 const PqrsGeneralModal = ({ pqrs }: IProps) => {
   return (
     <div class='space-y-4'>
-      <div class='grid grid-cols-4 gap-6'>
+      <div class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
         {pqrs.value?.extraData?.contractNumber && (
           <TextInformation
             label='Contrato'
@@ -70,10 +72,10 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
           value={pqrs.value?.extraData?.ticketNumber}
         />
         <div>
-          <label class='text-xs font-medium text-gray-500'>
+          <label class='text-[11px] font-semibold text-gray-500 dark:text-b-light-dark tracking-wide uppercase'>
             Fecha de Registro
           </label>
-          <p class='text-sm text-gray-900'>
+          <p class='text-sm text-t-light dark:text-white mt-1'>
             {pqrs.value?.extraData?.filingDate ? (
               <FormattedDate
                 date={String(pqrs.value?.extraData.filingDate)}
@@ -85,10 +87,10 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
           </p>
         </div>
         <div>
-          <label class='text-xs font-medium text-gray-500'>
+          <label class='text-[11px] font-semibold text-gray-500 dark:text-b-light-dark tracking-wide uppercase'>
             Fecha Esperada
           </label>
-          <p class='text-sm text-gray-900'>
+          <p class='text-sm text-t-light dark:text-white mt-1'>
             {pqrs.value?.extraData?.expectedAttentionDate ? (
               <FormattedDate
                 date={String(pqrs.value?.extraData.expectedAttentionDate)}
@@ -108,13 +110,11 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
           value={pqrs.value?.extraData?.assignee || 'Sin asignar'}
         />
         {pqrs.value?.extraData?.daysToExpire && (
-          <div class='col-span-2'>
-            <label class='text-xs font-medium text-gray-500'>
+          <div class='col-span-2 p-3 rounded-lg bg-gradient-to-r from-primary-opacity to-secondary-opacity border border-primary/30'>
+            <label class='text-[11px] font-semibold text-primary uppercase tracking-wide'>
               Días para Expirar
             </label>
-            <p
-              class={`text-sm font-medium ${pqrs.value?.extraData?.daysToExpire <= 3 ? 'text-red-600' : 'text-gray-900'}`}
-            >
+            <p class='text-sm font-semibold text-primary mt-1'>
               {pqrs.value?.extraData?.daysToExpire} días
             </p>
           </div>
@@ -126,8 +126,8 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
                     />
                 )} */}
         {pqrs.value?.resource && (
-          <div class='space-y-3'>
-            <h4 class='font-semibold text-gray-900 text-sm uppercase tracking-wide border-b pb-1'>
+          <div class='space-y-3 bg-white dark:bg-b-dark border border-gray-border dark:border-b-dark-light rounded-lg p-3 shadow-sm'>
+            <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide border-b border-gray-border dark:border-b-dark-light pb-1'>
               Archivos Adjuntos
             </h4>
             <div class='grid gap-3'>
@@ -138,11 +138,14 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
       </div>
 
       {pqrs.value?.extraData?.referencedTicketNumber && (
-        <div class='p-3 bg-blue-50 rounded-lg'>
-          <h4 class='font-semibold text-blue-900 text-sm mb-2'>
-            🔗 Ticket Referenciado
-          </h4>
-          <p class='text-sm text-blue-800 font-mono'>
+        <div class='p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-900 shadow-sm'>
+          <div class='flex items-center gap-2 mb-2'>
+            <span class='text-blue-600 dark:text-blue-300'>🔗</span>
+            <h4 class='font-semibold text-blue-900 dark:text-blue-200 text-sm'>
+              Ticket Referenciado
+            </h4>
+          </div>
+          <p class='text-sm text-blue-800 dark:text-blue-100 font-mono bg-white/60 dark:bg-blue-900/30 px-3 py-2 rounded'>
             {pqrs.value?.extraData?.referencedTicketNumber}
           </p>
         </div>

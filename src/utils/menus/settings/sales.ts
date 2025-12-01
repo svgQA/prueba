@@ -6,6 +6,12 @@ export const MODAL_SETTING_SALES: IModalSidebarMenu = {
   label: 'g_sales',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   id: 'sales:state',
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.sales.settings,
+    label: 'setting',
+    id: 'sales:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '167',

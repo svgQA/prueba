@@ -7,6 +7,12 @@ export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   show: true,
   id: 'security:state',
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.security.settings,
+    label: 'setting',
+    id: 'security:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '087',

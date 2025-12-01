@@ -181,6 +181,7 @@ export const label_es = {
   l_filter: 'Filtrar por',
   l_no_has: 'No tiene',
   l_select_option: 'Seleccionar opción',
+  l_loading_spinner: 'Cargando...',
 };
 
 export const label_en = {
@@ -364,4 +365,5 @@ export const label_en = {
   l_filter: 'Filter by',
   l_no_has: 'None',
   l_select_option: 'Select option',
+  l_loading_spinner: 'Loading...',
 };

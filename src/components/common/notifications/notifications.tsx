@@ -188,6 +188,7 @@ const Notifications = ({ icon, iconSize = 'xsm' }: INotificationsProps) => {
           iconSize={iconSize}
           borderless
           unpadded
+          transparent
           onClick={() => (isOpen.value = !isOpen.value)}
         />
       </FloatBadge>

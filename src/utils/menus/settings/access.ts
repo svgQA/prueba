@@ -6,6 +6,12 @@ export const MODAL_SETTING_ACCESS: IModalSidebarMenu = {
   label: 'g_access',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   id: 'access:state',
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.access.settings,
+    label: 'setting',
+    id: 'access:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '096',

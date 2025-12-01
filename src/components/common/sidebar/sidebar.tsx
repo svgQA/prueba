@@ -19,6 +19,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   onHomeHandler,
   isNavigation = false,
   onHandlerClick,
+  isOpen = false,
 }: ISidebarProps) => {
   const [location, navigate] = useLocation();
   const menuSelected = useSignal<string | null>('');
@@ -75,7 +76,9 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   return (
     <nav
       id={`${id}-nav`}
-      className='fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen dark:border-gray-700 z-20 bg-b-white dark:bg-b-dark-light max-w-16 min-w-16'
+      className={`fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen dark:border-gray-700 z-20 bg-b-white dark:bg-b-dark-light max-w-16 min-w-16 transition-transform duration-200 ease-in-out ${
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      } lg:translate-x-0`}
     >
       {onHomeHandler && (
         <ul className='flex flex-col items-center'>

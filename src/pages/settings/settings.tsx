@@ -16,10 +16,12 @@ import {
 } from '@/store/signals/modals';
 import { IMenu } from '@/components/common/utils/interface';
 import { validateSettingModuleState } from '@/store/signals/access/permission';
+import { Button } from '@/components/common/button/button';
 
 export const SettingsModal = () => {
   const { user } = useUserStore();
   const [expand, setExpand] = useState<boolean>(false);
+  const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false);
 
   const { go, goBack, goForward, current, created, settings } = useNavigation();
 
@@ -89,37 +91,62 @@ export const SettingsModal = () => {
       onClose={toggleSettingModal}
       name='setting-modal'
       id='setting-modal'
-      expandable
       theme
       setExpandable={setExpand}
       header={
         <div className='flex flex-row w-full items-center justify-between px-3'>
-          <MenuButtons goBack={goBack} goForward={goForward} />
+          <MenuButtons goBack={goBack} goForward={goForward}>
+            <div className='flex items-center justify-between md:hidden'>
+              <Button
+                id='setting-open-close-menu'
+                name='setting-open-close-menu'
+                onClick={() => setShowMobileMenu((state) => !state)}
+                type='button'
+                rounded
+                transparent
+                borderless
+                icon='011'
+              />
+            </div>
+          </MenuButtons>
           <LanguageSwitcher />
         </div>
       }
     >
-      <div
-        onClick={selectMenu}
-        className='max-w-80 min-w-60 border-r-2 border-r-b-light-light dark:border-b-dark-light flex flex-col gap-1'
-      >
-        <CardSettingUser
-          id='user-information'
-          name='user-information'
-          company='Inndico'
-          username={`${user?.name} ${user?.surname}`}
-          image={user?.image || ''}
-          rol={user?.userType || ''}
-        />
-        <MenuList menuSettings={MODAL_SIDEBAR_MENUS} expand={expand} />
-      </div>
-      <div
-        className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'}`}
-        onClick={selectMenu}
-      >
-        <CardSettingHeader id='setting-header' name='setting-header' />
-        <div className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-light'>
-          <RoutingContent />
+      <div className='flex flex-col w-full h-full gap-3 md:gap-6'>
+        <div className='flex flex-col w-full h-full gap-4 md:gap-6 md:flex-row relative'>
+          <div
+            onClick={(event) => {
+              selectMenu(event);
+              setShowMobileMenu(false);
+            }}
+            className={`${showMobileMenu ? 'flex fixed inset-0 z-30 p-2 shadow-2xl max-h-[99vh]' : 'hidden md:flex'} w-full ${
+              showMobileMenu ? 'max-w-full sm:max-w-xl' : 'max-w-80'
+            } md:max-w-80 md:min-w-60  border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex-col gap-1 dark:bg-dark-bg text-dark dark:text-white md:static md:p-0 md:shadow-none rounded-lg md:rounded-none mx-auto md:mx-0 dark:bg-b-dark-light bg-white`}
+          >
+            <CardSettingUser
+              id='user-information'
+              name='user-information'
+              company='Inndico'
+              username={`${user?.name} ${user?.surname}`}
+              image={user?.image || ''}
+              rol={user?.userType || ''}
+            />
+            <MenuList
+              menuSettings={MODAL_SIDEBAR_MENUS}
+              expand={expand}
+              mobileColumns={showMobileMenu}
+            />
+          </div>
+          <div
+            className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} ${showMobileMenu ? 'opacity-20 pointer-events-none md:opacity-100 md:pointer-events-auto' : ''}`}
+            onClick={() => setShowMobileMenu(false)}
+          >
+            <CardSettingHeader id='setting-header' name='setting-header' />
+            <div className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-light'>
+              <RoutingContent />
+            </div>
+          </div>
         </div>
       </div>
     </Modal>

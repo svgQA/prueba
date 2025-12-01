@@ -31,20 +31,30 @@ import { Signature } from '@/components/common/signature/signature';
 import { QrCode } from '@/components/common/qr/qrCode';
 import { Barcode } from '@/components/common/barcode/barcode';
 import { jsonToGzipBase64 } from '@/utils/utilities/blob';
-import { ReportService } from '@/services/form/reports';
+//import { ReportService } from '@/services/form/reports';
 import { fileManager } from '@/utils/network/file/file';
 import { useUserStore } from '@/store/slices';
+import { useTranslation } from 'react-i18next';
+import { ReportService } from '@/services/report/report';
+import {
+  openSpinner,
+  closeSpinner,
+} from '@/store/signals/modals/spinner.signal';
+import { ReportType } from '@/types/report/report.enum';
 interface IFormResponseSettingPageProps {
   posFinishAction: () => void;
   type?: string;
 }
 
+const NOT_AVAILABLE = 'N/A';
+
 export const FormResponseSettingPage: FunctionComponent<
   IFormResponseSettingPageProps
 > = ({ posFinishAction, type }: IFormResponseSettingPageProps) => {
   const [currentPage, setCurrentPage] = useState(0);
+  const { t } = useTranslation();
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const { getTenant, getCompanyId } = useUserStore();
+  const { getTenant } = useUserStore();
 
   const toggleSection = (sectionId: string) => {
     setExpandedSections((prev: any) =>
@@ -488,7 +498,7 @@ export const FormResponseSettingPage: FunctionComponent<
     posFinishAction();
   };
 
-  const handleGenerateReport = async () => {
+  /* const handleGenerateReport = async () => {
     const id = getResponseMode.value?.id;
     const reportResponse = await ReportService.generate_report_automatic_form(
       String(id)
@@ -503,9 +513,84 @@ export const FormResponseSettingPage: FunctionComponent<
       ),
     });
   };
+*/
+  const handleShareReport = async () => {
+    const id = getResponseMode.value?.id;
+    const tenant = getTenant();
+    const currentUrl = window.location.origin;
+
+    if (!id || !tenant) {
+      return ToastManager.error('s_getted_error');
+    }
+
+    const url = `${currentUrl}/response?responseId=${id}&tenant=${tenant}`;
+
+    try {
+      await navigator.clipboard.writeText(url);
+      ToastManager.success('s_url_copied');
+    } catch (error) {
+      // Fallback para navegadores que no soportan clipboard API
+      const textArea = document.createElement('textarea');
+      textArea.value = url;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        ToastManager.success('s_url_copied');
+      } catch (err) {
+        ToastManager.error('s_url_error');
+      }
+      document.body.removeChild(textArea);
+    }
+  };
+
+  const handleDownloadReport = async () => {
+    if (!getResponse.value || !getResponseMode.value?.id) {
+      return ToastManager.error('s_getted_error');
+    }
+
+    openSpinner();
+
+    const structure = getResponse.value;
+    const responseId = getResponseMode.value.id;
+
+    const { getUser, getSelectedCompany } = useUserStore.getState();
+    const currentUser = getUser();
+    const selectedCompany = getSelectedCompany();
+
+    const response = await ReportService.download_one_module_pdf({
+      structure,
+      user: {
+        name: currentUser?.name || NOT_AVAILABLE,
+        surname: currentUser?.surname || NOT_AVAILABLE,
+        email: currentUser?.email || NOT_AVAILABLE,
+      },
+      company: {
+        name: selectedCompany?.label || NOT_AVAILABLE,
+      },
+      responseId: responseId,
+      type: ReportType.Response,
+    });
+
+    if (!response.getStatus()) {
+      ToastManager.error('s_download_file_error');
+      closeSpinner();
+      return;
+    }
+
+    fileManager.downloadBase64File(
+      response.getOne(),
+      'application/pdf',
+      'response.pdf'
+    );
+
+    closeSpinner();
+  };
 
   return (
-    <section className='pt-5 max-h-[72vh] overflow-auto vox-scroll-design'>
+    <section class='pt-5 max-h-[72vh] overflow-auto vox-scroll-design'>
       {getResponse.value && (
         <div className='max-w-4xl mx-auto py-4 px-8 bg-b-light-dark dark:bg-b-dark-light rounded-md'>
           <div className='w-full flex flex-col justify-between items-center'>
@@ -515,12 +600,29 @@ export const FormResponseSettingPage: FunctionComponent<
               </h1>
               {getResponseMode.value?.hold && (
                 <div className='mb-6 flex justify-end'>
-                  <Button
+                  {/* <Button
                     type='button'
                     onClick={handleGenerateReport}
                     name='btn-response-preview'
                     icon='411'
                     label='h_generate_report'
+                    className='mb-4'
+                  /> */}
+                  <Button
+                    type='button'
+                    onClick={handleShareReport}
+                    name='btn-response-preview'
+                    icon='411'
+                    label='h_share_report'
+                    className='mb-4'
+                  />
+
+                  <Button
+                    type='button'
+                    onClick={handleDownloadReport}
+                    name='btn-response-download'
+                    icon='411'
+                    label='h_download_report'
                     className='mb-4'
                   />
                 </div>
@@ -559,17 +661,19 @@ export const FormResponseSettingPage: FunctionComponent<
             )}
           </div>
 
-          {!(currentPage === getResponse.value.pages.length - 1) && (
+          {getResponse.value.pages.length > 1 && (
             <div className='flex justify-between items-center'>
               <Button
                 name='btn-response-prev'
                 type='button'
-                label='previus'
+                label='previous'
                 icon='003'
                 onClick={prevPage}
+                disabled={currentPage === 0}
               />
               <span className='text-sm'>
-                Page {currentPage + 1} of {getResponse.value.pages.length}
+                {t('page')} {currentPage + 1} {t('of')}{' '}
+                {getResponse.value.pages.length}
               </span>
               <Button
                 name='btn-response-next'

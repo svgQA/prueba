@@ -6,6 +6,12 @@ export const MODAL_SETTING_IA: IModalSidebarMenu = {
   label: 'g_ia',
   base: PAGES_LIST_ROUTER.dashboard.setting.base,
   id: 'ai:state',
+  setting: {
+    to: PAGES_LIST_ROUTER.dashboard.setting.ia.settings,
+    label: 'setting',
+    id: 'ia:tools:state',
+    show: true,
+  },
   menus: [
     {
       icon: '202',

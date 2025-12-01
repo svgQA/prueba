@@ -7,6 +7,7 @@ import {
 } from '@/components/common/table/components/dropdown.actions.menu';
 
 import { IStages } from '../utils/interface';
+import { Badge } from '@/components/common/badge/badge';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -36,17 +37,11 @@ export const getColumns = (
       header: 'h_goal',
       enableGrouping: true,
     },
-    {
-      id: 'executionNotes',
-      accessorKey: 'executionNotes',
-      size: 160,
-      header: 'h_execution_notes',
-    },
     // {
-    //   id: 'outputFormat',
-    //   accessorKey: 'outputFormat',
-    //   size: 120,
-    //   header: 'h_output_format',
+    //   id: 'executionNotes',
+    //   accessorKey: 'executionNotes',
+    //   size: 160,
+    //   header: 'h_execution_notes',
     // },
     {
       id: 'status',
@@ -54,6 +49,17 @@ export const getColumns = (
       size: 100,
       header: 'h_status',
       enableGrouping: true,
+    },
+    {
+      id: 'area',
+      accessorKey: 'areaId',
+      size: 100,
+      header: 'h_area',
+      enableGrouping: true,
+      cell: (info) => {
+        const areaId = info.getValue();
+        return <Badge label={areaId ? 'yes' : 'no'} />;
+      },
     },
     {
       id: 'action',

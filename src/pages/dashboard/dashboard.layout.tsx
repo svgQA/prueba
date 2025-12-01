@@ -109,6 +109,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
     const modalPanic = useSignal<IPanic | undefined>(undefined);
     const [modalKey, setModalKey] = useState(0);
     const openModalTenant = useSignal<boolean>(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
@@ -240,6 +241,10 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setAllPermissions(permissions.model);
     };
 
+    const toggleSidebar = () => {
+      setSidebarOpen((prev) => !prev);
+    };
+
     return (
       <section>
         <Sidebar
@@ -248,46 +253,61 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           onSettingHandler={toggleSettingModal}
           menus={SIDEBAR_MENUS}
           isNavigation
+          isOpen={isSidebarOpen}
         />
-        <div className='flex flex-col pl-[4.5rem]'>
-          <header className='h-14 flex flex-row items-center justify-end sticky top-0 bg-b-content dark:bg-b-dark z-10'>
-            <div className='flex flex-row px-6 gap-4 justify-between items-center'>
-              <Panic
-                icon='001'
-                emitPanic={(panic: IPanic) => {
-                  setTimeout(() => {
-                    setModalKey((prev) => prev + 1);
-                    modalPanic.value = panic;
-                    isModalOpen.value = true;
-                  }, 300);
-                }}
-              />
-              <LanguageSwitcher borderless />
-              <CustomSwitcher
-                options={companies}
-                value={selectedCompany?.value}
-                onChange={handleCompanyChange}
-                icon='023'
-                borderless
-              />
-              <CustomSwitcher
-                options={places}
-                value={selectedPlace?.value}
-                onChange={handlePlaceChange}
-                icon='103'
-                borderless
-              />
-              <CustomSwitcher
-                options={clients.value.map((client) => ({
-                  label: client.name,
-                  value: client.id,
-                }))}
-                value={clients.value[0]?.id}
-                onChange={() => {}}
-                icon='023'
-                borderless
-              />
-              <div className='flex flex-row gap-4 items-center justify-center'>
+        <div className='flex flex-col lg:pl-[4.5rem]'>
+          <header className='h-auto lg:h-14 sticky top-0 bg-b-content dark:bg-b-dark z-10'>
+            <div className='flex items-center w-full justify-end px-10 h-13'>
+              <div className='flex items-center gap-2 px-2'>
+                <button
+                  type='button'
+                  className='flex flex-col items-center justify-center gap-1 p-2 rounded-md bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100 lg:hidden'
+                  onClick={toggleSidebar}
+                  aria-label='Toggle sidebar'
+                  aria-expanded={isSidebarOpen}
+                >
+                  <span className='block h-0.5 w-6 bg-current rounded-full'></span>
+                  <span className='block h-0.5 w-6 bg-current rounded-full'></span>
+                  <span className='block h-0.5 w-6 bg-current rounded-full'></span>
+                </button>
+                <LanguageSwitcher borderless />
+                <CustomSwitcher
+                  options={companies}
+                  value={selectedCompany?.value}
+                  onChange={handleCompanyChange}
+                  icon='023'
+                  borderless
+                />
+                <CustomSwitcher
+                  options={places}
+                  value={selectedPlace?.value}
+                  onChange={handlePlaceChange}
+                  icon='103'
+                  borderless
+                />
+                <CustomSwitcher
+                  options={clients.value.map((client) => ({
+                    label: client.name,
+                    value: client.id,
+                  }))}
+                  value={clients.value[0]?.id}
+                  onChange={() => {}}
+                  icon='023'
+                  borderless
+                />
+              </div>
+
+              <div className='flex items-center gap-2 px-3'>
+                <Panic
+                  icon='001'
+                  emitPanic={(panic: IPanic) => {
+                    setTimeout(() => {
+                      setModalKey((prev) => prev + 1);
+                      modalPanic.value = panic;
+                      isModalOpen.value = true;
+                    }, 300);
+                  }}
+                />
                 <ThemeButton unpadded />
                 <Notifications icon='317' iconSize='xsm' />
                 <Dropdown

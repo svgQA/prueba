@@ -14,4 +14,12 @@ export class AreaService extends BaseService {
     };
     return await super.make_request<IOption>(this.sname, model);
   }
+
+  static async get_simple_List() {
+    const model: IMakeRequest = {
+      url: ['area', 'simple', 'list', 'area'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<IOption>(this.sname, model);
+  }
 }

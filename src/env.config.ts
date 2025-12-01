@@ -4,11 +4,12 @@ export const {
 
   VITE_DEFAULT_SERVICE_URL: default_service_url,
   VITE_IA_SERVICE_URL: ia_service_url,
-  VITE_LATITUDE_SERVICE_URL: latitude_service_url,
+  //VITE_LATITUDE_SERVICE_URL: latitude_service_url,
   VITE_MESSAGE_SERVICE_URL: message_service_url,
   VITE_TENANT_SERVICE_URL: tenant_service_url,
+  VITE_LATITUDE_SERVICE_URL: report_service_url,
   VITE_TENANT_HEADER: tenant_header,
-  VITE_AI_PQRS_SERVICE_URL: ai_pqrs_service_url,
+  VITE_IA_SERVICE_URL: ai_pqrs_service_url,
 
   VITE_AWS_COGNITO_USER_POOL_ID: aws_cognito_user_pool,
   VITE_AWS_COGNITO_CLIENT_ID: aws_cognito_client_id,

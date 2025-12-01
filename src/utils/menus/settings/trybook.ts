@@ -8,7 +8,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
   show: true,
   id: 'trybook:state',
   setting: {
-    to: '/algo/',
+    to: PAGES_LIST_ROUTER.dashboard.setting.trybook.settings,
     label: 'setting',
     id: 'trybook:tools:state',
     show: true,

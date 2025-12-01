@@ -145,7 +145,7 @@ export const AccessPage: FunctionalComponent = () => {
   };
 
   return (
-    <Section>
+    <Section padding>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
         <CardData
           title='h_accessess_total'
@@ -171,8 +171,8 @@ export const AccessPage: FunctionalComponent = () => {
       </div>
 
       <div className='max-h-screen'>
-        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
-          <div className='flex flex-row items-center justify-between'>
+        <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
+          <div className='flex flex-wrap items-center justify-between gap-2 sm:gap-3 w-full'>
             {/* <Button
               name='button-create-shift'
               label='create'

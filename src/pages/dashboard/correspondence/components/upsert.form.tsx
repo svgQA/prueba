@@ -165,7 +165,7 @@ export const CorrespondenceForm = ({ closed, onClose, id }: Props) => {
               id='form-correspondence-create-update'
               onKeyDown={preventKeyDown}
             >
-              <div className='grid grid-cols-2 gap-4'>
+              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 <div className='col-span-1'>
                   <Field<string> name='sender'>
                     {({ input, meta }) => (
