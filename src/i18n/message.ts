@@ -363,8 +363,8 @@ i_pros_stats: '60% of companies in LATAM are looking for tools that improve trac
   i_message_assign_profile: 'Are you sure you want to assign profile to',
   i_message_assign_profile_subtitle:
     'The user will be able to use the application.',
-  i_showAlert_msg: 'Are you sure you want to delete the ticket?',
-  i_showAlert_title: 'Delete ticket',
+  i_showAlert_msg: 'Are you sure you want to delete the slot?',
+  i_showAlert_title: 'Delete slot',
   i_showAlert_msg_zone: 'Are you sure you want to delete the common zone?',
   i_showAlert_msg_resource:
     'Are you sure you want to delete the resource zone?',
