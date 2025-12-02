@@ -7,6 +7,8 @@ export interface ICPqrsRequest {
   resource?: IPresignedRequest[] | null;
   status: string;
   inferences: any;
+  lat?: number | null;
+  lng?: number | null;
 }
 
 export interface ICPqrs {
