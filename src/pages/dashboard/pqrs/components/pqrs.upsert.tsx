@@ -162,7 +162,7 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                           name='attachments'
                           onChange={handleAttachmentUpload}
                           value={files.value}
-                          accept='image/*, video/*'
+                          accept='image/*, video/*, application/pdf'
                           label='h_attachment'
                           area='trybook'
                           showFiles={true}
