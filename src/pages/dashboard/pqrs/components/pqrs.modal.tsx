@@ -16,6 +16,15 @@ import PqrsInferenceModal from './modal/pqrs-inference.modal';
 import PqrsGeneralModal from './modal/pqrs-general.modal';
 import MapLibreShowPoints from '@/components/common/map/MapLibreShowPoints';
 
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  MessageEvent,
+  MESSAGE_LISTENERS,
+  SOCKET_MESSAGE_EVENTS,
+} from '@/utils/socket/manager/types';
+
 interface IProps {
   showModal: Signal<boolean>;
   closeModal: () => void;
@@ -41,8 +50,25 @@ export const PqrsModal = ({
   useEffect(() => {
     if (selectedCompany) {
       fetchInitialValues();
+
+      WebSocketManager.add(
+        SOCKET_MESSAGE_AREA.PQRS,
+        handleMessage,
+        MESSAGE_LISTENERS.PQRS_AI
+      );
+      return () => {
+        WebSocketManager.remove(
+          SOCKET_MESSAGE_AREA.PQRS,
+          MESSAGE_LISTENERS.PQRS_AI
+        );
+      };
     }
   }, [selectedCompany, id]);
+
+  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
+    const { type: name } = event.payload;
+    if (name === SOCKET_MESSAGE_EVENTS.UPDATE) fetchInitialValues();
+  };
 
   const fetchInitialValues = async () => {
     if (!id) return;
@@ -212,8 +238,8 @@ export const PqrsModal = ({
               <button
                 key={tab.id}
                 class={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${activeTab.value === tab.id
-                    ? 'bg-primary-opacity text-primary border-b-2 border-primary shadow-sm'
-                    : 'text-gray-text-light dark:text-b-light-dark hover:text-t-light hover:bg-b-light dark:hover:bg-b-dark-light'
+                  ? 'bg-primary-opacity text-primary border-b-2 border-primary shadow-sm'
+                  : 'text-gray-text-light dark:text-b-light-dark hover:text-t-light hover:bg-b-light dark:hover:bg-b-dark-light'
                   }`}
                 onClick={() => (activeTab.value = tab.id)}
               >
@@ -230,15 +256,15 @@ export const PqrsModal = ({
           {pqrs.value?.lat && pqrs.value?.lng && activeTab.value === 'location' && (
             <MapLibreShowPoints
               name='pqrs-location-map'
-              pointsRef={[{ 
-                id: pqrs.value.id || 0, 
-                position: { 
-                  lat: pqrs.value.lat, 
-                  lng: pqrs.value.lng 
+              pointsRef={[{
+                id: pqrs.value.id || 0,
+                position: {
+                  lat: pqrs.value.lat,
+                  lng: pqrs.value.lng
                 },
                 name: pqrs.value?.extraData?.clientOrCompanyName || 'Ubicación PQRS'
               }]}
-              sendPoints={() => {}}
+              sendPoints={() => { }}
               center={{ lat: pqrs.value.lat, lng: pqrs.value.lng }}
               height='100%'
               disablePointSelection={true}
