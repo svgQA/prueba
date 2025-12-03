@@ -369,7 +369,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           placeholder='p_address'
                           label='l_address'
                           type='text'
-                    
                           meta={meta}
                           disabled={loading.value}
                         />
@@ -391,7 +390,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             {...input}
                             placeholder='p_select'
                             label='h_country'
-                            
                             options={countries.value}
                             meta={meta}
                             disabled={loading.value}
@@ -405,7 +403,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             {...input}
                             placeholder='p_select'
                             label='h_department'
-                           
                             options={departments.value}
                             onChange={(e) => {
                               if (e && e.value) {
@@ -427,7 +424,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             {...input}
                             placeholder='p_select_municipality'
                             label='l_municipality'
-                     
                             options={municipalities.value}
                             meta={meta}
                             onChange={(e) => {
@@ -448,7 +444,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             {...input}
                             placeholder='p_zip_code'
                             label='zip'
-                      
                             type='number'
                             meta={meta}
                             disabled={loading.value}
