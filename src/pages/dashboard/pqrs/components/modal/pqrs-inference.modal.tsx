@@ -36,11 +36,10 @@ const PqrsInferenceModal = ({ pqrs }: IProps) => {
             </span>
           </div>
 
-          {inferences.map((inference: Inference, index: number) => (
+          {inferences.map((inference: Inference) => (
             <InferenceCard
               key={inference.id}
               inference={inference}
-              final={index === inferences.length - 1}
             />
           ))}
         </div>
@@ -62,12 +61,12 @@ const PqrsInferenceModal = ({ pqrs }: IProps) => {
   );
 };
 
-const InferenceCard = ({ inference, final = false }: { inference: Inference, final?: boolean }) => {
+const InferenceCard = ({ inference }: { inference: Inference }) => {
   const data = inference.inference;
 
   return (
     <div class='border border-gray-200 dark:border-b-dark-light rounded-lg p-4 hover:shadow-lg transition-shadow bg-white dark:bg-b-dark'>
-      {!final && (
+      {!(data.title || data.subtitle || data.description) && (
         <div class='flex items-start justify-between mb-3'>
           <div class='flex-1'>
             <h4 class='font-semibold text-gray-900 dark:text-white text-sm mb-1'>
@@ -82,7 +81,6 @@ const InferenceCard = ({ inference, final = false }: { inference: Inference, fin
           </span>
         </div>
       )}
-
       <div class='space-y-3'>
         {/* Main content section - title, subtitle, description */}
         {(data.title || data.subtitle || data.description) && (
