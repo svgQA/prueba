@@ -34,8 +34,10 @@ interface IGroups {
   };
 }
 
-export interface UResponseRequest
-  extends Omit<IResponseRequestBase64, 'formId'> {
+export interface UResponseRequest extends Omit<
+  IResponseRequestBase64,
+  'formId'
+> {
   status?: RESPONSE_STATUS;
 }
 

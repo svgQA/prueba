@@ -6,8 +6,10 @@ export interface ICCompanyRequest {
   identification: string;
 }
 
-export interface IUCompanyRequest
-  extends Omit<ICCompanyRequest, 'name' | 'description' | 'identification'> {
+export interface IUCompanyRequest extends Omit<
+  ICCompanyRequest,
+  'name' | 'description' | 'identification'
+> {
   name?: string;
   description?: string;
   identification?: string;

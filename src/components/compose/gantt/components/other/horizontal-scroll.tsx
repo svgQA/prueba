@@ -12,7 +12,7 @@ export const HorizontalScroll = ({
   svgWidth: number;
   taskListWidth?: number;
   rtl?: boolean;
-  onScroll: (event: UIEvent) => void;
+  onScroll: (event: any) => void;
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 

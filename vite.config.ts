@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, loadEnv, PluginOption } from 'vite';
 import preact from '@preact/preset-vite';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     plugins: [
-      preact(),
+      preact() as PluginOption[],
       visualizer({
         open: false, // Abre el reporte automáticamente en el navegador
         filename: 'stats.html', // Nombre del archivo de salida
