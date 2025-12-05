@@ -36,12 +36,8 @@ const PqrsInferenceModal = ({ pqrs }: IProps) => {
             </span>
           </div>
 
-          {inferences.map((inference: Inference, index: number) => (
-            <InferenceCard
-              key={inference.id}
-              inference={inference}
-              final={index === inferences.length - 1}
-            />
+          {inferences.map((inference: Inference) => (
+            <InferenceCard key={inference.id} inference={inference} />
           ))}
         </div>
       ) : (
@@ -62,12 +58,12 @@ const PqrsInferenceModal = ({ pqrs }: IProps) => {
   );
 };
 
-const InferenceCard = ({ inference, final = false }: { inference: Inference, final?: boolean }) => {
+const InferenceCard = ({ inference }: { inference: Inference }) => {
   const data = inference.inference;
 
   return (
     <div class='border border-gray-200 dark:border-b-dark-light rounded-lg p-4 hover:shadow-lg transition-shadow bg-white dark:bg-b-dark'>
-      {!final && (
+      {!(data.title || data.subtitle || data.description) && (
         <div class='flex items-start justify-between mb-3'>
           <div class='flex-1'>
             <h4 class='font-semibold text-gray-900 dark:text-white text-sm mb-1'>
@@ -82,7 +78,6 @@ const InferenceCard = ({ inference, final = false }: { inference: Inference, fin
           </span>
         </div>
       )}
-
       <div class='space-y-3'>
         {/* Main content section - title, subtitle, description */}
         {(data.title || data.subtitle || data.description) && (
@@ -92,7 +87,9 @@ const InferenceCard = ({ inference, final = false }: { inference: Inference, fin
                 <h5 class='font-semibold text-indigo-900 text-sm mb-1'>
                   {data.title}
                 </h5>
-                {data.subtitle && <p class='text-xs text-indigo-700'>{data.subtitle}</p>}
+                {data.subtitle && (
+                  <p class='text-xs text-indigo-700'>{data.subtitle}</p>
+                )}
               </div>
             )}
             {data.description && (
@@ -155,12 +152,13 @@ const InferenceCard = ({ inference, final = false }: { inference: Inference, fin
           <div class='flex items-center gap-2'>
             <span class='text-xs font-medium text-gray-500'>Prioridad:</span>
             <span
-              class={`px-2 py-1 text-xs font-medium rounded capitalize ${(data.prioridad || data.priority) === 'alta'
-                ? 'bg-red-100 text-red-800'
-                : (data.prioridad || data.priority) === 'media'
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : 'bg-green-100 text-green-800'
-                }`}
+              class={`px-2 py-1 text-xs font-medium rounded capitalize ${
+                (data.prioridad || data.priority) === 'alta'
+                  ? 'bg-red-100 text-red-800'
+                  : (data.prioridad || data.priority) === 'media'
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-green-100 text-green-800'
+              }`}
             >
               {data.prioridad || data.priority}
             </span>
@@ -172,12 +170,13 @@ const InferenceCard = ({ inference, final = false }: { inference: Inference, fin
           <div class='flex items-center gap-2'>
             <span class='text-xs font-medium text-gray-500'>Severidad:</span>
             <span
-              class={`px-2 py-1 text-xs font-medium rounded capitalize ${data.severity === 'alto' || data.severity === 'alta'
-                ? 'bg-red-100 text-red-800'
-                : data.severity === 'medio' || data.severity === 'media'
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : 'bg-green-100 text-green-800'
-                }`}
+              class={`px-2 py-1 text-xs font-medium rounded capitalize ${
+                data.severity === 'alto' || data.severity === 'alta'
+                  ? 'bg-red-100 text-red-800'
+                  : data.severity === 'medio' || data.severity === 'media'
+                    ? 'bg-yellow-100 text-yellow-800'
+                    : 'bg-green-100 text-green-800'
+              }`}
             >
               {data.severity}
             </span>
@@ -241,109 +240,110 @@ const InferenceCard = ({ inference, final = false }: { inference: Inference, fin
         {(data.banderas ||
           data.riesgo_vida !== undefined ||
           data.multicliente !== undefined) && (
-            <div class='p-3 bg-orange-50 rounded-lg'>
-              <label class='block text-xs font-medium text-orange-800 mb-2'>
-                Banderas de Alerta
-              </label>
-              <div class='grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs'>
-                {data.banderas &&
-                  Object.entries(data.banderas).map(
-                    ([key, value]: [string, any]) => (
-                      <div key={key} class='flex items-center gap-2'>
-                        <span class={value ? 'text-red-600' : 'text-green-600'}>
-                          {value ? '⚠️' : '✓'}
-                        </span>
-                        <span class='text-gray-700 capitalize'>
-                          {key.replace(/_/g, ' ')}
-                        </span>
-                      </div>
-                    )
-                  )}
-                {!data.banderas && (
-                  <>
-                    {data.riesgo_vida !== undefined && (
-                      <div class='flex items-center gap-2'>
-                        <span
-                          class={
-                            data.riesgo_vida ? 'text-red-600' : 'text-green-600'
-                          }
-                        >
-                          {data.riesgo_vida ? '⚠️' : '✓'}
-                        </span>
-                        <span class='text-gray-700'>riesgo vida</span>
-                      </div>
-                    )}
-                    {data.multicliente !== undefined && (
-                      <div class='flex items-center gap-2'>
-                        <span
-                          class={
-                            data.multicliente ? 'text-red-600' : 'text-green-600'
-                          }
-                        >
-                          {data.multicliente ? '⚠️' : '✓'}
-                        </span>
-                        <span class='text-gray-700'>multicliente</span>
-                      </div>
-                    )}
-                    {data.falta_ubicacion !== undefined && (
-                      <div class='flex items-center gap-2'>
-                        <span
-                          class={
-                            data.falta_ubicacion
-                              ? 'text-red-600'
-                              : 'text-green-600'
-                          }
-                        >
-                          {data.falta_ubicacion ? '⚠️' : '✓'}
-                        </span>
-                        <span class='text-gray-700'>falta ubicacion</span>
-                      </div>
-                    )}
-                    {data.tema_medidor_contador !== undefined && (
-                      <div class='flex items-center gap-2'>
-                        <span
-                          class={
-                            data.tema_medidor_contador
-                              ? 'text-red-600'
-                              : 'text-green-600'
-                          }
-                        >
-                          {data.tema_medidor_contador ? '⚠️' : '✓'}
-                        </span>
-                        <span class='text-gray-700'>tema medidor contador</span>
-                      </div>
-                    )}
-                    {data.posible_consumo_ilegal !== undefined && (
-                      <div class='flex items-center gap-2'>
-                        <span
-                          class={
-                            data.posible_consumo_ilegal
-                              ? 'text-red-600'
-                              : 'text-green-600'
-                          }
-                        >
-                          {data.posible_consumo_ilegal ? '⚠️' : '✓'}
-                        </span>
-                        <span class='text-gray-700'>posible consumo ilegal</span>
-                      </div>
-                    )}
-                  </>
+          <div class='p-3 bg-orange-50 rounded-lg'>
+            <label class='block text-xs font-medium text-orange-800 mb-2'>
+              Banderas de Alerta
+            </label>
+            <div class='grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs'>
+              {data.banderas &&
+                Object.entries(data.banderas).map(
+                  ([key, value]: [string, any]) => (
+                    <div key={key} class='flex items-center gap-2'>
+                      <span class={value ? 'text-red-600' : 'text-green-600'}>
+                        {value ? '⚠️' : '✓'}
+                      </span>
+                      <span class='text-gray-700 capitalize'>
+                        {key.replace(/_/g, ' ')}
+                      </span>
+                    </div>
+                  )
                 )}
-              </div>
+              {!data.banderas && (
+                <>
+                  {data.riesgo_vida !== undefined && (
+                    <div class='flex items-center gap-2'>
+                      <span
+                        class={
+                          data.riesgo_vida ? 'text-red-600' : 'text-green-600'
+                        }
+                      >
+                        {data.riesgo_vida ? '⚠️' : '✓'}
+                      </span>
+                      <span class='text-gray-700'>riesgo vida</span>
+                    </div>
+                  )}
+                  {data.multicliente !== undefined && (
+                    <div class='flex items-center gap-2'>
+                      <span
+                        class={
+                          data.multicliente ? 'text-red-600' : 'text-green-600'
+                        }
+                      >
+                        {data.multicliente ? '⚠️' : '✓'}
+                      </span>
+                      <span class='text-gray-700'>multicliente</span>
+                    </div>
+                  )}
+                  {data.falta_ubicacion !== undefined && (
+                    <div class='flex items-center gap-2'>
+                      <span
+                        class={
+                          data.falta_ubicacion
+                            ? 'text-red-600'
+                            : 'text-green-600'
+                        }
+                      >
+                        {data.falta_ubicacion ? '⚠️' : '✓'}
+                      </span>
+                      <span class='text-gray-700'>falta ubicacion</span>
+                    </div>
+                  )}
+                  {data.tema_medidor_contador !== undefined && (
+                    <div class='flex items-center gap-2'>
+                      <span
+                        class={
+                          data.tema_medidor_contador
+                            ? 'text-red-600'
+                            : 'text-green-600'
+                        }
+                      >
+                        {data.tema_medidor_contador ? '⚠️' : '✓'}
+                      </span>
+                      <span class='text-gray-700'>tema medidor contador</span>
+                    </div>
+                  )}
+                  {data.posible_consumo_ilegal !== undefined && (
+                    <div class='flex items-center gap-2'>
+                      <span
+                        class={
+                          data.posible_consumo_ilegal
+                            ? 'text-red-600'
+                            : 'text-green-600'
+                        }
+                      >
+                        {data.posible_consumo_ilegal ? '⚠️' : '✓'}
+                      </span>
+                      <span class='text-gray-700'>posible consumo ilegal</span>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
-          )}
+          </div>
+        )}
 
         {data.confidence !== undefined && (
           <div class='flex items-center gap-2'>
             <span class='text-xs font-medium text-gray-500'>Confianza:</span>
             <div class='flex-1 bg-gray-200 rounded-full h-2'>
               <div
-                class={`h-2 rounded-full ${data.confidence >= 0.8
-                  ? 'bg-green-500'
-                  : data.confidence >= 0.6
-                    ? 'bg-yellow-500'
-                    : 'bg-red-500'
-                  }`}
+                class={`h-2 rounded-full ${
+                  data.confidence >= 0.8
+                    ? 'bg-green-500'
+                    : data.confidence >= 0.6
+                      ? 'bg-yellow-500'
+                      : 'bg-red-500'
+                }`}
                 style={{ width: `${data.confidence * 100}%` }}
               />
             </div>

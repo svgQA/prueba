@@ -7,6 +7,7 @@ export interface ICPqrsRequest {
   resource?: IPresignedRequest[] | null;
   status: string;
   inferences: any;
+  area?: { id: number; name: string };
   lat?: number | null;
   lng?: number | null;
 }
@@ -41,4 +42,19 @@ export interface ICPqrs {
   hasFiles: boolean;
   files: string[] | string | null;
   informationFile?: any | null;
+}
+
+export interface ICOtsRequest {
+  description: string;
+  cost: number;
+  status: OTS_STATUS;
+  note: string;
+  executionDate: string | Date;
+}
+
+export enum OTS_STATUS {
+  OPENED = 'OPENED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  CLOSED = 'CLOSED',
+  CANCELLED = 'CANCELLED',
 }

@@ -128,13 +128,16 @@ export const StageForm: FunctionComponent = () => {
       hasArea: initialData.areaId ? true : false,
       type: initialData.type
         ? {
-          value: initialData.type,
-          label: initialData.type === TypesOfStages.CONTINUE ? t('h_automatic') : t('h_manual')
-        }
+            value: initialData.type,
+            label:
+              initialData.type === TypesOfStages.CONTINUE
+                ? t('h_automatic')
+                : t('h_manual'),
+          }
         : null,
       areaId: initialData.areaId
         ? areaList.value.find((area) => area.value === initialData.areaId) ||
-        null
+          null
         : null,
     });
     loading.value = false;
@@ -322,11 +325,11 @@ export const StageForm: FunctionComponent = () => {
                       options={[
                         {
                           value: TypesOfStages.CONTINUE,
-                          label: t('h_automatic')
+                          label: t('h_automatic'),
                         },
                         {
                           value: TypesOfStages.MANUAL,
-                          label: t('h_manual')
+                          label: t('h_manual'),
                         },
                       ]}
                       menuPortalTarget={document.body}
