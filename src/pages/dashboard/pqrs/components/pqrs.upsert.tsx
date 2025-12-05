@@ -101,10 +101,12 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
               enviarlo a IA.
             </p>
           </div>
+          {/*
           <div className='hidden sm:flex items-center gap-2 px-3 py-2 rounded-full bg-primary-opacity text-primary text-xs font-medium border border-primary/40'>
             <span className='vox-icon vx-icon-201 text-base'></span>
             Redacción asistida
           </div>
+          */}
         </div>
       }
       footer={footerContent}
@@ -135,13 +137,13 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                     {({ input, meta }) => (
                       <TextArea
                         {...input}
-                        icon='120'
                         type='text'
-                        placeholder={t('h_description')}
+                        // placeholder={t('h_description')}
                         label={t('h_description')}
                         meta={meta}
                         disabled={loading.value}
-                        className='bg-white dark:bg-b-dark text-t-light dark:text-white'
+                        rows={12}
+                        className='bg-white dark:bg-b-dark text-t-light dark:text-white resize-none'
                       />
                     )}
                   </Field>
@@ -155,7 +157,7 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                     Agrega capturas, videos o documentos que ayuden a
                     contextualizar la solicitud.
                   </p>
-                  <div className='rounded-lg border border-dashed border-gray-border dark:border-b-dark-light p-3 bg-white dark:bg-b-dark shadow-inner'>
+                  <div className='rounded-lg border border-dashed border-gray-border dark:border-b-dark-light p-3 bg-white dark:bg-b-dark shadow-inner h-72'>
                     <Field name='attachments'>
                       {() => (
                         <File
@@ -163,7 +165,7 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                           onChange={handleAttachmentUpload}
                           value={files.value}
                           accept='image/*, video/*, application/pdf'
-                          label='h_attachment'
+                          // label='h_attachment'
                           area='trybook'
                           showFiles={true}
                           multiple={true}
