@@ -26,11 +26,11 @@ export class OtsService extends BaseService {
     return await super.make_request<ICOtsRequest>(this.name, model);
   }
 
-  static async create(data: ICOtsRequest) {
+  static async create(pqrsId: number) {
     const model: IMakeRequest = {
-      url: ['ots'],
+      url: ['ots', pqrsId.toString()],
       method: REQUEST_METHODS.POST,
-      data: data,
+      data: {},
     };
     return await super.make_request(this.name, model);
   }

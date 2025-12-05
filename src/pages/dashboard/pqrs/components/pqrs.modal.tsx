@@ -1,20 +1,6 @@
 import { Signal, useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 
-import { PqrsService } from '@/services/pqrs/pqrs';
-
-import { Modal } from '@/components/common/modal/modal';
-import { Badge } from '@/components/common/badge/badge';
-import { TextEllipsis } from '@/components/common/text-ellipsis';
-import { FormattedDate } from '@/components/compose/forms';
-
-import { useUserStore } from '@/store/slices';
-import { useTranslation } from 'react-i18next';
-
-import { ICPqrsRequest } from '../utils/interface';
-import PqrsInferenceModal from './modal/pqrs-inference.modal';
-import PqrsGeneralModal from './modal/pqrs-general.modal';
-import MapLibreShowPoints from '@/components/common/map/MapLibreShowPoints';
 
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import {
@@ -24,6 +10,23 @@ import {
   MESSAGE_LISTENERS,
   SOCKET_MESSAGE_EVENTS,
 } from '@/utils/socket/manager/types';
+
+import { Modal } from '@/components/common/modal/modal';
+import { Badge } from '@/components/common/badge/badge';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { FormattedDate } from '@/components/compose/forms';
+import MapLibreShowPoints from '@/components/common/map/MapLibreShowPoints';
+
+import { useUserStore } from '@/store/slices';
+import { useTranslation } from 'react-i18next';
+
+import { PqrsService } from '@/services/pqrs/pqrs';
+
+import { ICPqrsRequest } from '../utils/interface';
+import PqrsInferenceModal from './modal/pqrs-inference.modal';
+import PqrsGeneralModal from './modal/pqrs-general.modal';
+import { OtsService } from '@/services/pqrs/ots';
+import { Button } from '@/components/common/button/button';
 
 interface IProps {
   showModal: Signal<boolean>;
@@ -100,6 +103,14 @@ export const PqrsModal = ({
     return 'info';
   };
 
+  const handleCreateOts = async (pqrsId: number) => {
+    loading.value = true;
+    const response = await OtsService.create(pqrsId);
+    if (!response.getStatus()) return loading.value = false;
+    closeModal();
+    loading.value = false;
+  }
+
   return (
     <Modal
       open={showModal.value}
@@ -152,6 +163,14 @@ export const PqrsModal = ({
                 outline={false}
                 size='md'
                 width='w-fit'
+              />
+            )}
+
+            {(pqrs.value?.area?.name && pqrs.value.id) && (
+              <Button
+                name='btn-click-ots'
+                label='create OTS'
+                onClick={() => handleCreateOts(pqrs.value?.id!!)}
               />
             )}
           </div>
