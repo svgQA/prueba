@@ -151,7 +151,7 @@ export const SGeneralSettingPage: FunctionComponent = () => {
               className='space-y-6 relative'
               id='form-settings-general'
             >
-              <h2 className='text-2xl font-bold'>Configuración General</h2>
+              <h2 className='text-2xl font-bold'>{t('l_general_configuration')}</h2>
               <div className='grid grid-cols-2 gap-4'>
                 <div className='col-span-1'>
                   <Field name='language' type='select'>
@@ -160,7 +160,7 @@ export const SGeneralSettingPage: FunctionComponent = () => {
                         {...input}
                         id='language'
                         name='language'
-                        label='Idioma'
+                        label={t('l_language')}
                         meta={meta}
                         options={Object.values(LANGUAGE).map((language) => ({
                           label: language,
@@ -175,7 +175,7 @@ export const SGeneralSettingPage: FunctionComponent = () => {
                         {...input}
                         id='time_zone'
                         name='time_zone'
-                        label='Zona horaria'
+                        label={t('l_time_zone')}
                         meta={meta}
                         options={Object.values(TIME_ZONE).map((time_zone) => ({
                           label: time_zone,
@@ -192,7 +192,7 @@ export const SGeneralSettingPage: FunctionComponent = () => {
                         {...input}
                         id='currency'
                         name='currency'
-                        label='Moneda'
+                        label={t('l_currency')}
                         options={Object.values(CURRENCY).map((currency) => ({
                           label: currency,
                           value: currency,
@@ -206,7 +206,7 @@ export const SGeneralSettingPage: FunctionComponent = () => {
                         {...input}
                         id='date_format'
                         name='date_format'
-                        label='Formato de fecha'
+                        label={t('l_date_format')}
                         placeholder='dd/mm/yyyy'
                         type='text'
                         meta={meta}
@@ -220,7 +220,7 @@ export const SGeneralSettingPage: FunctionComponent = () => {
                       <Switch
                         id='multicompany'
                         name='multicompany'
-                        label='Multicompañía'
+                        label={t('l_multicompany')}
                         value={input.checked}
                         onChange={input.onChange}
                       />
@@ -261,14 +261,14 @@ export const SGeneralSettingPage: FunctionComponent = () => {
               className='space-y-6 relative'
               id='form-settings-app'
             >
-              <h2 className='text-2xl font-bold'>Configuración de la App</h2>
+              <h2 className='text-2xl font-bold'>{t('l_app_configuration')}</h2>
               <div className='grid grid-cols-2 gap-4'>
                 <div className='col-span-1'>
                   <Field<string> name='primaryColor' validate={required}>
                     {({ input, meta }) => (
                       <ColorPicker
                         {...input}
-                        label='Color Primario'
+                        label={t('l_primary_color')}
                         meta={meta}
                       />
                     )}
@@ -280,7 +280,7 @@ export const SGeneralSettingPage: FunctionComponent = () => {
                     {({ input, meta }) => (
                       <ColorPicker
                         {...input}
-                        label='Color Secundario'
+                        label={t('l_secondary_color')}
                         meta={meta}
                       />
                     )}
@@ -289,7 +289,7 @@ export const SGeneralSettingPage: FunctionComponent = () => {
 
                 <Preview
                   preview={iconPreview}
-                  label='Ícono de la App'
+                  label={t('l_icon_app')}
                   onChange={(e) =>
                     handleFileChange(e, 'iconApp', setIconPreview)
                   }
@@ -297,7 +297,7 @@ export const SGeneralSettingPage: FunctionComponent = () => {
 
                 <Preview
                   preview={logoPreview}
-                  label='Logo'
+                  label={t('l_logo')}
                   onChange={(e) => handleFileChange(e, 'logo', setLogoPreview)}
                 />
 
@@ -307,7 +307,7 @@ export const SGeneralSettingPage: FunctionComponent = () => {
                       <Switch
                         id='availableActivity'
                         name='availableActivity'
-                        label='Actividad Disponible'
+                        label={t('l_available_activity')}
                         value={input.checked}
                         onChange={input.onChange}
                       />

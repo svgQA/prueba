@@ -1,6 +1,16 @@
 export const user_es = {
   user: {
     pageTitle: 'Usuarios',
+    document_type: {
+      cc: "Cédula de ciudadanía",
+      ti: "Tarjeta de identidad",
+      rc: "Registro civil",
+      te: "Tarjeta de extranjería",
+      ce: "Cédula de extranjería",
+      pp: "Pasaporte",
+      pep: "Permiso especial de permanencia",
+      die: "Doc. Identificación Extranjero"
+    },
     area: {
       success: 'Àrea creada exitosamente!',
       update: 'Àrea actualizada exitosamente!',
@@ -160,6 +170,16 @@ export const user_es = {
 export const user_en = {
   user: {
     pageTitle: 'Users',
+    document_type: {
+      cc: "Citizenship ID",
+      ti: "Identity Card",
+      rc: "Civil Registration",
+      te: "Alien Card",
+      ce: "Foreigner ID (C.E.)",
+      pp: "Passport",
+      pep: "Special Stay Permit (PEP)",
+      die: "Foreign ID Document"
+    },
     area: {
       success: 'Area created successfully!',
       update: 'Area updated successfully!',
