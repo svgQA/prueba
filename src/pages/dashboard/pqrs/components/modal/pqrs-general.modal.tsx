@@ -35,80 +35,86 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
   return (
     <div class='space-y-4'>
       <div class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-        {pqrs.value?.extraData?.contractNumber && (
+        {pqrs.value?.extraData?.contractNumber && pqrs.value?.extraData?.contractNumber !== "N/A" && (
           <TextInformation
             label='Contrato'
             value={pqrs.value?.extraData?.contractNumber}
           />
         )}
-        {pqrs.value?.extraData?.associatedPlan && (
+        {pqrs.value?.extraData?.associatedPlan && pqrs.value?.extraData?.associatedPlan !== "N/A" && (
           <TextInformation
             label='Plan'
             value={pqrs.value?.extraData?.associatedPlan}
           />
         )}
-        {pqrs.value?.extraData?.orderNumber && (
+        {pqrs.value?.extraData?.orderNumber && pqrs.value?.extraData?.orderNumber !== "N/A" && (
           <TextInformation
             label='Orden'
             value={pqrs.value?.extraData?.orderNumber}
           />
         )}
-        {pqrs.value?.extraData?.orderStatus && (
+        {pqrs.value?.extraData?.orderStatus && pqrs.value?.extraData?.orderStatus !== "N/A" && (
           <TextInformation
             label='Estado Orden'
             value={pqrs.value?.extraData?.orderStatus}
           />
         )}
-        <TextInformation
-          label='Registrado por'
-          value={pqrs.value?.extraData?.registeredBy}
-        />
-        <TextInformation
-          label='Número de Cuenta'
-          value={pqrs.value?.extraData?.accountNumber}
-        />
-        <TextInformation
-          label='Ticket'
-          value={pqrs.value?.extraData?.ticketNumber}
-        />
-        <div>
-          <label class='text-[11px] font-semibold text-gray-500 dark:text-b-light-dark tracking-wide uppercase'>
-            Fecha de Registro
-          </label>
-          <p class='text-sm text-t-light dark:text-white mt-1'>
-            {pqrs.value?.extraData?.filingDate ? (
+        {pqrs.value?.extraData?.registeredBy && pqrs.value?.extraData?.registeredBy !== "N/A" && (
+          <TextInformation
+            label='Registrado por'
+            value={pqrs.value?.extraData?.registeredBy}
+          />
+        )}
+        {pqrs.value?.extraData?.accountNumber && pqrs.value?.extraData?.accountNumber !== "N/A" && (
+          <TextInformation
+            label='Número de Cuenta'
+            value={pqrs.value?.extraData?.accountNumber}
+          />
+        )}
+        {pqrs.value?.extraData?.ticketNumber && pqrs.value?.extraData?.ticketNumber !== "N/A" && (
+          <TextInformation
+            label='Ticket'
+            value={pqrs.value?.extraData?.ticketNumber}
+          />
+        )}
+        {pqrs.value?.extraData?.filingDate && pqrs.value?.extraData?.filingDate !== "N/A" && (
+          <div>
+            <label class='text-[11px] font-semibold text-gray-500 dark:text-b-light-dark tracking-wide uppercase'>
+              Fecha de Registro
+            </label>
+            <p class='text-sm text-t-light dark:text-white mt-1'>
               <FormattedDate
                 date={String(pqrs.value?.extraData.filingDate)}
                 format='date'
               />
-            ) : (
-              'N/A'
-            )}
-          </p>
-        </div>
-        <div>
-          <label class='text-[11px] font-semibold text-gray-500 dark:text-b-light-dark tracking-wide uppercase'>
-            Fecha Esperada
-          </label>
-          <p class='text-sm text-t-light dark:text-white mt-1'>
-            {pqrs.value?.extraData?.expectedAttentionDate ? (
+            </p>
+          </div>
+        )}
+        {pqrs.value?.extraData?.expectedAttentionDate && pqrs.value?.extraData?.expectedAttentionDate !== "N/A" && (
+          <div>
+            <label class='text-[11px] font-semibold text-gray-500 dark:text-b-light-dark tracking-wide uppercase'>
+              Fecha Esperada
+            </label>
+            <p class='text-sm text-t-light dark:text-white mt-1'>
               <FormattedDate
                 date={String(pqrs.value?.extraData.expectedAttentionDate)}
                 format='date'
               />
-            ) : (
-              'N/A'
-            )}
-          </p>
-        </div>
-        <TextInformation
-          label='Canal de Recepción'
-          value={pqrs.value?.extraData?.receptionChannel}
-        />
-        <TextInformation
-          label='Asignado a'
-          value={pqrs.value?.extraData?.assignee || 'Sin asignar'}
-        />
+            </p>
+          </div>
+        )}
+        {pqrs.value?.extraData?.receptionChannel && pqrs.value?.extraData?.receptionChannel !== "N/A" && (
+          <TextInformation
+            label='Canal de Recepción'
+            value={pqrs.value?.extraData?.receptionChannel}
+          />
+        )}
+        {pqrs.value?.extraData?.assignee && pqrs.value?.extraData?.assignee !== "N/A" && (
+          <TextInformation
+            label='Asignado a'
+            value={pqrs.value?.extraData?.assignee}
+          />
+        )}
         {pqrs.value?.extraData?.daysToExpire && (
           <div class='col-span-2 p-3 rounded-lg bg-gradient-to-r from-primary-opacity to-secondary-opacity border border-primary/30'>
             <label class='text-[11px] font-semibold text-primary uppercase tracking-wide'>
