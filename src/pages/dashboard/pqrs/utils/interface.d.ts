@@ -42,3 +42,18 @@ export interface ICPqrs {
   files: string[] | string | null;
   informationFile?: any | null;
 }
+
+export interface ICOtsRequest {
+  description: string;
+  cost: number;
+  status: OTS_STATUS;
+  note: string;
+  executionDate: string | Date;
+}
+
+export enum OTS_STATUS {
+  OPENED = "OPENED",
+  IN_PROGRESS = "IN_PROGRESS",
+  CLOSED = "CLOSED",
+  CANCELLED = "CANCELLED"
+}

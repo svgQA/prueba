@@ -26,6 +26,7 @@ import { IOption } from '@/components/common/smart-selector/smart-select';
 import { uuid } from 'short-uuid';
 import { useTranslation } from 'react-i18next';
 import { PqrsModal } from './components/pqrs.modal';
+import OtsPage from './components/pqrs.ots';
 
 interface ColumnConfig {
   title: string;
@@ -36,6 +37,7 @@ interface ColumnConfig {
 enum ViewMode {
   CARDS,
   DASHBOARD,
+  OTS,
 }
 
 export const PqrsPage: FunctionComponent = () => {
@@ -129,7 +131,7 @@ export const PqrsPage: FunctionComponent = () => {
           Array.isArray(item.inferences)
           && item.inferences.length > 0
           && (
-            normalizedStatus !== 'created' 
+            normalizedStatus !== 'created'
             && normalizedStatus !== 'finished'
             && normalizedStatus !== 'error'
           )
@@ -429,26 +431,30 @@ export const PqrsPage: FunctionComponent = () => {
         </div>
 
         <div class='flex justify-between items-center md:justify-end gap-3 md:w-1/2'>
-          <div class='flex gap-2'>
-            <Button
-              name='btn-refresh'
-              onClick={() => fetchingAllData()}
-              label='h_refresh'
-              icon='050'
-              iconSize='sm'
-            />
-            <Button
-              name='btn-upsert-pqrs'
-              onClick={() => (openModalUpsert.value = true)}
-              label='create'
-              icon='044'
-              iconSize='sm'
-            />
-          </div>
+          {viewMode.value === ViewMode.CARDS && (
+            <div class='flex gap-2'>
+              <Button
+                name='btn-refresh'
+                onClick={() => fetchingAllData()}
+                label='h_refresh'
+                icon='050'
+                iconSize='sm'
+              />
+              <Button
+                name='btn-upsert-pqrs'
+                onClick={() => (openModalUpsert.value = true)}
+                label='create'
+                icon='044'
+                iconSize='sm'
+              />
+            </div>
+          )}
+
           <div class='bg-b-light dark:bg-b-dark-light rounded-full p-1 flex gap-1'>
             {[
               { id: ViewMode.CARDS, label: 'Tarjetas' },
               { id: ViewMode.DASHBOARD, label: 'Dashboard' },
+              { id: ViewMode.OTS, label: 'OTS' },
             ].map((option) => (
               <button
                 key={option.id}
@@ -535,6 +541,7 @@ export const PqrsPage: FunctionComponent = () => {
       )}
 
       {viewMode.value === ViewMode.DASHBOARD && <DashboardPreview />}
+      {viewMode.value === ViewMode.OTS && <OtsPage />}
 
       <PqrsUpsert
         showModal={openModalUpsert}
