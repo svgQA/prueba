@@ -8,7 +8,7 @@ test.describe('Main Interface (Shell) Experience', () => {
 
   test.beforeEach(async ({ page }) => {
     await login(page);
-    });test.skip('change company and the selection persists when reloading', async ({ page }) => {
+    });test('change company and the selection persists when reloading', async ({ page }) => {
       await page.waitForTimeout(400);
       const initialCompanyButton = page.getByRole('button', { name: /E2E-Test/i });
       await expect(initialCompanyButton).toBeVisible();
@@ -23,7 +23,7 @@ test.describe('Main Interface (Shell) Experience', () => {
       await page.reload();
       await page.waitForTimeout(800);
       await expect(newCompanyButton).toBeVisible({ timeout: 10000 });
-    });test.skip('Theme preference persists on page reload', async ({ page }) => {
+    });test('Theme preference persists on page reload', async ({ page }) => {
       await page.waitForTimeout(400);
       const body = page.locator('body');
       await expect(body).not.toHaveClass('dark');
@@ -35,7 +35,7 @@ test.describe('Main Interface (Shell) Experience', () => {
       await page.reload();
       await page.waitForTimeout(800);
       await expect(body).toHaveClass('dark', { timeout: 10000 });
-    });test.skip('Verify locale switching across modules', async ({ page }) => {
+    });test('Verify locale switching across modules', async ({ page }) => {
       await page.waitForTimeout(300);
       const shiftsLink = page.getByRole('link', { name: translationRegex('t_shift') });
       await expect(shiftsLink.getByText('Shifts')).toBeVisible({ timeout: 10000 });
@@ -67,7 +67,7 @@ test.describe('Main Interface (Shell) Experience', () => {
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(400);
       await expect(page.getByRole('heading', { name: 'Total Memos Today' })).toBeVisible({ timeout: 10000 });
-    });test.skip('Validate user dropdown actions (Settings modal and Log out)', async ({ page }) => {
+    });test('Validate user dropdown actions (Settings modal and Log out)', async ({ page }) => {
       await page.waitForTimeout(300);
       await page.getByRole('button', { name: 'Ʌ' }).click();
       await page.waitForTimeout(400);
@@ -89,7 +89,7 @@ test.describe('Main Interface (Shell) Experience', () => {
       await expect(
           page.getByRole('heading', { name: /Iniciar sesión|Sign In/i })
       ).toBeVisible({ timeout: 10000 });
-    });test('Guard tenant-scoped settings modals (Tasks page)', async ({ page }) => {
+    });test.skip('Guard tenant-scoped settings modals (Tasks page)', async ({ page }) => {
     await page.getByRole('button', { name: /É2E-Test/i }).click(); 
     await page.getByTestId('opt-lang-2').click(); 
     await page.waitForLoadState('networkidle'); 
@@ -122,7 +122,7 @@ test.describe('Main Interface (Shell) Experience', () => {
     await page.waitForLoadState('networkidle');
     await expect(tareaCompañiaA).not.toBeVisible();
     await expect(tareaCompañiaB).toBeVisible({ timeout: 10000 });
-    });test.skip('Validate the global panic shortcut', async ({ page }) => {
+    });test('Validate the global panic shortcut', async ({ page }) => {
         test.setTimeout(60000);
         const panicButton = page.locator('header button[name="user-action"]').first();
         await expect(panicButton).toBeVisible();
@@ -131,7 +131,7 @@ test.describe('Main Interface (Shell) Experience', () => {
         await expect(panicAlertText).toBeVisible({ timeout: 10000 });
         await expect(page.getByText('Sixto Orobio').first()).toBeVisible();
         await page.locator('body').click({ position: { x: 0, y: 0 } });
-    });test.skip('Exercise the header notification center', async ({ page }) => {
+    });test('Exercise the header notification center', async ({ page }) => {
         test.setTimeout(60000);
         await page.waitForTimeout(500);
         const notifButton = page.locator('header button[name="user-action"]').nth(1);

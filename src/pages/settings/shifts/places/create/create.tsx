@@ -267,7 +267,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             placeholder='p_code'
                             label='l_code'
                             type='number'
-                            icon='123'
+                   
                             meta={meta}
                             disabled={loading.value}
                           />
@@ -287,7 +287,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             type='text'
                             placeholder='p_name'
                             label='l_name'
-                            icon='123'
+                   
                             meta={meta}
                             disabled={loading.value}
                           />
@@ -304,7 +304,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           placeholder='p_element_description'
                           label='description'
                           type='text'
-                          icon='123'
+                
                           meta={meta}
                           disabled={loading.value}
                         />
@@ -327,7 +327,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             placeholder='p_select_type'
                             label='l_type_ubication'
                             name='type'
-                            icon='123'
+                       
                             options={[
                               { value: 'INDUSTRIAL', label: t('l_industrial') },
                               {
@@ -349,7 +349,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             placeholder='p_select_state'
                             label='l_status'
                             name='state'
-                            icon='123'
+                 
                             options={[
                               { value: 'ACTIVE', label: t('active') },
                               { value: 'INACTIVE', label: t('inactive') },
@@ -369,7 +369,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           placeholder='p_address'
                           label='l_address'
                           type='text'
-                          icon='123'
                           meta={meta}
                           disabled={loading.value}
                         />
@@ -391,7 +390,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             {...input}
                             placeholder='p_select'
                             label='h_country'
-                            icon='123'
                             options={countries.value}
                             meta={meta}
                             disabled={loading.value}
@@ -405,7 +403,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             {...input}
                             placeholder='p_select'
                             label='h_department'
-                            icon='123'
                             options={departments.value}
                             onChange={(e) => {
                               if (e && e.value) {
@@ -427,7 +424,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             {...input}
                             placeholder='p_select_municipality'
                             label='l_municipality'
-                            icon='123'
                             options={municipalities.value}
                             meta={meta}
                             onChange={(e) => {
@@ -448,7 +444,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             {...input}
                             placeholder='p_zip_code'
                             label='zip'
-                            icon='123'
                             type='number'
                             meta={meta}
                             disabled={loading.value}

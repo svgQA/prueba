@@ -11,12 +11,12 @@ export const general_es = {
     chat: {
       aiAssistant: 'Asistente IA',
       aiDefaultMessage: 'Puedo ayudar con eso',
-      itsMe: 'SOY YO',
-      other: 'OTRO',
+      itsMe: 'Yo',
+      other: 'Otro',
       time: '10:15',
-      errorMessage: 'El mensaje tiene una estructura incorrecta',
+      errorMessage: 'Formato de mensaje no válido',
       view: {
-        users: 'Memo por usuarios',
+        users: 'Memos por usuario',
         services: 'Memo por servicios',
         select: 'Seleccionar memo',
       },
@@ -40,18 +40,18 @@ export const general_es = {
       read: 'Leídos',
       unread: 'No leídos',
       reload: 'Recargar',
-      executeReview: 'Ejecutar revisión',
+      executeReview: 'Iniciar revisión',
     },
     errors: {
       loadHistory: 'Error al cargar historial',
       loadStats: 'Error al cargar estadísticas',
-      cronExecution: 'Error al ejecutar el cron manualmente',
+      cronExecution: 'Error en la sincronización manual',
     },
     success: {
-      cronExecuted: 'Cron ejecutado manualmente 🚀',
+      cronExecuted: 'Sincronización manual ejecutada 🚀',
     },
     cards: {
-      notificationShifts: 'Turnos de notificaciones',
+      notificationShifts: 'Notificaciones de turno',
       openRate: 'Tasa de apertura',
       monthlyNotifications: 'Notificaciones del mes',
     },
@@ -73,7 +73,7 @@ export const general_es = {
     },
   },
   users: {
-    pageTitle: 'TR - Servicio de usuarios',
+    pageTitle: 'TR - Gestión de usuarios',
     client: {
       users_client: {
         title: 'Usuarios del cliente',

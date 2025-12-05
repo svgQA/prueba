@@ -32,7 +32,7 @@ export const message_es = {
     '"Adaptable a cualquier tamaño de empresa o industria, desde la vigilancia hasta la logística."',
   i_button: 'Conoce todas las posibilidades',
   i_carousel_viewDetails: 'Ver detalle',
-  i_carousel_monitoring_title: 'Monitorio en Tiempo Real',
+  i_carousel_monitoring_title: 'Monitoreo en Tiempo Real',
   i_carousel_monitoring_subtitle:
     'Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real.',
   i_carousel_offline_title: 'Capacidades Offline',
@@ -67,7 +67,7 @@ export const message_es = {
   i_services_title: 'Nuestros Servicios',
   i_services_subtitle: 'Soluciones para cada necesidad',
   i_services_button: 'Ver más servicios',
-  i_services_monitoring_title: 'Monitorio en Tiempo Real',
+  i_services_monitoring_title: 'Monitoreo en Tiempo Real',
   i_services_monitoring_subtitle:
     'Visualiza el progreso de las tareas y el estado de los activos con actualizaciones automáticas y basadas en datos en tiempo real.',
   i_services_offline_title: 'Capacidades Offline',
@@ -105,8 +105,7 @@ export const message_es = {
   i_plans_free_option2: 'Monitoreo en tiempo real para un máximo de 3 activos.',
   i_plans_free_option3:
     'Asistencia virtual limitada (soporte solo durante horas laborables).',
-  i_plans_free_option4:
-    'Integración con una herramienta externa. Duración: Prueba gratuita de 30 días. Plan Empresarial (Intermedio).',
+  i_plans_free_option4: 'Integración con una herramienta externa. Duración: Prueba gratuita de 30 días.',
   i_plans_free_option5:
     'Para empresas en crecimiento que necesitan mayor alcance.',
   i_plans_enterprise_pricing: '$49 USD/mes',
@@ -202,10 +201,9 @@ export const message_en = {
   i_demoButton: 'Schedule a Free Demo',
   i_pros_title: 'Why Tryvoo?',
   a_title_delete: 'Delete',
-  a_message_delete: 'Do you want delete?',
+  a_message_delete: 'Are you sure you want to delete?',
   i_pros_subtitle: 'Simplify. Optimize. Grow.',
-  i_pros_stats:
-    '60% of companies in LATAM are looking for tools that improve traceability and reduce operational costs',
+i_pros_stats: '60% of companies in LATAM are looking for tools that improve traceability and reduce operational costs',
   i_pros_description:
     'Tryvoo is leading this transformation, thanks to the complete digitization and automation of field activities, delivering intuitive solutions, accessible even without connection.',
   i_management_title: 'Easy Management and Traceability:',
@@ -365,11 +363,12 @@ export const message_en = {
   i_message_assign_profile: 'Are you sure you want to assign profile to',
   i_message_assign_profile_subtitle:
     'The user will be able to use the application.',
-  i_showAlert_msg: 'Are you sure you want to delete the ticket?',
-  i_showAlert_title: 'Delete ticket',
+  i_showAlert_msg: 'Are you sure you want to delete the slot?',
+  i_showAlert_title: 'Delete slot',
   i_showAlert_msg_zone: 'Are you sure you want to delete the common zone?',
   i_showAlert_msg_resource:
     'Are you sure you want to delete the resource zone?',
+  i_showAlert_title_resource: 'Delete resource zone',
   i_showAlert_title_zone: 'Delete common zone',
   s_structure_success: 'Correct structure format',
 };
