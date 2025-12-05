@@ -11,7 +11,7 @@ export const general_en = {
     chat: {
       aiAssistant: 'AI Assistant',
       aiDefaultMessage: 'I can help with that',
-      itsMe: "Me",
+      itsMe: 'Me',
       other: 'Sender',
       time: '10:15',
       errorMessage: 'Invalid message format',

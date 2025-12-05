@@ -105,7 +105,8 @@ export const message_es = {
   i_plans_free_option2: 'Monitoreo en tiempo real para un máximo de 3 activos.',
   i_plans_free_option3:
     'Asistencia virtual limitada (soporte solo durante horas laborables).',
-  i_plans_free_option4: 'Integración con una herramienta externa. Duración: Prueba gratuita de 30 días.',
+  i_plans_free_option4:
+    'Integración con una herramienta externa. Duración: Prueba gratuita de 30 días.',
   i_plans_free_option5:
     'Para empresas en crecimiento que necesitan mayor alcance.',
   i_plans_enterprise_pricing: '$49 USD/mes',
@@ -203,7 +204,8 @@ export const message_en = {
   a_title_delete: 'Delete',
   a_message_delete: 'Are you sure you want to delete?',
   i_pros_subtitle: 'Simplify. Optimize. Grow.',
-i_pros_stats: '60% of companies in LATAM are looking for tools that improve traceability and reduce operational costs',
+  i_pros_stats:
+    '60% of companies in LATAM are looking for tools that improve traceability and reduce operational costs',
   i_pros_description:
     'Tryvoo is leading this transformation, thanks to the complete digitization and automation of field activities, delivering intuitive solutions, accessible even without connection.',
   i_management_title: 'Easy Management and Traceability:',

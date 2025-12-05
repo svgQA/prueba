@@ -267,7 +267,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             placeholder='p_code'
                             label='l_code'
                             type='number'
-                   
                             meta={meta}
                             disabled={loading.value}
                           />
@@ -287,7 +286,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             type='text'
                             placeholder='p_name'
                             label='l_name'
-                   
                             meta={meta}
                             disabled={loading.value}
                           />
@@ -304,7 +302,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                           placeholder='p_element_description'
                           label='description'
                           type='text'
-                
                           meta={meta}
                           disabled={loading.value}
                         />
@@ -327,7 +324,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             placeholder='p_select_type'
                             label='l_type_ubication'
                             name='type'
-                       
                             options={[
                               { value: 'INDUSTRIAL', label: t('l_industrial') },
                               {
@@ -349,7 +345,6 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
                             placeholder='p_select_state'
                             label='l_status'
                             name='state'
-                 
                             options={[
                               { value: 'ACTIVE', label: t('active') },
                               { value: 'INACTIVE', label: t('inactive') },
