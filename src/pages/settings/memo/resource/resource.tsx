@@ -211,7 +211,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                           validate={required}
                           initialValue='WHATSAPP'
                         >
-                          {({ input, meta }) => (
+                          {({ input }) => (
                             <Dropdown
                               id='type'
                               name={input.name}
