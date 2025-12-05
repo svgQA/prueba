@@ -258,10 +258,10 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         <div className='flex flex-col lg:pl-[4.5rem]'>
           <header className='h-auto lg:h-14 sticky top-0 bg-b-content dark:bg-b-dark z-10'>
             <div className='flex items-center w-full justify-end px-10 h-13'>
-              <div className='flex items-center gap-2 px-2'>
+              <div className='w-full flex flex-row items-start px-10'>
                 <button
                   type='button'
-                  className='flex flex-col items-center justify-center gap-1 p-2 rounded-md bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100 lg:hidden'
+                  className='flex flex-col items-center justify-center gap-1 p-2 rounded-md bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-100 lg:hidden'
                   onClick={toggleSidebar}
                   aria-label='Toggle sidebar'
                   aria-expanded={isSidebarOpen}
@@ -270,6 +270,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
                   <span className='block h-0.5 w-6 bg-current rounded-full'></span>
                   <span className='block h-0.5 w-6 bg-current rounded-full'></span>
                 </button>
+              </div>
+              <div className='flex items-center gap-2 px-2'>
                 <LanguageSwitcher borderless />
                 <CustomSwitcher
                   options={companies}

@@ -93,7 +93,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
         >
           {icon && !end && (
             <span
-              className={`${mode ? 'text-white' : selected ? 'text-white' : 'text-primary'} left-0 px-1 size-${iconSize} vx-icon vx-icon-${icon} hidden sm:inline ${iconColor} ${label ? 'mr-2' : ''}`}
+              className={`${mode ? 'text-white' : selected ? 'text-white' : 'text-primary'} left-0 px-1 size-${iconSize} vx-icon vx-icon-${icon} ${iconColor} ${label ? 'mr-2' : ''}`}
             />
           )}
 
