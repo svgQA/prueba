@@ -7,7 +7,7 @@ export interface ICPqrsRequest {
   resource?: IPresignedRequest[] | null;
   status: string;
   inferences: any;
-  area?: { id: number, name: string }
+  area?: { id: number; name: string };
   lat?: number | null;
   lng?: number | null;
 }
@@ -53,8 +53,8 @@ export interface ICOtsRequest {
 }
 
 export enum OTS_STATUS {
-  OPENED = "OPENED",
-  IN_PROGRESS = "IN_PROGRESS",
-  CLOSED = "CLOSED",
-  CANCELLED = "CANCELLED"
+  OPENED = 'OPENED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  CLOSED = 'CLOSED',
+  CANCELLED = 'CANCELLED',
 }

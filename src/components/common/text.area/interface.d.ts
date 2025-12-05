@@ -1,17 +1,18 @@
 import { IInputProps } from '../input/interface';
 
-export interface ITextAreaProps extends Omit<
-  IInputProps,
-  | 'type'
-  | 'ref'
-  | 'onChange'
-  | 'onKeyUp'
-  | 'onKeyDown'
-  | 'onClick'
-  | 'onFocus'
-  | 'onBlur'
-  | 'onInput'
-> {
+export interface ITextAreaProps
+  extends Omit<
+    IInputProps,
+    | 'type'
+    | 'ref'
+    | 'onChange'
+    | 'onKeyUp'
+    | 'onKeyDown'
+    | 'onClick'
+    | 'onFocus'
+    | 'onBlur'
+    | 'onInput'
+  > {
   type?: 'text';
   ref?: React.RefObject<HTMLTextAreaElement>;
   onChange?: (event: TargetedEvent<HTMLTextAreaElement>) => void;

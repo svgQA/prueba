@@ -401,5 +401,5 @@ export const columns_en = {
   h_visibility: 'Visibility',
   h_automatic: 'Automatic',
   h_manual: 'Manual',
-  h_area: 'Area'
+  h_area: 'Area',
 };

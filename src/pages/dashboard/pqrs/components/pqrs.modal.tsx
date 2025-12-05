@@ -1,7 +1,6 @@
 import { Signal, useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 
-
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import {
   InSocketMessage,
@@ -106,10 +105,10 @@ export const PqrsModal = ({
   const handleCreateOts = async (pqrsId: number) => {
     loading.value = true;
     const response = await OtsService.create(pqrsId);
-    if (!response.getStatus()) return loading.value = false;
+    if (!response.getStatus()) return (loading.value = false);
     closeModal();
     loading.value = false;
-  }
+  };
 
   return (
     <Modal
@@ -166,7 +165,7 @@ export const PqrsModal = ({
               />
             )}
 
-            {(pqrs.value?.area?.name && pqrs.value.id) && (
+            {pqrs.value?.area?.name && pqrs.value.id && (
               <Button
                 name='btn-click-ots'
                 label='create OTS'
@@ -222,31 +221,31 @@ export const PqrsModal = ({
             {((tags && tags.length > 0) ||
               pqrs.value?.extraData?.hasFiles ||
               typeof pqrs.value?.extraData?.daysToExpire === 'number') && (
-                <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border dark:border-b-dark-light'>
-                  {tags &&
-                    tags.map((tag, idx) => (
-                      <span
-                        key={idx}
-                        class='px-2 py-0.5 bg-b-light dark:bg-b-dark text-gray-text-light dark:text-b-light-dark text-xs rounded border border-gray-border/60 dark:border-b-dark-light/60'
-                      >
-                        #{String(tag)}
-                      </span>
-                    ))}
+              <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border dark:border-b-dark-light'>
+                {tags &&
+                  tags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      class='px-2 py-0.5 bg-b-light dark:bg-b-dark text-gray-text-light dark:text-b-light-dark text-xs rounded border border-gray-border/60 dark:border-b-dark-light/60'
+                    >
+                      #{String(tag)}
+                    </span>
+                  ))}
 
-                  {pqrs.value?.extraData?.hasFiles && (
-                    <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1 border border-primary/30'>
-                      📎 Archivos
+                {pqrs.value?.extraData?.hasFiles && (
+                  <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1 border border-primary/30'>
+                    📎 Archivos
+                  </span>
+                )}
+
+                {typeof pqrs.value?.extraData?.daysToExpire === 'number' &&
+                  pqrs.value.extraData.daysToExpire <= 3 && (
+                    <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium border border-error/40'>
+                      ⏰ {pqrs.value.extraData.daysToExpire}d
                     </span>
                   )}
-
-                  {typeof pqrs.value?.extraData?.daysToExpire === 'number' &&
-                    pqrs.value.extraData.daysToExpire <= 3 && (
-                      <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium border border-error/40'>
-                        ⏰ {pqrs.value.extraData.daysToExpire}d
-                      </span>
-                    )}
-                </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -256,10 +255,11 @@ export const PqrsModal = ({
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                class={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${activeTab.value === tab.id
-                  ? 'bg-primary-opacity text-primary border-b-2 border-primary shadow-sm'
-                  : 'text-gray-text-light dark:text-b-light-dark hover:text-t-light hover:bg-b-light dark:hover:bg-b-dark-light'
-                  }`}
+                class={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+                  activeTab.value === tab.id
+                    ? 'bg-primary-opacity text-primary border-b-2 border-primary shadow-sm'
+                    : 'text-gray-text-light dark:text-b-light-dark hover:text-t-light hover:bg-b-light dark:hover:bg-b-dark-light'
+                }`}
                 onClick={() => (activeTab.value = tab.id)}
               >
                 <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>
@@ -272,23 +272,29 @@ export const PqrsModal = ({
         <div class='flex-1 overflow-y-auto p-3 rounded-lg bg-b-light dark:bg-b-dark-light shadow-inner vox-scroll-design'>
           {activeTab.value === 'general' && <PqrsGeneralModal pqrs={pqrs} />}
           {activeTab.value === 'analysis' && <PqrsInferenceModal pqrs={pqrs} />}
-          {pqrs.value?.lat && pqrs.value?.lng && activeTab.value === 'location' && (
-            <MapLibreShowPoints
-              name='pqrs-location-map'
-              pointsRef={[{
-                id: pqrs.value.id || 0,
-                position: {
-                  lat: pqrs.value.lat,
-                  lng: pqrs.value.lng
-                },
-                name: pqrs.value?.extraData?.clientOrCompanyName || 'Ubicación PQRS'
-              }]}
-              sendPoints={() => { }}
-              center={{ lat: pqrs.value.lat, lng: pqrs.value.lng }}
-              height='100%'
-              disablePointSelection={true}
-            />
-          )}
+          {pqrs.value?.lat &&
+            pqrs.value?.lng &&
+            activeTab.value === 'location' && (
+              <MapLibreShowPoints
+                name='pqrs-location-map'
+                pointsRef={[
+                  {
+                    id: pqrs.value.id || 0,
+                    position: {
+                      lat: pqrs.value.lat,
+                      lng: pqrs.value.lng,
+                    },
+                    name:
+                      pqrs.value?.extraData?.clientOrCompanyName ||
+                      'Ubicación PQRS',
+                  },
+                ]}
+                sendPoints={() => {}}
+                center={{ lat: pqrs.value.lat, lng: pqrs.value.lng }}
+                height='100%'
+                disablePointSelection={true}
+              />
+            )}
         </div>
       </div>
     </Modal>

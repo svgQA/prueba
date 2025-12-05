@@ -131,20 +131,20 @@ export const PqrsPage: FunctionComponent = () => {
       pqrs.value.forEach((item: any) => {
         let normalizedStatus: string = item.status.toLowerCase();
         if (
-          Array.isArray(item.inferences)
-          && item.inferences.length > 0
-          && (
-            normalizedStatus !== 'created'
-            && normalizedStatus !== 'finished'
-            && normalizedStatus !== 'error'
-          )
+          Array.isArray(item.inferences) &&
+          item.inferences.length > 0 &&
+          normalizedStatus !== 'created' &&
+          normalizedStatus !== 'finished' &&
+          normalizedStatus !== 'error'
         ) {
           const lastInference = item.inferences[item.inferences.length - 1];
           if (lastInference?.stage?.visibility == false) return;
-          normalizedStatus = lastInference?.stage?.stageName.toLowerCase() || null;
+          normalizedStatus =
+            lastInference?.stage?.stageName.toLowerCase() || null;
         }
 
-        if (!groupedPqrs.value[normalizedStatus]) groupedPqrs.value[normalizedStatus] = [];
+        if (!groupedPqrs.value[normalizedStatus])
+          groupedPqrs.value[normalizedStatus] = [];
         groupedPqrs.value[normalizedStatus].push(item);
       });
 
@@ -242,10 +242,11 @@ export const PqrsPage: FunctionComponent = () => {
             ].map((option) => (
               <button
                 key={option.id}
-                class={`px-4 py-2 text-sm font-medium rounded-full transition-all shadow-sm ${viewMode.value === option.id
-                  ? 'bg-primary text-white shadow-primary/20'
-                  : 'text-gray-text-light hover:text-t-light dark:text-white'
-                  }`}
+                class={`px-4 py-2 text-sm font-medium rounded-full transition-all shadow-sm ${
+                  viewMode.value === option.id
+                    ? 'bg-primary text-white shadow-primary/20'
+                    : 'text-gray-text-light hover:text-t-light dark:text-white'
+                }`}
                 onClick={() => (viewMode.value = option.id as ViewMode)}
               >
                 {option.label}
