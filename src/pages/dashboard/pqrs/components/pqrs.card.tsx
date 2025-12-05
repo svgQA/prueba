@@ -61,18 +61,22 @@ export const PqrsCards = ({
     return areaInference?.inference?.area || (pqrs as any)?.area || null;
   }, []);
 
-  const onExecuteButtonByStage = async (id: number, type: 'RETRY' | 'CONTINUE') => {
-    const stageId = type === 'RETRY' ?
-      pqrs.inferences[pqrs.inferences.length - 1]?.stage?.prevStageId :
-      pqrs.inferences[pqrs.inferences.length - 1]?.stage?.nextStageId;
-    await PqrsAiService.execute_ai_process_again(String(stageId), id)
-  }
+  const onExecuteButtonByStage = async (
+    id: number,
+    type: 'RETRY' | 'CONTINUE'
+  ) => {
+    const stageId =
+      type === 'RETRY'
+        ? pqrs.inferences[pqrs.inferences.length - 1]?.stage?.prevStageId
+        : pqrs.inferences[pqrs.inferences.length - 1]?.stage?.nextStageId;
+    await PqrsAiService.execute_ai_process_again(String(stageId), id);
+  };
 
   const tags = getTags();
   const area = getArea();
   const pqrsButtonByStage =
     pqrs.status?.toLowerCase() === 'error' ||
-    pqrs.inferences[pqrs.inferences.length - 1]?.stage?.type === "MANUAL";
+    pqrs.inferences[pqrs.inferences.length - 1]?.stage?.type === 'MANUAL';
 
   return (
     <Card key={`pqrs-card-${index}`} borderless={false} shadow={true}>
@@ -161,30 +165,30 @@ export const PqrsCards = ({
         {(tags.length > 0 ||
           pqrs?.extraData?.hasFiles ||
           typeof pqrs?.extraData?.daysToExpire === 'number') && (
-            <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border'>
-              {tags.map((tag, idx) => (
-                <span
-                  key={idx}
-                  class='px-2 py-0.5 bg-b-light text-gray-text-light text-xs rounded'
-                >
-                  #{String(tag)}
-                </span>
-              ))}
+          <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border'>
+            {tags.map((tag, idx) => (
+              <span
+                key={idx}
+                class='px-2 py-0.5 bg-b-light text-gray-text-light text-xs rounded'
+              >
+                #{String(tag)}
+              </span>
+            ))}
 
-              {pqrs?.extraData?.hasFiles && (
-                <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1'>
-                  📎 Archivos
+            {pqrs?.extraData?.hasFiles && (
+              <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1'>
+                📎 Archivos
+              </span>
+            )}
+
+            {typeof pqrs?.extraData?.daysToExpire === 'number' &&
+              pqrs?.extraData?.daysToExpire <= 3 && (
+                <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium'>
+                  ⏰ {pqrs?.extraData?.daysToExpire}d
                 </span>
               )}
-
-              {typeof pqrs?.extraData?.daysToExpire === 'number' &&
-                pqrs?.extraData?.daysToExpire <= 3 && (
-                  <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium'>
-                    ⏰ {pqrs?.extraData?.daysToExpire}d
-                  </span>
-                )}
-            </div>
-          )}
+          </div>
+        )}
 
         {/* Actions Stage */}
         {pqrsButtonByStage && (

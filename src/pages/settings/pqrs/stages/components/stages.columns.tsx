@@ -58,7 +58,11 @@ export const getColumns = (
       enableGrouping: true,
       cell: (info) => {
         const type = info.getValue();
-        return <Badge label={type === TypesOfStages.CONTINUE ? 'h_automatic' : 'h_manual'} />;
+        return (
+          <Badge
+            label={type === TypesOfStages.CONTINUE ? 'h_automatic' : 'h_manual'}
+          />
+        );
       },
     },
     {

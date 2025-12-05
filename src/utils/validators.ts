@@ -15,7 +15,6 @@ export const composeValidators =
       undefined
     );
 
-
 export const validateNumber: FieldValidator<string> = (
   value: string
 ): string | undefined => {
