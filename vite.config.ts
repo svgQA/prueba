@@ -37,7 +37,8 @@ export default defineConfig(({ mode }) => {
             }> = [
               {
                 name: '@maps',
-                test: (target) => /react-google-maps|maplibre-gl/.test(target),
+                test: (target) =>
+                  /react-google-maps|maplibre-gl|mapbox-gl|ol\/|ol\//.test(target),
               },
               { name: '@lodash', test: (target) => target.includes('lodash') },
               { name: '@pdf', test: (target) => /jspdf|pdf-lib|pako/.test(target) },
@@ -51,7 +52,7 @@ export default defineConfig(({ mode }) => {
                 name: '@aws-amplify',
                 test: (target) => target.includes('aws-amplify'),
               },
-              { name: '@charts', test: (target) => target.includes('chart') },
+              { name: '@charts', test: (target) => /chart|apexcharts/.test(target) },
               { name: '@excel', test: (target) => target.includes('exceljs') },
               {
                 name: '@forms',
@@ -80,6 +81,17 @@ export default defineConfig(({ mode }) => {
             }
 
             if (id.includes('node_modules')) {
+              const pnpmMatch = id.match(/node_modules\/\.pnpm\/([^/]+)\/node_modules\/([^/]+)/);
+              if (pnpmMatch) {
+                const [_, encodedName, nestedPkg] = pnpmMatch;
+                // encodedName: "@scope+pkg@1.0.0" or "pkg@1.0.0"
+                const decodedName = encodedName
+                  .replace(/^@/, '')
+                  .replace(/\+.*/, '-')
+                  .replace(/@.*/, '');
+                return `vendor-${decodedName || nestedPkg}`;
+              }
+
               const [, scope = '', pkg = ''] = id.match(
                 /node_modules\/(?:@([^/]+)\/)?([^/]+)/,
               ) ?? [];
