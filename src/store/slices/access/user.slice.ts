@@ -21,7 +21,7 @@ type Actions = {
   setUser: (user?: IUserResponse) => void;
   setToken: (token: string) => void;
   getUser: () => IUserResponse | null;
-  getToken: () => string;
+  getToken: (no?: boolean) => string;
   setLoaded: (loaded: boolean) => void;
   getLoaded: () => boolean;
   getUrlSocket: () => string;
@@ -142,8 +142,9 @@ export const useUserStore = create<State & Actions>((set, get) => ({
     const { socket } = get();
     return socket;
   },
-  getToken: () => {
+  getToken: (no?: boolean) => {
     const { token } = get();
+    if (no) return token;
     return `Bearer ${token}`;
   },
   cleanUserStore: () => {
