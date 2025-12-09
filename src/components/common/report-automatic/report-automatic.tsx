@@ -76,14 +76,14 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     checkList.value = [
       {
         value: SelectCheckType.INTERNO,
-        label: 'Interno',
+        label: t('l_internal'),
         icon: '306',
         color: 'primary',
         disabled: !getPermissionByModuleState('memo', 'internal:report'),
       },
       {
         value: SelectCheckType.CLIENTE,
-        label: 'Cliente',
+        label: t('l_client'),
         icon: '307',
         color: 'secondary',
         disabled: !getPermissionByModuleState('memo', 'client:report'),
@@ -186,7 +186,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       <div className='flex justify-end items-center gap-2 p-4'>
         <Button
           name='btn-report-automatic-close'
-          label='cancel'
+          label={t('cancel')}
           type='button'
           onClick={() => setIsOpen(false)}
           icon='041'
@@ -195,14 +195,14 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
         <Button
           name='btn-report-automatic-save'
           type='submit'
-          label='save'
+          label={t('btnSave')}
           form='form-report-automatic-create'
           icon='041'
           disabled={loading.value}
         />
       </div>
     ),
-    [loading.value]
+    [loading.value, setIsOpen, t]
   );
 
   const onClose = () => {

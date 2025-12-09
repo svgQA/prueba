@@ -37,7 +37,6 @@ const resources = {
   en: {
     translation: {
       ...common_en,
-      ...buttons_en,
       ...columns_en,
       ...menus_en,
       ...placeholder_en,
@@ -62,12 +61,12 @@ const resources = {
       ...smartGroup_en,
       ...trybook_en,
       ...file_en,
+      ...buttons_en,
     },
   },
   es: {
     translation: {
       ...common_es,
-      ...buttons_es,
       ...columns_es,
       ...menus_es,
       ...placeholder_es,
@@ -92,6 +91,7 @@ const resources = {
       ...smartGroup_es,
       ...trybook_es,
       ...file_es,
+      ...buttons_es,
     },
   },
 };
