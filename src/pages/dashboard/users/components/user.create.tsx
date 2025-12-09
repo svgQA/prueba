@@ -425,7 +425,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='l_name'
                         label='l_name'
                         type='text'
-                        icon='231'
+                        
                         meta={meta}
                       />
                     )}
@@ -438,7 +438,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='l_surname'
                         label='l_surname'
                         type='text'
-                        icon='231'
+                        
                         meta={meta}
                       />
                     )}
@@ -454,7 +454,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='p_email'
                         label='l_email'
                         type='email'
-                        icon='231'
+                        
                         meta={meta}
                         normal
                       />
@@ -472,7 +472,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         label={'h_phone'}
                         type='tel'
                         meta={meta}
-                        icon='231'
+                        
                         normal
                         onChange={(e) => {
                           const value = e.currentTarget.value;
@@ -499,7 +499,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='p_select_document_type'
                         label='l_card_type'
                         name='cardType'
-                        icon='231'
+                       
                         optionValue='id'
                         optionLabel='name'
                         onChange={(e) => {
@@ -522,7 +522,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='p_enter_document_number'
                         label='l_card_id'
                         type='text'
-                        icon='231'
+                        
                         meta={meta}
                       />
                     )}
@@ -547,7 +547,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         id='country'
                         label='h_country'
                         placeholder='p_select'
-                        icon='321'
+                       
                         options={countries.value}
                       />
                     )}
@@ -564,7 +564,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         id='departmentId'
                         label='h_department'
                         placeholder='p_select'
-                        icon='321'
+                     
                         options={departments.value}
                         onChange={(e) => {
                           if (e?.value) {
@@ -588,7 +588,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         id='municipalityId'
                         label='l_municipality'
                         placeholder='p_search'
-                        icon='321'
+                      
                         options={municipalities.value}
                       />
                     )}
@@ -600,7 +600,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         {...input}
                         placeholder='p_address'
                         label='l_address'
-                        icon='321'
+                   
                         type='text'
                         meta={meta}
                       />
@@ -623,7 +623,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='p_select_user_type'
                         label='l_user_type'
                         name='userType'
-                        icon='231'
+                       
                         onChange={(e) => {
                           requiredRole.value =
                             e.currentTarget.value !== 'CLIENT';
@@ -647,7 +647,7 @@ const getDocumentTypes = async (): Promise<void> => {
                             id='clients'
                             label='l_client'
                             placeholder='p_select'
-                            icon='231'
+                            
                             multiple={true}
                             allowAll={true}
                             options={clients.value}
@@ -668,7 +668,7 @@ const getDocumentTypes = async (): Promise<void> => {
                             meta={meta}
                             id='select-places'
                             label={t('h_place')}
-                            icon='231'
+                            
                             options={places.value}
                             multiple={true}
                             allowAll={true}
@@ -689,7 +689,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         meta={meta}
                         id='select-roles'
                         label='l_role'
-                        icon='231'
+                       
                         options={roles.value}
                         multiple={true}
                         allowAll={true}
@@ -707,7 +707,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         meta={meta}
                         id='select-companies'
                         label='l_company'
-                        icon='231'
+                        
                         options={companies.value}
                         multiple={true}
                         allowAll={true}

@@ -2,6 +2,19 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { INovelty } from '../novelty';
 import { Badge } from '@/components/common/badge/badge';
+import { t } from 'i18next';
+
+const PRIORITY_TRANSLATIONS: Record<string, string> = {
+  'Alta': 'l_priority_high',
+  'Media': 'l_priority_medium',
+  'Baja': 'l_priority_low',
+};
+
+const translatePriority = (priority: string): string => {
+  if (!priority) return '';
+  const translationKey = PRIORITY_TRANSLATIONS[priority.trim()];
+  return translationKey ? t(translationKey) : priority;
+};
 
 export const columns: ColumnDef<INovelty>[] = [
   {
@@ -49,7 +62,7 @@ export const columns: ColumnDef<INovelty>[] = [
 
       return (
         <Badge
-          label={priority}
+          label={translatePriority(priority)}
           status={status as 'info' | 'error' | 'warning' | 'success'}
           full
           outline
