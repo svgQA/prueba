@@ -1,4 +1,6 @@
 import { Socket, Channel, Push } from 'phoenix';
+import WebSocket from 'ws';
+
 import {
   InSocketMessage,
   OutSocketMessage,
@@ -11,6 +13,14 @@ type NamedListener = {
   callback: { id: string; fn: (data: any) => void }[];
 };
 
+class AuthWebSocket {
+  constructor(url: string, protocols?: string | string[]) {
+    return new WebSocket(url, protocols, {
+      headers: { Authorization: `Bearer ${process.env.COGNITO_ACCESS_TOKEN}` },
+    });
+  }
+}
+
 export class WebSocketManager {
   private static listeners: Set<NamedListener> = new Set();
   private static socket: Socket | null = null;
@@ -18,12 +28,14 @@ export class WebSocketManager {
   private static t: string;
   private static c: string;
   private static k: string;
+  private static i: string;
   // private static currentTopic: string | null = null;
 
   static connect(
     tenant: () => string,
     company: () => string | undefined,
-    token: () => string,
+    token: (no?: boolean) => string,
+    cognito: () => string,
     url: string = tracking_service_url
   ) {
     const _company = company();
@@ -31,32 +43,31 @@ export class WebSocketManager {
 
     this.t = tenant();
     this.c = _company;
-    this.k = token();
+    this.k = token(true);
+    this.i = cognito();
 
     const r = `${url}/socket`;
-    this.socket = new Socket(r, {
-      params: {
-        tenant: this.t,
-        company: this.c,
-        awsToken: this.k,
-        type: 'web',
-      },
-    });
+    const params = {
+      tenant: this.t,
+      company: this.c,
+      token: this.k,
+      cognito: this.i,
+      type: 'web',
+    };
+    this.socket = new Socket(r, { params, transport: AuthWebSocket });
 
-    this.socket.onOpen(() => console.log('[WS] open: ', r));
-    this.socket.onError((e: any) => console.warn('[WS] error', e));
+    this.socket.onOpen(() => console.log('[WS] opened'));
+    this.socket.onError((e: any) => console.warn('[WS] error: ', e));
     this.socket.onClose(() => console.log('[WS] close'));
-
     this.socket.connect();
 
     const topic = `room:web:${this.t}:${this.c}`;
     this.channel = this.socket.channel(topic);
-    // this.currentTopic = topic;
 
     this.channel
       .join()
       .receive('ok', () => {
-        console.log('[WS] joined in room');
+        console.log('[WS] joined');
       })
       .receive('error', (e: any) => {
         console.warn('[WS] join error', e);
@@ -66,6 +77,7 @@ export class WebSocketManager {
       });
 
     this.channel.on('server_message', (msg: InSocketMessage) => {
+      // console.log('[CH] server_message:', msg);
       for (const l of this.listeners) {
         if (l.name === SOCKET_MESSAGE_AREA.ALL) {
           for (const cb of l.callback) {

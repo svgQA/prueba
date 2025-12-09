@@ -517,8 +517,8 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   meta={meta}
                   name='predefined'
                   id='select-predefined'
-                  placeholder='Opciones predefinidas'
-                  label='Opciones predefinidas'
+                  placeholder={t('l_predefined_options')}
+                  label={t('l_predefined_options')}
                   options={predefined.value}
                   menuPortalTarget={document.body}
                   end={false}
@@ -536,7 +536,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   type='number'
                   name='duration'
                   disabled={true}
-                  label='Duración'
+                  label={t('l_duration')}
                   placeholder='Min'
                 />
               )}
@@ -547,7 +547,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                 <DateField
                   {...input}
                   name='date'
-                  label='Fecha'
+                  label={t('l_date')}
                   type='datetime-local'
                   defaultToNow={true}
                   disabled={true}
@@ -563,7 +563,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   value={[]}
                   accept='image/*'
                   multiple={true}
-                  label='Adjuntos'
+                  label={t('l_attachments')}
                   area='memo'
                 />
               )}
