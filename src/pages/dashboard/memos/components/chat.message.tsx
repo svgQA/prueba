@@ -133,8 +133,8 @@ export const ChatMessage = ({
                 transparent
                 onClick={() =>
                   showAlert({
-                    title: btnLabel,
-                    message: `${t('message.confirm')} ${btnLabel}`,
+                    title: t(`memo.${btnLabel.toLowerCase()}.title`),
+                    message: t(`memo.${btnLabel.toLowerCase()}.message`),
                     onConfirm: () => handleCheck(),
                     onCancel: () => {},
                   })

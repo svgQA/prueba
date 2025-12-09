@@ -288,7 +288,7 @@ export const getColumns = (
           : [
               {
                 label: !checkIn ? t('h_check_in') : t('h_check_out'),
-                icon: 'vox-icon vx-icon-312 text-primary',
+                icon: 'vox-icon vx-icon-048 text-primary',
                 keyName: 'check',
                 onClick: () => {
                   onClickAction({
@@ -307,7 +307,7 @@ export const getColumns = (
             ? []
             : [
                 {
-                  label: 'edit',
+                  label: t('actions.edit'),
                   keyName: 'upsert',
                   icon: 'vox-icon vx-icon-123 text-primary',
                   onClick: () => {
@@ -324,7 +324,7 @@ export const getColumns = (
           ...uModel,
           ...model,
           {
-            label: 'delete',
+            label: t('actions.delete'),
             keyName: 'delete',
             icon: 'vox-icon vx-icon-053 text-red-500',
             color: 'text-red-600',
@@ -337,9 +337,9 @@ export const getColumns = (
             },
           },
           {
-            label: 'download',
+            label: t('actions.download'),
             keyName: 'download',
-            icon: 'vox-icon vx-icon-411 text-primary',
+            icon: 'vox-icon vx-icon-057 text-primary',
             onClick: () => {
               onClickAction({
                 id: s_id,

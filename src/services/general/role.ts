@@ -34,8 +34,10 @@ export class RoleService extends BaseService {
   }
 
   static async getModulesList() {
+      const currentLanguage = localStorage.getItem('i18nextLng') || 'es';
     const model: IMakeRequest = {
       url: ['role', 'modules', 'list'],
+      params: { lang: currentLanguage }
     };
     return await super.make_request<IListModuleResponse>(this.name, model);
   }

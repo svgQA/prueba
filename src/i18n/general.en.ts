@@ -1,4 +1,20 @@
 export const general_en = {
+  actions: {
+  delete: 'Delete',
+  download: 'Download',
+  cancel: 'Cancel',
+  edit: 'Edit',
+  },
+    memo: {
+    solve: {
+      title: 'Resolve Memo',
+      message: 'Are you sure you want to mark this memo as resolved?'
+    },
+    resolved: {
+      title: 'Resolved Memo',
+      message: 'This memo is already marked as resolved'
+    }
+  },
   memos: {
     title: 'TR - Chat',
     pageTitle: 'TR - Memos Service',
@@ -79,6 +95,17 @@ export const general_en = {
         title: 'Client Users',
       },
     },
+      documentTypes: {
+      l_citizenship_id: 'Citizenship ID',
+      l_identity_card: 'Identity Card',
+      l_civil_registry: 'Civil Registry',
+      l_foreign_id_card: 'Foreign ID Card',
+      l_foreign_citizenship_id: 'Foreign Citizenship ID',
+      l_passport: 'Passport',
+      l_special_permit: 'Special Residence Permit',
+      l_temporary_protection_permit: 'Temporary Protection Permit',
+      l_foreign_identification_document: 'Foreign Identification Document',
+    }, 
   },
   permissions: {
     denied: 'Permission denied',
@@ -95,4 +122,7 @@ export const general_en = {
     finished: 'Finished',
     no_resources_added: 'No resources added',
   },
+  mobile: 'Mobile',
+  web: 'Web',
+  all: 'All',
 };
