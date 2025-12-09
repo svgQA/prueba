@@ -1,4 +1,6 @@
 import { Socket, Channel, Push } from 'phoenix';
+import WebSocket from 'ws';
+
 import {
   InSocketMessage,
   OutSocketMessage,
@@ -10,6 +12,14 @@ type NamedListener = {
   name: string;
   callback: { id: string; fn: (data: any) => void }[];
 };
+
+class AuthWebSocket {
+  constructor(url: string, protocols?: string | string[]) {
+    return new WebSocket(url, protocols, {
+      headers: { Authorization: `Bearer ${process.env.COGNITO_ACCESS_TOKEN}` },
+    });
+  }
+}
 
 export class WebSocketManager {
   private static listeners: Set<NamedListener> = new Set();
@@ -44,7 +54,7 @@ export class WebSocketManager {
       cognito: this.i,
       type: 'web',
     };
-    this.socket = new Socket(r, { params });
+    this.socket = new Socket(r, { params, transport: AuthWebSocket });
 
     this.socket.onOpen(() => console.log('[WS] opened'));
     this.socket.onError((e: any) => console.warn('[WS] error: ', e));
