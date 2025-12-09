@@ -29,10 +29,26 @@ import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { t } from 'i18next';
 import { RoleService } from '@/services/general/role';
 import { useUserStore } from '@/store/slices';
+import { useTranslation } from 'react-i18next';
 interface CreateUserProps {
   onUserCreated?: (user: any) => void;
   user?: IUserResponse;
 }
+const DOCUMENT_TYPE_TRANSLATIONS: Record<string, string> = {
+  'Cédula de ciudadanía': 'l_citizenship_id',
+  'Tarjeta de identidad': 'l_identity_card',
+  'Registro civil': 'l_civil_registry',
+  'Tarjeta de extranjería': 'l_foreign_id_card',
+  'Cédula de extranjería': 'l_foreign_citizenship_id',
+  'Pasaporte': 'l_passport',
+  'Permiso especial de permanencia': 'l_special_permit',
+  'Permiso por protección temporal': 'l_temporary_protection_permit',
+  'Documento de identificación extranjero': 'l_foreign_identification_document',
+};
+const translateDocumentType = (name: string): string => {
+  const translationKey = DOCUMENT_TYPE_TRANSLATIONS[name];
+  return translationKey ? t(`users.documentTypes.${translationKey}`) : name;
+};
 
 export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const {} = useUserStore();
@@ -55,6 +71,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const image = useSignal<IPresignedRequest[]>([]);
   const requiredRole = useSignal<boolean>(true);
   const typeSelected = useSignal<string | null>(null);
+  const rawDocumentTypes = useSignal<IDocumentTypeResponse[]>([]);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     // applyAllData();
@@ -72,6 +90,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     // getDepartments();
     // getAllCompanies();
   }, []);
+
+  useEffect(() => {
+     if (rawDocumentTypes.value.length > 0) {
+    documentTypes.value = rawDocumentTypes.value.map((docType) => ({
+      ...docType,
+      name: translateDocumentType(docType.name),
+    }));
+  }
+}, [i18n.language]);
 
   // const applyAllData = async (): Promise<void> => {
   //   await Promise.all([
@@ -198,14 +225,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     companies.value = r_companies;
   };
 
-  const getRoles = async (): Promise<void> => {
-    const response = await RoleService.getRoles();
-    if (!response.getStatus()) return;
-    roles.value = response.getMany().map((role) => ({
-      label: role.name,
-      value: role.id,
-    }));
-  };
+const getRoles = async (): Promise<void> => {
+  const response = await RoleService.getRoles();
+  if (!response.getStatus()) return;
+  
+  roles.value = response.getMany().map((role) => ({
+    label: role.name, 
+    value: role.id,
+  }));
+};
 
   const getPlaces = async () => {
     const response = await PlaceService.getSimpleList();
@@ -259,11 +287,19 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     municipalities.value = response.getMany();
   };
 
-  const getDocumentTypes = async (): Promise<void> => {
-    const response = await UserService.getDocumentTypes();
-    if (!response.getStatus()) return;
-    documentTypes.value = response.getMany();
-  };
+const getDocumentTypes = async (): Promise<void> => {
+  const response = await UserService.getDocumentTypes();
+  if (!response.getStatus()) return;
+  
+  const types = response.getMany();
+  
+  rawDocumentTypes.value = types;
+  
+  documentTypes.value = types.map((docType) => ({
+    ...docType,
+    name: translateDocumentType(docType.name),
+  }));
+};
 
   const onSubmit = async (user: IUserRequest) => {
     let request;

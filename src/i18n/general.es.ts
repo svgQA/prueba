@@ -1,4 +1,20 @@
 export const general_es = {
+  actions: {
+  delete: 'Eliminar',
+  download: 'Descargar',
+  cancel: 'Cancelar',
+  edit: 'Editar',
+  },
+    memo: {
+    solve: {
+      title: 'Resolver Memo',
+      message: '¿Está seguro que desea marcar este memo como resuelto?'
+    },
+    resolved: {
+      title: 'Memo Resuelto',
+      message: 'Este memo ya está marcado como resuelto'
+    }
+  },
   memos: {
     title: 'TR - Chat',
     pageTitle: 'TR - Servicio de memorandos',
@@ -7,6 +23,7 @@ export const general_es = {
       question1: '¿Cómo puedo empezar un nuevo proyecto?',
       question2: '¿Cuáles son las mejores prácticas de código?',
       question3: '¿Cómo puedo optimizar mi aplicación?',
+      
     },
     chat: {
       aiAssistant: 'Asistente IA',
@@ -79,6 +96,17 @@ export const general_es = {
         title: 'Usuarios del cliente',
       },
     },
+      documentTypes: {
+      l_citizenship_id: 'Cédula de ciudadanía',
+      l_identity_card: 'Tarjeta de identidad',
+      l_civil_registry: 'Registro civil',
+      l_foreign_id_card: 'Tarjeta de extranjería',
+      l_foreign_citizenship_id: 'Cédula de extranjería',
+      l_passport: 'Pasaporte',
+      l_special_permit: 'Permiso especial de permanencia',
+      l_temporary_protection_permit: 'Permiso por protección temporal',
+      l_foreign_identification_document: 'Documento de identificación extranjero',
+    } 
   },
   permissions: {
     denied: 'Permiso denegado',
@@ -95,4 +123,7 @@ export const general_es = {
     finished: 'Finalizadas',
     no_resources_added: 'No se han añadido recursos',
   },
+  mobile: 'Móvil',
+  web: 'Web',
+  all: 'Todos',
 };
