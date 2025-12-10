@@ -151,6 +151,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
         email: user.user.email,
         phone: user.user.phone,
         address: user.user.address,
+        owner: user.owner,
         oldUser: true,
       })) || [];
     loading.value = false;
