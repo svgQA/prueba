@@ -103,6 +103,8 @@ import { SFormSettingPage } from './forms/setting/setting';
 import { SIotSettingPage } from './iot/setting/setting';
 import { SIASettingPage } from './ia/setting/setting';
 import { SMemoSettingPage } from './memo/setting/setting';
+import { PrioritiesForm } from './pqrs/priority/components/priorities.upsert';
+import PrioritiesPage from './pqrs/priority/priorities.page';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -833,6 +835,9 @@ export const RoutingContent = memo(() => {
           component={lazy(() => Promise.resolve({ default: AccessBanForm }))}
         />
 
+        {/**
+         * PQRS OPTIONS
+         */}
         {/* OPTIONS STAGES */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.stages.to}
@@ -846,6 +851,21 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.stages.update.to}
           component={lazy(() => Promise.resolve({ default: StageForm }))}
         />
+
+         {/* OPTIONS PRIORITIES */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.priorities.to}
+          component={lazy(() => Promise.resolve({ default: PrioritiesPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.priorities.create.to}
+          component={lazy(() => Promise.resolve({ default: PrioritiesForm }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.priorities.update.to}
+          component={lazy(() => Promise.resolve({ default: PrioritiesForm }))}
+        />
+  
       </Suspense>
     </Router>
   );

@@ -16,7 +16,7 @@ import { ICPrioritiesResponse } from "./utils/interface";
 import { Table } from "@/components/common/table/table";
 import { getColumns } from "./components/priorities.columns";
 
-const prioritiesPage = () => {
+const PrioritiesPage = () => {
     const { t } = useTranslation();
     const { go } = useNavigation();
     const { selectedCompany } = useUserStore();
@@ -82,4 +82,4 @@ const prioritiesPage = () => {
     );
 };
 
-export default prioritiesPage;
+export default PrioritiesPage;
