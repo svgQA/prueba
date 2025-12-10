@@ -581,10 +581,21 @@ export const ShiftsPage: FunctionalComponent = () => {
         });
         break;
       case ROW_ACTIONS.CHECK_IN:
-        handleCheck('CHECK_IN', Number(params.id));
+        showAlert({
+          title: t('h_check_in'),
+          message: t('s_request'),
+          onConfirm: () => handleCheck('CHECK_IN', Number(params.id)),
+          onCancel: () => {},
+        });
+
         break;
       case ROW_ACTIONS.CHECK_OUT:
-        handleCheck('CHECK_OUT', Number(params.id));
+        showAlert({
+          title: t('h_check_out'),
+          message: t('s_request'),
+          onConfirm: () => handleCheck('CHECK_OUT', Number(params.id)),
+          onCancel: () => {},
+        });
         break;
       case ROW_ACTIONS.DOWNLOAD:
         handleDownloadShift(Number(params.id));

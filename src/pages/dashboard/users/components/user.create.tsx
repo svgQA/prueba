@@ -40,7 +40,7 @@ const DOCUMENT_TYPE_TRANSLATIONS: Record<string, string> = {
   'Registro civil': 'l_civil_registry',
   'Tarjeta de extranjería': 'l_foreign_id_card',
   'Cédula de extranjería': 'l_foreign_citizenship_id',
-  'Pasaporte': 'l_passport',
+  Pasaporte: 'l_passport',
   'Permiso especial de permanencia': 'l_special_permit',
   'Permiso por protección temporal': 'l_temporary_protection_permit',
   'Documento de identificación extranjero': 'l_foreign_identification_document',
@@ -92,13 +92,13 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   }, []);
 
   useEffect(() => {
-     if (rawDocumentTypes.value.length > 0) {
-    documentTypes.value = rawDocumentTypes.value.map((docType) => ({
-      ...docType,
-      name: translateDocumentType(docType.name),
-    }));
-  }
-}, [i18n.language]);
+    if (rawDocumentTypes.value.length > 0) {
+      documentTypes.value = rawDocumentTypes.value.map((docType) => ({
+        ...docType,
+        name: translateDocumentType(docType.name),
+      }));
+    }
+  }, [i18n.language]);
 
   // const applyAllData = async (): Promise<void> => {
   //   await Promise.all([
@@ -225,15 +225,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     companies.value = r_companies;
   };
 
-const getRoles = async (): Promise<void> => {
-  const response = await RoleService.getRoles();
-  if (!response.getStatus()) return;
-  
-  roles.value = response.getMany().map((role) => ({
-    label: role.name, 
-    value: role.id,
-  }));
-};
+  const getRoles = async (): Promise<void> => {
+    const response = await RoleService.getRoles();
+    if (!response.getStatus()) return;
+
+    roles.value = response.getMany().map((role) => ({
+      label: role.name,
+      value: role.id,
+    }));
+  };
 
   const getPlaces = async () => {
     const response = await PlaceService.getSimpleList();
@@ -287,19 +287,19 @@ const getRoles = async (): Promise<void> => {
     municipalities.value = response.getMany();
   };
 
-const getDocumentTypes = async (): Promise<void> => {
-  const response = await UserService.getDocumentTypes();
-  if (!response.getStatus()) return;
-  
-  const types = response.getMany();
-  
-  rawDocumentTypes.value = types;
-  
-  documentTypes.value = types.map((docType) => ({
-    ...docType,
-    name: translateDocumentType(docType.name),
-  }));
-};
+  const getDocumentTypes = async (): Promise<void> => {
+    const response = await UserService.getDocumentTypes();
+    if (!response.getStatus()) return;
+
+    const types = response.getMany();
+
+    rawDocumentTypes.value = types;
+
+    documentTypes.value = types.map((docType) => ({
+      ...docType,
+      name: translateDocumentType(docType.name),
+    }));
+  };
 
   const onSubmit = async (user: IUserRequest) => {
     let request;
@@ -392,7 +392,7 @@ const getDocumentTypes = async (): Promise<void> => {
 
   return (
     <div className='flex flex-col'>
-      <div className='absolute top-0 right-0 flex items-center justify-center bg-red gap-10 flex-row'>
+      <div className='absolute -top-11 right-0 flex items-center justify-center bg-red gap-10 flex-row'>
         <StatusButton
           onClickClean={onClean}
           submitting={false}
@@ -425,7 +425,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='l_name'
                         label='l_name'
                         type='text'
-                        icon='231'
+                        icon='174'
                         meta={meta}
                       />
                     )}
@@ -438,7 +438,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='l_surname'
                         label='l_surname'
                         type='text'
-                        icon='231'
+                        icon='174'
                         meta={meta}
                       />
                     )}
@@ -454,7 +454,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='p_email'
                         label='l_email'
                         type='email'
-                        icon='231'
+                        icon='100'
                         meta={meta}
                         normal
                       />
@@ -472,7 +472,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         label={'h_phone'}
                         type='tel'
                         meta={meta}
-                        icon='231'
+                        icon='402'
                         normal
                         onChange={(e) => {
                           const value = e.currentTarget.value;
@@ -499,7 +499,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='p_select_document_type'
                         label='l_card_type'
                         name='cardType'
-                        icon='231'
+                        icon='096'
                         optionValue='id'
                         optionLabel='name'
                         onChange={(e) => {
@@ -522,7 +522,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='p_enter_document_number'
                         label='l_card_id'
                         type='text'
-                        icon='231'
+                        icon='174'
                         meta={meta}
                       />
                     )}
@@ -547,7 +547,6 @@ const getDocumentTypes = async (): Promise<void> => {
                         id='country'
                         label='h_country'
                         placeholder='p_select'
-                        icon='321'
                         options={countries.value}
                       />
                     )}
@@ -564,7 +563,6 @@ const getDocumentTypes = async (): Promise<void> => {
                         id='departmentId'
                         label='h_department'
                         placeholder='p_select'
-                        icon='321'
                         options={departments.value}
                         onChange={(e) => {
                           if (e?.value) {
@@ -588,7 +586,6 @@ const getDocumentTypes = async (): Promise<void> => {
                         id='municipalityId'
                         label='l_municipality'
                         placeholder='p_search'
-                        icon='321'
                         options={municipalities.value}
                       />
                     )}
@@ -600,7 +597,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         {...input}
                         placeholder='p_address'
                         label='l_address'
-                        icon='321'
+                        icon='142'
                         type='text'
                         meta={meta}
                       />
@@ -623,7 +620,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         placeholder='p_select_user_type'
                         label='l_user_type'
                         name='userType'
-                        icon='231'
+                        icon='096'
                         onChange={(e) => {
                           requiredRole.value =
                             e.currentTarget.value !== 'CLIENT';
@@ -647,7 +644,7 @@ const getDocumentTypes = async (): Promise<void> => {
                             id='clients'
                             label='l_client'
                             placeholder='p_select'
-                            icon='231'
+                            icon='096'
                             multiple={true}
                             allowAll={true}
                             options={clients.value}
@@ -668,7 +665,6 @@ const getDocumentTypes = async (): Promise<void> => {
                             meta={meta}
                             id='select-places'
                             label={t('h_place')}
-                            icon='231'
                             options={places.value}
                             multiple={true}
                             allowAll={true}
@@ -689,7 +685,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         meta={meta}
                         id='select-roles'
                         label='l_role'
-                        icon='231'
+                        icon='096'
                         options={roles.value}
                         multiple={true}
                         allowAll={true}
@@ -707,7 +703,7 @@ const getDocumentTypes = async (): Promise<void> => {
                         meta={meta}
                         id='select-companies'
                         label='l_company'
-                        icon='231'
+                        icon='023'
                         options={companies.value}
                         multiple={true}
                         allowAll={true}

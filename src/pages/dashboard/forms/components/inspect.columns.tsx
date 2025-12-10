@@ -25,14 +25,11 @@ export const getColumns = (
     meta: { headerAlign: 'center' },
     cell: (info) => {
       const { user } = info.row.original;
+      const name = `${user?.name} ${user?.surname}`;
       return (
-        <div className='flex items-center'>
+        <div className='flex items-center gap-2'>
           <Avatar name={user?.name} src={user?.image} size='sm' square />
-          <div className='flex flex-col ml-3'>
-            <div className='font-bold'>
-              {user?.name} {user?.surname}
-            </div>
-          </div>
+          <TextEllipsis text={name} maxWidth='250px' />
         </div>
       );
     },
@@ -82,9 +79,12 @@ export const getColumns = (
       const { form } = info.row.original;
       return (
         <div className='flex items-center'>
-          <span className='vox-icon vx-icon-152 mt-1 size-md' />
           <div className='flex flex-col ml-3 text-left'>
-            <h5 className='font-bold text-left'>{form.title}</h5>
+            <TextEllipsis
+              text={form.title}
+              maxWidth='800px'
+              className='text-xl font-bold'
+            />
             <TextEllipsis text={form.description} maxWidth='300px' />
           </div>
         </div>

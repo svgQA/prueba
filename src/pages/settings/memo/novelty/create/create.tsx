@@ -128,8 +128,8 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                     <Input
                       {...input}
                       type='text'
-                      placeholder='Ingrese nombre...'
-                      label='Nombre'
+                      placeholder='p_enter_name'
+                      label='l_name'
                       meta={meta}
                     />
                   )}
