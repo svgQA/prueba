@@ -126,4 +126,9 @@ export const general_es = {
   mobile: 'Móvil',
   web: 'Web',
   all: 'Todos',
+  l_priority_high: 'Alta',
+  l_priority_medium: 'Media',
+  l_priority_low: 'Baja',
+  l_name: 'Nombre',
+  p_enter_name: 'Ingrese nombre...',
 };

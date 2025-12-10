@@ -125,4 +125,9 @@ export const general_en = {
   mobile: 'Mobile',
   web: 'Web',
   all: 'All',
+  l_priority_high: 'High',
+  l_priority_medium: 'Medium',
+  l_priority_low: 'Low',
+  l_name: 'Name',
+  p_enter_name: 'Enter name...',
 };

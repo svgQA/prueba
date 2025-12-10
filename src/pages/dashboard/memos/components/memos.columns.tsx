@@ -8,6 +8,7 @@ import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { NColumnDef } from '@/components/common/table/type';
 import { FloatBadge } from '@/components/common/badge/float';
 import { FormattedDate } from '@/components/compose/forms';
+import { t } from 'i18next';
 
 type CustomColumnProps = {
   iconGroup?: string;
@@ -19,6 +20,18 @@ type CustomColumnProps = {
 type CustomColumnDef<TData> = ColumnDef<TData> &
   CustomColumnProps &
   NColumnDef<TData>;
+
+  const PRIORITY_TRANSLATIONS: Record<string, string> = {
+  'Alta': 'l_priority_high',
+  'Media': 'l_priority_medium',
+  'Baja': 'l_priority_low',
+};
+
+const translatePriority = (priority: string): string => {
+  if (!priority) return '';
+  const translationKey = PRIORITY_TRANSLATIONS[priority.trim()];
+  return translationKey ? t(translationKey) : priority;
+};
 
 export const getColumns = (
   _onClickAction: (params: {
@@ -161,7 +174,7 @@ export const getColumns = (
 
         return (
           <Badge
-            label={priority}
+            label={translatePriority(priority)}
             status={status as 'info' | 'error' | 'warning' | 'success'}
             full
             outline
