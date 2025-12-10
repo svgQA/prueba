@@ -56,6 +56,7 @@ export const menus_es = {
   m_news: 'Noticias',
   g_pqrs: 'PQRS',
   m_stage: 'Etapas',
+  m_priorities: 'Prioridades',
 
   //TODO: Revisar estos campos que son las key de rols, algunos ya estan
   m_acces: 'Accesos',
@@ -132,6 +133,7 @@ export const menus_en = {
   m_news: 'News',
   g_pqrs: 'PQRS',
   m_stage: 'Stages',
+  m_priorities: 'Priorities',
 
   //TODO: Revisit these fields that are the keys of roles, some are already present
   m_acces: 'Accesses',

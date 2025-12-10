@@ -27,6 +27,7 @@ export const description_es = {
   d_resourcezone: '',
   d_stages: '',
   d_residence: '',
+  d_priorities: '',
 };
 
 export const description_en = {
@@ -58,4 +59,5 @@ export const description_en = {
   d_resourcezone: '',
   d_stages: '',
   d_residence: '',
+  d_priorities: '',
 };
