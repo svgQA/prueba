@@ -4,6 +4,8 @@ export const general_es = {
   download: 'Descargar',
   cancel: 'Cancelar',
   edit: 'Editar',
+  report: 'Reporte',
+  update: 'Actualizar',
   },
     memo: {
     solve: {
