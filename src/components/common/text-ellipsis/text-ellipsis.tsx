@@ -49,7 +49,7 @@ export const TextEllipsis = ({
     return (
       <div
         ref={containerRef}
-        className={`inline-flex items-center justify-center w-6 h-6 bg-cyan-500 text-white text-xs font-medium rounded-full ${className}`}
+        className={`inline-flex items-center justify-center w-6 h-6 bg-cyan-500 text-white text-sm font-medium rounded-full ${className}`}
         title={tooltip && content ? String(content) : undefined}
       >
         {content}

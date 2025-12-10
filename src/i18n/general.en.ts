@@ -1,19 +1,19 @@
 export const general_en = {
   actions: {
-  delete: 'Delete',
-  download: 'Download',
-  cancel: 'Cancel',
-  edit: 'Edit',
+    delete: 'Delete',
+    download: 'Download',
+    cancel: 'Cancel',
+    edit: 'Edit',
   },
-    memo: {
+  memo: {
     solve: {
       title: 'Resolve Memo',
-      message: 'Are you sure you want to mark this memo as resolved?'
+      message: 'Are you sure you want to mark this memo as resolved?',
     },
     resolved: {
       title: 'Resolved Memo',
-      message: 'This memo is already marked as resolved'
-    }
+      message: 'This memo is already marked as resolved',
+    },
   },
   memos: {
     title: 'TR - Chat',
@@ -95,7 +95,7 @@ export const general_en = {
         title: 'Client Users',
       },
     },
-      documentTypes: {
+    documentTypes: {
       l_citizenship_id: 'Citizenship ID',
       l_identity_card: 'Identity Card',
       l_civil_registry: 'Civil Registry',
@@ -105,7 +105,7 @@ export const general_en = {
       l_special_permit: 'Special Residence Permit',
       l_temporary_protection_permit: 'Temporary Protection Permit',
       l_foreign_identification_document: 'Foreign Identification Document',
-    }, 
+    },
   },
   permissions: {
     denied: 'Permission denied',
