@@ -38,7 +38,10 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
       const resolvedUrls = await Promise.all(getUrlsPromises);
       rawFiles.push(...resolvedUrls);
     }
-    const response = await PqrsAiService.execute_ai_pqrs({ information, files: rawFiles });
+    const response = await PqrsAiService.execute_ai_pqrs({
+      information,
+      files: rawFiles,
+    });
     if (!response.getStatus()) {
       loading.value = false;
       return;

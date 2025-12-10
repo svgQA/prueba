@@ -830,27 +830,31 @@ export const FormResponsePublicPage: FunctionComponent<
 
             <div className='mt-8 flex flex-col gap-3 rounded-2xl bg-gray-50 p-4 md:flex-row md:items-center md:justify-between'>
               <div className='flex flex-wrap items-center gap-3'>
-                <Button
-                  name='btn-response-prev'
-                  type='button'
-                  icon='003'
-                  rounded
-                  mode='primary'
-                  className='flex w-40 items-center justify-center rounded-full bg-gradient-to-r from-primary to-blue-500 px-6 py-2 font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:saturate-50'
-                  onClick={prevPage}
-                  disabled={currentPage === 0}
-                />
-                <Button
-                  name='btn-response-next'
-                  type='button'
-                  icon='004'
-                  end
-                  mode='primary'
-                  rounded
-                  className='flex w-40 items-center justify-center rounded-full bg-gradient-to-r from-primary to-blue-500 px-6 py-2 font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:saturate-50'
-                  disabled={currentPage === totalPages - 1}
-                  onClick={postPage}
-                />
+                {totalPages > 1 && (
+                  <>
+                    <Button
+                      name='btn-response-prev'
+                      type='button'
+                      icon='003'
+                      rounded
+                      mode='primary'
+                      className='flex w-40 items-center justify-center rounded-full bg-gradient-to-r from-primary to-blue-500 px-6 py-2 font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:saturate-50'
+                      onClick={prevPage}
+                      disabled={currentPage === 0}
+                    />
+                    <Button
+                      name='btn-response-next'
+                      type='button'
+                      icon='004'
+                      end
+                      mode='primary'
+                      rounded
+                      className='flex w-40 items-center justify-center rounded-full bg-gradient-to-r from-primary to-blue-500 px-6 py-2 font-semibold text-white shadow-md transition hover:-translate-y-0.5 hover:shadow-lg disabled:translate-y-0 disabled:opacity-60 disabled:saturate-50'
+                      disabled={currentPage === totalPages - 1}
+                      onClick={postPage}
+                    />
+                  </>
+                )}
               </div>
               <div className='flex items-center gap-3 text-sm text-slate-700'>
                 <div className='h-2 w-24 overflow-hidden rounded-full bg-white'>

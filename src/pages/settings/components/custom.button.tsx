@@ -33,7 +33,7 @@ export const StatusButton = ({
           name='btn-clean'
           type='button'
           label={t('clean')}
-          icon='023'
+          icon='181'
           onClick={onClickClean}
           disabled={clear ? lock && pristine : submitting || pristine}
         />
@@ -44,7 +44,7 @@ export const StatusButton = ({
           type='submit'
           label={label === 'save' ? t('btnSave') : label}
           form={form}
-          icon='022'
+          icon='146'
           disabled={submitting}
         />
       </div>

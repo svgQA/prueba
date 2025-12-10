@@ -62,6 +62,7 @@ import { FaroManager } from '@/utils/telemetry';
 import { IClientResponse } from '@/types/user/user.response';
 import { USER_TYPE } from '@/types/user/user.enum';
 import { IDropdownOptions } from '@/components/common/dropdown/interface';
+import { IconsModal } from '../globals/icons/icons';
 
 /** ***********************************************************************
  * COMPONENT
@@ -406,6 +407,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
         <SettingsModal />
         <TenantsModal open={openModalTenant} />
+        <IconsModal />
       </section>
     );
   }
