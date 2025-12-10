@@ -11,7 +11,7 @@ import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { getPermissionByModuleState } from '@/store/signals/access/permission';
 import i18n from '@/i18n';
 
-export const getColumns = (
+export const getColumns = (t:any,
   onClickAction: (params: {
     id: string;
     type: string;
@@ -222,7 +222,7 @@ export const getColumns = (
         ...(getPermissionByModuleState('user', 'upsert')
           ? [
               {
-                label: 'edit',
+                label: t('actions.edit'),
                 icon: 'vox-icon vx-icon-123 text-primary',
                 onClick: () => {
                   onClickAction({
@@ -237,7 +237,7 @@ export const getColumns = (
         ...(getPermissionByModuleState('user', 'delete')
           ? [
               {
-                label: 'delete',
+                label: t('actions.delete'),
                 icon: 'vox-icon vx-icon-053 text-red-500',
                 color: 'text-red-600',
                 onClick: () => {
