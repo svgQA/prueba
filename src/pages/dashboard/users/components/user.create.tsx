@@ -547,7 +547,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         id='country'
                         label='h_country'
                         placeholder='p_select'
-                       
                         options={countries.value}
                       />
                     )}
@@ -564,7 +563,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         id='departmentId'
                         label='h_department'
                         placeholder='p_select'
-                     
                         options={departments.value}
                         onChange={(e) => {
                           if (e?.value) {
@@ -588,7 +586,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         id='municipalityId'
                         label='l_municipality'
                         placeholder='p_search'
-                      
                         options={municipalities.value}
                       />
                     )}
@@ -668,7 +665,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                             meta={meta}
                             id='select-places'
                             label={t('h_place')}
-                            
                             options={places.value}
                             multiple={true}
                             allowAll={true}

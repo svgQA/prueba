@@ -21,10 +21,10 @@ type CustomColumnDef<TData> = ColumnDef<TData> &
   CustomColumnProps &
   NColumnDef<TData>;
 
-  const PRIORITY_TRANSLATIONS: Record<string, string> = {
-  'Alta': 'l_priority_high',
-  'Media': 'l_priority_medium',
-  'Baja': 'l_priority_low',
+const PRIORITY_TRANSLATIONS: Record<string, string> = {
+  Alta: 'l_priority_high',
+  Media: 'l_priority_medium',
+  Baja: 'l_priority_low',
 };
 
 const translatePriority = (priority: string): string => {
