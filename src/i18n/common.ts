@@ -99,6 +99,7 @@ export const common_es = {
   Hour: 'Hora',
   'Quarter Day': 'Cuarto día',
   'Half Day': 'Medio día',
+  usuarios: 'Usuarios',
 };
 
 export const common_en = {
@@ -137,6 +138,7 @@ export const common_en = {
   friday: 'Friday',
   saturday: 'Saturday',
   sunday: 'Sunday',
+  usuarios: 'Users',
   // Short days
   mon: 'Mon',
   tue: 'Tue',

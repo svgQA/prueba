@@ -31,8 +31,9 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       cell: (info) => {
         const { employee } = info.row.original;
+        const name = `${employee?.name} ${employee?.surname}`;
         return (
-          <div className='flex items-center'>
+          <div className='flex items-center gap-2'>
             <Avatar
               name={employee?.name}
               src={employee?.image}
@@ -43,7 +44,7 @@ export const getColumns = (
               className='p-1 size-sm cursor-pointer text-left'
               onClick={() => info.row.toggleExpanded()}
             >
-              {employee?.name} {employee?.surname}
+              <TextEllipsis text={name} maxWidth='300px' />
             </span>
           </div>
         );
@@ -287,7 +288,7 @@ export const getColumns = (
           ? []
           : [
               {
-                label: !checkIn ? t('h_check_in') : t('h_check_out'),
+                label: !checkIn ? 'Check In' : 'Check Out', // t('h_check_in') : t('h_check_out'),
                 icon: 'vox-icon vx-icon-048 text-primary',
                 keyName: 'check',
                 onClick: () => {

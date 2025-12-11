@@ -49,10 +49,11 @@ export const getColumns = (
       size: 120,
       cell: (info) => {
         const type = String(info.getValue());
+        const value = type.toLowerCase();
         return (
           <Badge
-            status={type === t('history.types.users') ? 'success' : 'warning'}
-            label={type}
+            status={value === 'usuarios' ? 'success' : 'warning'}
+            label={value}
             outline
           />
         );

@@ -21,10 +21,10 @@ type CustomColumnDef<TData> = ColumnDef<TData> &
   CustomColumnProps &
   NColumnDef<TData>;
 
-  const PRIORITY_TRANSLATIONS: Record<string, string> = {
-  'Alta': 'l_priority_high',
-  'Media': 'l_priority_medium',
-  'Baja': 'l_priority_low',
+const PRIORITY_TRANSLATIONS: Record<string, string> = {
+  Alta: 'l_priority_high',
+  Media: 'l_priority_medium',
+  Baja: 'l_priority_low',
 };
 
 const translatePriority = (priority: string): string => {
@@ -49,12 +49,12 @@ export const getColumns = (
       enableGrouping: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {
-        // const name = info.getValue() as string;
-        const { name, surname } = info.row?.original?.user;
+        const { user } = info.row.original;
+        const name = `${user?.name} ${user?.surname}`;
         return (
           <div className='flex items-center gap-2 justify-start'>
             <Avatar name={name} size='sm' square />
-            {name} {surname}
+            <TextEllipsis text={name} maxWidth='300px' />
           </div>
         );
       },

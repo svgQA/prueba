@@ -28,15 +28,20 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
 
   const handleSubmit = async (model: any, _form: any) => {
     loading.value = true;
-    let description = model.description;
+    let information = model.description;
+    let rawFiles: string[] = [];
 
     if (files.value && files.value.length > 0) {
-      let getUrls = files.value.map((file: IPresignedRequest) =>
+      const getUrlsPromises = files.value.map((file: IPresignedRequest) =>
         fileManager.getUrl(getTenant(), getCompanyId(), file)
       );
-      description += `\n\nAttachments:\n` + getUrls.join('\n');
+      const resolvedUrls = await Promise.all(getUrlsPromises);
+      rawFiles.push(...resolvedUrls);
     }
-    const response = await PqrsAiService.execute_ai_pqrs({ description });
+    const response = await PqrsAiService.execute_ai_pqrs({
+      information,
+      files: rawFiles,
+    });
     if (!response.getStatus()) {
       loading.value = false;
       return;

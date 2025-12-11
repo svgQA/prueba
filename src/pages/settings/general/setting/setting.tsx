@@ -151,7 +151,9 @@ export const SGeneralSettingPage: FunctionComponent = () => {
               className='space-y-6 relative'
               id='form-settings-general'
             >
-              <h2 className='text-2xl font-bold'>{t('l_general_configuration')}</h2>
+              <h2 className='text-2xl font-bold'>
+                {t('l_general_configuration')}
+              </h2>
               <div className='grid grid-cols-2 gap-4'>
                 <div className='col-span-1'>
                   <Field name='language' type='select'>

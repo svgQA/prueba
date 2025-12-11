@@ -138,9 +138,9 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                 selected={data.id === initialValues.value?.id}
               />
             ))}
-              {resources.value.length === 0 && (
+            {resources.value.length === 0 && (
               <div className='text-center text-gray-500'>
-              {t('l_no_resources')}
+                {t('l_no_resources')}
               </div>
             )}
           </div>
@@ -221,12 +221,12 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                                 input.onChange(nextVal);
                                 form.change('link', '');
                               }}
-                          label={t('l_type_communication')} 
-                          options={[
-                            { value: 'WHATSAPP', label: t('l_whatsapp') },
-                            { value: 'EMAIL', label: t('l_email') },     
-                            { value: 'LINK', label: t('l_link') },        
-                          ]}
+                              label={t('l_type_communication')}
+                              options={[
+                                { value: 'WHATSAPP', label: t('l_whatsapp') },
+                                { value: 'EMAIL', label: t('l_email') },
+                                { value: 'LINK', label: t('l_link') },
+                              ]}
                             />
                           )}
                         </Field>

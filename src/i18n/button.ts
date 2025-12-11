@@ -19,7 +19,7 @@ export const buttons_es = {
   btnUpdate: 'Actualizar',
   page: 'Página',
   of: 'de',
-  cancel: 'Cancelar'
+  cancel: 'Cancelar',
 };
 
 export const buttons_en = {

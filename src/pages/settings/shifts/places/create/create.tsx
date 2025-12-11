@@ -229,7 +229,7 @@ export const PlaceCreateSettingPage: FunctionComponent = () => {
   }, [selectedCompany, location]);
 
   return (
-    <Section loading={loading.value}>
+    <Section className='pt-2' loading={loading.value}>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
