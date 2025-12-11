@@ -33,7 +33,7 @@ enum VIEW_NAME {
 }
 
 export const UsersPage: FunctionalComponent = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const user = useSignal<IUserResponse | any>();
   const loading = useSignal<boolean>(false);
@@ -326,8 +326,9 @@ export const UsersPage: FunctionalComponent = () => {
 
         {currentView.value === VIEW_NAME.TABLE && (
           <Table<IUserResponse>
+            key={i18n.language}
             data={users.value}
-            columns={getColumns(handleOnClick)}
+            columns={getColumns(t, handleOnClick)}
             pageSize={20}
             selectable
             onClickAction={handleOnClick}

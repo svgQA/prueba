@@ -68,7 +68,7 @@ const EmployeeInfo = ({
           </h4>
           <div className='grid grid-cols-2 gap-y-2'>
             <div>
-              <p className='font-semibold'>{t('company')}</p>
+              <p className='font-semibold'>{t('h_company')}</p>
               <p>{service.contract.company?.name}</p>
             </div>
             <div>

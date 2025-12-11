@@ -25,7 +25,7 @@ export type RelatedShifts = {
 
 export class ShiftService extends BaseService {
   static name: VoxServices = 'shift';
-  static async get_all(params: ICustomQuery = { page: 1, items: 400 }) {
+  static async get_all(params: ICustomQuery = { page: 1, items: 2000 }) {
     const model: IMakeRequest = {
       url: ['activity'],
       params: params as any,
@@ -85,10 +85,13 @@ export class ShiftService extends BaseService {
    * Gets a summary of shifts including total count, in progress and completed
    * @returns Summary object with total, progress and completed counts
    */
-  static async getShiftSummary() {
+  static async getShiftSummary(
+    params: ICustomQuery = { page: 1, items: 2000 }
+  ) {
     const model: IMakeRequest = {
       url: ['activity/summary'],
       method: REQUEST_METHODS.GET,
+      params: params as any,
     };
 
     return await super.make_request<ShiftSummary>(this.name, model);
