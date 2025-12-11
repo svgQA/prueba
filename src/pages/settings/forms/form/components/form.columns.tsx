@@ -9,7 +9,7 @@ import {
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 
-export const getColumns = (t: any,
+export const getColumns = (
   onClickAction: (params: {
     id: string;
     type: string;
@@ -105,7 +105,7 @@ export const getColumns = (t: any,
         ...(report
           ? [
               {
-                label: t('actions.report'),
+                label: 'actions.report',
                 icon: 'vox-icon vx-icon-143 text-primary',
                 onClick: () => {
                   onClickAction({
@@ -118,7 +118,7 @@ export const getColumns = (t: any,
             ]
           : []),
         {
-          label: t('actions.delete'),
+          label: 'actions.delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {

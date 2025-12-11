@@ -1,7 +1,6 @@
 import { createPortal } from 'preact/compat';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
-
 export interface IDropdownAction {
   label: string;
   icon: string;
