@@ -141,7 +141,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   useEffect(() => {
     // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
     if (selectedCompany) {
-      handleGetShiftSummary();
+      handleGetShiftSummary(dateRangeFilters);
       fetchInitialData(dateRangeFilters);
     }
   }, [selectedCompany, location, dateRangeFilters]);
@@ -153,7 +153,12 @@ export const ShiftsPage: FunctionalComponent = () => {
       getGanttHandler(viewMode);
     }
     if (currentView.value === VIEW_NAME.TABLE) {
-      const response = await ShiftService.get_all({ page: 1, items: 1000 });
+      const response = await ShiftService.get_all(
+        dateRangeFilters ? { ...baseParams, ...dateRangeFilters } : baseParams
+      );
+      await ShiftService.getShiftSummary(
+        dateRangeFilters ? { ...baseParams, ...dateRangeFilters } : baseParams
+      );
       if (!response.getStatus()) return;
       shifts.value = response.getMany();
     }
@@ -416,8 +421,12 @@ export const ShiftsPage: FunctionalComponent = () => {
     [shifts]
   );
 
-  const handleGetShiftSummary = async () => {
-    const summary = await ShiftService.getShiftSummary();
+  const handleGetShiftSummary = async (
+    dateRangeFilters?: { [key: string]: [string, string] } | null
+  ) => {
+    const summary = await ShiftService.getShiftSummary(
+      dateRangeFilters ? { ...baseParams, ...dateRangeFilters } : baseParams
+    );
     if (!summary.getStatus()) return;
     shiftSummary.value = summary.getOne();
   };
@@ -770,6 +779,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             }}
             searchable={{
               report: false,
+              date: false,
               shift: false,
               round: false,
               task: false,
