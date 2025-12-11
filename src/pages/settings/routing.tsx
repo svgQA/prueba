@@ -105,6 +105,8 @@ import { SIASettingPage } from './ia/setting/setting';
 import { SMemoSettingPage } from './memo/setting/setting';
 import { PrioritiesForm } from './pqrs/priority/components/priorities.upsert';
 import PrioritiesPage from './pqrs/priority/priorities.page';
+import ResourcesPage from './pqrs/resources/resources.page';
+import { ResourcesForm } from './pqrs/resources/components/resources.upsert';
 
 export const RoutingContent = memo(() => {
   const content = (
@@ -852,7 +854,7 @@ export const RoutingContent = memo(() => {
           component={lazy(() => Promise.resolve({ default: StageForm }))}
         />
 
-         {/* OPTIONS PRIORITIES */}
+        {/* OPTIONS PRIORITIES */}
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.priorities.to}
           component={lazy(() => Promise.resolve({ default: PrioritiesPage }))}
@@ -864,6 +866,20 @@ export const RoutingContent = memo(() => {
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.priorities.update.to}
           component={lazy(() => Promise.resolve({ default: PrioritiesForm }))}
+        />
+
+        {/* OPTIONS RESOURCES */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.resources.to}
+          component={lazy(() => Promise.resolve({ default: ResourcesPage }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.resources.create.to}
+          component={lazy(() => Promise.resolve({ default: ResourcesForm }))}
+        />
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.resources.update.to}
+          component={lazy(() => Promise.resolve({ default: ResourcesForm }))}
         />
   
       </Suspense>

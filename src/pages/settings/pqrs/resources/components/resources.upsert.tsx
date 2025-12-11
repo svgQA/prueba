@@ -15,15 +15,15 @@ import { useTranslation } from 'react-i18next';
 import { Form, Field } from 'react-final-form';
 import { useParams } from 'wouter';
 
-import { PrioritiesService } from "@/services/pqrs/priorities";
-import { ICPrioritiesResponse } from '../utils/interface';
+import { ResourceService } from '@/services/form/resources';
+import { IResourceResponse } from '@/types/memo/memo.response';
 
-export const PrioritiesForm: FunctionComponent = () => {
+export const ResourcesForm: FunctionComponent = () => {
   const { t } = useTranslation();
   const { go } = useNavigation();
   const { id } = useParams<{ id?: string }>();
 
-  const initialValues = useSignal<ICPrioritiesResponse>();
+  const initialValues = useSignal<any>({});
   const loading = useSignal<boolean>(false);
 
   useEffect(() => {
@@ -49,10 +49,9 @@ export const PrioritiesForm: FunctionComponent = () => {
       return;
     }
 
-    const response = await PrioritiesService.get_by_id(id);
+    const response = await ResourceService.get_by_id(id);
     if (!response.getStatus()) return;
     const initialData = response.getOne();
-
     initialValues.value = {
       name: initialData.name || '',
       description: initialData.description || '',
@@ -61,20 +60,20 @@ export const PrioritiesForm: FunctionComponent = () => {
   };
 
 
-  const handleSubmit = async (model: any, _form?: any) => {
+  const handleSubmit = async (_model: any, _form?: any) => {
     loading.value = true;
-    let body: ICPrioritiesResponse = {
-      name: model.name,
-      description: model.description,
-    };
+    // let body: IResourceResponse = {
+    //   name: model.name,
+    //   description: model.description,
+    // };
 
-    let response = id
-      ? await PrioritiesService.update(id, body)
-      : await PrioritiesService.create(body);
+    // let response = id
+    //   ? await ResourceService.update(id, body)
+    //   : await ResourceService.create(body);
 
-    if (!response.getStatus()) return;
+    // if (!response.getStatus()) return;
     ToastManager.success(id ? 's_updated_success' : 's_created_success');
-    initialValues.value = {} as ICPrioritiesResponse;
+    initialValues.value = {} as IResourceResponse;
 
     go({
       to: '/pqrs/priorities',

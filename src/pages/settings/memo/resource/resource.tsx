@@ -18,6 +18,7 @@ import { MultiSelect } from '../../forms/create/MultiSelect';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { INPUT_TYPES } from '@/components/common/input/interface';
 import { validateContactByType, validateOptionalUrl } from './utils';
+import { ResourceService } from '@/services/form/resources';
 
 interface IMultiSelect {
   id: number;
@@ -50,7 +51,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
   };
 
   const getResources = async () => {
-    const response = await GeneralService.resource();
+    const response = await ResourceService.get_all();
     if (!response.getStatus()) return;
     resources.value = response.getMany();
   };
@@ -72,9 +73,9 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
 
     let response;
     if (values.id) {
-      response = await GeneralService.updateResource(values.id, output);
+      response = await ResourceService.update(values.id, output);
     } else {
-      response = await GeneralService.createResource(output);
+      response = await ResourceService.create(output);
     }
     if (!response.getStatus()) return;
 
@@ -101,7 +102,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
   };
 
   const handleDelete = async (id: number) => {
-    const response = await GeneralService.deleteResource(id);
+    const response = await ResourceService.delete(id);
     if (!response.getStatus()) return;
     ToastManager.success('s_deleted_success');
     getResources();
