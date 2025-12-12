@@ -25,8 +25,8 @@ export const getColumns = (t: any,
       const { title, description } = info.row.original;
       return (
         <div className='flex items-center'>
-          <span className='vox-icon vx-icon-152 mt-1 size-md' />
-          <div className='flex flex-col ml-3 text-left'>
+          
+          <div className='flex flex-col text-left'>
             <h5 className='font-bold text-left'>{title}</h5>
             <TextEllipsis text={description} maxWidth='250px' />
           </div>

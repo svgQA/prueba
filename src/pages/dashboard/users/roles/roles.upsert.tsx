@@ -358,9 +358,9 @@ export const RolesUpsertPage = () => {
               <div className='space-y-4'>
                 {getFilteredModules()?.map((module) => (
                   <ExpansionPanel
-                    title={module.name}
+                    title={module.key ? t(`modules.${module.key}`) : module.name}
                     key={module.id}
-                    subtitle={module.description}
+                    subtitle={module.key ? t(`module_descriptions.${module.key}`) : module.description}
                     onCheck={(checked) => {
                       const flatPermissionIds =
                         module.permissionsGrouped?.flat.map((p) => p.id) || [];
@@ -432,10 +432,10 @@ export const RolesUpsertPage = () => {
                                   />
                                   <label className='ml-2 flex flex-col'>
                                     <span className='text-sm font-medium'>
-                                      {permission.name}
+                                      {permission.key ? t(`role_permissions.${permission.key}`) : permission.name}
                                     </span>
                                     <span className='text-xs text-gray-500'>
-                                      {permission.description}
+                                      {permission.key ? t(`role_descriptions.${permission.key}`) : permission.description}
                                     </span>
                                     <span className='text-xs text-gray-500 flex items-center gap-2'>
                                       <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
@@ -448,7 +448,7 @@ export const RolesUpsertPage = () => {
                                             : 'bg-purple-100 text-purple-800'
                                         }`}
                                       >
-                                        {permission.mobile ? 'Móvil' : 'Web'}
+                                        {permission.mobile ? t('mobile') : t('web')}
                                       </span>
                                     </span>
                                   </label>
@@ -501,14 +501,14 @@ export const RolesUpsertPage = () => {
                                             <span className='text-xs text-gray-500 flex items-center gap-2'>
                                               <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
                                                 {child.permission?.key}
-                                              </span>
-                                              <span
+                                                </span>
+                                                <span
                                                 className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                                                   child.permission?.mobile
                                                     ? 'bg-green-100 text-green-800'
                                                     : 'bg-purple-100 text-purple-800'
                                                 }`}
-                                              >
+                                                >
                                                 {child.permission?.mobile
                                                   ? 'Móvil'
                                                   : 'Web'}
