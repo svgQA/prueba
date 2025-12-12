@@ -11,7 +11,8 @@ import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { getPermissionByModuleState } from '@/store/signals/access/permission';
 import i18n from '@/i18n';
 
-export const getColumns = (t:any,
+export const getColumns = (
+  t: any,
   onClickAction: (params: {
     id: string;
     type: string;
