@@ -110,7 +110,11 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                 <span class='text-xs font-medium text-blue-700 block mb-1'>
                   Análisis Realizado:
                 </span>
-                <p class='text-xs text-blue-900'>{data.analysisRequest}</p>
+                <p class='text-xs text-blue-900'>
+                  {typeof data.analysisRequest === 'string'
+                    ? data.analysisRequest
+                    : JSON.stringify(data.analysisRequest, null, 2)}
+                </p>
               </div>
             )}
             {data.analysisResponse && (
@@ -118,9 +122,11 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                 <span class='text-xs font-medium text-green-700 block mb-1'>
                   Resultado del Análisis:
                 </span>
-                <p class='text-xs text-green-900 leading-relaxed'>
-                  {data.analysisResponse}
-                </p>
+                <pre class='text-xs text-green-900 leading-relaxed whitespace-pre-wrap overflow-x-auto'>
+                  {typeof data.analysisResponse === 'string'
+                    ? data.analysisResponse
+                    : JSON.stringify(data.analysisResponse, null, 2)}
+                </pre>
               </div>
             )}
           </div>
@@ -193,7 +199,7 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
           </div>
         )}
 
-        {(data.area || data.subarea) && (
+        {/* {(data.area || data.subarea) && (
           <div class='grid grid-cols-1 sm:grid-cols-2 gap-3'>
             {data.area && (
               <div>
@@ -216,7 +222,7 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
               </div>
             )}
           </div>
-        )}
+        )} */}
 
         {data.etiquetas && data.etiquetas.length > 0 && (
           <div>

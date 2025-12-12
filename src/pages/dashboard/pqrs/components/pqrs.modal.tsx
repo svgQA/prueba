@@ -1,5 +1,6 @@
 import { Signal, useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
+import dayjs from 'dayjs';
 
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import {
@@ -24,8 +25,8 @@ import { PqrsService } from '@/services/pqrs/pqrs';
 import { ICPqrsRequest } from '../utils/interface';
 import PqrsInferenceModal from './modal/pqrs-inference.modal';
 import PqrsGeneralModal from './modal/pqrs-general.modal';
-import { OtsService } from '@/services/pqrs/ots';
-import { Button } from '@/components/common/button/button';
+// import { OtsService } from '@/services/pqrs/ots';
+// import { Button } from '@/components/common/button/button';
 
 interface IProps {
   showModal: Signal<boolean>;
@@ -40,7 +41,7 @@ export const PqrsModal = ({
   closeModal,
   id,
   tags,
-  areas,
+  // areas,
 }: IProps) => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
@@ -95,20 +96,39 @@ export const PqrsModal = ({
     | 'warning'
     | 'info'
     | 'ternary' => {
-    const requestType = pqrs.value?.extraData?.requestType?.toLowerCase();
-    if (requestType === 'queja') return 'error';
-    if (requestType === 'sugerencia') return 'success';
-    if (requestType === 'reclamo') return 'warning';
+    const pqrsType = pqrs.value?.extraData?.pqrsType?.toLowerCase();
+    if (pqrsType === 'queja') return 'error';
+    if (pqrsType === 'sugerencia') return 'success';
+    if (pqrsType === 'reclamo') return 'warning';
+    if (pqrsType === 'recurso') return 'ternary';
     return 'info';
   };
 
-  const handleCreateOts = async (pqrsId: number) => {
-    loading.value = true;
-    const response = await OtsService.create(pqrsId);
-    if (!response.getStatus()) return (loading.value = false);
-    closeModal();
-    loading.value = false;
+  // const handleCreateOts = async (pqrsId: number) => {
+  //   loading.value = true;
+  //   const response = await OtsService.create(pqrsId);
+  //   if (!response.getStatus()) return (loading.value = false);
+  //   closeModal();
+  //   loading.value = false;
+  // };
+
+  const calculateDaysToExpire = () => {
+    if (!pqrs.value?.startDate) return null;
+    
+    const startDate = dayjs(pqrs.value.startDate);
+    const expirationDate = startDate.add(15, 'days');
+    const today = dayjs();
+    
+    const daysRemaining = expirationDate.diff(today, 'days');
+    
+    return {
+      daysRemaining,
+      isExpired: daysRemaining < 0,
+      isExpiringSoon: daysRemaining >= 0 && daysRemaining <= 3,
+    };
   };
+
+  const expirationStatus = calculateDaysToExpire();
 
   return (
     <Modal
@@ -135,19 +155,19 @@ export const PqrsModal = ({
             <div class='flex-1 min-w-0'>
               <div class='flex items-center gap-2 mb-1'>
                 <h4 class='font-semibold text-t-light dark:text-white text-lg leading-tight'>
-                  {pqrs.value?.extraData?.clientOrCompanyName || 'Sin nombre'}
+                  {pqrs.value?.extraData?.title || 'Sin nombre'}
                 </h4>
               </div>
               <div class='flex items-center gap-2 text-xs text-gray-text-light dark:text-b-light-dark'>
-                {pqrs.value?.extraData?.ticketNumber && (
+                {pqrs.value?.identifier && (
                   <>
                     <span class='font-mono'>
-                      #{pqrs.value.extraData.ticketNumber}
+                      #{pqrs.value.identifier}
                     </span>
-                    {pqrs.value?.extraData?.accountNumber && (
+                    {pqrs.value?.contract && (
                       <>
                         <span>•</span>
-                        <span>{pqrs.value.extraData.accountNumber}</span>
+                        <span>{pqrs.value.contract}</span>
                       </>
                     )}
                   </>
@@ -155,9 +175,9 @@ export const PqrsModal = ({
               </div>
             </div>
 
-            {pqrs.value?.extraData?.requestType && (
+            {pqrs.value?.extraData?.pqrsType && (
               <Badge
-                label={pqrs.value.extraData.requestType}
+                label={pqrs.value.extraData.pqrsType}
                 status={getBadgeStatus()}
                 outline={false}
                 size='md'
@@ -165,19 +185,19 @@ export const PqrsModal = ({
               />
             )}
 
-            {pqrs.value?.area?.name && pqrs.value.id && (
+            {/*pqrs.value?.area?.name && pqrs.value.id && (
               <Button
                 name='btn-click-ots'
                 label='create OTS'
                 onClick={() => handleCreateOts(pqrs.value?.id!!)}
               />
-            )}
+            )*/}
           </div>
 
-          {pqrs.value?.extraData?.registerObservation && (
+          {pqrs.value?.extraData?.observation && (
             <div class='mb-3 pb-3 border-b border-gray-border dark:border-b-dark-light'>
               <TextEllipsis
-                text={pqrs.value.extraData.registerObservation}
+                text={pqrs.value.extraData.observation}
                 maxWidth='100%'
                 lines={2}
                 className='text-sm text-gray-text-light dark:text-b-light-dark leading-relaxed'
@@ -187,30 +207,30 @@ export const PqrsModal = ({
 
           <div class='space-y-3'>
             <div class='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs'>
-              {pqrs.value?.extraData?.filingDate && (
+              {pqrs.value?.startDate && (
                 <div class='flex items-center gap-1.5 text-gray-text-light dark:text-b-light-dark bg-white dark:bg-b-dark rounded-lg px-3 py-2 border border-gray-border dark:border-b-dark-light'>
                   <span>📅</span>
                   <FormattedDate
-                    date={String(pqrs.value.extraData.filingDate)}
+                    date={String(pqrs.value?.startDate)}
                     format='date'
                   />
                 </div>
               )}
 
-              {areas && (
+              {/* {areas && (
                 <div class='flex items-center gap-1.5 text-gray-text-light dark:text-b-light-dark bg-white dark:bg-b-dark rounded-lg px-3 py-2 border border-gray-border dark:border-b-dark-light'>
                   <span>🏢</span>
                   <span class='truncate capitalize'>
                     {areas.replace(/_/g, ' ')}
                   </span>
                 </div>
-              )}
+              )} */}
 
-              {pqrs.value?.extraData?.contactEmail && (
+              {pqrs.value?.contactEmail && (
                 <div class='flex items-center gap-1.5 text-gray-text-light dark:text-b-light-dark bg-white dark:bg-b-dark rounded-lg px-3 py-2 border border-gray-border dark:border-b-dark-light'>
                   <span>📧</span>
                   <TextEllipsis
-                    text={pqrs.value.extraData.contactEmail}
+                    text={pqrs.value.contactEmail}
                     maxWidth='100%'
                     lines={1}
                   />
@@ -218,34 +238,36 @@ export const PqrsModal = ({
               )}
             </div>
 
-            {((tags && tags.length > 0) ||
-              pqrs.value?.extraData?.hasFiles ||
-              typeof pqrs.value?.extraData?.daysToExpire === 'number') && (
-              <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border dark:border-b-dark-light'>
-                {tags &&
-                  tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      class='px-2 py-0.5 bg-b-light dark:bg-b-dark text-gray-text-light dark:text-b-light-dark text-xs rounded border border-gray-border/60 dark:border-b-dark-light/60'
-                    >
-                      #{String(tag)}
-                    </span>
-                  ))}
 
-                {pqrs.value?.extraData?.hasFiles && (
-                  <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1 border border-primary/30'>
-                    📎 Archivos
+            <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border dark:border-b-dark-light'>
+              {tags &&
+                tags.map((tag, idx) => (
+                  <span
+                    key={idx}
+                    class='px-2 py-0.5 bg-b-light dark:bg-b-dark text-gray-text-light dark:text-b-light-dark text-xs rounded border border-gray-border/60 dark:border-b-dark-light/60'
+                  >
+                    #{String(tag)}
                   </span>
-                )}
+                ))}
 
-                {typeof pqrs.value?.extraData?.daysToExpire === 'number' &&
-                  pqrs.value.extraData.daysToExpire <= 3 && (
-                    <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium border border-error/40'>
-                      ⏰ {pqrs.value.extraData.daysToExpire}d
-                    </span>
-                  )}
-              </div>
-            )}
+              {pqrs.value?.resources && (
+                <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1 border border-primary/30'>
+                  📎 Archivos
+                </span>
+              )}
+
+              {expirationStatus?.isExpired && (
+                <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium border border-error/40'>
+                  ⏰ Expirado hace {Math.abs(expirationStatus.daysRemaining)}d
+                </span>
+              )}
+
+              {expirationStatus?.isExpiringSoon && !expirationStatus?.isExpired && (
+                <span class='px-2 py-0.5 bg-warning-opacity text-warning text-xs rounded flex items-center gap-1 font-medium border border-warning/40'>
+                  ⏰ Expira en {expirationStatus.daysRemaining}d
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -255,11 +277,10 @@ export const PqrsModal = ({
             {tabs.map((tab) => (
               <button
                 key={tab.id}
-                class={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${
-                  activeTab.value === tab.id
+                class={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${activeTab.value === tab.id
                     ? 'bg-primary-opacity text-primary border-b-2 border-primary shadow-sm'
                     : 'text-gray-text-light dark:text-b-light-dark hover:text-t-light hover:bg-b-light dark:hover:bg-b-dark-light'
-                }`}
+                  }`}
                 onClick={() => (activeTab.value = tab.id)}
               >
                 <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>
@@ -285,11 +306,11 @@ export const PqrsModal = ({
                       lng: pqrs.value.lng,
                     },
                     name:
-                      pqrs.value?.extraData?.clientOrCompanyName ||
+                      pqrs.value?.clientName ||
                       'Ubicación PQRS',
                   },
                 ]}
-                sendPoints={() => {}}
+                sendPoints={() => { }}
                 center={{ lat: pqrs.value.lat, lng: pqrs.value.lng }}
                 height='100%'
                 disablePointSelection={true}

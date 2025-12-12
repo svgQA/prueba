@@ -1,47 +1,56 @@
-import { IPresignedRequest, IPresignedResponse } from '@/types/file';
+import { IPresignedRequest } from '@/types/file';
+
+interface IdName<T= number> {
+  id: T;
+  name: string;
+  description?: string;
+}
 
 export interface ICPqrsRequest {
   id?: number;
-  extraData: ICPqrs;
-  filesBedrock?: IPresignedResponse[] | null;
-  resource?: IPresignedRequest[] | null;
+  raw?: any | null;
+  rawFile?: any | null;
+  resources?: IPresignedRequest[] | null;
+  embedding?: number[] | null;
+  extraData?: ICPqrsExtraData | null;
   status: string;
-  inferences: any;
-  area?: { id: number; name: string };
+  identifier?: string | null;
+  contract?: string | null;
+  municipality?: string | null;
+  address?: string | null;
+  department?: string | null;
+  transformer?: string | null;
+  pole?: string | null;
   lat?: number | null;
   lng?: number | null;
+  startDate?: string | Date | null;
+  clientName?: string | null;
+  contactEmail?: string | null;
+  assignedToId?: number | null;
+  areaId?: number | null;
+  subareaId?: number | null;
+  priorityId?: number | null;
+
+  //relations
+  inferences: any;
+  area?: IdName;
+  subarea?: IdName;
+  priority?: IdName;
 }
 
-export interface ICPqrs {
-  ticketNumber: string | null;
-  filingDate: string | Date | null;
-  accountNumber: string | null;
-  procedure: string | null;
-  registeredBy: string | null;
-  requestStatus: string | null;
-  expectedAttentionDate: string | Date | null;
-  registerObservation: string | null;
-  contractNumber: string | null;
-  contractDetail: string | null;
-  receptionChannel: string | null;
-  assignee: string | null;
-  orderNumber: string | null;
-  orderStatus: string | null;
-  attentionDate: string | Date | null;
-  attentionExtensionDate: string | Date | null;
-  legalizationDate: string | Date | null;
-  numPages: number | null;
-  contactEmail: string | null;
-  clientOrCompanyName: string | null;
-  actorType: string | null;
-  referencedTicketNumber: string | null;
-  requestType: string | null;
-  associatedPlan: string | null;
-  termStatus: string | null;
-  daysToExpire: number | null;
-  hasFiles: boolean;
-  files: string[] | string | null;
-  informationFile?: any | null;
+export interface ICPqrsExtraData {
+  title: string | null;
+  observation: string | null;
+  pqrsType: 'peticion' | 'queja' | 'reclamo' | 'sugerencia' | 'recurso';
+  legalResourceType?: 'reposicion' | 'apelacion' | 'reposicion_y_apelacion' | null;
+  mainIssue: string | null;
+  secondaryIssues?: string[] | null;
+  affectedService: 'energia' | 'agua' | 'gas' | 'otro' | null;
+  userRequest: string | null;
+  referencedTicketNumber?: string | null;
+  referencedInvoicePeriods?: string[] | null;
+  receptionChannel?: 'web' | 'whatsapp' | 'oficina' | 'email' | 'otro' | null;
+  sentiment?: 'negativo' | 'neutral' | 'positivo' | null;
 }
 
 export interface ICOtsRequest {
