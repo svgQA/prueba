@@ -77,7 +77,7 @@ export const getColumns = (
       },
     },
     {
-      id: 'fecha',
+      id: 'date',
       accessorKey: 'start',
       size: 120,
       header: 'h_date',

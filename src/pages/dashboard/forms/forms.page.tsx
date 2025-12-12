@@ -37,7 +37,7 @@ import {
 } from '@/utils/socket/manager/types';
 
 export const FormsPage: FunctionComponent = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const responses = useSignal<IResponseResponse[]>([]);
   const loading = useSignal<boolean>(false);
   const { selectedCompany } = useUserStore();
@@ -251,8 +251,9 @@ export const FormsPage: FunctionComponent = () => {
         </div>
         {currentView.value === VIEW_NAME.TABLE && (
           <Table<IResponseResponse>
+            key={i18n.language}
             data={responses.value}
-            columns={getColumns(handleOnClick)}
+            columns={getColumns(t, handleOnClick)}
             pageSize={20}
             onClickAction={handleOnClick}
             loading={loading.value}

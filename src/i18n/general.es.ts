@@ -1,9 +1,11 @@
 export const general_es = {
   actions: {
-    delete: 'Eliminar',
-    download: 'Descargar',
-    cancel: 'Cancelar',
-    edit: 'Editar',
+  delete: 'Eliminar',
+  download: 'Descargar',
+  cancel: 'Cancelar',
+  edit: 'Editar',
+  report: 'Reporte',
+  update: 'Actualizar',
   },
   memo: {
     solve: {
