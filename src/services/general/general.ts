@@ -9,8 +9,6 @@ import {
   VoxServices,
 } from '@/utils/network/types';
 import { IPaginationUser } from '@/utils/types/user.interface';
-import { IResourceResponse } from '@/types/memo/memo.response';
-import { IResourceRequest } from '@/types/memo/memo.request';
 
 export interface IGeneralRequest {
   id?: number;
@@ -39,6 +37,7 @@ export const baseParams = {
 
 export class GeneralService extends BaseService {
   static sname: VoxServices = 'file';
+  
   static async presigned(data: IPresignedRequest) {
     const model: IMakeRequest = {
       url: ['file', 'presigned'],
@@ -46,40 +45,6 @@ export class GeneralService extends BaseService {
       data,
     };
     return await super.make_request<IPresignedResponse>(this.sname, model);
-  }
-
-  static async resource() {
-    const model: IMakeRequest = {
-      url: ['resource'],
-      method: REQUEST_METHODS.GET,
-    };
-    return await super.make_request<IResourceResponse>(this.sname, model);
-  }
-
-  static async updateResource(id: number, data: IResourceRequest) {
-    const model: IMakeRequest = {
-      url: ['resource', id.toString()],
-      method: REQUEST_METHODS.PUT,
-      data,
-    };
-    return await super.make_request<IResourceRequest>(this.sname, model);
-  }
-
-  static async deleteResource(id: number) {
-    const model: IMakeRequest = {
-      url: ['resource', id.toString()],
-      method: REQUEST_METHODS.DELETE,
-    };
-    return await super.make_request<IResourceRequest>(this.sname, model);
-  }
-
-  static async createResource(data: IResourceRequest) {
-    const model: IMakeRequest = {
-      url: ['resource'],
-      method: REQUEST_METHODS.POST,
-      data,
-    };
-    return await super.make_request<IResourceRequest>(this.sname, model);
   }
 
   static async createGroup(data: {

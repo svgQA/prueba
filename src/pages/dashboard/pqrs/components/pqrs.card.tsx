@@ -7,6 +7,7 @@ import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { useCallback } from 'preact/compat';
 import { Button } from '@/components/common/button/button';
 import { PqrsAiService } from '@/services/pqrs/ai-pqrs';
+import dayjs from 'dayjs';
 
 export interface IProps {
   pqrs: ICPqrsRequest;
@@ -31,16 +32,13 @@ export const PqrsCards = ({
     | 'warning'
     | 'info'
     | 'ternary' => {
-    if (columnColorClass.includes('error')) return 'error';
-    if (
-      columnColorClass.includes('secondary') ||
-      columnColorClass.includes('m6')
-    )
-      return 'success';
-    if (columnColorClass.includes('caution')) return 'warning';
-    if (columnColorClass.includes('ternary')) return 'ternary';
+    const pqrsType = pqrs?.extraData?.pqrsType?.toLowerCase();
+    if (pqrsType === 'queja') return 'error';
+    if (pqrsType === 'sugerencia') return 'success';
+    if (pqrsType === 'reclamo') return 'warning';
+    if (pqrsType === 'recurso') return 'ternary';
     return 'info';
-  }, []);
+  }, [pqrs?.extraData?.pqrsType]);
 
   const getTags = useCallback(() => {
     const allTags =
@@ -72,8 +70,25 @@ export const PqrsCards = ({
     await PqrsAiService.execute_ai_process_again(String(stageId), id);
   };
 
+  const calculateDaysToExpire = useCallback(() => {
+    if (!pqrs?.startDate) return null;
+    
+    const startDate = dayjs(pqrs.startDate);
+    const expirationDate = startDate.add(15, 'days');
+    const today = dayjs();
+    
+    const daysRemaining = expirationDate.diff(today, 'days');
+    
+    return {
+      daysRemaining,
+      isExpired: daysRemaining < 0,
+      isExpiringSoon: daysRemaining >= 0 && daysRemaining <= 3,
+    };
+  }, [pqrs?.startDate]);
+
   const tags = getTags();
   const area = getArea();
+  const expirationStatus = calculateDaysToExpire();
   const pqrsButtonByStage =
     pqrs.status?.toLowerCase() === 'error' ||
     pqrs.inferences[pqrs.inferences.length - 1]?.stage?.type === 'MANUAL';
@@ -101,30 +116,30 @@ export const PqrsCards = ({
         <div class='flex items-start justify-between gap-3'>
           <div class='flex-1 min-w-0'>
             <TextEllipsis
-              text={pqrs?.extraData?.clientOrCompanyName || 'Sin nombre'}
+              text={pqrs?.extraData?.title || pqrs?.clientName || 'Sin nombre'}
               maxWidth='100%'
               lines={1}
               className='font-semibold text-sm leading-tight'
             />
             <div class='flex items-center gap-2 mt-1'>
-              {pqrs?.extraData?.ticketNumber && (
+              {pqrs?.identifier && (
                 <span class='text-xs font-mono'>
-                  #{pqrs?.extraData?.ticketNumber}
+                  #{pqrs?.identifier}
                 </span>
               )}
-              {pqrs?.extraData?.accountNumber && (
+              {pqrs?.contract && (
                 <>
                   <span class=''>•</span>
-                  <span class='text-xs'>{pqrs?.extraData?.accountNumber}</span>
+                  <span class='text-xs'>{pqrs?.contract}</span>
                 </>
               )}
             </div>
           </div>
 
-          {pqrs?.extraData?.requestType && (
+          {pqrs?.extraData?.pqrsType && (
             <div class='flex flex-col gap-1.5 items-end'>
               <Badge
-                label={pqrs?.extraData?.requestType}
+                label={pqrs?.extraData?.pqrsType}
                 status={getBadgeStatus()}
                 full
                 outline
@@ -133,9 +148,9 @@ export const PqrsCards = ({
           )}
         </div>
 
-        {pqrs?.extraData?.registerObservation && (
+        {pqrs?.extraData?.observation && (
           <TextEllipsis
-            text={pqrs?.extraData?.registerObservation}
+            text={pqrs?.extraData?.observation}
             maxWidth='100%'
             lines={2}
             className='text-xs leading-relaxed'
@@ -144,27 +159,31 @@ export const PqrsCards = ({
 
         {/* Metadata Grid */}
         <div class='grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs'>
-          {pqrs?.extraData?.filingDate && (
+          {pqrs?.startDate && (
             <div class='flex items-center gap-1.5'>
               <span>📅</span>
               <FormattedDate
-                date={String(pqrs?.extraData?.filingDate)}
+                date={String(pqrs?.startDate)}
                 format='date'
               />
             </div>
           )}
 
-          {area && (
+          {pqrs?.contactEmail && (
             <div class='flex items-center gap-1.5 text-gray-text-light'>
-              <span>🏢</span>
-              <span class='truncate capitalize'>{area.replace(/_/g, ' ')}</span>
+              <span>📧</span>
+              <TextEllipsis
+                text={pqrs.contactEmail}
+                maxWidth='100%'
+                lines={1}
+              />
             </div>
           )}
         </div>
 
         {(tags.length > 0 ||
-          pqrs?.extraData?.hasFiles ||
-          typeof pqrs?.extraData?.daysToExpire === 'number') && (
+          pqrs?.resources ||
+          expirationStatus) && (
           <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border'>
             {tags.map((tag, idx) => (
               <span
@@ -175,18 +194,23 @@ export const PqrsCards = ({
               </span>
             ))}
 
-            {pqrs?.extraData?.hasFiles && (
+            {pqrs?.resources && (
               <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1'>
                 📎 Archivos
               </span>
             )}
 
-            {typeof pqrs?.extraData?.daysToExpire === 'number' &&
-              pqrs?.extraData?.daysToExpire <= 3 && (
-                <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium'>
-                  ⏰ {pqrs?.extraData?.daysToExpire}d
-                </span>
-              )}
+            {expirationStatus?.isExpired && (
+              <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium'>
+                ⏰ Expirado hace {Math.abs(expirationStatus.daysRemaining)}d
+              </span>
+            )}
+
+            {expirationStatus?.isExpiringSoon && !expirationStatus?.isExpired && (
+              <span class='px-2 py-0.5 bg-warning-opacity text-warning text-xs rounded flex items-center gap-1 font-medium'>
+                ⏰ Expira en {expirationStatus.daysRemaining}d
+              </span>
+            )}
           </div>
         )}
 

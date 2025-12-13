@@ -23,5 +23,23 @@ export const MODAL_SETTING_PQRS: IModalSidebarMenu = {
       show: true,
       id: 'pqrs:prompts:state',
     },
+    {
+      icon: '387',
+      label: 'm_priorities',
+      description: 'd_priorities',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.pqrs.priorities.base,
+      show: true,
+      id: 'pqrs:priorities:state',
+    },
+    {
+      icon: '145',
+      label: 'm_resource',
+      description: 'd_resource',
+      base,
+      to: PAGES_LIST_ROUTER.dashboard.setting.pqrs.resources.base,
+      show: true,
+      id: 'pqrs:resources:state',
+    },
   ],
 };
