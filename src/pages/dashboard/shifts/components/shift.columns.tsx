@@ -36,7 +36,7 @@ export const getColumns = (
           <div className='flex items-center gap-2'>
             <Avatar
               name={employee?.name}
-              src={employee?.image}
+              // src={employee?.image}
               size='sm'
               square
             />
@@ -233,7 +233,16 @@ export const getColumns = (
 
         return (
           <div className='flex flex-col justify-center items-center'>
+            <Gauge
+              size={10}
+              gauges={[
+                { progress: progress, color: progressColor },
+                { progress: 45, color: 'green' },
+              ]}
+            />
+            {/*
             <Gauge progress={progress} color={progressColor} />
+          */}
           </div>
         );
       },
@@ -257,7 +266,16 @@ export const getColumns = (
 
         return (
           <div className='flex flex-row justify-center'>
+            <Gauge
+              size={10}
+              gauges={[
+                { progress: roundPct, color: progressColor },
+                { progress: 45, color: 'green' },
+              ]}
+            />
+            {/*
             <Gauge progress={roundPct} color={progressColor} />
+            */}
           </div>
         );
       },
