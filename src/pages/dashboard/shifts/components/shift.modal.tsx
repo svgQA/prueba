@@ -346,24 +346,6 @@ export const ShiftForm = ({
                 </span>
               </div>
               <div className='h-48 rounded-lg overflow-hidden'>
-                {/* <Map
-                  sendPoints={() => {}}
-                  name='CheckInMap'
-                  center={{
-                    lat: taskData.locationLat,
-                    lng: taskData.locationLng,
-                  }}
-                  pointsAmount={1}
-                  pointsRef={checkInPoints.value}
-                  condition={false}
-                  errorCondition=''
-                  radialPoint={null}
-                  errorRadialPoint=''
-                  radius={50}
-                  draggable={false}
-                  width='100%'
-                  clickPoint={() => {}}
-                /> */}
                 <MapLibrePointsMap
                   sendPoints={() => {}}
                   name='CheckInMap'
@@ -403,24 +385,6 @@ export const ShiftForm = ({
                 </span>
               </div>
               <div className='h-48 rounded-lg overflow-hidden'>
-                {/* <Map
-                  sendPoints={() => {}}
-                  name='CheckOutMap'
-                  center={{
-                    lat: taskData.locationLat,
-                    lng: taskData.locationLng,
-                  }}
-                  pointsAmount={1}
-                  pointsRef={checkOutPoints.value}
-                  condition={false}
-                  errorCondition=''
-                  radialPoint={null}
-                  errorRadialPoint=''
-                  radius={50}
-                  draggable={false}
-                  width='100%'
-                  clickPoint={() => {}}
-                /> */}
                 <MapLibrePointsMap
                   sendPoints={() => {}}
                   name='CheckOutMap'

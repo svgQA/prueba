@@ -173,14 +173,15 @@ export const AccessPage: FunctionalComponent = () => {
       <div className='max-h-screen'>
         <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
           <div className='flex flex-wrap items-center justify-between gap-2 sm:gap-3 w-full'>
-            {/* <Button
+            {/*
+            <Button
               name='button-create-shift'
               label='create'
               onClick={() => handleUpsert()}
               icon='044'
               iconSize='sm'
             />
-            <AudioButton /> */}
+            */}
           </div>
         </div>
 
