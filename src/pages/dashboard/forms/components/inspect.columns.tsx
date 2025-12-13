@@ -11,7 +11,7 @@ import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
 
-export const getColumns = (t: any,
+export const getColumns = (
   onClickAction: (params: {
     id: string;
     type: string;
@@ -141,7 +141,7 @@ export const getColumns = (t: any,
               },
             }
           : {
-              label: t('actions.report'),
+              label: 'report',
               icon: 'vox-icon vx-icon-433 text-primary',
               onClick: () => {
                 onClickAction({
@@ -152,7 +152,7 @@ export const getColumns = (t: any,
               },
             },
         {
-          label: t('actions.delete'),
+          label: 'delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {

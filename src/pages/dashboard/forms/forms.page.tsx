@@ -253,7 +253,7 @@ export const FormsPage: FunctionComponent = () => {
           <Table<IResponseResponse>
             key={i18n.language}
             data={responses.value}
-            columns={getColumns(t, handleOnClick)}
+            columns={getColumns(handleOnClick)}
             pageSize={20}
             onClickAction={handleOnClick}
             loading={loading.value}
