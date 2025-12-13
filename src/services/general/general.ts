@@ -37,7 +37,7 @@ export const baseParams = {
 
 export class GeneralService extends BaseService {
   static sname: VoxServices = 'file';
-  
+
   static async presigned(data: IPresignedRequest) {
     const model: IMakeRequest = {
       url: ['file', 'presigned'],

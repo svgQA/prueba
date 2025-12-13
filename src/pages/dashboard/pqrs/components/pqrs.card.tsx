@@ -72,13 +72,13 @@ export const PqrsCards = ({
 
   const calculateDaysToExpire = useCallback(() => {
     if (!pqrs?.startDate) return null;
-    
+
     const startDate = dayjs(pqrs.startDate);
     const expirationDate = startDate.add(15, 'days');
     const today = dayjs();
-    
+
     const daysRemaining = expirationDate.diff(today, 'days');
-    
+
     return {
       daysRemaining,
       isExpired: daysRemaining < 0,
@@ -123,9 +123,7 @@ export const PqrsCards = ({
             />
             <div class='flex items-center gap-2 mt-1'>
               {pqrs?.identifier && (
-                <span class='text-xs font-mono'>
-                  #{pqrs?.identifier}
-                </span>
+                <span class='text-xs font-mono'>#{pqrs?.identifier}</span>
               )}
               {pqrs?.contract && (
                 <>
@@ -162,10 +160,7 @@ export const PqrsCards = ({
           {pqrs?.startDate && (
             <div class='flex items-center gap-1.5'>
               <span>📅</span>
-              <FormattedDate
-                date={String(pqrs?.startDate)}
-                format='date'
-              />
+              <FormattedDate date={String(pqrs?.startDate)} format='date' />
             </div>
           )}
 
@@ -181,9 +176,7 @@ export const PqrsCards = ({
           )}
         </div>
 
-        {(tags.length > 0 ||
-          pqrs?.resources ||
-          expirationStatus) && (
+        {(tags.length > 0 || pqrs?.resources || expirationStatus) && (
           <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border'>
             {tags.map((tag, idx) => (
               <span
@@ -206,11 +199,12 @@ export const PqrsCards = ({
               </span>
             )}
 
-            {expirationStatus?.isExpiringSoon && !expirationStatus?.isExpired && (
-              <span class='px-2 py-0.5 bg-warning-opacity text-warning text-xs rounded flex items-center gap-1 font-medium'>
-                ⏰ Expira en {expirationStatus.daysRemaining}d
-              </span>
-            )}
+            {expirationStatus?.isExpiringSoon &&
+              !expirationStatus?.isExpired && (
+                <span class='px-2 py-0.5 bg-warning-opacity text-warning text-xs rounded flex items-center gap-1 font-medium'>
+                  ⏰ Expira en {expirationStatus.daysRemaining}d
+                </span>
+              )}
           </div>
         )}
 

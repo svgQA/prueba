@@ -43,13 +43,22 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
             </h4>
             <div class='space-y-3'>
               {pqrs.value?.municipality && (
-                <TextInformation label='Municipio' value={pqrs.value?.municipality} />
+                <TextInformation
+                  label='Municipio'
+                  value={pqrs.value?.municipality}
+                />
               )}
               {pqrs.value?.department && (
-                <TextInformation label='Departamento' value={pqrs.value?.department} />
+                <TextInformation
+                  label='Departamento'
+                  value={pqrs.value?.department}
+                />
               )}
               {pqrs.value?.transformer && (
-                <TextInformation label='Transformador' value={pqrs.value?.transformer} />
+                <TextInformation
+                  label='Transformador'
+                  value={pqrs.value?.transformer}
+                />
               )}
               {pqrs.value?.pole && (
                 <TextInformation label='Poste' value={pqrs.value?.pole} />
@@ -80,8 +89,11 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
                     name: pqrs.value?.clientName || 'Ubicación PQRS',
                   },
                 ]}
-                sendPoints={() => { }}
-                center={{ lat: pqrs.value?.lat || 0, lng: pqrs.value?.lng || 0 }}
+                sendPoints={() => {}}
+                center={{
+                  lat: pqrs.value?.lat || 0,
+                  lng: pqrs.value?.lng || 0,
+                }}
                 height='100%'
                 disablePointSelection={true}
               />
@@ -97,7 +109,11 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
               </h4>
               <div class='bg-gray-50 dark:bg-b-dark-light rounded p-3'>
                 <TextEllipsis
-                  text={typeof pqrs.value.raw === 'string' ? pqrs.value.raw : JSON.stringify(pqrs.value.raw, null, 2)}
+                  text={
+                    typeof pqrs.value.raw === 'string'
+                      ? pqrs.value.raw
+                      : JSON.stringify(pqrs.value.raw, null, 2)
+                  }
                   maxWidth='100%'
                   lines={8}
                   className='text-xs text-gray-text-light dark:text-b-light-dark font-mono whitespace-pre-wrap'
@@ -113,7 +129,11 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
               </h4>
               <div class='bg-gray-50 dark:bg-b-dark-light rounded p-3'>
                 <TextEllipsis
-                  text={typeof pqrs.value.rawFile === 'string' ? pqrs.value.rawFile : JSON.stringify(pqrs.value.rawFile, null, 2)}
+                  text={
+                    typeof pqrs.value.rawFile === 'string'
+                      ? pqrs.value.rawFile
+                      : JSON.stringify(pqrs.value.rawFile, null, 2)
+                  }
                   maxWidth='100%'
                   lines={8}
                   className='text-xs text-gray-text-light dark:text-b-light-dark font-mono whitespace-pre-wrap'
@@ -242,7 +262,6 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
           </p>
         </div>
       )}
-
     </div>
   );
 };

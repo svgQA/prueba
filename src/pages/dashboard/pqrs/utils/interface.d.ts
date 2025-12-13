@@ -1,6 +1,6 @@
 import { IPresignedRequest } from '@/types/file';
 
-interface IdName<T= number> {
+interface IdName<T = number> {
   id: T;
   name: string;
   description?: string;
@@ -42,7 +42,11 @@ export interface ICPqrsExtraData {
   title: string | null;
   observation: string | null;
   pqrsType: 'peticion' | 'queja' | 'reclamo' | 'sugerencia' | 'recurso';
-  legalResourceType?: 'reposicion' | 'apelacion' | 'reposicion_y_apelacion' | null;
+  legalResourceType?:
+    | 'reposicion'
+    | 'apelacion'
+    | 'reposicion_y_apelacion'
+    | null;
   mainIssue: string | null;
   secondaryIssues?: string[] | null;
   affectedService: 'energia' | 'agua' | 'gas' | 'otro' | null;

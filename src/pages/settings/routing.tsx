@@ -881,7 +881,6 @@ export const RoutingContent = memo(() => {
           path={PAGES_LIST_ROUTER.dashboard.setting.pqrs.resources.update.to}
           component={lazy(() => Promise.resolve({ default: ResourcesForm }))}
         />
-  
       </Suspense>
     </Router>
   );

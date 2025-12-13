@@ -59,7 +59,6 @@ export const ResourcesForm: FunctionComponent = () => {
     loading.value = false;
   };
 
-
   const handleSubmit = async (_model: any, _form?: any) => {
     loading.value = true;
     // let body: IResourceResponse = {

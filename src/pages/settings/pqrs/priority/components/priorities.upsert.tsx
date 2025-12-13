@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, Field } from 'react-final-form';
 import { useParams } from 'wouter';
 
-import { PrioritiesService } from "@/services/pqrs/priorities";
+import { PrioritiesService } from '@/services/pqrs/priorities';
 import { ICPrioritiesResponse } from '../utils/interface';
 
 export const PrioritiesForm: FunctionComponent = () => {
@@ -59,7 +59,6 @@ export const PrioritiesForm: FunctionComponent = () => {
     };
     loading.value = false;
   };
-
 
   const handleSubmit = async (model: any, _form?: any) => {
     loading.value = true;

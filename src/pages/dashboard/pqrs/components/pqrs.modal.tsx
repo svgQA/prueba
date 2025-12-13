@@ -36,12 +36,7 @@ interface IProps {
   tags?: any[];
 }
 
-export const PqrsModal = ({
-  showModal,
-  closeModal,
-  id,
-  tags,
-}: IProps) => {
+export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
 
@@ -138,9 +133,7 @@ export const PqrsModal = ({
           <div class='flex items-center gap-2 text-xs text-gray-text-light dark:text-b-light-dark'>
             {pqrs.value?.identifier && (
               <>
-                <span class='font-mono'>
-                  #{pqrs.value.identifier}
-                </span>
+                <span class='font-mono'>#{pqrs.value.identifier}</span>
                 {pqrs.value?.contract && (
                   <>
                     <span>•</span>
@@ -192,7 +185,7 @@ export const PqrsModal = ({
           />
         )}
 
-        {pqrs.value?.area?.name === "Mantenimiento" && pqrs.value.id && (
+        {pqrs.value?.area?.name === 'Mantenimiento' && pqrs.value.id && (
           <Button
             name='btn-click-ots'
             label='create OTS'
@@ -216,7 +209,12 @@ export const PqrsModal = ({
         <div class='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs'>
           {pqrs.value?.startDate && (
             <Badge
-              label={'clientName: ' + DateUtils.dateToFrontend(pqrs.value?.startDate, { format: 'DD/MM/YYYY' })}
+              label={
+                'clientName: ' +
+                DateUtils.dateToFrontend(pqrs.value?.startDate, {
+                  format: 'DD/MM/YYYY',
+                })
+              }
               status='info'
               size='sm'
               icon='315'
@@ -281,7 +279,6 @@ export const PqrsModal = ({
           )}
         </div>
 
-
         <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border dark:border-b-dark-light'>
           {tags &&
             tags.map((tag, idx) => (
@@ -340,7 +337,9 @@ export const PqrsModal = ({
         <TabInformation tabs={tabs} activeTab={activeTab}>
           <>
             {activeTab.value === 'general' && <PqrsGeneralModal pqrs={pqrs} />}
-            {activeTab.value === 'analysis' && <PqrsInferenceModal pqrs={pqrs} />}
+            {activeTab.value === 'analysis' && (
+              <PqrsInferenceModal pqrs={pqrs} />
+            )}
           </>
         </TabInformation>
       </div>
@@ -356,7 +355,7 @@ interface ITab<T = string> {
 interface ITabProp {
   tabs: ITab[];
   children: VNode | VNode[];
-  activeTab: Signal<string>
+  activeTab: Signal<string>;
 }
 
 const TabInformation = ({ tabs, children, activeTab }: ITabProp) => (
@@ -366,10 +365,11 @@ const TabInformation = ({ tabs, children, activeTab }: ITabProp) => (
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            class={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${activeTab.value === tab.id
-              ? 'bg-primary-opacity text-primary border-b-2 border-primary shadow-sm'
-              : 'text-gray-text-light dark:text-b-light-dark hover:text-t-light hover:bg-b-light dark:hover:bg-b-dark-light'
-              }`}
+            class={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+              activeTab.value === tab.id
+                ? 'bg-primary-opacity text-primary border-b-2 border-primary shadow-sm'
+                : 'text-gray-text-light dark:text-b-light-dark hover:text-t-light hover:bg-b-light dark:hover:bg-b-dark-light'
+            }`}
             onClick={() => (activeTab.value = tab.id)}
           >
             <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>

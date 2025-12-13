@@ -30,7 +30,7 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
       information: model.description,
       files: files.value,
     };
-    
+
     const response = await PqrsAiService.execute_ai_pqrs(data);
     if (!response.getStatus()) {
       loading.value = false;
