@@ -9,8 +9,6 @@ import { useMemo, useCallback } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
 import { File } from '@/components/common/file/file';
 import { IPresignedRequest } from '@/types/file';
-import { fileManager } from '@/utils/network/file/file';
-import { useUserStore } from '@/store/slices';
 import { PqrsAiService } from '@/services/pqrs/ai-pqrs';
 import { Loading } from '@/components/common/loading/loading';
 
@@ -21,27 +19,19 @@ interface IProps {
 
 export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
   const { t } = useTranslation();
-  const { getTenant, getCompanyId } = useUserStore();
 
   const loading = useSignal<boolean>(false);
   const files = useSignal<IPresignedRequest[]>([]);
 
   const handleSubmit = async (model: any, _form: any) => {
     loading.value = true;
-    let information = model.description;
-    let rawFiles: string[] = [];
 
-    if (files.value && files.value.length > 0) {
-      const getUrlsPromises = files.value.map((file: IPresignedRequest) =>
-        fileManager.getUrl(getTenant(), getCompanyId(), file)
-      );
-      const resolvedUrls = await Promise.all(getUrlsPromises);
-      rawFiles.push(...resolvedUrls);
-    }
-    const response = await PqrsAiService.execute_ai_pqrs({
-      information,
-      files: rawFiles,
-    });
+    let data = {
+      information: model.description,
+      files: files.value,
+    };
+
+    const response = await PqrsAiService.execute_ai_pqrs(data);
     if (!response.getStatus()) {
       loading.value = false;
       return;
