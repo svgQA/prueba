@@ -32,10 +32,26 @@ export interface ICPqrsRequest {
   priorityId?: number | null;
 
   //relations
-  inferences: any;
+  inferences: Inference[];
   area?: IdName;
   subarea?: IdName;
   priority?: IdName;
+}
+
+export interface Inference {
+  title: string;
+  subtitle: string;
+  description: string;
+  analysisRequest: string;
+  analysisResponse: string;
+  confidence: number;
+  createdAt: string;
+  stage: {
+    id: number;
+    stageName: string;
+    goal: string;
+  };
+  [key: string]: any;
 }
 
 export interface ICPqrsExtraData {

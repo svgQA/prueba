@@ -15,6 +15,7 @@ import {
 
 import { Modal } from '@/components/common/modal/modal';
 import { Badge } from '@/components/common/badge/badge';
+import { Chip } from '@/components/common/chip/chip';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { Button } from '@/components/common/button/button';
 
@@ -150,7 +151,6 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
             label={pqrs.value.extraData.pqrsType}
             status={getBadgeStatus()}
             size='sm'
-            icon='315'
             outline
           />
         )}
@@ -160,7 +160,6 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
             label={pqrs.value?.area.name}
             status='info'
             size='sm'
-            icon='315'
             outline
           />
         )}
@@ -170,7 +169,6 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
             label={pqrs.value?.subarea.name}
             status='success'
             size='sm'
-            icon='315'
             outline
           />
         )}
@@ -180,7 +178,6 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
             label={pqrs.value?.priority.name}
             status='warning'
             size='sm'
-            icon='315'
             outline
           />
         )}
@@ -210,14 +207,13 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
           {pqrs.value?.startDate && (
             <Badge
               label={
-                'clientName: ' +
+                'fecha: ' +
                 DateUtils.dateToFrontend(pqrs.value?.startDate, {
                   format: 'DD/MM/YYYY',
                 })
               }
               status='info'
               size='sm'
-              icon='315'
               outline
               full
             />
@@ -228,7 +224,6 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
               label={'clientName: ' + pqrs.value?.clientName}
               status='info'
               size='sm'
-              icon='315'
               outline
               full
             />
@@ -239,7 +234,6 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
               label={'contactEmail: ' + pqrs.value?.contactEmail}
               status='info'
               size='sm'
-              icon='315'
               outline
               full
             />
@@ -250,7 +244,6 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
               label={'Cedula: ' + pqrs.value?.identifier}
               status='info'
               size='sm'
-              icon='315'
               outline
               full
             />
@@ -261,7 +254,6 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
               label={'contract: ' + pqrs.value?.contract}
               status='info'
               size='sm'
-              icon='315'
               outline
               full
             />
@@ -272,7 +264,6 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
               label={'address: ' + pqrs.value?.address}
               status='info'
               size='sm'
-              icon='315'
               outline
               full
             />
@@ -282,30 +273,19 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
         <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border dark:border-b-dark-light'>
           {tags &&
             tags.map((tag, idx) => (
-              <span
-                key={idx}
-                class='px-2 py-0.5 bg-b-light dark:bg-b-dark text-gray-text-light dark:text-b-light-dark text-xs rounded border border-gray-border/60 dark:border-b-dark-light/60'
-              >
-                #{String(tag)}
-              </span>
+              <Chip key={idx} label={`#${String(tag)}`} width='lg' />
             ))}
 
           {pqrs.value?.resources && (
-            <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1 border border-primary/30'>
-              📎 Archivos
-            </span>
+            <Chip label={'📎 Archivos'} width='lg' />
           )}
 
           {expirationStatus?.isExpired && (
-            <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium border border-error/40'>
-              ⏰ Expirado hace {Math.abs(expirationStatus.daysRemaining)}d
-            </span>
+            <Chip label={`⏰ Expirado hace ${Math.abs(expirationStatus.daysRemaining)}d`} width='lg' />
           )}
 
           {expirationStatus?.isExpiringSoon && !expirationStatus?.isExpired && (
-            <span class='px-2 py-0.5 bg-warning-opacity text-warning text-xs rounded flex items-center gap-1 font-medium border border-warning/40'>
-              ⏰ Expira en {expirationStatus.daysRemaining}d
-            </span>
+            <Chip label={`⏰ Expira en ${expirationStatus.daysRemaining}d`} width='full' />
           )}
         </div>
       </div>
