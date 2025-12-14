@@ -263,7 +263,7 @@ export const PqrsPage: FunctionComponent = () => {
             return (
               <div
                 key={`${column.colorClass}-${index}`}
-                class={`${column.bgColorClass} rounded-xl p-4 min-h-96 w-80 flex-shrink-0 border border-gray-border/60 shadow-[0_8px_24px_rgba(0,0,0,0.05)] backdrop-blur-sm`}
+                class={`${column.bgColorClass} rounded-xl p-4 min-h-96 w-80 flex-shrink-0 border border-gray-border/60 shadow-[0_8px_24px_rgba(0,0,0,0.05)] backdrop-blur-sm dark:bg-b-dark-light dark:border-gray-border/30`}
               >
                 <div class='flex items-center justify-between mb-4 gap-2'>
                   <h3
@@ -301,7 +301,7 @@ export const PqrsPage: FunctionComponent = () => {
                     );
                   })}
                   {items.length === 0 && (
-                    <div class='text-center py-8 text-gray-text-light opacity-60 border border-dashed border-gray-border rounded-lg bg-white/60'>
+                    <div class='text-center py-8 text-gray-text-light opacity-80 border border-dashed border-gray-border rounded-lg bg-white/60 dark:bg-b-dark dark:text-t-dark-light dark:border-gray-border/30'>
                       <p class='text-sm'>No hay PQRS en esta columna</p>
                       <p class='text-xs mt-1'>
                         Crea un nuevo caso para empezar.
@@ -313,7 +313,7 @@ export const PqrsPage: FunctionComponent = () => {
             );
           })}
           {!loading.value && columns.value.length === 0 && (
-            <div class='text-center py-8 text-gray-text-light opacity-70 border border-dashed border-gray-border rounded-lg bg-white/60 w-full'>
+            <div class='text-center py-8 text-gray-text-light opacity-80 border border-dashed border-gray-border rounded-lg bg-white/60 dark:bg-b-dark dark:text-t-dark-light dark:border-gray-border/30 w-full'>
               <p class='text-sm font-medium text-t-light'>
                 Aún no hay estados configurados
               </p>
