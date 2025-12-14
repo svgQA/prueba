@@ -28,19 +28,6 @@ export const SettingsModal = () => {
   useEffect(() => {
     if (settings) {
       if (!current.to) {
-        // let adminMenu;
-        // for (const menus of MODAL_SIDEBAR_MENUS) {
-        //   adminMenu = menus.menus.find((menu) => menu.show);
-        //   if (adminMenu) break;
-        // }
-        // if (adminMenu) {
-        //   go({
-        //     ...adminMenu,
-        //     to: `/setting${adminMenu.base}${adminMenu.to || '/'}`,
-        //   });
-        // }
-
-        // Find the first menu that has permissions
         let firstAvailableMenu;
 
         for (const menuGroup of MODAL_SIDEBAR_MENUS) {

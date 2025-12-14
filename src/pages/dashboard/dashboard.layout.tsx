@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'preact';
-import { Route, Router } from 'wouter';
+import { Route, Router, useLocation } from 'wouter';
 import { lazy, Suspense, useEffect, useState } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
@@ -38,7 +38,6 @@ import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { AuthAmplifyProps } from '@/utils/types/auth.interface';
 import { HistoryNotificationsPage } from './history/history.page';
 import { PqrsPage } from './pqrs/pqrs.page';
-import { WebSocketProvider } from '@/utils/socket';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { CustomSwitcher } from '@/components/common/CustomSwitcher';
 import { hasUserTenant, useUserStore } from '@/store/slices';
@@ -62,13 +61,17 @@ import { FaroManager } from '@/utils/telemetry';
 import { IClientResponse } from '@/types/user/user.response';
 import { USER_TYPE } from '@/types/user/user.enum';
 import { IDropdownOptions } from '@/components/common/dropdown/interface';
+import { INITIAL_DROPDOWN_OPTIONS } from './constant';
+type Props = {
+  location: string;
+};
 // import { IconsModal } from '../globals/icons/icons';
 
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
-export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
-  ({ signOut }: AuthAmplifyProps) => {
+export const DashboardLayout: FunctionComponent<AuthAmplifyProps & Props> =
+  memo(({ signOut, location }: AuthAmplifyProps & Props) => {
     const {
       setCompanies,
       companies,
@@ -92,20 +95,9 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setPlaces,
       getPlaceId,
     } = useUserStore();
-
+    const [, navigate] = useLocation();
     const clients = useSignal<IClientResponse[]>([]);
-    const options = useSignal<IDropdownOptions[]>([
-      {
-        label: 'setting',
-        value: 1,
-        icon: '158',
-      },
-      {
-        label: 'logout',
-        value: 2,
-        icon: '099',
-      },
-    ]);
+    const options = useSignal<IDropdownOptions[]>(INITIAL_DROPDOWN_OPTIONS);
     const isModalOpen = useSignal<boolean>(false);
     const modalPanic = useSignal<IPanic | undefined>(undefined);
     const [modalKey, setModalKey] = useState(0);
@@ -116,6 +108,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       BaseService.setLoading(openLoading, closeLoading);
       BaseService.setUser(getTenant, getToken, getCompanyId, getPlaceId);
       validateUser();
+      navigate(location);
     }, []);
 
     useEffect(() => {
@@ -139,12 +132,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setLoaded(result);
 
       if (result) {
-        Promise.all([
-          getCompanies(),
-          setTenantOption(),
-          getPermissions(),
-          // getPlaces(),
-        ]);
+        Promise.all([getCompanies(), setTenantOption(), getPermissions()]);
       }
     };
 
@@ -242,7 +230,8 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setAllPermissions(permissions.model);
     };
 
-    const toggleSidebar = () => {
+    const toggleSidebar = (e: any) => {
+      e.preventDefault();
       setSidebarOpen((prev) => !prev);
     };
 
@@ -334,75 +323,71 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
               panic={modalPanic.value}
             />
           )}
-          <WebSocketProvider>
-            <Router>
-              <Suspense fallback={<div></div>}>
-                <Route
-                  path={PAGES_LIST.HOME}
-                  component={MemosPage}
-                  key='memos-page'
-                />
-                <Route
-                  path={PAGES_LIST.SHIFTS}
-                  component={lazy(() =>
-                    Promise.resolve({
-                      default: ShiftsPage,
-                    })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.ACCESS}
-                  component={lazy(() =>
-                    Promise.resolve({ default: AccessPage })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.CORRESPONDENCE}
-                  component={lazy(() =>
-                    Promise.resolve({
-                      default: CorrespondencePage,
-                    })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.USERS}
-                  component={lazy(() =>
-                    Promise.resolve({ default: UsersPage })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.FORMS}
-                  component={lazy(() =>
-                    Promise.resolve({ default: FormsPage })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.DEVICES}
-                  component={lazy(() =>
-                    Promise.resolve({
-                      default: DevicesPage,
-                    })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.HISTORY}
-                  component={lazy(() =>
-                    Promise.resolve({
-                      default: HistoryNotificationsPage,
-                    })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.PQRS}
-                  component={lazy(() =>
-                    Promise.resolve({
-                      default: PqrsPage,
-                    })
-                  )}
-                />
-              </Suspense>
-            </Router>
-          </WebSocketProvider>
+          <Router>
+            <Suspense fallback={<div></div>}>
+              <Route
+                path={PAGES_LIST.HOME}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: MemosPage,
+                  })
+                )}
+                key='memos-page'
+              />
+              <Route
+                path={PAGES_LIST.SHIFTS}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: ShiftsPage,
+                  })
+                )}
+              />
+              <Route
+                path={PAGES_LIST.ACCESS}
+                component={lazy(() => Promise.resolve({ default: AccessPage }))}
+              />
+              <Route
+                path={PAGES_LIST.CORRESPONDENCE}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: CorrespondencePage,
+                  })
+                )}
+              />
+              <Route
+                path={PAGES_LIST.USERS}
+                component={lazy(() => Promise.resolve({ default: UsersPage }))}
+              />
+              <Route
+                path={PAGES_LIST.FORMS}
+                component={lazy(() => Promise.resolve({ default: FormsPage }))}
+              />
+              <Route
+                path={PAGES_LIST.DEVICES}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: DevicesPage,
+                  })
+                )}
+              />
+              <Route
+                path={PAGES_LIST.HISTORY}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: HistoryNotificationsPage,
+                  })
+                )}
+              />
+              <Route
+                path={PAGES_LIST.PQRS}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: PqrsPage,
+                  })
+                )}
+              />
+            </Suspense>
+          </Router>
         </div>
 
         <SettingsModal />
@@ -410,5 +395,4 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
         {/* <IconsModal /> */}
       </section>
     );
-  }
-);
+  });

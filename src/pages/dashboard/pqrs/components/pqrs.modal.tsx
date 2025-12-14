@@ -276,16 +276,20 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
               <Chip key={idx} label={`#${String(tag)}`} width='lg' />
             ))}
 
-          {pqrs.value?.resources && (
-            <Chip label={'📎 Archivos'} width='lg' />
-          )}
+          {pqrs.value?.resources && <Chip label={'📎 Archivos'} width='lg' />}
 
           {expirationStatus?.isExpired && (
-            <Chip label={`⏰ Expirado hace ${Math.abs(expirationStatus.daysRemaining)}d`} width='lg' />
+            <Chip
+              label={`⏰ Expirado hace ${Math.abs(expirationStatus.daysRemaining)}d`}
+              width='lg'
+            />
           )}
 
           {expirationStatus?.isExpiringSoon && !expirationStatus?.isExpired && (
-            <Chip label={`⏰ Expira en ${expirationStatus.daysRemaining}d`} width='full' />
+            <Chip
+              label={`⏰ Expira en ${expirationStatus.daysRemaining}d`}
+              width='full'
+            />
           )}
         </div>
       </div>

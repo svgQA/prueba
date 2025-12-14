@@ -12,7 +12,6 @@ import './utils/memos.css';
 import { useLocation } from 'wouter';
 import { UserService } from '@/services/general/user';
 import { IUserResponse } from '@/types/auth';
-import { useWebSocket } from '@/utils/socket';
 import { Section } from '@/components/common/section/section';
 import { useTranslation } from 'react-i18next';
 import { Table } from '@/components/common/table/table';
@@ -71,7 +70,7 @@ export const MemosPage: FunctionComponent = () => {
     string | null
   >(null);
 
-  const wsManager = useWebSocket();
+  // const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
   const routePath = useSignal<RoutePoint[]>([]);
 
@@ -96,20 +95,6 @@ export const MemosPage: FunctionComponent = () => {
 
   useEffect(() => {
     document.title = t('p_chat');
-    return () => {
-      wsManager.removeListener('memos');
-    };
-  }, []);
-
-  useEffect(() => {
-    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
-    if (selectedCompany) {
-      fetchInitialData(dateRangeFilters);
-      selectedNotifier();
-    }
-  }, [selectedCompany, location, dateRangeFilters, selectedPlace]);
-
-  useEffect(() => {
     WebSocketManager.add(
       SOCKET_MESSAGE_AREA.MEMOS,
       handleMessage,
@@ -122,6 +107,14 @@ export const MemosPage: FunctionComponent = () => {
       );
     };
   }, []);
+
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      fetchInitialData(dateRangeFilters);
+      selectedNotifier();
+    }
+  }, [selectedCompany, location, dateRangeFilters, selectedPlace]);
 
   const selectedNotifier = () => {
     handleNotificationEvent('notification-click', (id: any) => {

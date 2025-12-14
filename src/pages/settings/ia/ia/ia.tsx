@@ -29,7 +29,8 @@ export const IASettingPage: FunctionComponent = () => {
 
   const get_config_model = async () => {
     try {
-      const [response_model, response_files /*, response_tenant_status*/] =
+      /*
+      const [response_model, response_files] =
         await Promise.all([
           IaService.model_status(),
           IaService.model_files(),
@@ -43,7 +44,7 @@ export const IASettingPage: FunctionComponent = () => {
       if (response_files.getStatus()) {
         model_files.value = response_files.getMany();
       }
-
+    */
       // if (response_tenant_status.getStatus()) {
       //   tenant_status.value = response_tenant_status.getOne();
       // }
@@ -74,23 +75,29 @@ export const IASettingPage: FunctionComponent = () => {
   };
 
   const create_model = async () => {
+    /*
     const response = await IaService.create_model();
     if (!response.getStatus()) return;
     get_config_model();
+  */
   };
 
   const sync_model = async () => {
+    /*
     const response = await IaService.model_sync();
     if (!response.getStatus()) return;
     model_status.value = response.getOne();
+  */
   };
 
   const makeRequest = async () => {
+    /*
     const response = await IaService.make_query({
       question: testMessage.value,
     });
     if (!response.getStatus()) testResponse.value = 'error.';
     else testResponse.value = response.getOne().answer;
+  */
   };
 
   return (

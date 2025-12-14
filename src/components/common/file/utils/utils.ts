@@ -53,9 +53,10 @@ export const handleFileSaveWrapper = async (
     area,
   };
 
-  const response = (service === 'ai_pqrs') ?
-    await PqrsAiService.presigned(model) :
-    await GeneralService.presigned(model);
+  const response =
+    service === 'ai_pqrs'
+      ? await PqrsAiService.presigned(model)
+      : await GeneralService.presigned(model);
   if (!response.getStatus()) return;
 
   const urlModel = response.getOne();

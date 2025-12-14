@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
 import { IUserResponse } from '@/types/auth';
 import { Chats, FrequentQuestion } from '../interface';
-import { useWebSocket } from '@/utils/socket';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useSignal } from '@preact/signals';
 import { IMessage } from '@/utils/socket/interface';
@@ -83,7 +82,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 }) => {
   const { t } = useTranslation();
   const { cognito } = useUserStore();
-  const wsManager = useWebSocket();
+  // const wsManager = useWebSocket();
   const userSelected = useSignal<IUserResponse | undefined>();
   const currentPage = useSignal<number>(1);
   const totalPages = useSignal<number>(3);
@@ -128,12 +127,14 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     }
   };
 
+  /*
   useEffect(() => {
     wsManager.addListener('memos', handleReceiveMessage);
     return () => {
       wsManager.removeListener('memos');
     };
   }, []);
+  */
 
   useEffect(() => {
     // Reset pagination when view mode changes
@@ -152,9 +153,11 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     userSelected.value = undefined;
   }, [viewMode.value]);
 
+  /*
   const handleReceiveMessage = (message: IMessage) => {
     chats.value = addMessageArray(message.from, message);
   };
+  */
 
   const addMessageArray = (
     sender: string,
@@ -204,7 +207,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
       message,
       replyTo: replyId,
     };
-    wsManager.sendMessage(objMessage);
+    // wsManager.sendMessage(objMessage);
 
     chats.value = addMessageArray(objMessage.to, objMessage, true);
     replyToId.value = undefined;

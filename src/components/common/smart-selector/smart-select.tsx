@@ -339,6 +339,7 @@ export function SmartSelector<T = IOption>({
         {button && (
           <div className='border-l dark:border-gray-600 border-b-light-dark'>
             <Button
+              id='btn-select-action'
               onClick={handleButtonClick}
               name='btn-input-action'
               icon={buttonIcon}
