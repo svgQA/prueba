@@ -1,91 +1,53 @@
+/* ShiftsPage queda como composición de hooks + UI; lógica pesada sale a hooks para legibilidad y mejor performance. */
 import { FunctionalComponent } from 'preact';
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
-import {
-  baseParams,
-  GanttService,
-  NotificationService,
-  ServiceService,
-  ShiftService,
-  ShiftSummary,
-} from '@/services';
+import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
+
 import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
-import { getColumns } from './components/shift.columns';
-import { IShiftResponse } from '@/types/shift/activity';
-import { useTranslation } from 'react-i18next';
-import {
-  GeneralTask,
-  Task,
-  TaskStatus,
-  TaskType,
-  User,
-  ViewMode,
-} from '@/components/compose/gantt/types/public-types';
-import dayjs from 'dayjs';
-import { Gantt } from '@/components/compose/gantt';
-import { TaskForm } from './components/upsert.modal';
-import { CardData } from '@/components/compose/cards';
 import { Button } from '@/components/common/button/button';
-import { SendForm } from './components/send/send.modal';
+
+import { getColumns } from './components/shift.columns';
 import { ExpandableMultiple } from './components/expandable.multiple';
+import { TaskForm } from './components/upsert.modal';
+import { SendForm } from './components/send/send.modal';
 import { ShiftForm } from './components/shift.modal';
 import LiveUserMap from './components/shift.map';
-import { Group } from '@/components/compose/gantt/components/gantt/group';
 import { PlannerView } from './components/planner.view';
-import { UserService } from '@/services/general/user';
-import { MentionOption } from '@/components/common/mention-editor';
-import { ToastManager } from '@/utils/toast/toast-manager';
-import { ROW_ACTIONS } from '@/components/common/table/enum';
-import { showAlert } from '@/components/common/show-alert/show-alert';
-import { SHIFT_STATUS } from '@/types/shift/shift.enum.ts';
-import { getLocation } from '@/utils/utilities/location';
+
+import { Gantt } from '@/components/compose/gantt';
+import { Group } from '@/components/compose/gantt/components/gantt/group';
+import {
+  ViewMode,
+  GeneralTask,
+  Task,
+  User,
+} from '@/components/compose/gantt/types/public-types';
+
+import { ShiftSummary } from '@/services';
 import { useUserStore } from '@/store/slices';
 import { modulesReport } from '@/types/form';
-import {
-  closeSpinner,
-  openSpinner,
-} from '@/store/signals/modals/spinner.signal';
-// import { merge } from 'lodash';
+import { IShiftResponse } from '@/types/shift/activity';
 
-/**
- * TODO: WebSocket
- */
-import { WebSocketManager } from '@/utils/socket/manager/manager';
-import {
-  InSocketMessage,
-  SOCKET_MESSAGE_AREA,
-  SOCKET_MESSAGE_EVENTS,
-  MessageEvent,
-  MESSAGE_LISTENERS,
-} from '@/utils/socket/manager/types';
-import { fileManager } from '@/utils/network/file/file';
-import { ReportService } from '@/services/report/report';
-// import { memo } from '@tanstack/react-table';
-import { IShiftReportRequest } from '@/types/report/report.request';
-import { ReportType } from '@/types/report/report.enum';
+import { MetricCard } from '@/components/compose/cards/company/metric';
+import { BalanceIndicator } from '@/components/common/balance/balance';
 
-enum VIEW_NAME {
-  TABLE,
-  CALENDAR,
-  SCHEDULER,
-  SUPERVISOR,
-  MAP,
-  PLANNER,
-}
+import { VIEW_NAME } from './utils/view.name';
+import { useShiftsData } from './utils/hooks/useShiftData';
+import { useShiftSocket } from './utils/hooks/useShiftSocket';
+import { useShiftModals } from './utils/hooks/useShiftModal';
+import { useShiftActions } from './utils/hooks/useShiftAction';
 
 export const ShiftsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
-  const showUpsertModal = useSignal<boolean>(false);
-  const showSendModal = useSignal<boolean>(false);
-  const notificationValidate = useSignal<boolean>(false);
-  const showShiftModal = useSignal<boolean>(false);
+
+  const showUpsertModal = useSignal(false);
+  const showSendModal = useSignal(false);
+  const notificationValidate = useSignal(false);
+  const showShiftModal = useSignal(false);
+
   const shiftSummary = useSignal<ShiftSummary>({
     total: 0,
     in_progress: 0,
@@ -94,6 +56,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const shifts = useSignal<IShiftResponse[]>([]);
+  const loading = useSignal(false);
 
   const [isChecked, setIsChecked] = useState(true);
   const [view, setView] = useState<ViewMode>(ViewMode.QuarterDay);
@@ -104,194 +67,130 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [timeBeforeSelected, setTimeBeforeSelected] = useState<number>(0);
   const [externalSelected, setExternalSelected] = useState<string>('');
 
-  const [services, setServices] = useState<MentionOption[]>([]);
-  const [users, setUsers] = useState<MentionOption[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
 
-  const [selectedUsers, setSelectedUsers] = useState([]);
-  const [onNotifications, setOnNotifications] = useState(false);
-  const [hasValidPlayer, setHasValidPlayer] = useState(false);
-
-  const loading = useSignal<boolean>(false);
-
-  // Estado para almacenar los filtros de rango de fechas
   const [dateRangeFilters, setDateRangeFilters] = useState<{
     [key: string]: [string, string];
   } | null>(null);
 
-  // Memoizar los servicios y usuarios para evitar re-renders innecesarios
-  const memoizedServices = useMemo(() => services, [services]);
-  const memoizedUsers = useMemo(() => users, [users]);
+  const startDate = useMemo(() => dayjs().subtract(1, 'day').toDate(), []);
+  const endDate = useMemo(
+    () => dayjs(startDate).add(1, 'week').toDate(),
+    [startDate]
+  );
 
-  const startDate = dayjs().subtract(1, 'day').toDate();
-  const endDate = dayjs(startDate).add(1, 'week').toDate();
   const [ganttShifts, setGanttShifts] = useState<GeneralTask>({
     startDate,
     endDate,
     users: [],
   });
 
-  /**
-   * Handle the useEffect hook for the document title and shift retrieval.
-   */
   const { selectedCompany } = useUserStore();
+
   useEffect(() => {
     document.title = t('p_shift');
+  }, [t]);
+
+  const {
+    services,
+    users,
+    hasValidPlayer,
+    fetchInitialData,
+    handleGetShiftSummary,
+  } = useShiftsData({
+    shifts,
+    loading,
+    shiftSummary,
+    notificationValidate,
+  });
+
+  useEffect(() => {
+    if (!selectedCompany) return;
+    handleGetShiftSummary(dateRangeFilters);
+    fetchInitialData(dateRangeFilters);
+  }, [
+    dateRangeFilters,
+    fetchInitialData,
+    handleGetShiftSummary,
+    selectedCompany,
+  ]);
+
+  useShiftSocket({
+    shifts,
+    dateRangeFilters,
+    onCreate: fetchInitialData,
+  });
+
+  const cleanSelectedData = useCallback(() => {
+    setUserSelected(undefined);
+    setTaskSelected(undefined);
   }, []);
 
-  useEffect(() => {
-    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
-    if (selectedCompany) {
-      handleGetShiftSummary(dateRangeFilters);
-      fetchInitialData(dateRangeFilters);
-    }
-  }, [selectedCompany, location, dateRangeFilters]);
+  const {
+    onNotifications,
+    handleViewChange,
+    toggleSendModal,
+    toggleUpsertModal,
+    toggleShiftModal,
+    handleCloseSendModal,
+  } = useShiftModals({
+    currentView,
+    showUpsertModal,
+    showSendModal,
+    showShiftModal,
+    hasValidPlayer,
+    selectedUsers,
+  });
 
-  const handleViewMode = async (viewMode: ViewMode = ViewMode.QuarterDay) => {
-    if (currentView.value === VIEW_NAME.SCHEDULER) {
-      setView(viewMode);
-      setGanttShifts({ startDate, endDate, users: [] });
-      getGanttHandler(viewMode);
-    }
-    if (currentView.value === VIEW_NAME.TABLE) {
-      const response = await ShiftService.get_all(
-        dateRangeFilters ? { ...baseParams, ...dateRangeFilters } : baseParams
-      );
-      await ShiftService.getShiftSummary(
-        dateRangeFilters ? { ...baseParams, ...dateRangeFilters } : baseParams
-      );
-      if (!response.getStatus()) return;
-      shifts.value = response.getMany();
-    }
-  };
+  const { onClickAction, checkItem, handleTaskDelete } = useShiftActions({
+    shifts,
+    openUpsert: () => {
+      toggleUpsertModal();
+    },
+    setTaskSelected,
+    setKeywordsSelected,
+    setTimeBeforeSelected,
+    setExternalSelected,
+    refetch: () => fetchInitialData(dateRangeFilters),
+  });
 
-  const getGanttHandler = async (viewMode?: ViewMode) => {
-    const response = await GanttService.get_gantt({
-      page: 1,
-      items: 100,
-      mode: viewMode,
-    });
-    if (!response.getStatus()) return;
-    setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
-  };
+  const handleViewMode = useCallback(
+    async (viewMode: ViewMode = ViewMode.QuarterDay) => {
+      if (currentView.value === VIEW_NAME.SCHEDULER) {
+        setView(viewMode);
+        setGanttShifts({ startDate, endDate, users: [] });
 
-  /*
-   * TODO: Arreglar esta mierda.
-   * Efecto que observa shifts.value Ineficiente a morir.
-   */
-  useEffect(() => {
-    const result = shifts.value.some(
-      (shift: any) =>
-        typeof shift?.employee?.playerId === 'string' &&
-        shift.employee.playerId.trim() !== ''
-    );
-    setHasValidPlayer(result);
-  }, [shifts.value]);
-
-  useEffect(() => {
-    WebSocketManager.add(
-      SOCKET_MESSAGE_AREA.SHIFTS,
-      handleMessage,
-      MESSAGE_LISTENERS.SHIFTS
-    );
-    return () => {
-      WebSocketManager.remove(
-        SOCKET_MESSAGE_AREA.SHIFTS,
-        MESSAGE_LISTENERS.SHIFTS
-      );
-    };
-  }, []);
-
-  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
-    const { type: name, message } = event.payload;
-
-    if (
-      name === SOCKET_MESSAGE_EVENTS.UPDATE ||
-      name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK
-    ) {
-      const shiftIndex = shifts.value.findIndex(
-        (shift) => Number(shift.id) === Number(message.id)
-      );
-      if (shiftIndex < 0) return;
-      const shiftCopy: IShiftResponse[] = shifts.value;
-      shiftCopy[shiftIndex] = message;
-      shifts.value = [...shiftCopy];
-      // shifts.value = shifts.value.map((shift) => {
-      //   if (Number(shift.id) !== Number(message.id)) return shift;
-      //   const updated = merge({}, shift, message);
-      //   if (message.checkIn === undefined) updated.checkIn = shift.checkIn;
-      //   if (message.checkOut === undefined) updated.checkOut = shift.checkOut;
-      //   return updated;
-      // });
-    }
-
-    if (name === SOCKET_MESSAGE_EVENTS.CREATE) {
-      fetchInitialData(dateRangeFilters);
-    }
-  };
-
-  const fetchInitialData = async (
-    rangeFilters?: { [key: string]: [string, string] } | null
-  ) => {
-    loading.value = true;
-    const [shiftsResponse, servicesResponse, usersResponse, hasValidResponse] =
-      await Promise.all([
-        ShiftService.get_all(
-          rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams
-        ),
-        ServiceService.getServicesSimpleList(),
-        UserService.getListUsers(),
-        NotificationService.hasUsersWithPlayerId(),
-      ]);
-
-    if (shiftsResponse && shiftsResponse.getStatus()) {
-      const [hasNotifications, responseShifts] = findNotificationShift(
-        shiftsResponse.getMany()
-      );
-      notificationValidate.value = hasNotifications;
-
-      shifts.value = responseShifts;
-      loading.value = false;
-    }
-
-    if (servicesResponse.getStatus()) {
-      setServices(servicesResponse.getMany());
-    }
-
-    if (usersResponse.getStatus()) {
-      setUsers(usersResponse.getMany());
-    }
-
-    const { hasUsers } = hasValidResponse.getOne();
-    setHasValidPlayer(hasUsers);
-    hasValidPlayerRef.current = hasUsers;
-  };
-
-  const findNotificationShift = (
-    shiftsResponse: IShiftResponse[]
-  ): [boolean, IShiftResponse[]] => {
-    let hasSomeNotifications = false;
-    const shifts = shiftsResponse.map((shifts) => {
-      if (shifts.employee?.playerId) {
-        hasSomeNotifications = true;
-        return {
-          ...shifts,
-          hasNotifications: true,
-        };
+        const { GanttService } = await import('@/services');
+        const response = await GanttService.get_gantt({
+          page: 1,
+          items: 100,
+          mode: viewMode,
+        });
+        if (!response.getStatus()) return;
+        setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
       }
-      return {
-        ...shifts,
-        hasNotifications: false,
-      };
-    });
 
-    return [hasSomeNotifications, shifts];
-  };
+      if (currentView.value === VIEW_NAME.TABLE) {
+        fetchInitialData(dateRangeFilters);
+      }
+    },
+    [currentView, dateRangeFilters, endDate, fetchInitialData, startDate]
+  );
 
   useEffect(() => {
-    if (currentView.value === VIEW_NAME.SCHEDULER) {
-      getGanttHandler(view);
-    }
-  }, [currentView.value]);
+    if (currentView.value !== VIEW_NAME.SCHEDULER) return;
+
+    (async () => {
+      const { GanttService } = await import('@/services');
+      const response = await GanttService.get_gantt({
+        page: 1,
+        items: 100,
+        mode: view,
+      });
+      if (!response.getStatus()) return;
+      setGanttShifts((prev) => ({ ...prev, users: response.getMany() }));
+    })();
+  }, [currentView.value, view]);
 
   const columnWidth = useMemo(() => {
     if (view === ViewMode.Month) return 300;
@@ -299,172 +198,45 @@ export const ShiftsPage: FunctionalComponent = () => {
     return 60;
   }, [view]);
 
-  const hasValidPlayerRef = useRef(false);
-  const onNotificationsRef = useRef(false);
+  const handleDblClick = useCallback(
+    (task: Task) => {
+      setTaskSelected(task);
+      toggleShiftModal();
+    },
+    [toggleShiftModal]
+  );
 
-  // sincroniza ambos:
-  useEffect(() => {
-    hasValidPlayerRef.current = hasValidPlayer;
-    setHasValidPlayer(hasValidPlayerRef.current);
-  }, [hasValidPlayer]);
+  const handleUserDoubleClick = useCallback((_id: string | number) => {}, []);
+  const handleUserClick = useCallback((_id: string | number) => {}, []);
+  const handleClick = useCallback(() => {}, []);
 
-  useEffect(() => {
-    onNotificationsRef.current = onNotifications;
-    setOnNotifications(onNotificationsRef.current);
-  }, [onNotifications]);
+  const handleReloadSignal = useCallback(() => {
+    handleViewMode(view);
+  }, [handleViewMode, view]);
 
-  /**
-   * Eventos de toggle para los modales
-   */
-  const toggleSendModal = () => {
-    handleViewChange(VIEW_NAME.TABLE);
-
-    if (!hasValidPlayerRef.current) {
-      ToastManager.warning('s_there_are_not_player_id');
-      return;
-    }
-
-    if (!onNotificationsRef.current) {
-      // 🟡 Primera vez: solo activa notificaciones
-      setOnNotifications(true);
-      onNotificationsRef.current = true;
-      return;
-    }
-
-    // ✅ Siguientes veces: solo abre el modal (sin toggle)
-    if (selectedUsers.length === 0) {
-      ToastManager.warning('s_must_some_selected');
-      setOnNotifications(false);
-      onNotificationsRef.current = false;
-      return;
-    } else {
-      showSendModal.value = true;
-    }
-  };
-
-  const toggleUpsertModal = () => {
-    showUpsertModal.value = !showUpsertModal.value;
-  };
-
-  const toggleShiftModal = () => {
-    showShiftModal.value = !showShiftModal.value;
-  };
-
-  /**
-   * Eventos para cerrar los modales
-   */
-  const handleCloseUpsertModal = useCallback(() => {
+  const handleCreacteNewShift = useCallback(() => {
     cleanSelectedData();
     toggleUpsertModal();
-  }, []);
+  }, [cleanSelectedData, toggleUpsertModal]);
 
-  const handleCloseSendModal = useCallback(() => {
-    showSendModal.value = false;
-    setOnNotifications(false);
-    onNotificationsRef.current = false;
-  }, []);
-
-  const handleCloseShiftModal = useCallback(() => {
-    toggleShiftModal();
-  }, []);
-
-  /**
-   * Eventos del gantt
-   */
-  const handleDblClick = useCallback((task: Task) => {
-    setTaskSelected(task);
-    toggleShiftModal();
-  }, []);
-
-  const handleClick = useCallback((/* task: Task */) => {}, []);
-
-  const handleUserDoubleClick = useCallback(
-    (_id: string | number) => {
-      // const selectedUser = ganttShifts.users.find((user) => user.id === id);
-      // setUserSelected(selectedUser);
-      // toggleUpsertModal();
-    },
-    [ganttShifts.users]
-  );
-
-  const handleUserClick = useCallback(
-    (_: string | number) => {
-      // const selectedUser = ganttShifts.users.find((user) => user.id === id);
-      // if (selectedUser) {
-      //   setUserSelected(selectedUser);
-      // }
-    },
-    [ganttShifts.users]
-  );
-
-  const handleTaskDelete = useCallback((task: Task) => {
-    window.confirm(t('shifts.confirmDelete', { name: task.name }));
-  }, []);
-
-  const cleanSelectedData = useCallback(() => {
-    setUserSelected(undefined);
-    setTaskSelected(undefined);
-  }, []);
-
-  /**
-   * Eventos de los botones superiores
-   */
-  const handleViewChange = useCallback((view: VIEW_NAME) => {
-    currentView.value = view;
-  }, []);
-
-  const handleTaskChange = useCallback(
-    (_: Task) => {
-      if (taskSelected) {
-      }
-    },
-    [shifts]
-  );
-
-  const handleGetShiftSummary = async (
-    dateRangeFilters?: { [key: string]: [string, string] } | null
-  ) => {
-    const summary = await ShiftService.getShiftSummary(
-      dateRangeFilters ? { ...baseParams, ...dateRangeFilters } : baseParams
-    );
-    if (!summary.getStatus()) return;
-    shiftSummary.value = summary.getOne();
-  };
-
-  const calculatePercentage = (value: number): string => {
-    if (shiftSummary.value.total === 0) return '0%';
-    return `${Math.round((value / shiftSummary.value.total) * 100)}%`;
-  };
-
-  const handleCreacteNewShift = () => {
-    cleanSelectedData();
-    toggleUpsertModal();
-  };
-
-  const buttonMenu = useMemo(
-    () => (
+  const buttonMenu = useMemo(() => {
+    return (
       <div className='flex items-center gap-2 ml-1'>
         <Button
           name='button-change-table'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.TABLE);
-          }}
+          onClick={() => handleViewChange(VIEW_NAME.TABLE)}
           selected={currentView.value === VIEW_NAME.TABLE}
           icon='443'
         />
         <Button
           name='button-change-scheduler'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.SCHEDULER);
-          }}
+          onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
           selected={currentView.value === VIEW_NAME.SCHEDULER}
           icon='412'
         />
         <Button
           name='button-change-map'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.MAP);
-          }}
+          onClick={() => handleViewChange(VIEW_NAME.MAP)}
           selected={currentView.value === VIEW_NAME.MAP}
           icon='103'
         />
@@ -489,233 +261,100 @@ export const ShiftsPage: FunctionalComponent = () => {
             </div>
           )}
         </div>
-
-        {/*
-        <Button
-          name='button-supervision'
-          label={t('l_remote_supervision')}
-          className='bg-primary text-white py-1 rounded px-4'
-          icon='079'
-          iconSize='sm'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.SUPERVISOR);
-          }}
-        />
-        <Button
-          name='button-change-planner'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.PLANNER);
-          }}
-          rounded={false}
-          className={
-            currentView.value === VIEW_NAME.PLANNER
-              ? 'bg-primary-opacity p-2'
-              : ''
-          }
-          icon='331'
-        />
-        */}
       </div>
-    ),
-    [
-      currentView.value,
-      hasValidPlayer,
-      onNotifications,
-      showSendModal.value,
-      selectedUsers,
-      t,
-    ]
-  );
-
-  const handleReloadSignal = () => {
-    getGanttHandler(view);
-  };
-
-  const onClickAction = (params: {
-    id: string;
-    type: string;
-    action: ROW_ACTIONS;
-  }) => {
-    switch (params.action) {
-      case ROW_ACTIONS.UPDATE:
-        const shiftUpdate = shifts.value.find(
-          (shift) => shift.id === Number(params.id)
-        );
-
-        setTaskSelected({
-          id: Number(params.id),
-          end: shiftUpdate?.end || '',
-          start: shiftUpdate?.start || '',
-          type: shiftUpdate?.type as TaskType,
-          userId: String(shiftUpdate?.employee?.id || ''),
-          serviceId: shiftUpdate?.serviceId || '',
-          // TODO: Verificar si es necesario
-          phone: shiftUpdate?.service?.contract.client.phone || '',
-          contract: String(shiftUpdate?.service?.contract.id || ''),
-          client: String(shiftUpdate?.service?.contract.client.id || ''),
-          cardId: shiftUpdate?.employee?.cardId || '',
-          status: shiftUpdate?.status as TaskStatus,
-          name: shiftUpdate?.service?.name || '',
-          progress: 0,
-          service: shiftUpdate?.service?.name || '',
-          client_name: String(shiftUpdate?.service?.contract.client.id || ''),
-        });
-
-        setKeywordsSelected(shiftUpdate?.keywords || []);
-        setTimeBeforeSelected(shiftUpdate?.timeBefore || 0);
-        setExternalSelected(shiftUpdate?.externalId || '');
-        toggleUpsertModal();
-        break;
-      case ROW_ACTIONS.DELETE:
-        const shift = shifts.value.find(
-          (shift) => shift.id === Number(params.id)
-        );
-
-        if (!shift) {
-          ToastManager.error('s_deleted_error');
-          return;
-        }
-
-        const status = shift.status as unknown as SHIFT_STATUS;
-        if (status !== SHIFT_STATUS.CREATED) {
-          ToastManager.warning('s_warning');
-          return;
-        }
-
-        showAlert({
-          title: t('s_title_delete'),
-          message: t('s_message'),
-          onConfirm: () => deleteShift(params.id),
-          onCancel: () => {},
-        });
-        break;
-      case ROW_ACTIONS.CHECK_IN:
-        showAlert({
-          title: t('h_check_in'),
-          message: t('s_request'),
-          onConfirm: () => handleCheck('CHECK_IN', Number(params.id)),
-          onCancel: () => {},
-        });
-
-        break;
-      case ROW_ACTIONS.CHECK_OUT:
-        showAlert({
-          title: t('h_check_out'),
-          message: t('s_request'),
-          onConfirm: () => handleCheck('CHECK_OUT', Number(params.id)),
-          onCancel: () => {},
-        });
-        break;
-      case ROW_ACTIONS.DOWNLOAD:
-        handleDownloadShift(Number(params.id));
-        break;
-    }
-  };
-
-  const handleCheck = async (type: string, shiftId: number) => {
-    const position = await getLocation();
-    if (!position) {
-      ToastManager.error('s_gps_error');
-      return;
-    }
-
-    const checkData = {
-      latitude: position.coords.latitude.toString(),
-      longitude: position.coords.longitude.toString(),
-      date: new Date().toISOString(),
-      platform: 'web',
-      type: type,
-    };
-
-    const response = await ShiftService.createCheck(checkData, shiftId);
-    if (response.getStatus()) {
-      ToastManager.success('s_created_success');
-      // fetchInitialData();
-      // TODO: Actualiza solo el shift afectado en shifts.value
-      // shifts.value = shifts.value.map((shift) => {
-      //   if (shift.id !== shiftId) return shift;
-      //   if (type === 'CHECK_IN') {
-      //     return { ...shift, checkIn: checkData as any, };
-      //   } else {
-      //     return { ...shift, checkOut: checkData as any, };
-      //   }
-      // });
-    }
-  };
-
-  const checkItem = async (check: any, row: any) => {
-    const updatedRow = { ...row };
-    if (check.type === 'CHECK_IN') {
-      updatedRow.checkIn = check;
-    } else {
-      updatedRow.checkOut = check;
-    }
-
-    shifts.value = shifts.value.map((shift) =>
-      shift.id === row.id ? updatedRow : shift
     );
-  };
-
-  const deleteShift = async (id: string) => {
-    const response = await ShiftService.deleteActivity(id);
-    if (!response.getStatus()) return;
-    ToastManager.success('s_deleted_success');
-    fetchInitialData();
-  };
-
-  const handleDownloadShift = async (shiftId: number) => {
-    openSpinner();
-
-    const shift = shifts.value.find((shift) => shift.id === shiftId);
-
-    const data: IShiftReportRequest = {
-      shiftId: shiftId,
-      type: ReportType.Shift,
-      shift: shift,
-    };
-
-    const response = await ReportService.download_one_module_pdf(data);
-
-    if (!response.getStatus()) {
-      closeSpinner();
-      ToastManager.error('s_download_file_error');
-      return;
-    }
-
-    fileManager.downloadBase64File(
-      response.getOne(),
-      'application/pdf',
-      'response.pdf'
-    );
-
-    closeSpinner();
-  };
+  }, [
+    currentView.value,
+    handleCloseSendModal,
+    handleViewChange,
+    hasValidPlayer,
+    selectedUsers,
+    showSendModal.value,
+    toggleSendModal,
+  ]);
 
   return (
-    <Section padding>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <CardData
-          title='h_shifts_total'
-          count={shiftSummary.value.total}
-          subtitle=''
-          color='t-dark'
-          icon='0001'
+    <Section className='px-7 py-1'>
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-3'>
+        <MetricCard
+          title='dashboard.users'
+          subtitle='dashboard.users.subtitle'
+          value={1280}
+          unit=''
+          icon='071'
+          color='emerald'
+        >
+          <BalanceIndicator
+            value={20}
+            leftLabel='Temprano'
+            centerLabel='Bien'
+            rightLabel='Tarde'
+            showLabel={false}
+          />
+        </MetricCard>
+
+        <MetricCard
+          title='dashboard.users'
+          subtitle='dashboard.users.subtitle'
+          value={1280}
+          unit=''
+          icon='071'
+          color='emerald'
+          indicators={[
+            {
+              label: 'm_user_active',
+              value: 742,
+              unit: '',
+              icon: '090',
+              tone: 'success',
+            },
+            {
+              label: 'm_user_churn',
+              value: 2.1,
+              unit: '%',
+              icon: '112',
+              tone: 'warning',
+            },
+            {
+              label: 'm_user_latency',
+              value: 180,
+              unit: 'ms',
+              icon: '031',
+              tone: 'neutral',
+            },
+          ]}
         />
 
-        <CardData
-          title='h_shifts_in_progress'
-          count={calculatePercentage(shiftSummary.value.in_progress)}
-          subtitle=''
-          color='t-dark'
-          icon='311'
-        />
-
-        <CardData
-          title='h_shifts_completed'
-          count={calculatePercentage(shiftSummary.value.completed)}
-          subtitle=''
-          color='t-dark'
-          icon='000'
+        <MetricCard
+          title='dashboard.users'
+          subtitle='dashboard.users.subtitle'
+          value={1280}
+          unit=''
+          icon='071'
+          color='emerald'
+          indicators={[
+            {
+              label: 'm_user_active',
+              value: 742,
+              unit: '',
+              icon: '090',
+              tone: 'success',
+            },
+            {
+              label: 'm_user_churn',
+              value: 2.1,
+              unit: '%',
+              icon: '112',
+              tone: 'warning',
+            },
+            {
+              label: 'm_user_latency',
+              value: 180,
+              unit: 'ms',
+              icon: '031',
+              tone: 'neutral',
+            },
+          ]}
         />
       </div>
 
@@ -730,7 +369,6 @@ export const ShiftsPage: FunctionalComponent = () => {
               icon='044'
               iconSize='sm'
             />
-            {/* <AudioButton /> */}
           </div>
         </div>
 
@@ -743,9 +381,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             onNotifications={onNotifications}
             hasNotifications={notificationValidate.value}
             loading={loading.value}
-            onRangeChange={(range) => {
-              setDateRangeFilters(range);
-            }}
+            onRangeChange={(range) => setDateRangeFilters(range)}
             onSelectionChange={(rows) => {
               const validUsers = rows.map((row: any) => ({
                 id: row.employee.id,
@@ -753,20 +389,15 @@ export const ShiftsPage: FunctionalComponent = () => {
                 email: row.employee.email,
                 playerId: row.employee.playerId,
               }));
-
               setSelectedUsers(validUsers as any);
             }}
-            expandable={(row: IShiftResponse, column?: string) => {
-              return (
-                <ExpandableMultiple
-                  onCheck={(check) => {
-                    checkItem(check, row);
-                  }}
-                  type={column}
-                  data={row}
-                />
-              );
-            }}
+            expandable={(row: IShiftResponse, column?: string) => (
+              <ExpandableMultiple
+                onCheck={(check) => checkItem(check, row)}
+                type={column}
+                data={row}
+              />
+            )}
             visibility={{
               servicePlaceAddress: false,
               city: false,
@@ -794,7 +425,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           <Gantt
             tasks={ganttShifts}
             viewMode={view}
-            onDateChange={handleTaskChange}
+            onDateChange={() => {}}
             onDelete={handleTaskDelete}
             onDoubleClick={handleDblClick}
             onUserDoubleClick={handleUserDoubleClick}
@@ -816,18 +447,20 @@ export const ShiftsPage: FunctionalComponent = () => {
         )}
 
         {currentView.value === VIEW_NAME.PLANNER && (
-          <PlannerView services={memoizedServices} users={memoizedUsers} />
+          <PlannerView services={services} users={users} />
         )}
+
         {currentView.value === VIEW_NAME.MAP && <LiveUserMap unsearch />}
       </div>
 
       <TaskForm
         closed={showUpsertModal.value}
-        onClose={handleCloseUpsertModal}
+        onClose={() => {
+          cleanSelectedData();
+          toggleUpsertModal();
+        }}
         posSave={handleViewMode}
         shiftId={userSelected?.id || taskSelected?.id}
-        // userSelected={userSelected}
-        // taskSelected={taskSelected}
         users={users}
         keywordsSelected={keywordsSelected}
         timeBeforeSelected={timeBeforeSelected}
@@ -836,12 +469,12 @@ export const ShiftsPage: FunctionalComponent = () => {
 
       <ShiftForm
         closed={showShiftModal.value}
-        onClose={handleCloseShiftModal}
+        onClose={toggleShiftModal}
         taskSelected={taskSelected}
         posAction={handleViewMode}
         onSupervision={() => {
           handleViewChange(VIEW_NAME.SUPERVISOR);
-          handleCloseShiftModal();
+          toggleShiftModal();
         }}
       />
     </Section>

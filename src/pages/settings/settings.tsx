@@ -129,7 +129,7 @@ export const SettingsModal = () => {
               name='user-information'
               company='Inndico'
               username={`${user?.name} ${user?.surname}`}
-              image={user?.image || ''}
+              image={user?.image}
               rol={user?.userType || ''}
             />
             <MenuList

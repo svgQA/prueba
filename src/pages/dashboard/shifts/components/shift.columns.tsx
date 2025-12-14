@@ -34,12 +34,7 @@ export const getColumns = (
         const name = `${employee?.name} ${employee?.surname}`;
         return (
           <div className='flex items-center gap-2'>
-            <Avatar
-              name={employee?.name}
-              // src={employee?.image}
-              size='sm'
-              square
-            />
+            <Avatar name={employee?.name} size='sm' square />
             <span
               className='p-1 size-sm cursor-pointer text-left'
               onClick={() => info.row.toggleExpanded()}
@@ -134,10 +129,16 @@ export const getColumns = (
       header: 'h_status',
       meta: { headerAlign: 'center' },
       cell: (info) => {
-        const rowData = info.row.original;
+        const { status } = info.row.original;
+        const _status = status === 'OPENED' ? 'success' : undefined;
         return (
           <div className='w-full justify-center flex items-center'>
-            <Badge label={String(rowData.status)} width='w-24' />
+            <Badge
+              label={String(status)}
+              width='w-24'
+              status={_status}
+              borderless
+            />
           </div>
         );
       },
@@ -198,7 +199,7 @@ export const getColumns = (
         const promedioUnDecimal = Math.round(promedio * 10) / 10;
         return (
           <div className='flex w-full justify-center'>
-            <div className='inline-flex items-center space-x-2 px-4 py-1 text-sm border border-gray-300 rounded-lg whitespace-nowrap'>
+            <div className='inline-flex items-center space-x-2 px-4 py-0.5 text-sm border border-gray-300 rounded-lg whitespace-nowrap'>
               <span>{report} R</span>
               <span>→</span>
               <span>{promedioUnDecimal} min</span>
@@ -299,14 +300,16 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       header: 'h_action',
       cell: (info) => {
-        const { id, checkIn, checkOut } = info.row.original;
+        const { id, checkIn, checkOut, externalId, externalPlatformId } =
+          info.row.original;
         const s_id = String(id);
         const { t } = useTranslation();
+
         const model = checkOut
           ? []
           : [
               {
-                label: !checkIn ? 'Check In' : 'Check Out', // t('h_check_in') : t('h_check_out'),
+                label: !checkIn ? 'h_check_in' : 'h_check_out', //  'Check In' : 'Check Out', // t('h_check_in') : t('h_check_out'),
                 icon: 'vox-icon vx-icon-048 text-primary',
                 keyName: 'check',
                 onClick: () => {
@@ -322,7 +325,7 @@ export const getColumns = (
             ];
 
         const uModel =
-          checkIn || checkOut
+          checkIn || checkOut || externalId
             ? []
             : [
                 {
@@ -337,24 +340,24 @@ export const getColumns = (
                     });
                   },
                 },
+                {
+                  label: t('actions.delete'),
+                  keyName: 'delete',
+                  icon: 'vox-icon vx-icon-053 text-red-500',
+                  color: 'text-red-600',
+                  onClick: () => {
+                    onClickAction({
+                      id: s_id,
+                      type: 'shift',
+                      action: ROW_ACTIONS.DELETE,
+                    });
+                  },
+                },
               ];
 
         const actions: IDropdownAction[] = [
           ...uModel,
           ...model,
-          {
-            label: t('actions.delete'),
-            keyName: 'delete',
-            icon: 'vox-icon vx-icon-053 text-red-500',
-            color: 'text-red-600',
-            onClick: () => {
-              onClickAction({
-                id: s_id,
-                type: 'shift',
-                action: ROW_ACTIONS.DELETE,
-              });
-            },
-          },
           {
             label: t('actions.download'),
             keyName: 'download',
@@ -369,7 +372,19 @@ export const getColumns = (
           },
         ];
 
-        return <DropdownActionsMenu actions={actions} />;
+        return (
+          <div className='flex flex-row justify-end'>
+            {externalPlatformId && (
+              <Avatar
+                name={externalPlatformId}
+                size='sm'
+                square
+                bgColor='bg-teal-700 text-white'
+              />
+            )}
+            <DropdownActionsMenu actions={actions} />
+          </div>
+        );
       },
     },
   ];

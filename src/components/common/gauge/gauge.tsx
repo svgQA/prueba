@@ -19,7 +19,7 @@ export const Gauge: FunctionComponent<IGaugeProps> = ({
             cy='50'
             r={baseRadius}
             strokeWidth={stroke}
-            className='stroke-gray-200 dark:stroke-gray-700 fill-none'
+            className='stroke-gray-50 dark:stroke-gray-800 fill-none'
           />
 
           {/* Gauges dinámicos */}

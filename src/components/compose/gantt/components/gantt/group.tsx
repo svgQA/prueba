@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
-import { Switch } from '@/components/common/switch/switch';
+// import { Switch } from '@/components/common/switch/switch';
 import { ViewMode } from '../../types/public-types';
 // import { Chip } from '@/components/common/chip/chip';
 // import { useTranslation } from 'react-i18next';
@@ -16,8 +16,8 @@ interface IGroupProps {
 export const Group = ({
   className = '',
   onViewModeChange,
-  onViewListChange,
-  isChecked,
+  // onViewListChange,
+  // isChecked,
   status,
 }: IGroupProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +34,10 @@ export const Group = ({
         <Button
           id='show-task-list'
           name='show-task-list'
-          onClick={() => onViewListChange(!isChecked)}
+          // onClick={(e) => {
+          //   e.preventDefault();
+          //   // onViewListChange(!isChecked);
+          // }}
           selected={isOpen}
           icon='120'
           borderless
@@ -71,7 +74,7 @@ export const Group = ({
               selected={status === ViewMode.HalfDay}
               onClick={() => onViewModeChange(ViewMode.HalfDay)}
             />
-
+            {/*
             <Switch
               id={`cb-shift-gantt-vals`}
               name='shift-gantt-vals'
@@ -79,6 +82,7 @@ export const Group = ({
               onChange={() => onViewListChange(!isChecked)}
               value={isChecked}
             />
+            */}
           </div>
         </div>
       )}

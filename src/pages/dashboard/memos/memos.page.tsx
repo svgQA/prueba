@@ -308,7 +308,7 @@ export const MemosPage: FunctionComponent = () => {
    * @returns cards
    */
   const renderCardsInfo = (summary: MemosSummary, _type: string = 'memos') => (
-    <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+    <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-3'>
       <CardData
         title='h_memos_total'
         count={summary.total}
@@ -377,9 +377,9 @@ export const MemosPage: FunctionComponent = () => {
       className={
         currentView.value === VIEW_NAME.CHAT
           ? 'flex flex-col lg:flex-row h-auto lg:h-[94.5vh]'
-          : 'mr-3 my-1 relative'
+          : 'px-7 py-1 relative'
       }
-      padding={currentView.value !== VIEW_NAME.CHAT}
+      // padding={currentView.value !== VIEW_NAME.CHAT}
     >
       {(currentView.value === VIEW_NAME.TABLE ||
         currentView.value === VIEW_NAME.MAP) &&

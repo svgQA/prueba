@@ -16,7 +16,6 @@ const buildInitUser = (): IUserRequest => ({
   address: '',
   externalId: '',
   externalPlatformId: '',
-  image: '',
   phone: '',
   cardId: '',
   cardType: undefined,
@@ -35,8 +34,6 @@ const buildInitUser = (): IUserRequest => ({
     },
     job: '',
     sucursal: '',
-    // area: '',
-    // company: '',
   },
 });
 

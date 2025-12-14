@@ -21,15 +21,15 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
   const getStatusColor = (status?: string) => {
     switch (status) {
       case 'error':
-        return 'border-error text-error';
+        return 'border-error text-error bg-error';
       case 'success':
-        return 'border-secondary text-secondary';
+        return 'border-secondary text-secondary bg-ternary';
       case 'warning':
-        return 'border-orange-500 text-orange-500';
+        return 'border-orange-500 text-orange-500 bg-orange-500';
       case 'info':
-        return 'border-primary text-primary';
+        return 'border-primary text-primary bg-ternary';
       default:
-        return 'border-gray-400 text-gray-400';
+        return 'border-gray-400 text-gray-400 bg-white dark:bg-b-dark-light';
     }
   };
 
@@ -43,18 +43,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
         ${
           outline
             ? `border ${getStatusColor(status)} bg-transparent`
-            : `${borderless ? 'border-none' : 'border border-gray-100 dark:border-gray-700'}
-             ${
-               status === 'error'
-                 ? 'bg-error'
-                 : status === 'success'
-                   ? 'bg-secondary'
-                   : status === 'warning'
-                     ? 'bg-orange-500'
-                     : status === 'info'
-                       ? 'bg-ternary'
-                       : 'bg-white dark:bg-b-dark-light'
-             }`
+            : `${borderless ? 'border-none' : 'border border-gray-100 dark:border-gray-700'} ${getStatusColor(status)}`
         }
       `}
       onClick={onClick}

@@ -407,7 +407,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
 
         <SettingsModal />
         <TenantsModal open={openModalTenant} />
-        {/*<IconsModal />*/}
+        {/* <IconsModal /> */}
       </section>
     );
   }
