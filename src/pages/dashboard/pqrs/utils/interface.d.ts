@@ -50,6 +50,9 @@ export interface Inference {
     id: number;
     stageName: string;
     goal: string;
+    nextStageId: number | null;
+    prevStageId: number | null;
+    type: string;
   };
   [key: string]: any;
 }
