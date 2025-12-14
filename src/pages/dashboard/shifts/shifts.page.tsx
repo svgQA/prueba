@@ -254,7 +254,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   ]);
 
   return (
-    <Section className='px-7 py-1'>
+    <Section className='px-3 py-1'>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-3'>
         <MetricCard
           title='m_active_user'

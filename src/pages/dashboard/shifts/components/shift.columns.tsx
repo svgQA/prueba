@@ -33,13 +33,13 @@ export const getColumns = (
         const { employee } = info.row.original;
         const name = `${employee?.name} ${employee?.surname}`;
         return (
-          <div className='flex items-center gap-2'>
+          <div className='flex items-center gap-2 w-[250px]'>
             <Avatar name={employee?.name} size='sm' square />
             <span
               className='p-1 size-sm cursor-pointer text-left'
               onClick={() => info.row.toggleExpanded()}
             >
-              <TextEllipsis text={name} maxWidth='300px' />
+              <TextEllipsis text={name} maxWidth='250px' />
             </span>
           </div>
         );
@@ -55,7 +55,11 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       cell: (info) => {
         const service = String(info.getValue());
-        return <TextEllipsis text={service} maxWidth='250px' />;
+        return (
+          <div className='w-[200px]'>
+            <TextEllipsis text={service} maxWidth='200px' />
+          </div>
+        );
       },
     },
     {
@@ -68,7 +72,11 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       cell: (info) => {
         const contract = String(info.getValue());
-        return <TextEllipsis text={contract} maxWidth='250px' />;
+        return (
+          <div className='w-[200px]'>
+            <TextEllipsis text={contract} maxWidth='200px' />
+          </div>
+        );
       },
     },
     {

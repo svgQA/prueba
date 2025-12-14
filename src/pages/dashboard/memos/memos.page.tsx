@@ -370,7 +370,7 @@ export const MemosPage: FunctionComponent = () => {
       className={
         currentView.value === VIEW_NAME.CHAT
           ? 'flex flex-col lg:flex-row h-auto lg:h-[94.5vh]'
-          : 'px-7 py-1 relative'
+          : 'px-2 py-1 relative'
       }
       // padding={currentView.value !== VIEW_NAME.CHAT}
     >
