@@ -5,7 +5,6 @@ import { useSignal } from '@preact/signals';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 
-import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { Button } from '@/components/common/button/button';
 
@@ -38,6 +37,7 @@ import { useShiftsData } from './utils/hooks/useShiftData';
 import { useShiftSocket } from './utils/hooks/useShiftSocket';
 import { useShiftModals } from './utils/hooks/useShiftModal';
 import { useShiftActions } from './utils/hooks/useShiftAction';
+import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
 
 export const ShiftsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -254,209 +254,212 @@ export const ShiftsPage: FunctionalComponent = () => {
   ]);
 
   return (
-    <Section className='px-3 py-1'>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-3'>
-        <MetricCard
-          title='m_active_user'
-          subtitle='m_active_user_d'
-          value={1280}
-          unit=''
-          icon='006'
-          color='emerald'
-        >
-          <BalanceIndicator
-            value={20}
-            leftLabel='Temprano'
-            centerLabel='Bien'
-            rightLabel='Tarde'
-            showLabel={false}
-          />
-        </MetricCard>
-
-        <MetricCard
-          title='m_active_shift'
-          subtitle='m_active_shift_d'
-          value={1280}
-          unit=''
-          icon='028'
-          color='emerald'
-          indicators={[
-            {
-              label: 'm_user_active',
-              value: 742,
-              unit: '',
-              icon: '090',
-              tone: 'success',
-            },
-            {
-              label: 'm_user_churn',
-              value: 2.1,
-              unit: '%',
-              icon: '112',
-              tone: 'warning',
-            },
-            {
-              label: 'm_user_latency',
-              value: 180,
-              unit: 'ms',
-              icon: '031',
-              tone: 'neutral',
-            },
-          ]}
-        />
-
-        <MetricCard
-          title='m_churn_round'
-          subtitle='m_churn_round_d'
-          value={1280}
-          unit=''
-          icon='142'
-          color='emerald'
-          indicators={[
-            {
-              label: 'm_user_active',
-              value: 742,
-              unit: '',
-              icon: '090',
-              tone: 'success',
-            },
-            {
-              label: 'm_user_churn',
-              value: 2.1,
-              unit: '%',
-              icon: '112',
-              tone: 'warning',
-            },
-            {
-              label: 'm_user_latency',
-              value: 180,
-              unit: 'ms',
-              icon: '031',
-              tone: 'neutral',
-            },
-          ]}
-        />
-      </div>
-
-      <div className='max-h-screen'>
-        <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
-          <div className='flex flex-wrap items-center justify-between gap-2 sm:gap-3 w-full'>
-            {buttonMenu}
-            <Button
-              name='button-create-shift'
-              label='create'
-              onClick={handleCreacteNewShift}
-              icon='044'
-              iconSize='sm'
+    <SectionPage
+      padding
+      cards={
+        <CardsPage>
+          <MetricCard
+            title='m_active_user'
+            subtitle='m_active_user_d'
+            value={1280}
+            unit=''
+            icon='006'
+            color='emerald'
+          >
+            <BalanceIndicator
+              value={20}
+              leftLabel='Temprano'
+              centerLabel='Bien'
+              rightLabel='Tarde'
+              showLabel={false}
             />
-          </div>
-        </div>
+          </MetricCard>
 
-        {currentView.value === VIEW_NAME.TABLE && (
-          <Table<IShiftResponse>
-            data={shifts.value}
-            columns={getColumns(onClickAction)}
-            pageSize={20}
-            selectable
-            onNotifications={onNotifications}
-            hasNotifications={notificationValidate.value}
-            loading={loading.value}
-            onRangeChange={(range) => setDateRangeFilters(range)}
-            onSelectionChange={(rows) => {
-              const validUsers = rows.map((row: any) => ({
-                id: row.employee.id,
-                name: row.employee.name,
-                email: row.employee.email,
-                playerId: row.employee.playerId,
-              }));
-              setSelectedUsers(validUsers as any);
-            }}
-            expandable={(row: IShiftResponse, column?: string) => (
-              <ExpandableMultiple
-                onCheck={(check) => checkItem(check, row)}
-                type={column}
-                data={row}
-              />
-            )}
-            visibility={{
-              servicePlaceAddress: false,
-              city: false,
-              employeeId: false,
-              client: false,
-              duration: false,
-              userEmail: false,
-              userPhone: false,
-              serviceRound: false,
-            }}
-            searchable={{
-              report: false,
-              date: false,
-              shift: false,
-              round: false,
-              task: false,
-              duration: false,
-            }}
-            modules={modulesReport.Shift}
-            fileName='shift'
+          <MetricCard
+            title='m_active_shift'
+            subtitle='m_active_shift_d'
+            value={1280}
+            unit=''
+            icon='028'
+            color='emerald'
+            indicators={[
+              {
+                label: 'm_user_active',
+                value: 742,
+                unit: '',
+                icon: '090',
+                tone: 'success',
+              },
+              {
+                label: 'm_user_churn',
+                value: 2.1,
+                unit: '%',
+                icon: '112',
+                tone: 'warning',
+              },
+              {
+                label: 'm_user_latency',
+                value: 180,
+                unit: 'ms',
+                icon: '031',
+                tone: 'neutral',
+              },
+            ]}
           />
-        )}
 
-        {currentView.value === VIEW_NAME.SCHEDULER && (
-          <Gantt
-            tasks={ganttShifts}
-            viewMode={view}
-            onDateChange={() => {}}
-            onDelete={handleTaskDelete}
-            onDoubleClick={handleDblClick}
-            onUserDoubleClick={handleUserDoubleClick}
-            onUserClick={handleUserClick}
-            onClick={handleClick}
-            listCellWidth={isChecked ? '155px' : ''}
-            columnWidth={columnWidth}
+          <MetricCard
+            title='m_churn_round'
+            subtitle='m_churn_round_d'
+            value={1280}
+            unit=''
+            icon='142'
+            color='emerald'
+            indicators={[
+              {
+                label: 'm_user_active',
+                value: 742,
+                unit: '',
+                icon: '090',
+                tone: 'success',
+              },
+              {
+                label: 'm_user_churn',
+                value: 2.1,
+                unit: '%',
+                icon: '112',
+                tone: 'warning',
+              },
+              {
+                label: 'm_user_latency',
+                value: 180,
+                unit: 'ms',
+                icon: '031',
+                tone: 'neutral',
+              },
+            ]}
+          />
+        </CardsPage>
+      }
+      buttons={
+        <ButtonsPage>
+          {buttonMenu}
+          <Button
+            name='button-create-shift'
+            label='create'
+            onClick={handleCreacteNewShift}
+            icon='044'
+            iconSize='sm'
+          />
+        </ButtonsPage>
+      }
+      modals={
+        <>
+          <TaskForm
+            closed={showUpsertModal.value}
+            onClose={() => {
+              cleanSelectedData();
+              toggleUpsertModal();
+            }}
+            posSave={handleViewMode}
+            shiftId={userSelected?.id || taskSelected?.id}
             users={users}
-            onReloadSignal={handleReloadSignal}
-            group={
-              <Group
-                onViewModeChange={handleViewMode}
-                onViewListChange={setIsChecked}
-                isChecked={isChecked}
-                status={view}
-              />
-            }
+            keywordsSelected={keywordsSelected}
+            timeBeforeSelected={timeBeforeSelected}
+            externalSelected={externalSelected}
           />
-        )}
 
-        {currentView.value === VIEW_NAME.PLANNER && (
-          <PlannerView services={services} users={users} />
-        )}
+          <ShiftForm
+            closed={showShiftModal.value}
+            onClose={toggleShiftModal}
+            taskSelected={taskSelected}
+            posAction={handleViewMode}
+            onSupervision={() => {
+              handleViewChange(VIEW_NAME.SUPERVISOR);
+              toggleShiftModal();
+            }}
+          />
+        </>
+      }
+    >
+      {currentView.value === VIEW_NAME.TABLE && (
+        <Table<IShiftResponse>
+          data={shifts.value}
+          columns={getColumns(onClickAction)}
+          pageSize={20}
+          selectable
+          onNotifications={onNotifications}
+          hasNotifications={notificationValidate.value}
+          loading={loading.value}
+          onRangeChange={(range) => setDateRangeFilters(range)}
+          onSelectionChange={(rows) => {
+            const validUsers = rows.map((row: any) => ({
+              id: row.employee.id,
+              name: row.employee.name,
+              email: row.employee.email,
+              playerId: row.employee.playerId,
+            }));
+            setSelectedUsers(validUsers as any);
+          }}
+          expandable={(row: IShiftResponse, column?: string) => (
+            <ExpandableMultiple
+              onCheck={(check) => checkItem(check, row)}
+              type={column}
+              data={row}
+            />
+          )}
+          visibility={{
+            servicePlaceAddress: false,
+            city: false,
+            employeeId: false,
+            client: false,
+            duration: false,
+            userEmail: false,
+            userPhone: false,
+            serviceRound: false,
+          }}
+          searchable={{
+            report: false,
+            date: false,
+            shift: false,
+            round: false,
+            task: false,
+            duration: false,
+          }}
+          modules={modulesReport.Shift}
+          fileName='shift'
+        />
+      )}
 
-        {currentView.value === VIEW_NAME.MAP && <LiveUserMap unsearch />}
-      </div>
+      {currentView.value === VIEW_NAME.SCHEDULER && (
+        <Gantt
+          tasks={ganttShifts}
+          viewMode={view}
+          onDateChange={() => {}}
+          onDelete={handleTaskDelete}
+          onDoubleClick={handleDblClick}
+          onUserDoubleClick={handleUserDoubleClick}
+          onUserClick={handleUserClick}
+          onClick={handleClick}
+          listCellWidth={isChecked ? '155px' : ''}
+          columnWidth={columnWidth}
+          users={users}
+          onReloadSignal={handleReloadSignal}
+          group={
+            <Group
+              onViewModeChange={handleViewMode}
+              onViewListChange={setIsChecked}
+              isChecked={isChecked}
+              status={view}
+            />
+          }
+        />
+      )}
 
-      <TaskForm
-        closed={showUpsertModal.value}
-        onClose={() => {
-          cleanSelectedData();
-          toggleUpsertModal();
-        }}
-        posSave={handleViewMode}
-        shiftId={userSelected?.id || taskSelected?.id}
-        users={users}
-        keywordsSelected={keywordsSelected}
-        timeBeforeSelected={timeBeforeSelected}
-        externalSelected={externalSelected}
-      />
+      {currentView.value === VIEW_NAME.PLANNER && (
+        <PlannerView services={services} users={users} />
+      )}
 
-      <ShiftForm
-        closed={showShiftModal.value}
-        onClose={toggleShiftModal}
-        taskSelected={taskSelected}
-        posAction={handleViewMode}
-        onSupervision={() => {
-          handleViewChange(VIEW_NAME.SUPERVISOR);
-          toggleShiftModal();
-        }}
-      />
-    </Section>
+      {currentView.value === VIEW_NAME.MAP && <LiveUserMap unsearch />}
+    </SectionPage>
   );
 };

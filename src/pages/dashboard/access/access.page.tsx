@@ -1,7 +1,6 @@
 import { FunctionalComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 
-import { Section } from '@/components/common/section/section';
 // Ajusta si tu Section está en otro lado
 import { Table } from '@/components/common/table/table';
 import { getColumns } from './components/access.columns';
@@ -29,6 +28,7 @@ import {
   MessageEvent,
   MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
+import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
 
 export const AccessPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -145,73 +145,74 @@ export const AccessPage: FunctionalComponent = () => {
   };
 
   return (
-    <Section padding>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <CardData
-          title='h_accessess_total'
-          count={summary.value?.total}
-          subtitle='h_accessess_subtitle'
-          color='text-secondary'
-          icon='189'
-        />
-        <CardData
-          title='h_accessess_in_progress'
-          count={calculatePercentage(summary.value)}
-          subtitle='h_accessess_entered_subtitle'
-          color='text-primary'
-          icon='183'
-        />
-        <CardData
-          title='h_accessess_completed'
-          count={calculatePercentage(summary.value, true)}
-          subtitle='h_accessess_entered_subtitle'
-          color='text-error'
-          icon='221'
-        />
-      </div>
-
-      <div className='max-h-screen'>
-        <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
-          <div className='flex flex-wrap items-center justify-between gap-2 sm:gap-3 w-full'>
-            {/*
-            <Button
-              name='button-create-shift'
-              label='create'
-              onClick={() => handleUpsert()}
-              icon='044'
-              iconSize='sm'
+    <SectionPage
+      padding
+      cards={
+        <CardsPage>
+          <CardData
+            title='h_accessess_total'
+            count={summary.value?.total}
+            subtitle='h_accessess_subtitle'
+            color='text-secondary'
+            icon='189'
+          />
+          <CardData
+            title='h_accessess_in_progress'
+            count={calculatePercentage(summary.value)}
+            subtitle='h_accessess_entered_subtitle'
+            color='text-primary'
+            icon='183'
+          />
+          <CardData
+            title='h_accessess_completed'
+            count={calculatePercentage(summary.value, true)}
+            subtitle='h_accessess_entered_subtitle'
+            color='text-error'
+            icon='221'
+          />
+        </CardsPage>
+      }
+      buttons={
+        <ButtonsPage>
+          {/*
+          <Button
+            name='button-create-shift'
+            label='create'
+            icon='044'
+            iconSize='sm'
+          />
+        */}
+        </ButtonsPage>
+      }
+      modals={
+        <>
+          {showUpsertModal.value && (
+            <AccessForm
+              closed={showUpsertModal.value}
+              onClose={() => {
+                toggleUpsertModal();
+                fetchInitialData();
+              }}
+              id={idAccess.value}
             />
-            */}
-          </div>
-        </div>
-
-        <Table<IAccess>
-          data={accesses.value}
-          columns={getColumns(onClickAction)}
-          pageSize={10}
-          // Reutilizando la propiedad "expandable" (igual que en shifts)
-          expandable={(row: IAccess) => <ExpandableAccess row={row} />}
-          visibility={{
-            id: false,
-            service: false,
-            contract: false,
-            client: false,
-            updatedAt: false,
-          }}
-          modules={modulesReport.Access}
-        />
-      </div>
-
-      {showUpsertModal.value && (
-        <AccessForm
-          closed={showUpsertModal.value}
-          onClose={() => {
-            toggleUpsertModal();
-            fetchInitialData();
-          }}
-          id={idAccess.value}
-        />
-      )}
-    </Section>
+          )}
+        </>
+      }
+    >
+      <Table<IAccess>
+        data={accesses.value}
+        columns={getColumns(onClickAction)}
+        pageSize={10}
+        expandable={(row: IAccess) => <ExpandableAccess row={row} />}
+        visibility={{
+          id: false,
+          service: false,
+          contract: false,
+          client: false,
+          updatedAt: false,
+        }}
+        modules={modulesReport.Access}
+      />
+    </SectionPage>
   );
 };

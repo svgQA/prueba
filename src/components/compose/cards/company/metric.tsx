@@ -90,7 +90,7 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
     return (
       <div
         className={[
-          'w-full px-4 py-2 flex flex-col justify-between rounded-xl',
+          'w-full px-4 py-2 flex flex-col justify-between rounded-lg',
           'ring-1',
           theme.ring,
         ].join(' ')}
