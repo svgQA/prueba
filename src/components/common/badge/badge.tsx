@@ -36,7 +36,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
   return (
     <span
       className={`
-        relative text-${size} items-center capitalize px-3 flex rounded-md py-1
+        relative text-${size} items-center capitalize px-3 flex justify-center rounded-md py-1
         ${icon ? 'justify-between' : 'justify-center'} text-base
         ${full ? 'w-full' : width}
         ${onRemove ? 'pr-8' : ''}

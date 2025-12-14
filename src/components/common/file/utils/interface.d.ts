@@ -4,6 +4,7 @@ import { FieldMetaState } from 'react-final-form';
 import { IPresignedRequest } from '@/types/file';
 import { AllowedAreaTypes } from '@/types';
 import { MapPoint } from '../../map/utils/interface';
+import { VoxServices } from '@/utils/network/types';
 
 export interface IFileProps extends IComponentProps {
   onChange?: (event: KeyboardEvent<HTMLInputElement>) => void;
@@ -29,6 +30,7 @@ export interface IFileProps extends IComponentProps {
   value: IPresignedRequest[];
   area?: AllowedAreaTypes;
   showFiles?: boolean;
+  service?: VoxServices;
 }
 
 export interface Attachment {

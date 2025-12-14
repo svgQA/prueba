@@ -336,7 +336,6 @@ export const PqrsPage: FunctionComponent = () => {
       <PqrsModal
         id={pqrsSelected.value.id}
         tags={pqrsSelected.value.tags}
-        areas={pqrsSelected.value.areas}
         showModal={openModalData}
         closeModal={() => (openModalData.value = false)}
       />

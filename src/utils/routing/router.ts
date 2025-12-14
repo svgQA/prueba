@@ -522,6 +522,30 @@ export const PAGES_LIST_ROUTER = {
             to: '/pqrs/stages/update/:id',
           },
         },
+        priorities: {
+          base: '/priorities',
+          to: '/pqrs/priorities',
+          create: {
+            base: '/create',
+            to: '/pqrs/priorities/create',
+          },
+          update: {
+            base: '/update',
+            to: '/pqrs/priorities/update/:id',
+          },
+        },
+        resources: {
+          base: '/resources',
+          to: '/pqrs/resources',
+          create: {
+            base: '/create',
+            to: '/pqrs/resources/create',
+          },
+          update: {
+            base: '/update',
+            to: '/pqrs/resources/update/:id',
+          },
+        },
       },
     },
   },
