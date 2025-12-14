@@ -73,17 +73,6 @@ export function SmartSelector<T = IOption>({
     return [];
   }, [input.value]);
 
-  /*
-  const filtered = useMemo(() => {
-    if (search.length < 1) return [];
-    return options.filter(
-      (opt) =>
-        opt.label.toLowerCase().includes(search.toLowerCase()) &&
-        !selected.some((sel) => sel.value === opt.value)
-    );
-  }, [search, options, selected]);
-  */
-
   const filtered = useMemo(() => {
     if (!focused) return [];
     if (search.length < 1)
@@ -358,12 +347,6 @@ export function SmartSelector<T = IOption>({
       {meta && meta.touched && meta.error && (
         <div class='text-sm text-red-600 mt-1'>{t(meta.error)}</div>
       )}
-      {/*
-      {focused &&
-        search.length >= 1 &&
-        filtered.length > 0 &&
-        createPortal(dropdown, menuPortalTarget ?? document.body)}
-      */}
       {focused &&
         filtered.length > 0 &&
         createPortal(dropdown, menuPortalTarget ?? document.body)}

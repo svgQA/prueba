@@ -89,13 +89,12 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
 
     return (
       <div
-        className={['w-full p-4 rounded-xl', 'ring-1', theme.ring].join(' ')}
+        className={[
+          'w-full px-4 py-2 flex flex-col justify-between rounded-xl',
+          'ring-1',
+          theme.ring,
+        ].join(' ')}
       >
-        {/*
-        'hover:shadow-md hover:-translate-y-[1px]',
-          'dark:hover:shadow-black/20',
-          'transition-all duration-200',
-        */}
         {/* Header row */}
         <div className='flex items-start gap-3'>
           <div

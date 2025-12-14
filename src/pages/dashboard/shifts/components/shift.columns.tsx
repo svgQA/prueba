@@ -238,12 +238,9 @@ export const getColumns = (
               size={10}
               gauges={[
                 { progress: progress, color: progressColor },
-                { progress: 45, color: 'green' },
+                { progress: 0, color: 'green' },
               ]}
             />
-            {/*
-            <Gauge progress={progress} color={progressColor} />
-          */}
           </div>
         );
       },
@@ -271,12 +268,9 @@ export const getColumns = (
               size={10}
               gauges={[
                 { progress: roundPct, color: progressColor },
-                { progress: 45, color: 'green' },
+                { progress: 0, color: 'green' },
               ]}
             />
-            {/*
-            <Gauge progress={roundPct} color={progressColor} />
-            */}
           </div>
         );
       },

@@ -26,7 +26,6 @@ import {
   User,
 } from '@/components/compose/gantt/types/public-types';
 
-import { ShiftSummary } from '@/services';
 import { useUserStore } from '@/store/slices';
 import { modulesReport } from '@/types/form';
 import { IShiftResponse } from '@/types/shift/activity';
@@ -47,12 +46,6 @@ export const ShiftsPage: FunctionalComponent = () => {
   const showSendModal = useSignal(false);
   const notificationValidate = useSignal(false);
   const showShiftModal = useSignal(false);
-
-  const shiftSummary = useSignal<ShiftSummary>({
-    total: 0,
-    in_progress: 0,
-    completed: 0,
-  });
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const shifts = useSignal<IShiftResponse[]>([]);
@@ -91,29 +84,16 @@ export const ShiftsPage: FunctionalComponent = () => {
     document.title = t('p_shift');
   }, [t]);
 
-  const {
-    services,
-    users,
-    hasValidPlayer,
-    fetchInitialData,
-    handleGetShiftSummary,
-  } = useShiftsData({
+  const { services, users, hasValidPlayer, fetchInitialData } = useShiftsData({
     shifts,
     loading,
-    shiftSummary,
     notificationValidate,
   });
 
   useEffect(() => {
     if (!selectedCompany) return;
-    handleGetShiftSummary(dateRangeFilters);
     fetchInitialData(dateRangeFilters);
-  }, [
-    dateRangeFilters,
-    fetchInitialData,
-    handleGetShiftSummary,
-    selectedCompany,
-  ]);
+  }, [dateRangeFilters, fetchInitialData, selectedCompany]);
 
   useShiftSocket({
     shifts,
@@ -277,11 +257,11 @@ export const ShiftsPage: FunctionalComponent = () => {
     <Section className='px-7 py-1'>
       <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-3'>
         <MetricCard
-          title='dashboard.users'
-          subtitle='dashboard.users.subtitle'
+          title='m_active_user'
+          subtitle='m_active_user_d'
           value={1280}
           unit=''
-          icon='071'
+          icon='006'
           color='emerald'
         >
           <BalanceIndicator
@@ -294,11 +274,11 @@ export const ShiftsPage: FunctionalComponent = () => {
         </MetricCard>
 
         <MetricCard
-          title='dashboard.users'
-          subtitle='dashboard.users.subtitle'
+          title='m_active_shift'
+          subtitle='m_active_shift_d'
           value={1280}
           unit=''
-          icon='071'
+          icon='028'
           color='emerald'
           indicators={[
             {
@@ -326,11 +306,11 @@ export const ShiftsPage: FunctionalComponent = () => {
         />
 
         <MetricCard
-          title='dashboard.users'
-          subtitle='dashboard.users.subtitle'
+          title='m_churn_round'
+          subtitle='m_churn_round_d'
           value={1280}
           unit=''
-          icon='071'
+          icon='142'
           color='emerald'
           indicators={[
             {

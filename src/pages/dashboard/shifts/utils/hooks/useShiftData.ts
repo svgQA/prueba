@@ -6,7 +6,6 @@ import {
   NotificationService,
   ServiceService,
   ShiftService,
-  ShiftSummary,
 } from '@/services';
 import { UserService } from '@/services/general/user';
 import { MentionOption } from '@/components/common/mention-editor';
@@ -21,25 +20,13 @@ type DateRangeFilters = { [key: string]: [string, string] } | null;
 export function useShiftsData(params: {
   shifts: Signal<IShiftResponse[]>;
   loading: Signal<boolean>;
-  shiftSummary: Signal<ShiftSummary>;
   notificationValidate: Signal<boolean>;
 }) {
-  const { shifts, loading, shiftSummary, notificationValidate } = params;
+  const { shifts, loading, notificationValidate } = params;
 
   const [services, setServices] = useState<MentionOption[]>([]);
   const [users, setUsers] = useState<MentionOption[]>([]);
   const [hasValidPlayer, setHasValidPlayer] = useState(false);
-
-  const handleGetShiftSummary = useCallback(
-    async (rangeFilters?: DateRangeFilters) => {
-      const summary = await ShiftService.getShiftSummary(
-        rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams
-      );
-      if (!summary.getStatus()) return;
-      shiftSummary.value = summary.getOne();
-    },
-    [shiftSummary]
-  );
 
   const fetchInitialData = useCallback(
     async (rangeFilters?: DateRangeFilters) => {
@@ -87,6 +74,5 @@ export function useShiftsData(params: {
     hasValidPlayer,
     setHasValidPlayer,
     fetchInitialData,
-    handleGetShiftSummary,
   };
 }

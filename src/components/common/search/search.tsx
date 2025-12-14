@@ -325,10 +325,9 @@ export const Search = ({
   return (
     <div
       id={id}
-      className='flex flex-row items-center h-12 w-full max-w-[850px] px-3 border rounded-xl relative bg-white dark:bg-b-dark-dark border-gray-200 dark:border-gray-700 shadow-sm'
-      // focus-within:ring-2 focus-within:ring-primary-opacity focus-within:border-primary transition-all duration-200
+      className='flex flex-row items-center h-10 w-full max-w-[850px] px-3 border rounded-xl relative bg-white dark:bg-b-dark-dark border-gray-200 dark:border-gray-700 shadow-sm'
     >
-      <span className='vox-icon vx-icon-153 text-gray-500 dark:text-gray-400' />
+      <span className='vox-icon vx-icon-153 text-gray-500 dark:text-gray-400 !text-lg' />
       <div
         className='flex flex-row items-center gap-1 ml-2 flex-wrap'
         onClick={handleClickFilters}
@@ -338,7 +337,7 @@ export const Search = ({
       <div className='flex-1 flex items-center'>
         <input
           ref={inputRef}
-          className='w-full px-2 py-1 bg-transparent outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 text-base'
+          className='w-full px-2 py-0.5 bg-transparent outline-none text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 text-base'
           placeholder={t(placeholder || 'p_general_search')}
           onChange={handleChangeInput}
           onKeyDown={handleKeyPress}
