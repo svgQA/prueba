@@ -1,4 +1,5 @@
 import { GeneralService } from '@/services/general/general';
+import { PqrsAiService } from '@/services/pqrs/ai-pqrs';
 import {
   AllowedAreaTypes,
   AllowedAudioTypes,
@@ -7,12 +8,14 @@ import {
   AllowedVideoTypes,
 } from '@/types';
 import { IPresignedRequest } from '@/types/file';
+import { VoxServices } from '@/utils/network/types';
 import shortUUID from 'short-uuid';
 
 export const handleFileChangeWrapper = async (
   e: React.ChangeEvent<HTMLInputElement>,
   onChange: (dataset: any, images: IPresignedRequest) => any,
-  area?: AllowedAreaTypes
+  area?: AllowedAreaTypes,
+  service: VoxServices = 'file'
 ) => {
   if (!e.target || !(e.target instanceof HTMLInputElement)) return;
   const files = e.target.files;
@@ -25,7 +28,8 @@ export const handleFileChangeWrapper = async (
     file.type,
     onChange,
     area || 'form',
-    e
+    e,
+    service
   );
 };
 
@@ -35,7 +39,8 @@ export const handleFileSaveWrapper = async (
   type: any,
   onChange: (dataset: any, images: IPresignedRequest) => any,
   area?: AllowedAreaTypes,
-  e?: React.ChangeEvent<HTMLInputElement>
+  e?: React.ChangeEvent<HTMLInputElement>,
+  service: VoxServices = 'file'
 ) => {
   const model: IPresignedRequest = {
     name: name,
@@ -48,10 +53,14 @@ export const handleFileSaveWrapper = async (
     area,
   };
 
-  const response = await GeneralService.presigned(model);
+  const response = (service === 'ai_pqrs') ?
+    await PqrsAiService.presigned(model) :
+    await GeneralService.presigned(model);
   if (!response.getStatus()) return;
 
   const urlModel = response.getOne();
+
+  console.log('Uploading file to URL:', urlModel.url);
 
   await fetch(urlModel.url, {
     method: 'PUT',

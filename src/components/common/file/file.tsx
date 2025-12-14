@@ -24,6 +24,7 @@ export const File = ({
   disabled,
   area,
   showFiles = true,
+  service = 'file',
   ...props
 }: IFileProps) => {
   const { t } = useTranslation();
@@ -36,7 +37,7 @@ export const File = ({
 
     isLoading.value = true;
     try {
-      await handleFileChangeWrapper(e, emitChange, area);
+      await handleFileChangeWrapper(e, emitChange, area, service);
     } catch {
       ToastManager.error('No se ha podido cargar la imagen');
     } finally {
