@@ -7,6 +7,7 @@ interface IdName<T = number> {
 }
 
 interface IPqrsArea extends IdName {
+  area?: IdName;
   subarea: IdName;
 }
 

@@ -23,7 +23,7 @@ import { useTranslation } from 'react-i18next';
 import { PqrsService } from '@/services/pqrs/pqrs';
 import { OtsService } from '@/services/pqrs/ots';
 
-import { ICPqrsRequest } from '../utils/interface';
+import { ICPqrsRequest, IPqrsArea } from '../utils/interface';
 import PqrsInferenceModal from './modal/pqrs-inference.modal';
 import PqrsGeneralModal from './modal/pqrs-general.modal';
 
@@ -92,9 +92,9 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
     return 'info';
   };
 
-  const handleCreateOts = async (pqrsId: number) => {
+  const handleCreateOts = async (pqrsId: number, areaId: number) => {
     loading.value = true;
-    const response = await OtsService.create(pqrsId);
+    const response = await OtsService.create(pqrsId, areaId);
     if (!response.getStatus()) return (loading.value = false);
     closeModal();
     loading.value = false;
@@ -151,7 +151,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
        * TODO: REFACTORIZAR ESTA PARTE PORQUE NO DEBE IR AQUI:
        */}
       {pqrs.value?.area &&
-        pqrs.value?.area.map((area) => (
+        pqrs.value?.area.map((area: IPqrsArea) => (
           <div class='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
             <div class='flex items-start gap-2'>
               <Badge
@@ -181,7 +181,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
               <Button
                 name='btn-click-ots'
                 label='create OTS'
-                onClick={() => handleCreateOts(pqrs.value?.id!!)}
+                onClick={() => handleCreateOts(pqrs.value?.id!!, area?.area?.id!!)}
                 className='!bg-secondary/15 !text-secondary hover:!bg-secondary/25'
               />
             </div>
@@ -275,11 +275,10 @@ const TabInformation = ({ tabs, children, activeTab }: ITabProp) => (
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            class={`px-3 py-2 text-sm font-medium rounded-xl transition-colors border ${
-              activeTab.value === tab.id
-                ? 'bg-primary text-white border-primary shadow-md'
-                : 'bg-white/80 dark:bg-b-dark/80 border-transparent text-gray-text-light dark:text-b-light-dark hover:border-gray-border/60 dark:hover:border-b-dark-light hover:text-t-light'
-            }`}
+            class={`px-3 py-2 text-sm font-medium rounded-xl transition-colors border ${activeTab.value === tab.id
+              ? 'bg-primary text-white border-primary shadow-md'
+              : 'bg-white/80 dark:bg-b-dark/80 border-transparent text-gray-text-light dark:text-b-light-dark hover:border-gray-border/60 dark:hover:border-b-dark-light hover:text-t-light'
+              }`}
             onClick={() => (activeTab.value = tab.id)}
           >
             <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>
