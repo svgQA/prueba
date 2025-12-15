@@ -19,7 +19,7 @@ import { ExpandeableContent } from './expandeable-content';
 import { useTranslation } from 'react-i18next';
 import { MentionOption } from '../mention-editor';
 import { selectPriority } from '@/pages/settings/memo/novelty/create/create';
-import { getPermissionByModuleState } from '@/store/signals/access/permission';
+//import { getPermissionByModuleState } from '@/store/signals/access/permission';
 import { closeSpinner, openSpinner } from '@/store/signals/modals';
 
 interface ReportFinishedSubmit {
