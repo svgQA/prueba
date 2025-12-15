@@ -1,4 +1,5 @@
 import { Signal } from '@preact/signals';
+import { ComponentChildren, FunctionalComponent } from 'preact';
 
 import { useTranslation } from 'react-i18next';
 
@@ -17,250 +18,333 @@ export interface ITextInformationProps {
   value: string | number | null | undefined;
 }
 
-const TextInformation = ({ label, value }: ITextInformationProps) => {
+const SectionCard = ({
+  title,
+  icon,
+  children,
+  className = '',
+}: {
+  title?: string;
+  icon?: string;
+  children: ComponentChildren;
+  className?: string;
+}) => (
+  <div
+    class={`rounded-2xl border border-gray-border/70 dark:border-b-dark-light bg-white/90 dark:bg-b-dark-light/90 shadow-sm backdrop-blur-sm ${className}`}
+  >
+    {(icon || title) && (
+      <div class='flex items-center gap-2 px-4 py-3 border-b border-gray-border/60 dark:border-b-dark-light'>
+        {icon && <span class='text-lg'>{icon}</span>}
+        {title && (
+          <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide'>
+            {title}
+          </h4>
+        )}
+      </div>
+    )}
+    <div class='p-4 space-y-4'>{children}</div>
+  </div>
+);
+
+const InfoPill: FunctionalComponent<{
+  icon: string;
+  label: string;
+  value?: string | number | null;
+}> = ({ icon, label, value }) => {
   const { t } = useTranslation();
 
+  if (!value) return null;
+
   return (
-    <div class='p-3 rounded-lg bg-white dark:bg-b-dark border border-gray-border dark:border-b-dark-light shadow-sm'>
-      <label class='text-[11px] font-semibold text-gray-500 dark:text-b-light-dark tracking-wide uppercase'>
-        {t(label)}
-      </label>
-      <p class='text-sm text-t-light dark:text-white mt-1'>
-        {(typeof value === 'string' ? t(value) : value) || 'N/A'}
-      </p>
+    <div class='inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white/80 dark:bg-b-dark/70 border border-gray-border/60 dark:border-b-dark-light shadow-sm'>
+      <span>{icon}</span>
+      <div class='flex flex-col leading-tight'>
+        <span class='text-[10px] uppercase tracking-[0.12em] text-gray-text-light dark:text-b-light-dark font-semibold'>
+          {t(label)}
+        </span>
+        <span class='text-sm text-t-light dark:text-white font-medium'>
+          {typeof value === 'string' ? t(value) : value}
+        </span>
+      </div>
     </div>
   );
 };
 
 const PqrsGeneralModal = ({ pqrs }: IProps) => {
   return (
-    <div class='space-y-4'>
-      <div class='grid grid-cols-1 lg:grid-cols-5 gap-4'>
-        <div class='lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4'>
-          <div class='md:col-span-1 bg-white dark:bg-b-dark border border-gray-border dark:border-b-dark-light rounded-lg p-3 shadow-sm'>
-            <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide border-b border-gray-border dark:border-b-dark-light pb-2 mb-3'>
-              📍 Ubicación
-            </h4>
+    <div class='space-y-5'>
+      {/* Primera fila: resumen arriba y mapa a ancho completo */}
+      <div class='grid grid-cols-1 gap-5 items-start'>
+        <div class='space-y-4'>
+          <SectionCard>
             <div class='space-y-3'>
-              {pqrs.value?.municipality && (
-                <TextInformation
+              <div class='space-y-1'>
+                <h3 class='text-xl font-semibold text-t-light dark:text-white'>
+                  {pqrs.value?.clientName || 'Detalle del caso'}
+                </h3>
+              </div>
+              <div class='flex flex-wrap gap-2'>
+                <InfoPill
+                  icon='📑'
+                  label='Tipo de Recurso'
+                  value={pqrs.value?.extraData?.legalResourceType}
+                />
+                <InfoPill
+                  icon='🎫'
+                  label='Ticket'
+                  value={pqrs.value?.extraData?.referencedTicketNumber}
+                />
+                <InfoPill
+                  icon='🛰️'
+                  label='Servicio Afectado'
+                  value={pqrs.value?.extraData?.affectedService}
+                />
+                <InfoPill
+                  icon='📍'
                   label='Municipio'
                   value={pqrs.value?.municipality}
                 />
-              )}
-              {pqrs.value?.department && (
-                <TextInformation
+                <InfoPill
+                  icon='🗺️'
                   label='Departamento'
                   value={pqrs.value?.department}
                 />
-              )}
-              {pqrs.value?.transformer && (
-                <TextInformation
-                  label='Transformador'
-                  value={pqrs.value?.transformer}
+                <InfoPill
+                  icon='📡'
+                  label='Canal de Recepción'
+                  value={pqrs.value?.extraData?.receptionChannel}
                 />
-              )}
-              {pqrs.value?.pole && (
-                <TextInformation label='Poste' value={pqrs.value?.pole} />
-              )}
-              {pqrs.value?.lat && (
-                <TextInformation label='Latitud' value={pqrs.value?.lat} />
-              )}
-              {pqrs.value?.lng && (
-                <TextInformation label='Longitud' value={pqrs.value?.lng} />
-              )}
+                <InfoPill
+                  icon='💬'
+                  label='Sentimiento'
+                  value={pqrs.value?.extraData?.sentiment}
+                />
+                {pqrs.value?.transformer && (
+                  <InfoPill
+                    icon='🛰️'
+                    label='Transformador'
+                    value={pqrs.value?.transformer}
+                  />
+                )}
+                {pqrs.value?.pole && (
+                  <InfoPill icon='🛰️' label='Poste' value={pqrs.value?.pole} />
+                )}
+                {pqrs.value?.lat && (
+                  <InfoPill icon='🛰️' label='Latitud' value={pqrs.value?.lat} />
+                )}
+                {pqrs.value?.lng && (
+                  <InfoPill
+                    icon='🛰️'
+                    label='Longitud'
+                    value={pqrs.value?.lng}
+                  />
+                )}
+              </div>
             </div>
-          </div>
+          </SectionCard>
+        </div>
 
-          <div class='md:col-span-3 bg-white dark:bg-b-dark border border-gray-border dark:border-b-dark-light rounded-lg p-3 shadow-sm'>
-            <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide border-b border-gray-border dark:border-b-dark-light pb-2 mb-3'>
-              📍 Mapa
-            </h4>
-            <div class='h-[400px] rounded-lg overflow-hidden'>
-              <MapLibreShowPoints
-                name='pqrs-location-map'
-                pointsRef={[
-                  {
-                    id: pqrs.value?.id || 0,
-                    position: {
-                      lat: pqrs.value?.lat || 0,
-                      lng: pqrs.value?.lng || '',
-                    },
-                    name: pqrs.value?.clientName || 'Ubicación PQRS',
+        <SectionCard title='Mapa' icon='🗺️'>
+          <div class='h-[420px] rounded-xl overflow-hidden border border-gray-border/60 dark:border-b-dark-light bg-white dark:bg-b-dark w-full'>
+            <MapLibreShowPoints
+              name='pqrs-location-map'
+              pointsRef={[
+                {
+                  id: pqrs.value?.id || 0,
+                  position: {
+                    lat: pqrs.value?.lat || 0,
+                    lng: Number(pqrs.value?.lng) || 0,
                   },
-                ]}
-                sendPoints={() => {}}
-                center={{
-                  lat: pqrs.value?.lat || 0,
-                  lng: pqrs.value?.lng || 0,
-                }}
-                height='100%'
-                disablePointSelection={true}
-              />
-            </div>
+                  name: pqrs.value?.clientName || 'Ubicación PQRS',
+                },
+              ]}
+              sendPoints={() => {}}
+              center={{
+                lat: pqrs.value?.lat || 0,
+                lng: Number(pqrs.value?.lng) || 0,
+              }}
+              height='100%'
+              disablePointSelection={true}
+            />
           </div>
-        </div>
-
-        <div class='lg:col-span-2 space-y-4'>
-          {pqrs.value?.raw && (
-            <div class='bg-white dark:bg-b-dark border border-gray-border dark:border-b-dark-light rounded-lg p-3 shadow-sm'>
-              <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide border-b border-gray-border dark:border-b-dark-light pb-2 mb-3'>
-                📄 Raw
-              </h4>
-              <div class='bg-gray-50 dark:bg-b-dark-light rounded p-3'>
-                <TextEllipsis
-                  text={
-                    typeof pqrs.value.raw === 'string'
-                      ? pqrs.value.raw
-                      : JSON.stringify(pqrs.value.raw, null, 2)
-                  }
-                  maxWidth='100%'
-                  lines={8}
-                  className='text-xs text-gray-text-light dark:text-b-light-dark font-mono whitespace-pre-wrap'
-                />
-              </div>
-            </div>
-          )}
-
-          {pqrs.value?.rawFile && (
-            <div class='bg-white dark:bg-b-dark border border-gray-border dark:border-b-dark-light rounded-lg p-3 shadow-sm'>
-              <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide border-b border-gray-border dark:border-b-dark-light pb-2 mb-3'>
-                📁 Raw File
-              </h4>
-              <div class='bg-gray-50 dark:bg-b-dark-light rounded p-3'>
-                <TextEllipsis
-                  text={
-                    typeof pqrs.value.rawFile === 'string'
-                      ? pqrs.value.rawFile
-                      : JSON.stringify(pqrs.value.rawFile, null, 2)
-                  }
-                  maxWidth='100%'
-                  lines={8}
-                  className='text-xs text-gray-text-light dark:text-b-light-dark font-mono whitespace-pre-wrap'
-                />
-              </div>
-            </div>
-          )}
-
-          {pqrs.value?.resources && (
-            <div class='bg-white dark:bg-b-dark border border-gray-border dark:border-b-dark-light rounded-lg p-3 shadow-sm'>
-              <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide border-b border-gray-border dark:border-b-dark-light pb-2 mb-3'>
-                📎 Archivos Adjuntos
-              </h4>
-              <div class='grid gap-3'>
-                <ShowFiles resources={pqrs.value.resources} />
-              </div>
-            </div>
-          )}
-        </div>
+        </SectionCard>
       </div>
 
-      <div class='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-        {pqrs.value?.extraData?.legalResourceType && (
-          <TextInformation
-            label='Tipo de Recurso Legal'
-            value={pqrs.value?.extraData?.legalResourceType}
-          />
-        )}
-        {pqrs.value?.extraData?.mainIssue && (
-          <div class='col-span-2 p-3 rounded-lg bg-white dark:bg-b-dark border border-gray-border dark:border-b-dark-light shadow-sm'>
-            <label class='text-[11px] font-semibold text-gray-500 dark:text-b-light-dark tracking-wide uppercase'>
-              Problema Principal
-            </label>
-            <p class='text-sm text-t-light dark:text-white mt-1'>
-              {pqrs.value?.extraData?.mainIssue}
-            </p>
-          </div>
-        )}
-        {pqrs.value?.extraData?.affectedService && (
-          <TextInformation
-            label='Servicio Afectado'
-            value={pqrs.value?.extraData?.affectedService}
-          />
-        )}
-        {pqrs.value?.extraData?.receptionChannel && (
-          <TextInformation
-            label='Canal de Recepción'
-            value={pqrs.value?.extraData?.receptionChannel}
-          />
-        )}
-        {pqrs.value?.extraData?.userRequest && (
-          <div class='col-span-2 p-3 rounded-lg bg-white dark:bg-b-dark border border-gray-border dark:border-b-dark-light shadow-sm'>
-            <label class='text-[11px] font-semibold text-gray-500 dark:text-b-light-dark tracking-wide uppercase'>
-              Solicitud del Usuario
-            </label>
-            <p class='text-sm text-t-light dark:text-white mt-1'>
-              {pqrs.value?.extraData?.userRequest}
-            </p>
-          </div>
-        )}
+      {/* Segunda fila: contexto del caso y referencias */}
+      <div class='grid grid-cols-1 xl:grid-cols-[1.4fr_1fr] gap-5 items-start'>
+        <SectionCard title='Resumen del caso' icon='🧭' className='h-full'>
+          <div class='space-y-3'>
+            {pqrs.value?.extraData?.mainIssue && (
+              <div class='p-3 rounded-xl bg-b-light/80 dark:bg-b-dark border border-gray-border/60 dark:border-b-dark-light'>
+                <p class='text-[11px] uppercase tracking-[0.16em] text-gray-text-light dark:text-b-light-dark font-semibold'>
+                  Problema Principal
+                </p>
+                <p class='text-sm text-t-light dark:text-white mt-1 leading-relaxed'>
+                  {pqrs.value?.extraData?.mainIssue}
+                </p>
+              </div>
+            )}
 
-        {pqrs.value?.extraData?.sentiment && (
-          <TextInformation
-            label='Sentimiento'
-            value={pqrs.value?.extraData?.sentiment}
-          />
-        )}
-      </div>
+            {pqrs.value?.extraData?.userRequest && (
+              <div class='p-3 rounded-xl bg-b-light/80 dark:bg-b-dark border border-gray-border/60 dark:border-b-dark-light'>
+                <p class='text-[11px] uppercase tracking-[0.16em] text-gray-text-light dark:text-b-light-dark font-semibold'>
+                  Solicitud del Usuario
+                </p>
+                <p class='text-sm text-t-light dark:text-white mt-1 leading-relaxed'>
+                  {pqrs.value?.extraData?.userRequest}
+                </p>
+              </div>
+            )}
 
-      {pqrs.value?.extraData?.secondaryIssues &&
-        pqrs.value?.extraData?.secondaryIssues.length > 0 && (
-          <div class='p-4 bg-yellow-50 dark:bg-yellow-950 rounded-lg border border-yellow-200 dark:border-yellow-900 shadow-sm'>
-            <div class='flex items-center gap-2 mb-2'>
-              <span class='text-yellow-600 dark:text-yellow-300'>⚠️</span>
-              <h4 class='font-semibold text-yellow-900 dark:text-yellow-200 text-sm'>
-                Problemas Secundarios
-              </h4>
-            </div>
-            <ul class='list-disc list-inside space-y-1'>
-              {pqrs.value?.extraData?.secondaryIssues.map((issue, idx) => (
-                <li
-                  key={idx}
-                  class='text-sm text-yellow-800 dark:text-yellow-100'
-                >
-                  {issue}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-      {pqrs.value?.extraData?.referencedInvoicePeriods &&
-        pqrs.value?.extraData?.referencedInvoicePeriods.length > 0 && (
-          <div class='p-4 bg-purple-50 dark:bg-purple-950 rounded-lg border border-purple-200 dark:border-purple-900 shadow-sm'>
-            <div class='flex items-center gap-2 mb-2'>
-              <span class='text-purple-600 dark:text-purple-300'>📅</span>
-              <h4 class='font-semibold text-purple-900 dark:text-purple-200 text-sm'>
-                Períodos de Factura Referenciados
-              </h4>
-            </div>
-            <div class='flex flex-wrap gap-2'>
-              {pqrs.value?.extraData?.referencedInvoicePeriods.map(
-                (period, idx) => (
-                  <span
-                    key={idx}
-                    class='px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-100 text-xs rounded font-mono'
-                  >
-                    {period}
-                  </span>
-                )
+            {pqrs.value?.extraData?.secondaryIssues &&
+              pqrs.value?.extraData?.secondaryIssues.length > 0 && (
+                <div class='p-3 rounded-xl bg-yellow-50/80 dark:bg-yellow-950/60 border border-yellow-200 dark:border-yellow-800 shadow-inner'>
+                  <div class='flex items-center gap-2 mb-2'>
+                    <span class='text-yellow-600 dark:text-yellow-300'>⚠️</span>
+                    <p class='text-[11px] uppercase tracking-[0.14em] text-yellow-800 dark:text-yellow-100 font-semibold'>
+                      Problemas Secundarios
+                    </p>
+                  </div>
+                  <ul class='list-disc list-inside space-y-1'>
+                    {pqrs.value?.extraData?.secondaryIssues.map(
+                      (issue, idx) => (
+                        <li
+                          key={idx}
+                          class='text-sm text-yellow-900 dark:text-yellow-100'
+                        >
+                          {issue}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
               )}
-            </div>
           </div>
-        )}
+        </SectionCard>
 
-      {pqrs.value?.extraData?.referencedTicketNumber && (
-        <div class='p-4 bg-blue-50 dark:bg-blue-950 rounded-lg border border-blue-200 dark:border-blue-900 shadow-sm'>
-          <div class='flex items-center gap-2 mb-2'>
-            <span class='text-blue-600 dark:text-blue-300'>🔗</span>
-            <h4 class='font-semibold text-blue-900 dark:text-blue-200 text-sm'>
-              Ticket Referenciado
-            </h4>
+        <SectionCard
+          title='Referencias y periodos'
+          icon='🔗'
+          className='h-full'
+        >
+          <div class='space-y-3'>
+            {pqrs.value?.extraData?.referencedInvoicePeriods &&
+              pqrs.value?.extraData?.referencedInvoicePeriods.length > 0 && (
+                <div class='p-3 rounded-xl bg-gradient-to-br from-purple-50 via-white to-purple-100 dark:from-purple-950/60 dark:via-b-dark/50 dark:to-purple-900/50 border border-purple-200 dark:border-purple-800 shadow-sm space-y-2'>
+                  <div class='flex items-center justify-between gap-2'>
+                    <div class='flex items-center gap-2'>
+                      <span class='text-purple-600 dark:text-purple-300'>
+                        📅
+                      </span>
+                      <p class='text-[11px] uppercase tracking-[0.14em] text-purple-800 dark:text-purple-200 font-semibold'>
+                        Períodos de Factura
+                      </p>
+                    </div>
+                    <span class='text-[11px] px-2 py-1 rounded-full bg-white/80 dark:bg-purple-900/60 border border-purple-200/70 dark:border-purple-700/60 text-purple-700 dark:text-purple-100'>
+                      {pqrs.value?.extraData?.referencedInvoicePeriods.length}{' '}
+                      en total
+                    </span>
+                  </div>
+
+                  <div class='grid grid-cols-2 sm:grid-cols-3 gap-2'>
+                    {pqrs.value?.extraData?.referencedInvoicePeriods.map(
+                      (period, idx) => (
+                        <span
+                          key={idx}
+                          class='px-3 py-1.5 bg-white/95 dark:bg-purple-950/50 text-purple-800 dark:text-purple-100 text-xs rounded-xl font-mono shadow-sm border border-purple-100/80 dark:border-purple-800/60 text-center truncate'
+                          title={period}
+                        >
+                          {period}
+                        </span>
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+
+            {pqrs.value?.extraData?.referencedTicketNumber && (
+              <div class='p-3 rounded-xl bg-blue-50/70 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 shadow-inner'>
+                <p class='text-[11px] uppercase tracking-[0.14em] text-blue-800 dark:text-blue-200 font-semibold mb-1'>
+                  Ticket Referenciado
+                </p>
+                <p class='text-sm text-blue-900 dark:text-blue-100 font-mono bg-white/70 dark:bg-blue-900/30 px-3 py-2 rounded border border-blue-100 dark:border-blue-800'>
+                  {pqrs.value?.extraData?.referencedTicketNumber}
+                </p>
+              </div>
+            )}
+
+            {!pqrs.value?.extraData?.referencedTicketNumber &&
+              !(
+                pqrs.value?.extraData?.referencedInvoicePeriods &&
+                pqrs.value?.extraData?.referencedInvoicePeriods.length > 0
+              ) && (
+                <div class='p-3 rounded-xl border border-dashed border-gray-border/60 dark:border-b-dark-light text-sm text-gray-text-light dark:text-b-light-dark bg-b-light/40 dark:bg-b-dark/40 text-center'>
+                  Sin referencias registradas
+                </div>
+              )}
           </div>
-          <p class='text-sm text-blue-800 dark:text-blue-100 font-mono bg-white/60 dark:bg-blue-900/30 px-3 py-2 rounded'>
-            {pqrs.value?.extraData?.referencedTicketNumber}
-          </p>
-        </div>
+        </SectionCard>
+      </div>
+
+      {/* Datos y archivos */}
+      {(pqrs.value?.raw || pqrs.value?.rawFile || pqrs.value?.resources) && (
+        <SectionCard title='Datos y adjuntos' icon='📂'>
+          <div class='grid grid-cols-1 lg:grid-cols-3 gap-4 items-start'>
+            {pqrs.value?.raw && (
+              <div class='lg:col-span-2 space-y-2'>
+                <div class='flex items-center gap-2 text-xs font-semibold text-gray-text-light dark:text-b-light-dark uppercase tracking-[0.12em]'>
+                  <span>📄</span>
+                  <span>Raw</span>
+                </div>
+                <div class='bg-b-light dark:bg-b-dark rounded-lg p-3 border border-gray-border/60 dark:border-b-dark-light'>
+                  <TextEllipsis
+                    text={
+                      typeof pqrs.value.raw === 'string'
+                        ? pqrs.value.raw
+                        : JSON.stringify(pqrs.value.raw, null, 2)
+                    }
+                    maxWidth='100%'
+                    lines={10}
+                    className='text-xs text-gray-text-light dark:text-b-light-dark font-mono whitespace-pre-wrap'
+                  />
+                </div>
+              </div>
+            )}
+
+            {pqrs.value?.rawFile && (
+              <div class='space-y-2'>
+                <div class='flex items-center gap-2 text-xs font-semibold text-gray-text-light dark:text-b-light-dark uppercase tracking-[0.12em]'>
+                  <span>📁</span>
+                  <span>Raw File</span>
+                </div>
+                <div class='bg-b-light dark:bg-b-dark rounded-lg p-3 border border-gray-border/60 dark:border-b-dark-light'>
+                  <TextEllipsis
+                    text={
+                      typeof pqrs.value.rawFile === 'string'
+                        ? pqrs.value.rawFile
+                        : JSON.stringify(pqrs.value.rawFile, null, 2)
+                    }
+                    maxWidth='100%'
+                    lines={10}
+                    className='text-xs text-gray-text-light dark:text-b-light-dark font-mono whitespace-pre-wrap'
+                  />
+                </div>
+              </div>
+            )}
+
+            {pqrs.value?.resources && (
+              <div class='space-y-2 lg:col-span-3'>
+                <div class='flex items-center gap-2 text-xs font-semibold text-gray-text-light dark:text-b-light-dark uppercase tracking-[0.12em]'>
+                  <span>📎</span>
+                  <span>Archivos Adjuntos</span>
+                </div>
+                <div class='grid gap-3'>
+                  <ShowFiles resources={pqrs.value.resources} />
+                </div>
+              </div>
+            )}
+          </div>
+        </SectionCard>
       )}
     </div>
   );

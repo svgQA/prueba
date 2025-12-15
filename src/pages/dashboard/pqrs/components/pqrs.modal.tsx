@@ -2,8 +2,6 @@ import { VNode } from 'preact';
 import { Signal, useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 
-import dayjs from 'dayjs';
-
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import {
   InSocketMessage,
@@ -15,7 +13,6 @@ import {
 
 import { Modal } from '@/components/common/modal/modal';
 import { Badge } from '@/components/common/badge/badge';
-import { Chip } from '@/components/common/chip/chip';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { Button } from '@/components/common/button/button';
 
@@ -34,10 +31,9 @@ interface IProps {
   showModal: Signal<boolean>;
   closeModal: () => void;
   id?: number;
-  tags?: any[];
 }
 
-export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
+export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
 
@@ -104,194 +100,124 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
     loading.value = false;
   };
 
-  const calculateDaysToExpire = () => {
-    if (!pqrs.value?.startDate) return null;
-
-    const startDate = dayjs(pqrs.value.startDate);
-    const expirationDate = startDate.add(15, 'days');
-    const today = dayjs();
-
-    const daysRemaining = expirationDate.diff(today, 'days');
-
-    return {
-      daysRemaining,
-      isExpired: daysRemaining < 0,
-      isExpiringSoon: daysRemaining >= 0 && daysRemaining <= 3,
-    };
-  };
-
-  const expirationStatus = calculateDaysToExpire();
-
   const HeaderInformation = () => (
-    <div class='bg-b-light dark:bg-b-dark-light border border-gray-border dark:border-b-dark-light rounded-xl p-4 shadow-sm'>
-      <div class='flex items-start justify-between gap-3 mb-3'>
-        <div class='flex-1 min-w-0'>
-          <div class='flex items-center gap-2 mb-1'>
+    <div class='bg-white/95 dark:bg-b-dark-light/90 border border-gray-border/70 dark:border-b-dark-light rounded-2xl p-4 shadow-sm space-y-4'>
+      <div class='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
+        <div class='flex-1 min-w-0 space-y-1.5'>
+          <div class='flex items-start gap-2 flex-wrap'>
             <h4 class='font-semibold text-t-light dark:text-white text-lg leading-tight'>
-              {pqrs.value?.extraData?.title || 'Sin nombre'}
+              {pqrs.value?.extraData?.title}
             </h4>
           </div>
-          <div class='flex items-center gap-2 text-xs text-gray-text-light dark:text-b-light-dark'>
+          <div class='flex items-center flex-wrap gap-2 text-xs text-gray-text-light dark:text-b-light-dark'>
+            {pqrs.value?.clientName && (
+              <span class='font-mono px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                Nombre: {pqrs.value.clientName}
+              </span>
+            )}
             {pqrs.value?.identifier && (
-              <>
-                <span class='font-mono'>#{pqrs.value.identifier}</span>
-                {pqrs.value?.contract && (
-                  <>
-                    <span>•</span>
-                    <span>{pqrs.value.contract}</span>
-                  </>
-                )}
-              </>
+              <span class='font-mono px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                Cedula: {pqrs.value.identifier}
+              </span>
+            )}
+            {pqrs.value?.contract && (
+              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                contract: {pqrs.value.contract}
+              </span>
+            )}
+            {pqrs.value?.startDate && (
+              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                fecha:{' '}
+                {DateUtils.dateToFrontend(pqrs.value?.startDate, {
+                  format: 'DD/MM/YYYY',
+                })}
+              </span>
+            )}
+            {pqrs.value?.contactEmail && (
+              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                Email: {pqrs.value.contactEmail}
+              </span>
+            )}
+            {pqrs.value?.address && (
+              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                Dirección: {pqrs.value.address}
+              </span>
             )}
           </div>
         </div>
+      </div>
 
+      {/**
+       * TODO: REFACTORIZAR ESTA PARTE PORQUE NO DEBE IR AQUI:
+       */}
+      {pqrs.value?.area &&
+        pqrs.value?.area.map((area) => (
+          <div class='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
+            <div class='flex items-start gap-2'>
+              <Badge
+                key={area.id}
+                label={area.name}
+                status='warning'
+                size='sm'
+                outline
+                width='w-fit'
+              />
+            </div>
+
+            {area.subarea && (
+              <div class='flex items-start gap-2'>
+                <Badge
+                  key={area?.subarea?.id}
+                  label={area?.subarea?.name}
+                  status='warning'
+                  size='sm'
+                  outline
+                  width='w-fit'
+                />
+              </div>
+            )}
+
+            <div class='flex items-start gap-2'>
+              <Button
+                name='btn-click-ots'
+                label='create OTS'
+                onClick={() => handleCreateOts(pqrs.value?.id!!)}
+                className='!bg-secondary/15 !text-secondary hover:!bg-secondary/25'
+              />
+            </div>
+          </div>
+        ))}
+
+      {pqrs.value?.extraData?.observation && (
+        <div class='mb-3 pb-3 border-b border-gray-border/70 dark:border-b-dark-light'>
+          <TextEllipsis
+            text={pqrs.value.extraData.observation}
+            maxWidth='100%'
+            lines={3}
+            className='text-sm text-gray-text-light dark:text-b-light-dark leading-relaxed'
+          />
+        </div>
+      )}
+      {/* Mover badges al final para que no queden junto al título */}
+      <div class='flex items-start gap-2 flex-wrap'>
         {pqrs.value?.extraData?.pqrsType && (
           <Badge
             label={pqrs.value.extraData.pqrsType}
             status={getBadgeStatus()}
             size='sm'
             outline
+            width='w-fit'
           />
         )}
-
-        {pqrs.value?.area && (
-          <Badge
-            label={pqrs.value?.area.name}
-            status='info'
-            size='sm'
-            outline
-          />
-        )}
-
-        {pqrs.value?.subarea && (
-          <Badge
-            label={pqrs.value?.subarea.name}
-            status='success'
-            size='sm'
-            outline
-          />
-        )}
-
         {pqrs.value?.priority && (
           <Badge
             label={pqrs.value?.priority.name}
             status='warning'
             size='sm'
             outline
+            width='w-fit'
           />
         )}
-
-        {pqrs.value?.area?.name === 'Mantenimiento' && pqrs.value.id && (
-          <Button
-            name='btn-click-ots'
-            label='create OTS'
-            onClick={() => handleCreateOts(pqrs.value?.id!!)}
-          />
-        )}
-      </div>
-
-      {pqrs.value?.extraData?.observation && (
-        <div class='mb-3 pb-3 border-b border-gray-border dark:border-b-dark-light'>
-          <TextEllipsis
-            text={pqrs.value.extraData.observation}
-            maxWidth='100%'
-            lines={2}
-            className='text-sm text-gray-text-light dark:text-b-light-dark leading-relaxed'
-          />
-        </div>
-      )}
-
-      <div class='space-y-3'>
-        <div class='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs'>
-          {pqrs.value?.startDate && (
-            <Badge
-              label={
-                'fecha: ' +
-                DateUtils.dateToFrontend(pqrs.value?.startDate, {
-                  format: 'DD/MM/YYYY',
-                })
-              }
-              status='info'
-              size='sm'
-              outline
-              full
-            />
-          )}
-
-          {pqrs.value?.clientName && (
-            <Badge
-              label={'clientName: ' + pqrs.value?.clientName}
-              status='info'
-              size='sm'
-              outline
-              full
-            />
-          )}
-
-          {pqrs.value?.contactEmail && (
-            <Badge
-              label={'contactEmail: ' + pqrs.value?.contactEmail}
-              status='info'
-              size='sm'
-              outline
-              full
-            />
-          )}
-
-          {pqrs.value?.identifier && (
-            <Badge
-              label={'Cedula: ' + pqrs.value?.identifier}
-              status='info'
-              size='sm'
-              outline
-              full
-            />
-          )}
-
-          {pqrs.value?.contract && (
-            <Badge
-              label={'contract: ' + pqrs.value?.contract}
-              status='info'
-              size='sm'
-              outline
-              full
-            />
-          )}
-
-          {pqrs.value?.address && (
-            <Badge
-              label={'address: ' + pqrs.value?.address}
-              status='info'
-              size='sm'
-              outline
-              full
-            />
-          )}
-        </div>
-
-        <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border dark:border-b-dark-light'>
-          {tags &&
-            tags.map((tag, idx) => (
-              <Chip key={idx} label={`#${String(tag)}`} width='lg' />
-            ))}
-
-          {pqrs.value?.resources && <Chip label={'📎 Archivos'} width='lg' />}
-
-          {expirationStatus?.isExpired && (
-            <Chip
-              label={`⏰ Expirado hace ${Math.abs(expirationStatus.daysRemaining)}d`}
-              width='lg'
-            />
-          )}
-
-          {expirationStatus?.isExpiringSoon && !expirationStatus?.isExpired && (
-            <Chip
-              label={`⏰ Expira en ${expirationStatus.daysRemaining}d`}
-              width='full'
-            />
-          )}
-        </div>
       </div>
     </div>
   );
@@ -301,7 +227,7 @@ export const PqrsModal = ({ showModal, closeModal, id, tags }: IProps) => {
       open={showModal.value}
       onClose={closeModal}
       name='modal-pqrs-details'
-      width='w-11/12 max-w-6xl'
+      width='w-full max-w-7xl'
       position='fixed'
       header={
         <div className='flex flex-col gap-1'>
@@ -343,16 +269,16 @@ interface ITabProp {
 }
 
 const TabInformation = ({ tabs, children, activeTab }: ITabProp) => (
-  <>
-    <div class='border-b border-gray-border dark:border-b-dark-light mb-1 px-1'>
-      <nav class='flex space-x-1 overflow-x-auto vox-scroll-design pb-1'>
+  <div class='rounded-2xl border border-gray-border/70 dark:border-b-dark-light bg-white/90 dark:bg-b-dark-light/90 shadow-sm overflow-hidden flex flex-col h-full'>
+    <div class='border-b border-gray-border/60 dark:border-b-dark-light bg-b-light/60 dark:bg-b-dark/60 px-2'>
+      <nav class='flex space-x-1 overflow-x-auto vox-scroll-design py-2'>
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            class={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${
+            class={`px-3 py-2 text-sm font-medium rounded-xl transition-colors border ${
               activeTab.value === tab.id
-                ? 'bg-primary-opacity text-primary border-b-2 border-primary shadow-sm'
-                : 'text-gray-text-light dark:text-b-light-dark hover:text-t-light hover:bg-b-light dark:hover:bg-b-dark-light'
+                ? 'bg-primary text-white border-primary shadow-md'
+                : 'bg-white/80 dark:bg-b-dark/80 border-transparent text-gray-text-light dark:text-b-light-dark hover:border-gray-border/60 dark:hover:border-b-dark-light hover:text-t-light'
             }`}
             onClick={() => (activeTab.value = tab.id)}
           >
@@ -363,8 +289,8 @@ const TabInformation = ({ tabs, children, activeTab }: ITabProp) => (
       </nav>
     </div>
 
-    <div class='flex-1 overflow-y-auto p-3 rounded-lg bg-b-light dark:bg-b-dark-light shadow-inner vox-scroll-design'>
+    <div class='flex-1 overflow-y-auto p-4 bg-b-light/60 dark:bg-b-dark/60 vox-scroll-design'>
       {children}
     </div>
-  </>
+  </div>
 );

@@ -2,7 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Badge } from '@/components/common/badge/badge';
-import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
+// import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { NColumnDef } from '@/components/common/table/type';
 import { FormattedDate } from '@/components/compose/forms';
 import { ICOtsRequest } from '../utils/interface';
@@ -25,18 +25,6 @@ export const getColumns = (
   }) => void
 ): CustomColumnDef<ICOtsRequest>[] => {
   return [
-    {
-      id: 'description',
-      accessorKey: 'description',
-      header: 'h_description',
-      size: 200,
-      enableGrouping: true,
-      meta: { headerAlign: 'center' },
-      cell: (info) => {
-        const description = info.getValue() as string;
-        return <TextEllipsis text={description} maxWidth='300px' />;
-      },
-    },
     {
       id: 'status',
       accessorKey: 'state',

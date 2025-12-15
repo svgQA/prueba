@@ -6,6 +6,10 @@ interface IdName<T = number> {
   description?: string;
 }
 
+interface IPqrsArea extends IdName {
+  subarea: IdName;
+}
+
 export interface ICPqrsRequest {
   id?: number;
   raw?: any | null;
@@ -33,8 +37,7 @@ export interface ICPqrsRequest {
 
   //relations
   inferences: Inference[];
-  area?: IdName;
-  subarea?: IdName;
+  area?: IPqrsArea[];
   priority?: IdName;
 }
 
@@ -77,11 +80,10 @@ export interface ICPqrsExtraData {
 }
 
 export interface ICOtsRequest {
-  description: string;
   cost: number;
   status: OTS_STATUS;
-  note: string;
   executionDate: string | Date;
+  pqrs: ICPqrsRequest;
 }
 
 export enum OTS_STATUS {
