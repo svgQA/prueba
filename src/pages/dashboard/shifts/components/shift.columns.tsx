@@ -261,7 +261,7 @@ export const getColumns = (
       header: 'h_round',
       meta: { headerAlign: 'center' },
       cell: (info: any) => {
-        const { roundPct } = info.row.original;
+        const { roundPct, service } = info.row.original as IShiftResponse;
         let progressColor = '#E05858';
 
         if (roundPct >= 30 && roundPct < 70) {
@@ -272,13 +272,15 @@ export const getColumns = (
 
         return (
           <div className='flex flex-row justify-center'>
-            <Gauge
-              size={10}
-              gauges={[
-                { progress: roundPct, color: progressColor },
-                { progress: 0, color: 'green' },
-              ]}
-            />
+            {service?.roundId > 0 && (
+              <Gauge
+                size={10}
+                gauges={[
+                  { progress: roundPct, color: progressColor },
+                  { progress: 0, color: 'green' },
+                ]}
+              />
+            )}
           </div>
         );
       },

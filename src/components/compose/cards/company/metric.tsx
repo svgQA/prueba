@@ -1,25 +1,28 @@
-// import { Card } from '@/components/common/card/card';
-import { FunctionalComponent, ComponentChildren } from 'preact';
+import { BalanceIndicator } from '@/components/common/balance/balance';
+import { SimpleGauge } from '@/components/common/gauge/simple';
+import { FunctionalComponent } from 'preact';
 import { memo } from 'preact/compat';
 import { useTranslation } from 'react-i18next';
 
+type ToneMetric = 'neutral' | 'success' | 'warning' | 'danger';
 type MetricIndicator = {
-  label: string; // i18n key
+  label: string;
   value: number | string;
   unit?: string;
   icon?: string;
-  tone?: 'neutral' | 'success' | 'warning' | 'danger';
+  tone?: ToneMetric;
 };
 
 type CardProps = {
   title: string;
   subtitle?: string;
-  value: number | string;
+  values: number[];
   unit?: string;
   icon?: string;
+  indicator?: 'gauge' | 'balance';
   color?: 'sky' | 'emerald' | 'amber' | 'rose' | 'violet' | 'slate';
   indicators?: MetricIndicator[];
-  children?: ComponentChildren; // 👈 slot
+  className?: string;
 };
 
 const toneClass: Record<NonNullable<MetricIndicator['tone']>, string> = {
@@ -71,31 +74,90 @@ const palette = {
   },
 } as const;
 
+const SimpleCard: FunctionalComponent<{
+  label: string;
+  tone: ToneMetric;
+  icon?: string;
+  unit?: string;
+  value: number;
+}> = ({ label, tone, icon, unit, value }) => {
+  const { t } = useTranslation();
+  return (
+    <div
+      className={[
+        'flex items-center gap-2 rounded-lg px-3 py-2',
+        'ring-1 ring-black/5 dark:ring-white/10',
+        toneClass[tone],
+      ].join(' ')}
+    >
+      {icon ? (
+        <span
+          className={[
+            `vox-icon vx-icon-${icon}`,
+            'w-5 h-5 flex items-center justify-center opacity-90',
+          ].join(' ')}
+          aria-hidden='true'
+        />
+      ) : (
+        <span className='w-5 h-5' aria-hidden='true' />
+      )}
+
+      <div className='min-w-0 flex-1'>
+        <div className='text-xs font-medium truncate opacity-90'>
+          {t(label)}
+        </div>
+        <div className='flex items-baseline gap-1'>
+          <span className='text-sm font-semibold'>{value}</span>
+          {unit && (
+            <span className='text-xs font-semibold opacity-80'>{unit}</span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const MetricCard: FunctionalComponent<CardProps> = memo(
   ({
     title,
     subtitle,
-    value,
+    values,
     unit,
     icon = '071',
     color = 'sky',
+    indicator,
     indicators = [],
-    children,
+    className,
   }) => {
     const { t } = useTranslation();
     const theme = palette[color];
-    const topIndicators = indicators.slice(0, 3);
-    const hasExtra = Boolean(children);
+
+    const mainValue: number | string = values?.[0] ?? 0;
+    const availableIndicatorCount = Math.min(
+      indicators.length,
+      Math.max(0, (values?.length ?? 0) - 1)
+    );
+
+    const mappedIndicators = indicators
+      .slice(0, availableIndicatorCount)
+      .map((ind, idx) => ({
+        ...ind,
+        value: values[idx + 1],
+      }));
+
+    const topIndicators = mappedIndicators.slice(0, 3);
 
     return (
       <div
         className={[
-          'w-full px-4 py-2 flex flex-col justify-between rounded-lg',
+          'w-full px-4 py-2 flex flex-col justify-between rounded-lg relative',
           'ring-1',
           theme.ring,
+          className,
         ].join(' ')}
       >
         {/* Header row */}
+        {/* {JSON.stringify(values)} */}
         <div className='flex items-start gap-3'>
           <div
             className={[
@@ -115,87 +177,86 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
 
           <div className='min-w-0 flex-1'>
             <h3 className='text-base font-semibold truncate'>{t(title)}</h3>
-            {subtitle ? (
+            {subtitle && (
               <p className='mt-0.5 text-sm text-t-light-dark dark:text-t-dark-light truncate'>
                 {t(subtitle)}
               </p>
-            ) : (
-              <div className='mt-0.5 h-5' />
             )}
           </div>
 
-          <div
-            className={[
-              'shrink-0 rounded-xl px-3 py-2',
-              'text-right',
-              theme.valueBg,
-            ].join(' ')}
-          >
-            <div className='flex items-baseline gap-1 justify-end'>
-              <span className='text-2xl font-bold tracking-tight'>{value}</span>
-              {unit ? (
-                <span className='text-sm font-semibold opacity-80'>{unit}</span>
-              ) : null}
+          {!indicator && (
+            <div
+              className={[
+                'shrink-0 rounded-xl px-3 py-2',
+                'text-right',
+                theme.valueBg,
+              ].join(' ')}
+            >
+              <div className='flex items-baseline gap-1 justify-end'>
+                <span className='text-2xl font-bold tracking-tight'>
+                  {mainValue}
+                </span>
+                {unit && (
+                  <span className='text-sm font-semibold opacity-80'>
+                    {unit}
+                  </span>
+                )}
+              </div>
             </div>
-          </div>
+          )}
+
+          {indicator === 'balance' && (
+            <>
+              {topIndicators.map((m, idx) => {
+                const tone = m.tone ?? 'neutral';
+                return (
+                  <SimpleCard
+                    key={`${m.label}-${idx}`}
+                    tone={tone}
+                    label={m.label}
+                    value={m.value}
+                    icon={m.icon}
+                    unit={m.unit}
+                  />
+                );
+              })}
+            </>
+          )}
+
+          {indicator === 'gauge' && (
+            <SimpleGauge progress={mainValue} color='red' size={14} />
+          )}
         </div>
 
-        {/* Optional extra content slot (gauge / balance / chart) */}
-        {hasExtra ? (
-          <div className='mt-4 rounded-lg p-3 bg-black/[0.02] dark:bg-white/[0.03] ring-1 ring-black/5 dark:ring-white/10'>
-            {children}
-          </div>
-        ) : null}
+        <div className='grid gap-2 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(0,1fr))] mt-2 justify-center pb-2'>
+          {indicator === 'balance' && (
+            <BalanceIndicator
+              value={mainValue}
+              leftLabel='m_early'
+              centerLabel='m_on_time'
+              rightLabel='m_late'
+              showLabel={false}
+            />
+          )}
 
-        {/* Indicators (2-3) */}
-        {topIndicators.length ? (
-          <div
-            className={[
-              'grid grid-cols-1 sm:grid-cols-3 gap-2',
-              hasExtra ? 'mt-3' : 'mt-4',
-            ].join(' ')}
-          >
-            {topIndicators.map((m, idx) => {
-              const tone = m.tone ?? 'neutral';
-              return (
-                <div
-                  key={`${m.label}-${idx}`}
-                  className={[
-                    'flex items-center gap-2 rounded-lg px-3 py-2',
-                    'ring-1 ring-black/5 dark:ring-white/10',
-                    toneClass[tone],
-                  ].join(' ')}
-                >
-                  {m.icon ? (
-                    <span
-                      className={[
-                        `vox-icon vx-icon-${m.icon}`,
-                        'w-5 h-5 flex items-center justify-center opacity-90',
-                      ].join(' ')}
-                      aria-hidden='true'
-                    />
-                  ) : (
-                    <span className='w-5 h-5' aria-hidden='true' />
-                  )}
-
-                  <div className='min-w-0 flex-1'>
-                    <div className='text-xs font-medium truncate opacity-90'>
-                      {t(m.label)}
-                    </div>
-                    <div className='flex items-baseline gap-1'>
-                      <span className='text-sm font-semibold'>{m.value}</span>
-                      {m.unit ? (
-                        <span className='text-xs font-semibold opacity-80'>
-                          {m.unit}
-                        </span>
-                      ) : null}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : null}
+          {(!indicator || indicator === 'gauge') && (
+            <>
+              {topIndicators.map((m, idx) => {
+                const tone = m.tone ?? 'neutral';
+                return (
+                  <SimpleCard
+                    key={`${m.label}-${idx}`}
+                    tone={tone}
+                    label={m.label}
+                    value={m.value}
+                    icon={m.icon}
+                    unit={m.unit}
+                  />
+                );
+              })}
+            </>
+          )}
+        </div>
       </div>
     );
   }

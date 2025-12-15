@@ -24,7 +24,7 @@ export const SectionPage: FunctionComponent<Props> = ({
     <section className={`${padding ? 'px-2 pt-2' : 'p-0'} ${className}`}>
       {cards}
       <div className='max-h-screen' class={`${relative ? 'relative' : ''}`}>
-        <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
+        <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center overflow-visible xl:absolute relative z-0 bg-b-content dark:bg-b-dark'>
           {buttons}
         </div>
         {children}

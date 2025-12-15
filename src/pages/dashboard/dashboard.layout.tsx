@@ -57,12 +57,14 @@ import { UserService } from '@/services/general/user';
 
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import { TenantsModal } from './tenants/tenants';
-import { FaroManager } from '@/utils/telemetry';
+// import { FaroManager } from '@/utils/telemetry';
 import { IClientResponse } from '@/types/user/user.response';
 import { USER_TYPE } from '@/types/user/user.enum';
 import { IDropdownOptions } from '@/components/common/dropdown/interface';
 import { INITIAL_DROPDOWN_OPTIONS } from './constant';
-import { IconsModal } from '../globals/icons/icons';
+// import { IconsModal } from '../globals/icons/icons';
+import { rawDataManager } from '@/utils/statistics/data.manager';
+import { metricsEngine } from '@/utils/statistics/metric.engine';
 
 type Props = {
   location: string;
@@ -108,16 +110,21 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps & Props> =
       BaseService.setLoading(openLoading, closeLoading);
       BaseService.setUser(getTenant, getToken, getCompanyId, getPlaceId);
       validateUser();
+      if (location.includes('signin')) return;
       navigate(location);
     }, []);
 
     useEffect(() => {
       if (selectedCompany) {
         WebSocketManager.connect(getTenant, getCompanyId, getToken, getCognito);
-        FaroManager.connect(getTenant, getCompanyId, getToken, getCognito);
+        // FaroManager.connect(getTenant, getCompanyId, getToken, getCognito);
+        rawDataManager.connect(getCompanyId);
+        metricsEngine.connect();
+        metricsEngine.recalculate();
       }
       return () => {
         WebSocketManager.disconnect();
+        metricsEngine.disconnect();
       };
     }, [selectedCompany, selectedPlace]);
 
@@ -373,7 +380,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps & Props> =
 
         <SettingsModal />
         <TenantsModal open={openModalTenant} />
-        <IconsModal />
+        {/* <IconsModal /> */}
       </section>
     );
   });

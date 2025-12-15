@@ -30,7 +30,6 @@ import { modulesReport } from '@/types/form';
 import { IShiftResponse } from '@/types/shift/activity';
 
 import { MetricCard } from '@/components/compose/cards/company/metric';
-import { BalanceIndicator } from '@/components/common/balance/balance';
 
 import { VIEW_NAME } from './utils/view.name';
 import { useShiftsData } from './utils/hooks/useShiftData';
@@ -38,6 +37,7 @@ import { useShiftSocket } from './utils/hooks/useShiftSocket';
 import { useShiftModals } from './utils/hooks/useShiftModal';
 import { useShiftActions } from './utils/hooks/useShiftAction';
 import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
+import { signalMetrics } from '@/store/signals/metric';
 
 export const ShiftsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -82,7 +82,7 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   useEffect(() => {
     document.title = t('p_shift');
-  }, [t]);
+  }, []);
 
   const { services, users, hasValidPlayer, fetchInitialData } = useShiftsData({
     shifts,
@@ -261,48 +261,65 @@ export const ShiftsPage: FunctionalComponent = () => {
           <MetricCard
             title='m_active_user'
             subtitle='m_active_user_d'
-            value={1280}
+            values={signalMetrics.value.user.values}
             unit=''
             icon='006'
             color='emerald'
-          >
-            <BalanceIndicator
-              value={20}
-              leftLabel='Temprano'
-              centerLabel='Bien'
-              rightLabel='Tarde'
-              showLabel={false}
-            />
-          </MetricCard>
-
-          <MetricCard
-            title='m_active_shift'
-            subtitle='m_active_shift_d'
-            value={1280}
-            unit=''
-            icon='028'
-            color='emerald'
+            indicator='gauge'
             indicators={[
               {
-                label: 'm_user_active',
-                value: 742,
-                unit: '',
+                label: 'm_user_v',
+                value: 0,
+                unit: 'und',
                 icon: '090',
                 tone: 'success',
               },
               {
-                label: 'm_user_churn',
-                value: 2.1,
-                unit: '%',
-                icon: '112',
-                tone: 'warning',
+                label: 'm_user_churn_v',
+                value: 0,
+                unit: 'und',
+                icon: '030',
+                tone: 'neutral',
               },
               {
-                label: 'm_user_latency',
-                value: 180,
-                unit: 'ms',
-                icon: '031',
+                label: 'm_user_missing_v',
+                value: 0,
+                unit: 'und',
+                icon: '010',
+                tone: 'warning',
+              },
+            ]}
+          />
+
+          <MetricCard
+            title='m_active_shift'
+            subtitle='m_active_shift_d'
+            values={signalMetrics.value.shift.values}
+            unit=''
+            icon='028'
+            color='emerald'
+            indicator='gauge'
+            indicators={[
+              {
+                label: 'm_shift_v',
+                value: 0,
+                unit: 'und',
+                icon: '090',
+                tone: 'success',
+              },
+              {
+                label: 'm_shift_churn_v',
+                value: 0,
+                unit: 'und',
+                icon: '030',
                 tone: 'neutral',
+              },
+              {
+                label: 'm_shift_risk_v',
+                value: 0,
+                unit: 'und',
+                icon: '010',
+                tone: 'warning',
               },
             ]}
           />
@@ -310,30 +327,32 @@ export const ShiftsPage: FunctionalComponent = () => {
           <MetricCard
             title='m_churn_round'
             subtitle='m_churn_round_d'
-            value={1280}
+            values={signalMetrics.value.round.values}
             unit=''
             icon='142'
             color='emerald'
+            indicator='balance'
+            className='col-span-2'
             indicators={[
               {
-                label: 'm_user_active',
+                label: 'm_round_pct_v',
                 value: 742,
-                unit: '',
+                unit: '%',
                 icon: '090',
                 tone: 'success',
               },
               {
-                label: 'm_user_churn',
-                value: 2.1,
+                label: 'm_round_tim_v',
+                value: 0,
                 unit: '%',
-                icon: '112',
+                icon: '030',
                 tone: 'warning',
               },
               {
-                label: 'm_user_latency',
-                value: 180,
-                unit: 'ms',
-                icon: '031',
+                label: 'm_round_v',
+                value: 0,
+                unit: 'und',
+                icon: '029',
                 tone: 'neutral',
               },
             ]}

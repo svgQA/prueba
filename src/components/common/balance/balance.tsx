@@ -1,5 +1,6 @@
 import { FunctionalComponent } from 'preact';
 import { memo } from 'preact/compat';
+import { useTranslation } from 'react-i18next';
 
 type BalanceIndicatorProps = {
   value: number;
@@ -22,13 +23,14 @@ export const BalanceIndicator: FunctionalComponent<BalanceIndicatorProps> =
     ({
       value,
       label,
-      leftLabel,
-      centerLabel,
-      rightLabel,
+      leftLabel = '',
+      centerLabel = '',
+      rightLabel = '',
       heightClass = 'h-2',
       showNeedle = true,
       showLabel = true,
     }) => {
+      const { t } = useTranslation();
       const v = clamp(Number.isFinite(value) ? value : 50, 0, 100);
 
       const delta = v - 50;
@@ -159,22 +161,23 @@ export const BalanceIndicator: FunctionalComponent<BalanceIndicatorProps> =
             {/* Needle */}
             {showNeedle ? (
               <div
-                className='absolute -top-2'
+                className='absolute -top-10'
                 style={{
                   left: `${needleLeftPct}%`,
-                  transform: 'translateX(-50%)',
+                  transform: 'translateX(-10%)',
                 }}
                 aria-hidden='true'
               >
+                {v} %
                 <div className='w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[10px] border-t-slate-900 dark:border-t-slate-100' />
               </div>
             ) : null}
 
             {/* Labels */}
             <div className='absolute -bottom-4 left-0 right-0 flex justify-between text-[11px] text-t-light-dark dark:text-t-dark-light'>
-              <span className='opacity-80'>{leftLabel}</span>
-              <span className='opacity-80'>{centerLabel}</span>
-              <span className='opacity-80'>{rightLabel}</span>
+              <span className='opacity-80'>{t(leftLabel)}</span>
+              <span className='opacity-80'>{t(centerLabel)}</span>
+              <span className='opacity-80'>{t(rightLabel)}</span>
             </div>
           </div>
         </div>
