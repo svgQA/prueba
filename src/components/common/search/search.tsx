@@ -4,9 +4,9 @@ import { IKey, ISearchProps } from './interface';
 import { TargetedEvent } from 'preact/compat';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
-// import { ReportAutomatic } from '../report-automatic/report-automatic';
+import { ReportAutomatic } from '../report-automatic/report-automatic';
 // import { FileControl } from '../file-control/file-control';
-// import { RangeExport } from '../range-export/range-export';
+import { RangeExport } from '../range-export/range-export';
 import { RangeDateFilter } from '../table/components/range/range';
 
 export const Search = ({
@@ -21,9 +21,9 @@ export const Search = ({
   grouping,
   disabled = false,
   onRangeChange,
-  // modules,
+  modules,
   // fileName,
-  // range,
+  range,
 }: ISearchProps) => {
   const { t } = useTranslation();
   const inputState = useSignal<string>('');
@@ -353,11 +353,9 @@ export const Search = ({
 
       {/* {table && range && <>{range}</>} */}
       {(table || grouping) && group && <>{group}</>}
-      {/*
       {table && modules && <ReportAutomatic modules={modules} />}
-      {fileName && <FileControl fileName={fileName} />}
+      {/* {fileName && <FileControl fileName={fileName} />} */}
       {range && modules && <RangeExport />}
-      */}
 
       {keys.length > 0 && isDropdownOpen.value && (
         <div
