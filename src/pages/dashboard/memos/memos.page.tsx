@@ -252,6 +252,15 @@ export const MemosPage: FunctionComponent = () => {
           icon='320'
         />
         <Button
+          name='button-change-panic'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.PANIC);
+          }}
+          rounded={false}
+          selected={currentView.value === VIEW_NAME.PANIC}
+          icon='359'
+        />
+        <Button
           name='button-change-scheduler'
           onClick={() => {
             handleViewChange(VIEW_NAME.CHAT);
@@ -260,15 +269,6 @@ export const MemosPage: FunctionComponent = () => {
           selected={currentView.value === VIEW_NAME.CHAT}
           icon='418'
           permissions={{ name: 'memo', state: 'chat' }}
-        />
-        <Button
-          name='button-change-panic'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.PANIC);
-          }}
-          rounded={false}
-          selected={currentView.value === VIEW_NAME.PANIC}
-          icon='359'
         />
 
         {/* <Button
@@ -367,13 +367,8 @@ export const MemosPage: FunctionComponent = () => {
 
   return (
     <SectionPage
+      className={currentView.value === VIEW_NAME.CHAT ? 'pt-0' : ''}
       padding
-      className={
-        currentView.value === VIEW_NAME.CHAT
-          ? 'flex flex-col lg:flex-row h-auto lg:h-[94.5vh]'
-          : 'relative'
-      }
-      relative={currentView.value === VIEW_NAME.CHAT}
       cards={
         <CardsPage>
           {(currentView.value === VIEW_NAME.TABLE ||
@@ -385,7 +380,9 @@ export const MemosPage: FunctionComponent = () => {
         </CardsPage>
       }
       buttons={
-        <ButtonsPage>
+        <ButtonsPage
+          className={currentView.value === VIEW_NAME.CHAT ? 'px-2' : ''}
+        >
           {buttonMenu}
           <NotificationBanner
             ref={notificationBannerRef}
@@ -464,9 +461,7 @@ export const MemosPage: FunctionComponent = () => {
       )}
 
       {currentView.value === VIEW_NAME.MAP && (
-        <div className='p-5 pt-16'>
-          <MapPath route={routePath.value} height='70vh'></MapPath>
-        </div>
+        <MapPath route={routePath.value} height='70vh'></MapPath>
       )}
 
       {currentView.value === VIEW_NAME.CHAT && (

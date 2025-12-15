@@ -257,7 +257,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     <SectionPage
       padding
       cards={
-        <CardsPage>
+        <CardsPage className='xl:grid-cols-4'>
           <MetricCard
             title='m_active_user'
             subtitle='m_active_user_d'
