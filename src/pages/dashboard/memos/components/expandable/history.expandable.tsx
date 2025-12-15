@@ -540,19 +540,16 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               'datetime'
             )}
 
-          {status.value !== 'RESOLVED' && (
-            <Button
-              name='memo-send-response'
-              form='form-message-memo'
-              type='submit'
-              disabled={disable}
-              label='send'
-              icon='311'
-              loading={loading.value}
-              permissions={{ name: 'memo', state: 'comment' }}
-              borderless
-            />
-          )}
+          <Button
+            name='memo-send-response'
+            form='form-message-memo'
+            type='submit'
+            disabled={disable}
+            label='send'
+            icon='222'
+            loading={loading.value}
+            permissions={{ name: 'memo', state: 'comment' }}
+          />
         </div>
       </div>
 

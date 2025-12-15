@@ -15,7 +15,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
   id: 'general:state',
   menus: [
     {
-      icon: '007',
+      icon: '006', // 👤 Usuario (Consistencia con formularios)
       label: 'm_user',
       description: 'd_user',
       base,
@@ -24,7 +24,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       show: false,
     },
     {
-      icon: '088',
+      icon: '327', // 🏢 Compañía (Edificio)
       label: 'm_company',
       description: 'd_company',
       base,
@@ -33,7 +33,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '282',
+      icon: '142', // 🔀 Webhook (Ruta/Conexión)
       label: 'm_webhook',
       description: 'd_webhook',
       base,
@@ -42,7 +42,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '092',
+      icon: '109', // ▦ Módulos (Cuadrícula)
       label: 'm_module',
       description: 'd_module',
       base,
@@ -50,7 +50,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       id: 'general:modules:state',
     },
     {
-      icon: '160',
+      icon: '160', // 🧩 Integración (Puzzle/Conexión)
       label: 'm_integration',
       description: 'd_integration',
       base,
@@ -58,7 +58,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       id: 'general:integration:state',
     },
     {
-      icon: '195',
+      icon: '195', // 📱 App (Móvil/Dispositivo)
       label: 'm_app',
       description: 'd_app',
       base,
@@ -66,7 +66,7 @@ export const MODAL_SETTING_GENERAL: IModalSidebarMenu = {
       id: 'general:tryvoo:state',
     },
     {
-      icon: '117',
+      icon: '117', // 🖥️ Solo (Monitor/Pantalla)
       label: 'm_solo',
       description: 'd_solo',
       base,

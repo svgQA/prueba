@@ -80,7 +80,7 @@ export const Input = <T = string,>({
         `}
       >
         {!end && icon && (
-          <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
+          <span className={`vox-icon size-sm vx-icon-${icon} px-3`} />
         )}
         <div className='relative flex-1 py-0.5'>
           <input
@@ -155,7 +155,7 @@ export const Input = <T = string,>({
             name='btn-input-action'
             icon={buttonIcon}
             type={buttonType}
-            rounded={!buttonLabel} // 👈 solo usa rounded si NO hay label
+            rounded={!buttonLabel} 
             borderless
             transparent
             label={buttonLabel}

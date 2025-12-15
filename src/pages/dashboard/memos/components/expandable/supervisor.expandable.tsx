@@ -176,8 +176,7 @@ const SupervisorInfo = ({
               type='button'
               onClick={handleDownloadMemo}
               name='btn-memo-download'
-              icon='411'
-              borderless
+              icon='057'
               label='h_download_memo'
               className='mb-4'
             />

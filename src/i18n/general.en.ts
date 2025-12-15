@@ -9,7 +9,7 @@ export const general_en = {
     save: 'Save',
     update: 'Update',
   },
-  memo: {
+    memo: {
     solve: {
       title: 'Resolve Memo',
       message: 'Are you sure you want to mark this memo as resolved?',
@@ -217,5 +217,14 @@ export const general_en = {
   l_priority_low: 'Low',
   l_name: 'Name',
   p_enter_name: 'Enter name...',
-  l_completation: 'Completed',
+  table: 'Table',
+  flow: 'Flow',
+  title: 'Title',
+  description: 'Description',
+  p_template_title: 'Enter template title...',
+  p_template_desc: 'Enter a description...',
+  cancel: 'Cancel',
+  save: 'Save',
+  content: 'Content',
 };
+

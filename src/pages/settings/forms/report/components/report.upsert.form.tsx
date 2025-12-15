@@ -196,7 +196,7 @@ export const ReportUpsertForm = () => {
                         {...input}
                         meta={meta}
                         id='select-user'
-                        icon='191'
+                        icon='384'
                         label='h_filter'
                         options={filterReport.value}
                         menuPortalTarget={document.body}
@@ -215,7 +215,7 @@ export const ReportUpsertForm = () => {
                             {...input}
                             meta={meta}
                             id='select-projects'
-                            icon='191'
+                            icon='109'
                             label='h_service'
                             options={projects.value}
                             menuPortalTarget={document.body}
@@ -242,7 +242,7 @@ export const ReportUpsertForm = () => {
                             {...input}
                             meta={meta}
                             id='select-user'
-                            icon='191'
+                            icon='122'
                             label='h_client'
                             options={users.value}
                             menuPortalTarget={document.body}
@@ -263,7 +263,7 @@ export const ReportUpsertForm = () => {
                             placeholder='h_contract'
                             label='h_contract'
                             meta={meta}
-                            icon='120'
+                            icon='122'
                             type='text'
                             disabled={loading.value}
                           />
@@ -279,6 +279,7 @@ export const ReportUpsertForm = () => {
                       <MultiSelect
                         options={modules.value}
                         placeholder={t('p_select')}
+                        icon='109'
                         selectedIds={
                           Array.isArray(input.value)
                             ? input.value.map((opt: IOption) => opt.value)
@@ -310,7 +311,7 @@ export const ReportUpsertForm = () => {
                         placeholder='h_title'
                         label='h_title'
                         meta={meta}
-                        icon='120'
+                        icon='122'
                         type='text'
                         disabled={loading.value}
                       />
@@ -325,7 +326,7 @@ export const ReportUpsertForm = () => {
                         placeholder='h_subtitle'
                         label='h_subtitle'
                         meta={meta}
-                        icon='120'
+                        icon='122'
                         type='text'
                         disabled={loading.value}
                       />
@@ -339,7 +340,7 @@ export const ReportUpsertForm = () => {
                         {...input}
                         meta={meta}
                         id='select-period'
-                        icon='191'
+                        icon='135'
                         label='h_frequency'
                         options={periods.value}
                         menuPortalTarget={document.body}
@@ -372,7 +373,7 @@ export const ReportUpsertForm = () => {
                         placeholder='h_emails'
                         label='h_emails'
                         buttonIcon='044'
-                        icon='086'
+                        icon='100'
                         bottom
                       />
                     )}
@@ -386,7 +387,7 @@ export const ReportUpsertForm = () => {
                         placeholder='h_description'
                         label='h_description'
                         meta={meta}
-                        icon='120'
+                        icon='122'
                         type='text'
                         disabled={loading.value}
                       />

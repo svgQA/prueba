@@ -26,6 +26,10 @@ export const getColumns = (
       const { title, description } = info.row.original;
       return (
         <div className='flex items-center'>
+<<<<<<< HEAD
+=======
+          
+>>>>>>> 62ebc4dd9 (Feat/e2e: Icons)
           <div className='flex flex-col text-left'>
             <h5 className='font-bold text-left'>{title}</h5>
             <TextEllipsis text={description} maxWidth='250px' />

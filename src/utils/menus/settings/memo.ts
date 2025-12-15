@@ -15,7 +15,7 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
   },
   menus: [
     {
-      icon: '067',
+      icon: '068', 
       label: 'm_novelty',
       description: 'd_novelty',
       base,
@@ -24,7 +24,7 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '020',
+      icon: '012', 
       label: 'm_predefined',
       description: 'd_predefined',
       base,
@@ -33,7 +33,7 @@ export const MODAL_SETTING_MEMO: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '145',
+      icon: '121', 
       label: 'm_resource',
       description: 'd_resource',
       base,

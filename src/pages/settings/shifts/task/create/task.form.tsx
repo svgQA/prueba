@@ -197,7 +197,7 @@ export const TaskFormCreate = ({
                               placeholder='h_name'
                               label='h_name'
                               meta={meta}
-                              icon='120'
+                              icon='123'
                               type='text'
                             />
                           )}

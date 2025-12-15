@@ -15,7 +15,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
   id: 'shift:state',
   menus: [
     {
-      icon: '138',
+      icon: '135', 
       label: 'm_round',
       description: 'd_round',
       base,
@@ -24,7 +24,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '103',
+      icon: '321', 
       label: 'm_place',
       description: 'd_place',
       base,
@@ -33,7 +33,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '064',
+      icon: '068',
       label: 'm_contract',
       description: 'd_contract',
       base,
@@ -42,7 +42,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '092',
+      icon: '306',
       label: 'm_task',
       description: 'd_task',
       base,
@@ -51,7 +51,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '050',
+      icon: '342', 
       label: 'm_schedule',
       description: 'd_schedule',
       base,
@@ -60,7 +60,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '191',
+      icon: '410', 
       label: 'm_shift',
       description: 'd_shift',
       base,
@@ -68,7 +68,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       id: 'shifts',
     },
     {
-      icon: '090',
+      icon: '354', 
       label: 'm_service',
       description: 'd_service',
       base,

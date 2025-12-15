@@ -15,7 +15,7 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
   },
   menus: [
     {
-      icon: '094',
+      icon: '402', 
       label: 'm_form',
       description: 'd_form',
       base,
@@ -23,17 +23,8 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
       id: 'forms:form:state',
       show: true,
     },
-    // {
-    //   icon: '033',
-    //   label: 'inspect',
-    //   description: 'Inspects',
-    //   base,
-    //   to: PAGES_LIST_ROUTER.dashboard.setting.forms.inspect.base,
-    //   id: 'form-inspect',
-    //   show: true,
-    // },
     {
-      icon: '028',
+      icon: '415', 
       label: 'm_analytic',
       description: 'd_analytic',
       base,
@@ -41,7 +32,7 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
       id: 'forms:analytic:state',
     },
     {
-      icon: '094',
+      icon: '068', 
       label: 'm_scheduled_reports',
       description: 'd_scheduled_reports',
       base,

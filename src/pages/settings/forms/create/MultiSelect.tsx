@@ -9,6 +9,7 @@ export interface MultiSelectProps<T> {
   getId: (item: T) => string | number;
   placeholder?: string;
   label?: string;
+  icon?: string;
 }
 
 export function MultiSelect<T>({
@@ -19,6 +20,7 @@ export function MultiSelect<T>({
   getId,
   placeholder = 'p_select',
   label,
+  icon,
 }: MultiSelectProps<T>) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -58,6 +60,8 @@ export function MultiSelect<T>({
     onChange(selectedIds.filter((id) => id !== idToRemove));
   };
 
+  // ❌ BORRÉ EL CÓDIGO DEL ICONO QUE ESTABA AQUÍ (ESTABA MAL PUESTO)
+
   const selectedItems = options.filter((item) =>
     selectedIds.includes(getId(item))
   );
@@ -83,6 +87,10 @@ export function MultiSelect<T>({
           inputRef.current?.focus();
         }}
       >
+        {icon && (
+          <span className={`vox-icon size-sm vx-icon-${icon} px-2`}></span>
+        )}
+
         {selectedItems.map((item) => (
           <span
             key={getId(item)}
@@ -108,7 +116,7 @@ export function MultiSelect<T>({
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
           placeholder={selectedItems.length === 0 ? t(placeholder) : ''}
-          className='w-full px-3 bg-white dark:bg-b-dark-dark text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-700 appearance-none'
+          className='flex-1 min-w-[100px] px-3 bg-transparent border-none outline-none text-gray-700 dark:text-gray-200 appearance-none'
         />
       </div>
 

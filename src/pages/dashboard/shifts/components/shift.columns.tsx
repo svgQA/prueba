@@ -365,7 +365,7 @@ export const getColumns = (
           ? []
           : [
               {
-                label: !checkIn ? 'h_check_in' : 'h_check_out', //  'Check In' : 'Check Out', // t('h_check_in') : t('h_check_out'),
+                label: !checkIn ? t('h_check_in') : t('h_check_out'),// t('h_check_in') : t('h_check_out'),
                 icon: 'vox-icon vx-icon-048 text-primary',
                 keyName: 'check',
                 onClick: () => {

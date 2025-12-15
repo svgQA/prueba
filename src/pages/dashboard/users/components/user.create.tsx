@@ -35,6 +35,7 @@ interface CreateUserProps {
   onUserCreated?: (user: any) => void;
   user?: IUserResponse;
 }
+
 const DOCUMENT_TYPE_TRANSLATIONS: Record<string, string> = {
   'Cédula de ciudadanía': 'l_citizenship_id',
   'Tarjeta de identidad': 'l_identity_card',
@@ -46,6 +47,7 @@ const DOCUMENT_TYPE_TRANSLATIONS: Record<string, string> = {
   'Permiso por protección temporal': 'l_temporary_protection_permit',
   'Documento de identificación extranjero': 'l_foreign_identification_document',
 };
+
 const translateDocumentType = (name: string): string => {
   const translationKey = DOCUMENT_TYPE_TRANSLATIONS[name];
   return translationKey ? t(`users.documentTypes.${translationKey}`) : name;
@@ -77,7 +79,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const { i18n } = useTranslation();
 
   useEffect(() => {
-    // applyAllData();
     Promise.all([
       getInitialValues(),
       getDocumentTypes(),
@@ -88,9 +89,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       getPlaces(),
       getClients(),
     ]);
-    // getCompanies();
-    // getDepartments();
-    // getAllCompanies();
   }, []);
 
   useEffect(() => {
@@ -101,16 +99,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       }));
     }
   }, [i18n.language]);
-
-  // const applyAllData = async (): Promise<void> => {
-  //   await Promise.all([
-  //     getInitialValues(),
-  //     getCompanies(),
-  //     getDocumentTypes(),
-  //     getCountries(),
-  //     getDepartments(),
-  //   ]);
-  // };
 
   const getInitialValues = async (): Promise<void> => {
     await getAreas();
@@ -145,13 +133,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         })) || [];
 
       const userExtraData = {
-        // area: user.extraData?.area || '',
         city: user.extraData?.city?.label ? user.extraData?.city : undefined,
         country: user.extraData?.country?.label
           ? user.extraData?.country
           : undefined,
         state: user.extraData?.state?.label ? user.extraData?.state : undefined,
-
         sucursal: user.extraData?.sucursal,
         job: user.extraData?.job,
       };
@@ -166,8 +152,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         cardId: user.cardId,
         address: user.address,
         userType: user.userType,
-        // externalId: user.externalId,
-        // externalPlatformId: user.externalPlatformId,
         companies: userCompanies,
         extraData: userExtraData,
         roles: roles,
@@ -213,9 +197,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   };
 
   const getDepartments = async (): Promise<void> => {
-    const response = await PlaceService.getDepartmentList(
-      1 // TODO: @Estaban esto es el id de colombia.
-    );
+    const response = await PlaceService.getDepartmentList(1);
     if (!response.getStatus()) return;
     departments.value = response.getMany();
   };
@@ -230,7 +212,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const getRoles = async (): Promise<void> => {
     const response = await RoleService.getRoles();
     if (!response.getStatus()) return;
-
     roles.value = response.getMany().map((role) => ({
       label: role.name,
       value: role.id,
@@ -267,19 +248,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     await getMunicipalities(departmentId);
   };
 
-  // const findDepartmentByName = (
-  //   name: string | undefined
-  // ): IDepartmentResponse => {
-  //   const department = departments.value.find(
-  //     (department) => department.name === name
-  //   );
-
-  //   if (!department) {
-  //     throw new Error(`department with name ${name} not found`);
-  //   }
-  //   return department;
-  // };
-
   const getMunicipalities = async (departmentId: number): Promise<void> => {
     const response = await PlaceService.getMunicipalitieList(departmentId);
     if (!response.getStatus()) return;
@@ -289,11 +257,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const getDocumentTypes = async (): Promise<void> => {
     const response = await UserService.getDocumentTypes();
     if (!response.getStatus()) return;
-
     const types = response.getMany();
-
     rawDocumentTypes.value = types;
-
     documentTypes.value = types.map((docType) => ({
       ...docType,
       name: translateDocumentType(docType.name),
@@ -303,7 +268,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const onSubmit = async (user: IUserRequest) => {
     let request;
     let message = '';
-
     if (user.id) {
       request = await UserService.update(user, user.id);
       message = 's_updated_success';
@@ -311,10 +275,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       request = await UserService.create(user);
       message = 's_created_success';
     }
-
     if (!request.getStatus()) return;
     props.onUserCreated?.(request.getOne());
-
     ToastManager.success(message);
   };
 
@@ -335,7 +297,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       email: '',
       phone: '',
       cardType: '',
-      // cognitoId: '',
       companies: [],
       extraData: {
         country: undefined,
@@ -349,34 +310,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   };
 
   const getTypesUsers = (): { id: string; name: string }[] => {
-    /*return [
-      ...(user?.userType === 'ADMIN_CLIENT'
-        ? [
-            {
-              id: 'CLIENT',
-              name: t('l_client'),
-            },
-          ]
-        : [
-            {
-              id: 'USER',
-              name: t('l_operator'),
-            },
-            {
-              id: 'ADMIN',
-              name: t('l_administrator'),
-            },
-            {
-              id: 'CLIENT',
-              name: t('l_client'),
-            },
-            {
-              id: 'ADMIN_CLIENT',
-              name: t('l_admin_client'),
-            },
-          ]),
-    ];*/
-
     return [
       {
         id: 'INTERNAL',
@@ -423,7 +356,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         placeholder='l_name'
                         label='l_name'
                         type='text'
-                        icon='174'
+                        icon='006' 
                         meta={meta}
                       />
                     )}
@@ -436,7 +369,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         placeholder='l_surname'
                         label='l_surname'
                         type='text'
-                        icon='174'
+                        icon='006'
                         meta={meta}
                       />
                     )}
@@ -470,7 +403,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         label={'h_phone'}
                         type='tel'
                         meta={meta}
-                        icon='402'
+                        icon='118'
                         normal
                         onChange={(e) => {
                           const value = e.currentTarget.value;
@@ -497,7 +430,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         placeholder='p_select_document_type'
                         label='l_card_type'
                         name='cardType'
-                        icon='096'
+                        icon='203'
                         optionValue='id'
                         optionLabel='name'
                         onChange={(e) => {
@@ -520,7 +453,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         placeholder='p_enter_document_number'
                         label='l_card_id'
                         type='text'
-                        icon='174'
+                        icon='203'
                         meta={meta}
                       />
                     )}
@@ -545,6 +478,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         id='country'
                         label='h_country'
                         placeholder='p_select'
+                        icon='321'
                         options={countries.value}
                       />
                     )}
@@ -561,6 +495,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         id='departmentId'
                         label='h_department'
                         placeholder='p_select'
+                        icon='321'
                         options={departments.value}
                         onChange={(e) => {
                           if (e?.value) {
@@ -584,6 +519,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         id='municipalityId'
                         label='l_municipality'
                         placeholder='p_search'
+                        icon='321'
                         options={municipalities.value}
                       />
                     )}
@@ -595,7 +531,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         {...input}
                         placeholder='p_address'
                         label='l_address'
-                        icon='142'
+                        icon='321'
                         type='text'
                         meta={meta}
                       />
@@ -618,7 +554,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         placeholder='p_select_user_type'
                         label='l_user_type'
                         name='userType'
-                        icon='096'
+                        icon='172'
                         onChange={(e) => {
                           requiredRole.value =
                             e.currentTarget.value !== 'CLIENT';
@@ -703,7 +639,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         meta={meta}
                         id='select-roles'
                         label='l_role'
-                        icon='096'
+                        icon='172'
                         options={roles.value}
                         multiple={true}
                         allowAll={true}
@@ -721,7 +657,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         meta={meta}
                         id='select-companies'
                         label='l_company'
-                        icon='023'
+                        icon='327'
                         options={companies.value}
                         multiple={true}
                         allowAll={true}

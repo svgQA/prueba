@@ -358,6 +358,7 @@ export const RolesUpsertPage = () => {
               <div className='space-y-4'>
                 {getFilteredModules()?.map((module) => (
                   <ExpansionPanel
+<<<<<<< HEAD
                     title={
                       module.key ? t(`modules.${module.key}`) : module.name
                     }
@@ -367,6 +368,11 @@ export const RolesUpsertPage = () => {
                         ? t(`module_descriptions.${module.key}`)
                         : module.description
                     }
+=======
+                    title={module.key ? t(`modules.${module.key}`) : module.name}
+                    key={module.id}
+                    subtitle={module.key ? t(`module_descriptions.${module.key}`) : module.description}
+>>>>>>> 62ebc4dd9 (Feat/e2e: Icons)
                     onCheck={(checked) => {
                       const flatPermissionIds =
                         module.permissionsGrouped?.flat.map((p) => p.id) || [];
@@ -438,6 +444,7 @@ export const RolesUpsertPage = () => {
                                   />
                                   <label className='ml-2 flex flex-col'>
                                     <span className='text-sm font-medium'>
+<<<<<<< HEAD
                                       {permission.key
                                         ? t(
                                             `role_permissions.${permission.key}`
@@ -450,6 +457,12 @@ export const RolesUpsertPage = () => {
                                             `role_descriptions.${permission.key}`
                                           )
                                         : permission.description}
+=======
+                                      {permission.key ? t(`role_permissions.${permission.key}`) : permission.name}
+                                    </span>
+                                    <span className='text-xs text-gray-500'>
+                                      {permission.key ? t(`role_descriptions.${permission.key}`) : permission.description}
+>>>>>>> 62ebc4dd9 (Feat/e2e: Icons)
                                     </span>
                                     <span className='text-xs text-gray-500 flex items-center gap-2'>
                                       <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
@@ -462,9 +475,13 @@ export const RolesUpsertPage = () => {
                                             : 'bg-purple-100 text-purple-800'
                                         }`}
                                       >
+<<<<<<< HEAD
                                         {permission.mobile
                                           ? t('mobile')
                                           : t('web')}
+=======
+                                        {permission.mobile ? t('mobile') : t('web')}
+>>>>>>> 62ebc4dd9 (Feat/e2e: Icons)
                                       </span>
                                     </span>
                                   </label>
@@ -517,14 +534,14 @@ export const RolesUpsertPage = () => {
                                             <span className='text-xs text-gray-500 flex items-center gap-2'>
                                               <span className='inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800'>
                                                 {child.permission?.key}
-                                              </span>
-                                              <span
+                                                </span>
+                                                <span
                                                 className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                                                   child.permission?.mobile
                                                     ? 'bg-green-100 text-green-800'
                                                     : 'bg-purple-100 text-purple-800'
                                                 }`}
-                                              >
+                                                >
                                                 {child.permission?.mobile
                                                   ? 'Móvil'
                                                   : 'Web'}

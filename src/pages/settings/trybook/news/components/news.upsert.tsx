@@ -150,7 +150,7 @@ export const NewsForm: FunctionComponent = () => {
                       placeholder={t('h_name')}
                       label={t('h_name')}
                       meta={meta}
-                      icon='120'
+                      icon='122'
                       type='text'
                       disabled={loading.value}
                       required
@@ -182,7 +182,7 @@ export const NewsForm: FunctionComponent = () => {
                   {({ input, meta }) => (
                     <TextArea
                       {...input}
-                      icon='120'
+                      icon='122'
                       type='text'
                       min='3'
                       max='300'
@@ -204,7 +204,7 @@ export const NewsForm: FunctionComponent = () => {
                   placeholder='p_select'
                   label='h_links'
                   buttonIcon='044'
-                  icon='086'
+                  icon='080'
                   bottom
                 />
               </div>

@@ -15,7 +15,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
   },
   menus: [
     {
-      icon: '328',
+      icon: '327', 
       label: 'm_residence',
       description: 'd_residence',
       base,
@@ -24,7 +24,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       id: 'trybook:residences:state',
     },
     {
-      icon: '160',
+      icon: '022',
       label: 'm_commonzone',
       description: 'd_commonzone',
       base,
@@ -33,7 +33,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       id: 'trybook:commonzone:state',
     },
     {
-      icon: '190',
+      icon: '025', 
       label: 'm_commonslot',
       description: 'd_commonslot',
       base,
@@ -42,7 +42,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       id: 'trybook:commonslot:state',
     },
     {
-      icon: '195',
+      icon: '348', 
       label: 'm_resourcezone',
       description: 'd_resourcezone',
       base,
@@ -51,7 +51,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       id: 'trybook:resourcezone:state',
     },
     {
-      icon: '386',
+      icon: '110', 
       label: 'm_news',
       description: 'd_news',
       base,
@@ -60,7 +60,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       id: 'trybook:notices:state',
     },
     {
-      icon: '150',
+      icon: '013',
       label: 'm_access_ban',
       description: 'Access Bans',
       base,

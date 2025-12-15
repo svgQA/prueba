@@ -17,8 +17,10 @@ import { useUserStore } from '@/store/slices';
 import { lengthSize } from '@/utils/utilities/validate';
 import { Section } from '@/components/common/section/section';
 import { StatusButton } from '@/pages/settings/components/custom.button';
+import { useTranslation } from 'react-i18next';
 
 export const TemplateCreateForm = () => {
+  const { t } = useTranslation();
   const [useForm, _setUseForm] = useState(false);
   const [useTasks, _setUseTasks] = useState(false);
   const [forms, setForms] = useState<any[]>([]);
@@ -124,15 +126,15 @@ export const TemplateCreateForm = () => {
             <div className='flex justify-end gap-4 absolute top-14 right-2'>
               <Button
                 name='cancel-create-scheduled'
-                label='cancel'
-                icon='023'
+                label={t('cancel')}
+                icon='192'
                 onClick={redirectToList}
               />
               <Button
                 name='submit-create-scheduled'
-                label='save'
+                label={t('save')}
                 type='submit'
-                icon='022'
+                icon='146'
                 disabled={loading.value}
               />
             </div>
@@ -143,9 +145,9 @@ export const TemplateCreateForm = () => {
                 <Input
                   name='title'
                   id='template-title'
-                  label='Título *'
+                  label={`${t('title')} *`}
                   meta={meta}
-                  placeholder='Ingrese el título de la plantilla...'
+                  placeholder={t('p_template_title')}
                   value={input.value || ''}
                   onChange={input.onChange}
                   required
@@ -158,10 +160,11 @@ export const TemplateCreateForm = () => {
                 <TextArea
                   name='description'
                   id='template-description'
-                  label='Descripción *'
+                  label={`${t('description')} *`}
                   meta={meta}
                   className='resize-none'
                   rows={2}
+                  placeholder={t('p_template_desc')}
                   value={input.value || ''}
                   onChange={input.onChange}
                   required
@@ -170,7 +173,7 @@ export const TemplateCreateForm = () => {
             </Field>
 
             <div>
-              <h3 className='text-md font-semibold mb-2'>Contenido</h3>
+              <h3 className='text-md font-semibold mb-2'>{t('content')}</h3>
               <TaskFormCreate
                 onSubmit={onTaskAdd}
                 taskList={tasksResponse.value}

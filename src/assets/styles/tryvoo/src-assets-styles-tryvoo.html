@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visor de Iconos Vox</title>
+    <!-- Cambia esta ruta a donde esté tu archivo icons.css -->
+    <link rel="stylesheet" href="./icons.css">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .info-box strong {
+            color: #856404;
+        }
+        
+        .search-box {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .search-box input {
+            padding: 10px 20px;
+            font-size: 16px;
+            width: 300px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+        }
+        
+        .icon-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .icon-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background: #e3f2fd;
+        }
+        
+        .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .icon-number {
+            font-size: 12px;
+            color: #666;
+            font-weight: bold;
+        }
+        
+        .copied-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .copied-notification.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+        
+        <div class="icon-grid" id="iconGrid"></div>
+    </div>
+    
+    <div class="copied-notification" id="notification">
+        ✓ Código copiado al portapapeles
+    </div>
+    
+    <script>
+        const iconGrid = document.getElementById('iconGrid');
+        const searchInput = document.getElementById('searchInput');
+        const notification = document.getElementById('notification');
+        
+        // Iconos especiales con nombres
+        const specialIcons = [
+            'calendar-days', 'options', 'user-inactive', 'user-active', 
+            'user-status', 'users', 'devices', 'user', 'form', 
+            'user-tasks', 'users-opacity', 'settings', 'notify', 'open-mail'
+        ];
+        
+        function createIconElement(number) {
+            const item = document.createElement('div');
+            item.className = 'icon-item';
+            item.dataset.number = number;
+            
+            const icon = document.createElement('span');
+            icon.className = `icon vox-icon vx-icon-${number}`;
+            
+            const label = document.createElement('div');
+            label.className = 'icon-number';
+            label.textContent = number;
+            
+            item.appendChild(icon);
+            item.appendChild(label);
+            
+            item.addEventListener('click', () => {
+                const code = `icon: 'vox-icon vx-icon-${number} text-primary',`;
+                navigator.clipboard.writeText(code).then(() => {
+                    notification.textContent = `✓ Copiado: vx-icon-${number}`;
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 2000);
+                }).catch(err => {
+                    alert(`Código: icon: 'vox-icon vx-icon-${number} text-primary',`);
+                });
+            });
+            
+            return item;
+        }
+        
+        // Genera iconos numerados del 001 al 454
+        for (let i = 1; i <= 454; i++) {
+            const num = String(i).padStart(3, '0');
+            iconGrid.appendChild(createIconElement(num));
+        }
+        
+        // Agrega iconos especiales
+        specialIcons.forEach(iconName => {
+            iconGrid.appendChild(createIconElement(iconName));
+        });
+        
+        // Funcionalidad de búsqueda
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.icon-item');
+            
+            items.forEach(item => {
+                const number = item.dataset.number.toLowerCase();
+                if (number.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

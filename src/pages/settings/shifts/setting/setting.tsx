@@ -103,6 +103,7 @@ export const SShiftSettingPage: FunctionComponent = () => {
                       label='name'
                       placeholder='p_enter_name'
                       type='text'
+                      icon='122'
                       meta={meta}
                     />
                   )}
@@ -122,6 +123,7 @@ export const SShiftSettingPage: FunctionComponent = () => {
                       placeholder='p_enter_range'
                       type='number'
                       min='0'
+                      icon='049'
                       value={input.value}
                       meta={meta}
                     />
@@ -138,6 +140,7 @@ export const SShiftSettingPage: FunctionComponent = () => {
                       placeholder='p_enter_max_time'
                       type='number'
                       min='0'
+                      icon='049'
                       value={input.value}
                       meta={meta}
                     />
@@ -158,6 +161,7 @@ export const SShiftSettingPage: FunctionComponent = () => {
                       placeholder='p_enter_min_time'
                       type='number'
                       min='0'
+                      icon='049'
                       value={input.value}
                       meta={meta}
                     />
@@ -174,6 +178,7 @@ export const SShiftSettingPage: FunctionComponent = () => {
                       placeholder='p_enter_max_time'
                       type='number'
                       min='0'
+                      icon='049'
                       value={input.value}
                       meta={meta}
                     />
@@ -192,6 +197,7 @@ export const SShiftSettingPage: FunctionComponent = () => {
                       placeholder='Ingrese distancia máxima...'
                       type='number'
                       min='0'
+                      icon='142'
                       value={input.value}
                       meta={meta}
                     />
@@ -208,6 +214,7 @@ export const SShiftSettingPage: FunctionComponent = () => {
                       placeholder='Ingrese distancia máxima...'
                       type='number'
                       min='0'
+                      icon='142'
                       value={input.value}
                       meta={meta}
                     />

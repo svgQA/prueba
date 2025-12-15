@@ -15,7 +15,7 @@ export const MODAL_SETTING_PQRS: IModalSidebarMenu = {
   },
   menus: [
     {
-      icon: '386',
+      icon: '135', 
       label: 'm_stage',
       description: 'd_stages',
       base,
@@ -24,7 +24,7 @@ export const MODAL_SETTING_PQRS: IModalSidebarMenu = {
       id: 'pqrs:prompts:state',
     },
     {
-      icon: '387',
+      icon: '359', 
       label: 'm_priorities',
       description: 'd_priorities',
       base,
@@ -33,7 +33,7 @@ export const MODAL_SETTING_PQRS: IModalSidebarMenu = {
       id: 'pqrs:priorities:state',
     },
     {
-      icon: '145',
+      icon: '121',
       label: 'm_resource',
       description: 'd_resource',
       base,
