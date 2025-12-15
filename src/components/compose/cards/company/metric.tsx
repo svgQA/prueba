@@ -184,7 +184,25 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
             )}
           </div>
 
-          {!indicator && (
+          {indicator === 'balance' && (
+            <>
+              {topIndicators.map((m, idx) => {
+                const tone = m.tone ?? 'neutral';
+                return (
+                  <SimpleCard
+                    key={`${m.label}-${idx}`}
+                    tone={tone}
+                    label={m.label}
+                    value={m.value}
+                    icon={m.icon}
+                    unit={m.unit}
+                  />
+                );
+              })}
+            </>
+          )}
+
+          {(!indicator || indicator === 'balance') && (
             <div
               className={[
                 'shrink-0 rounded-xl px-3 py-2',
@@ -203,24 +221,6 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
                 )}
               </div>
             </div>
-          )}
-
-          {indicator === 'balance' && (
-            <>
-              {topIndicators.map((m, idx) => {
-                const tone = m.tone ?? 'neutral';
-                return (
-                  <SimpleCard
-                    key={`${m.label}-${idx}`}
-                    tone={tone}
-                    label={m.label}
-                    value={m.value}
-                    icon={m.icon}
-                    unit={m.unit}
-                  />
-                );
-              })}
-            </>
           )}
 
           {indicator === 'gauge' && (

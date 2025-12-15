@@ -10,6 +10,8 @@ import {
   MessageEvent,
   MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
+import { rawDataManager } from '@/utils/statistics/data.manager';
+import { metricsEngine } from '@/utils/statistics/metric.engine';
 
 type DateRangeFilters = { [key: string]: [string, string] } | null;
 
@@ -23,6 +25,13 @@ export function useShiftSocket(params: {
   useEffect(() => {
     const handleMessage = (event: InSocketMessage<MessageEvent>) => {
       const { type: name, message } = event.payload;
+      if (name === 'METRIC') {
+        rawDataManager.updateOne(event.payload.id, {
+          roundPct: event.payload.roundPct,
+        });
+        metricsEngine.recalculate();
+        return;
+      }
 
       if (
         name === SOCKET_MESSAGE_EVENTS.UPDATE ||

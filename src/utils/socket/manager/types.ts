@@ -40,6 +40,9 @@ export interface MessageEvent {
   type: string;
   message: any;
   notification?: any;
+
+  id: number;
+  roundPct: number;
 }
 
 export enum MESSAGE_LISTENERS {
