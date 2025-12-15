@@ -19,7 +19,8 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'wouter';
 
 import { StageService } from '@/services/pqrs/stage';
-import { IResourceStage, IStages, TypesOfStages } from '../utils/interface';
+import { IStages, TypesOfStages } from '../utils/interface';
+import { listModulesUrls, IResourceStage } from '../utils/resoruce.interface';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { Button } from '@/components/common/button/button';
@@ -106,10 +107,25 @@ export const StageForm: FunctionComponent = () => {
       : '';
 
     const resourcesForForm = (initialData.resource || []).map(
-      (res: IResourceStage) => ({
-        method: res.method ? { value: res.method, label: res.method } : null,
-        requestUrl: res.requestUrl || '',
-      })
+      (res: IResourceStage) => {
+        if (res.type === 'internal' && res.internal) {
+          return {
+            type: { value: 'internal', label: 'Internal' },
+            internal: {
+              module: { value: res.internal.module, label: res.internal.module }
+            }
+          };
+        }
+        // Fallback for external or legacy
+        const ext = res.external || (res as any);
+        return {
+          type: { value: 'external', label: 'External' },
+          external: {
+            method: ext.method ? { value: ext.method, label: ext.method } : null,
+            requestUrl: ext.requestUrl || '',
+          }
+        };
+      }
     );
 
     setInitialValues({
@@ -128,16 +144,16 @@ export const StageForm: FunctionComponent = () => {
       hasArea: initialData.areaId ? true : false,
       type: initialData.type
         ? {
-            value: initialData.type,
-            label:
-              initialData.type === TypesOfStages.CONTINUE
-                ? t('h_automatic')
-                : t('h_manual'),
-          }
+          value: initialData.type,
+          label:
+            initialData.type === TypesOfStages.CONTINUE
+              ? t('h_automatic')
+              : t('h_manual'),
+        }
         : null,
       areaId: initialData.areaId
         ? areaList.value.find((area) => area.value === initialData.areaId) ||
-          null
+        null
         : null,
     });
     loading.value = false;
@@ -150,11 +166,37 @@ export const StageForm: FunctionComponent = () => {
       promptValue = JSON.parse(model.prompt);
 
     const resources = (model.resources || [])
-      .filter((res: any) => res.method && res.requestUrl)
-      .map((res: any) => ({
-        method: res.method?.value || res.method,
-        requestUrl: res.requestUrl,
-      }));
+      .map((res: any) => {
+        const type = res.type?.value || 'external';
+
+        if (type === 'internal') {
+          const selectedModule = res.internal?.module?.value;
+          if (!selectedModule) return null;
+
+          const moduleConfig = listModulesUrls.find(m => m.module === selectedModule);
+          if (!moduleConfig) return null;
+
+          return {
+            type: 'internal',
+            internal: {
+              module: selectedModule,
+              service: moduleConfig.service,
+              endpoint: moduleConfig.endpoint
+            }
+          };
+        } else {
+          // External
+          if (!res.external?.method || !res.external?.requestUrl) return null;
+          return {
+            type: 'external',
+            external: {
+              method: res.external.method?.value || res.external.method,
+              requestUrl: res.external.requestUrl
+            }
+          };
+        }
+      })
+      .filter(Boolean);
 
     let stage: IStages = {
       stageName: model.stageName,
@@ -195,7 +237,7 @@ export const StageForm: FunctionComponent = () => {
 
   return (
     <Section
-      className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design'
+      className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design dark:bg-b-dark dark:text-t-dark'
       loading={loading.value}
     >
       <Form
@@ -433,20 +475,20 @@ export const StageForm: FunctionComponent = () => {
                 )
               )}
 
-              <div className='col-span-3 border-t pt-4'>
+              <div className='col-span-3 border-t border-gray-border dark:border-b-dark-dark pt-4'>
                 <div className='flex items-center justify-between mb-3'>
-                  <h3 className='text-sm font-medium'>{t('h_resource')}</h3>
+                  <h3 className='text-sm font-medium text-t-light dark:text-t-dark'>{t('h_resource')}</h3>
                   <Button
                     name='add-resource-button'
                     type='button'
                     onClick={() =>
                       form.mutators.push('resources', {
-                        method: null,
-                        requestUrl: '',
+                        type: { value: 'external', label: 'External' },
+                        external: { method: null, requestUrl: '' }
                       })
                     }
                     disabled={loading.value}
-                    className='px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed'
+                    className='px-3 py-1 text-xs bg-primary text-white rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-primary'
                     label='add'
                   />
                 </div>
@@ -454,69 +496,117 @@ export const StageForm: FunctionComponent = () => {
                 <FieldArray name='resources'>
                   {({ fields }) =>
                     fields.length === 0 ? (
-                      <p className='text-sm text-gray-500 italic text-center py-4'>
+                      <p className='text-sm text-gray-text-light dark:text-t-dark italic text-center py-4'>
                         {t('pqrs.no_resources_added')}
                       </p>
                     ) : (
                       <div className='space-y-4'>
-                        {fields.map((name, index) => (
-                          <div
-                            key={name}
-                            className='border rounded-lg p-4 bg-gray-50'
-                          >
-                            <div className='grid grid-cols-4 gap-4'>
-                              <div className='col-span-1'>
-                                <Field name={`${name}.method`}>
-                                  {({ input, meta }) => (
-                                    <SmartSelector
-                                      {...input}
-                                      meta={meta}
-                                      id={`select-resource-method-${index}`}
-                                      icon='191'
-                                      label='h_method'
-                                      options={[
-                                        { value: 'GET', label: 'GET' },
-                                        { value: 'POST', label: 'POST' },
-                                      ]}
-                                      menuPortalTarget={document.body}
-                                      placeholder='p_select'
-                                    />
-                                  )}
-                                </Field>
-                              </div>
+                        {fields.map((name, index) => {
+                          const resourceValues = fields.value ? fields.value[index] : {};
+                          const isInternal = resourceValues.type?.value === 'internal';
 
-                              <div className='col-span-3'>
-                                <div className='flex gap-2'>
-                                  <div className='flex-1'>
-                                    <Field<string> name={`${name}.requestUrl`}>
+                          return (
+                            <div
+                              key={name}
+                              className='border border-gray-border dark:border-b-dark-dark rounded-lg p-4 bg-b-light dark:bg-b-dark-light text-t-light dark:text-t-dark'
+                            >
+                              <div className='grid grid-cols-4 gap-4'>
+                                {/* Type Selector */}
+                                <div className='col-span-4 md:col-span-1'>
+                                  <Field name={`${name}.type`}>
+                                    {({ input, meta }) => (
+                                      <SmartSelector
+                                        {...input}
+                                        meta={meta}
+                                        id={`select-resource-type-${index}`}
+                                        icon='191'
+                                        label='Type'
+                                        options={[
+                                          { value: 'internal', label: 'Internal' },
+                                          { value: 'external', label: 'External' },
+                                        ]}
+                                        menuPortalTarget={document.body}
+                                        placeholder='p_select'
+                                      />
+                                    )}
+                                  </Field>
+                                </div>
+
+                                {isInternal ? (
+                                  <div className='col-span-3'>
+                                    <Field name={`${name}.internal.module`}>
                                       {({ input, meta }) => (
-                                        <Input
+                                        <SmartSelector
                                           {...input}
-                                          icon='120'
-                                          type='text'
-                                          placeholder={t('h_request_url')}
-                                          label={t('h_request_url')}
                                           meta={meta}
-                                          disabled={loading.value}
+                                          id={`select-resource-module-${index}`}
+                                          icon='191'
+                                          label='Module'
+                                          options={listModulesUrls.map(m => ({
+                                            value: m.module,
+                                            label: m.module
+                                          }))}
+                                          menuPortalTarget={document.body}
+                                          placeholder='Select Module'
                                         />
                                       )}
                                     </Field>
                                   </div>
-                                  <div className='mt-6'>
-                                    <Button
-                                      name='remove-resource-button'
-                                      type='button'
-                                      onClick={() => fields.remove(index)}
-                                      disabled={loading.value}
-                                      label='remove'
-                                      icon='312'
-                                    />
-                                  </div>
+                                ) : (
+                                  <>
+                                    <div className='col-span-1'>
+                                      <Field name={`${name}.external.method`}>
+                                        {({ input, meta }) => (
+                                          <SmartSelector
+                                            {...input}
+                                            meta={meta}
+                                            id={`select-resource-method-${index}`}
+                                            icon='191'
+                                            label='h_method'
+                                            options={[
+                                              { value: 'GET', label: 'GET' },
+                                              { value: 'POST', label: 'POST' },
+                                            ]}
+                                            menuPortalTarget={document.body}
+                                            placeholder='p_select'
+                                          />
+                                        )}
+                                      </Field>
+                                    </div>
+
+                                    <div className='col-span-2'>
+                                      <Field<string> name={`${name}.external.requestUrl`}>
+                                        {({ input, meta }) => (
+                                          <Input
+                                            {...input}
+                                            icon='120'
+                                            type='text'
+                                            placeholder={t('h_request_url')}
+                                            label={t('h_request_url')}
+                                            meta={meta}
+                                            disabled={loading.value}
+                                          />
+                                        )}
+                                      </Field>
+                                    </div>
+                                  </>
+                                )}
+
+                                <div className='col-span-4 flex justify-end'>
+                                  <Button
+                                    name='remove-resource-button'
+                                    type='button'
+                                    onClick={() => fields.remove(index)}
+                                    disabled={loading.value}
+                                    label='remove'
+                                    icon='312'
+                                    className='mt-2'
+                                  />
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     )
                   }
