@@ -127,22 +127,22 @@ export const TaskForm = ({
       <div className='flex justify-end items-center gap-2 p-4'>
         <Button
           name='btn-form-shift-close'
-          label='CANCELED'
+          label={t('actions.cancel')}
           type='button'
           onClick={handleOnClose}
-          icon='041'
+          icon='192'
         />
         <Button
           id='btn-form-shift-save'
           name='btn-form-shift-save'
           type='submit'
-          label={shiftId ? 'edit' : 'save'}
+          label={shiftId ? t('actions.edit') : t('actions.save')}
           form='form-shift-create-update'
-          icon='041'
+          icon='146'
         />
       </div>
     ),
-    []
+    [shiftId, t, handleOnClose]
   );
 
   useEffect(() => {
@@ -260,7 +260,7 @@ export const TaskForm = ({
       name='modal-shift-updsert'
       width='w-2/3'
       position='fixed'
-      header={<h3>{shiftId ? t('udpate') : t('create')}</h3>}
+      header={<h3>{shiftId ? t('update') : t('create')}</h3>}
       footer={footerContent}
     >
       <div className='px-4 py-6 flex flex-col w-full max-h-[80vh] overflow-y-auto vox-scroll-design'>

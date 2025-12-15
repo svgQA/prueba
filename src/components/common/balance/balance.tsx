@@ -164,10 +164,11 @@ export const BalanceIndicator: FunctionalComponent<BalanceIndicatorProps> =
                 className='absolute -top-3'
                 style={{
                   left: `${needleLeftPct}%`,
-                  transform: 'translateX(-10%)',
+                  transform: 'translateX(-50%)',
                 }}
                 aria-hidden='true'
               >
+                <p className='text-xs absolute -top-5 font-bold'>{v - 50}</p>
                 <div className='w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[10px] border-t-slate-900 dark:border-t-slate-100' />
               </div>
             ) : null}

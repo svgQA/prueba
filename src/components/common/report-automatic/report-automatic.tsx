@@ -191,7 +191,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
           label={t('cancel')}
           type='button'
           onClick={() => setIsOpen(false)}
-          icon='041'
+          icon='192'
           disabled={loading.value}
         />
         <Button
@@ -199,7 +199,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
           type='submit'
           label={t('btnSave')}
           form='form-report-automatic-create'
-          icon='041'
+          icon='146'
           disabled={loading.value}
         />
       </div>

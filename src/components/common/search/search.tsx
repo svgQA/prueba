@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { ReportAutomatic } from '../report-automatic/report-automatic';
 // import { FileControl } from '../file-control/file-control';
 import { RangeExport } from '../range-export/range-export';
-import { RangeDateFilter } from '../table/components/range/range';
+import { IRangeValues, RangeDateFilter } from '../table/components/range/range';
 
 export const Search = ({
   id,
@@ -33,7 +33,7 @@ export const Search = ({
   const keysContainerRef = useRef<HTMLDivElement>(null);
   const isDropdownOpen = useSignal<boolean>(false);
   const isOpenRange = useSignal<boolean>(false);
-  const columnSelected = useSignal<string>('createdAt');
+  const columnSelected = useSignal<IKey>({ id: '0', label: '', type: 'date' });
   //TODO: Verificar si es necesario este useEffect, porque cuando se cambia el valor se borra del buscador automáticamente
   /* useEffect(() => {
     searchArray.value = value;
@@ -62,7 +62,7 @@ export const Search = ({
   };
 
   const selectKey = useCallback(
-    (selected: IKey) => {
+    (selected: IKey, _value?: string) => {
       return (prev: ColumnFiltersState) => {
         const id = selected.id;
         const value = inputState.value.trim();
@@ -88,8 +88,8 @@ export const Search = ({
   );
 
   const setFilterSelected = useCallback(
-    (key: IKey, update = true) => {
-      const setSearch = selectKey(key);
+    (key: IKey, update = true, value?: string) => {
+      const setSearch = selectKey(key, value);
       setFilter(setSearch(searchArray.value), update);
       inputState.value = '';
       selectedKeyIndex.value = -1;
@@ -116,8 +116,9 @@ export const Search = ({
           if (!key) return;
           if (key.type === 'date') {
             isOpenRange.value = true;
-            columnSelected.value = key.id;
-            setFilterSelected(key, true);
+            columnSelected.value = key;
+            // setFilterSelected(key, true);
+            return;
           }
           setFilterSelected(key);
         } else if (event.key === 'Tab') {
@@ -211,8 +212,9 @@ export const Search = ({
 
         if (type === 'date') {
           isOpenRange.value = true;
-          columnSelected.value = id;
-          setFilterSelected({ id, label, type }, true);
+          columnSelected.value = { id, label, type };
+          // setFilterSelected({ id, label, type }, true);
+          return;
         }
 
         setFilterSelected({ id, label, type });
@@ -372,8 +374,28 @@ export const Search = ({
 
       <RangeDateFilter
         isOpen={isOpenRange}
-        onRangeChange={onRangeChange}
-        column={columnSelected.value}
+        onRangeChange={(e: IRangeValues | null) => {
+          if (!e) return;
+
+          /*
+          const keysObj = e?.keys;
+          if (!keysObj || typeof keysObj !== 'object') return;
+
+          const firstKey = Object.keys(keysObj)[0];
+          const arr = keysObj[firstKey];
+
+          if (!Array.isArray(arr) || arr.length === 0) return;
+
+          const firstValue = arr[0];
+          const joinedValues = arr.join('-');
+
+          console.log(typeof e, e);
+
+          onRangeChange?.(e);
+          */
+          setFilterSelected(columnSelected.value, false);
+        }}
+        column={columnSelected.value?.id}
       />
     </div>
   );

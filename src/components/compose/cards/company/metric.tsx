@@ -202,7 +202,7 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
             </>
           )}
 
-          {(!indicator || indicator === 'balance') && (
+          {!indicator && (
             <div
               className={[
                 'shrink-0 rounded-xl px-3 py-2',

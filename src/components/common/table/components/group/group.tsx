@@ -51,7 +51,7 @@ export const Group = <T,>({ table, className = '' }: IGroupProps<T>) => {
         <Button
           name='group-none-filter'
           onClick={() => setIsOpen(!isOpen)}
-          icon='093'
+          icon='011'
           square
           transparent
           borderless
