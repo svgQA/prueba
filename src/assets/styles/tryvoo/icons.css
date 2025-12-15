@@ -670,9 +670,10 @@ span.vx-icon.size-xl {
   content: '\019E';
 }
 
-.vx-icon-152::before {
+/*.vx-icon-152::before {
   content: '\019F';
 }
+*/
 
 .vx-icon-153::before {
   content: '\01A0';
