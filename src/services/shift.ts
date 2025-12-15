@@ -25,6 +25,7 @@ import {
   VoxServices,
   REQUEST_METHODS,
 } from '@/utils/network/types';
+import { ShiftStatisticsData } from '@/utils/statistics/types';
 import {
   type IPaginationPlace,
   type IPaginationRound,
@@ -534,5 +535,13 @@ export class ShiftService extends BaseService {
       data,
     };
     return await super.make_request(this.name, model);
+  }
+
+  static async statistics() {
+    const model: IMakeRequest = {
+      url: ['activity', 'statistics'],
+      method: REQUEST_METHODS.GET,
+    };
+    return await super.make_request<ShiftStatisticsData>(this.name, model);
   }
 }

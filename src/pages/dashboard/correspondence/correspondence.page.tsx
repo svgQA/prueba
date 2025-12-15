@@ -4,7 +4,6 @@ import { FunctionalComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 
-import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { CardData } from '@/components/compose/cards';
 import { IRowAction } from '@/components/common/table/interface';
@@ -32,6 +31,7 @@ import {
   MessageEvent,
   MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
+import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
 
 export const CorrespondencePage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -148,73 +148,60 @@ export const CorrespondencePage: FunctionalComponent = () => {
   };
 
   return (
-    <Section padding>
-      {/* Tarjetas superiores, como en Access o Shifts */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <CardData
-          title='h_correspondence_total'
-          count={summary.value?.total}
-          subtitle='h_correspondence_subtitle'
-          color='text-secondary'
-          icon='189'
-        />
-        <CardData
-          title='h_correspondence_in_progress'
-          count={calculatePercentage(summary.value)}
-          subtitle='h_correspondence_delivered_subtitle'
-          color='text-primary'
-          icon='183'
-        />
-        <CardData
-          title='h_correspondence_completed'
-          count={calculatePercentage(summary.value, true)}
-          subtitle='h_correspondence_delivered_subtitle'
-          color='text-error'
-          icon='221'
-        />
-      </div>
-
-      <div className='max-h-screen'>
-        <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
-          <div className='flex flex-row items-center justify-between'>
-            {/*<Button
-              name='button-create-shift'
-              label='create'
-              onClick={() => handleUpsert()}
-              icon='044'
-              iconSize='sm'
+    <SectionPage
+      padding
+      cards={
+        <CardsPage>
+          <CardData
+            title='h_correspondence_total'
+            count={summary.value?.total}
+            subtitle='h_correspondence_subtitle'
+            color='text-secondary'
+            icon='189'
+          />
+          <CardData
+            title='h_correspondence_in_progress'
+            count={calculatePercentage(summary.value)}
+            subtitle='h_correspondence_delivered_subtitle'
+            color='text-primary'
+            icon='183'
+          />
+          <CardData
+            title='h_correspondence_completed'
+            count={calculatePercentage(summary.value, true)}
+            subtitle='h_correspondence_delivered_subtitle'
+            color='text-error'
+            icon='221'
+          />
+        </CardsPage>
+      }
+      buttons={<ButtonsPage></ButtonsPage>}
+      modals={
+        <>
+          {showUpsertModal.value && (
+            <CorrespondenceForm
+              closed={showUpsertModal.value}
+              onClose={() => {
+                toggleUpsertModal();
+                fetchInitialData();
+              }}
+              id={idCorrespondence.value}
             />
-             <AudioButton /> */}
-          </div>
-        </div>
-
-        <Table<ICorrespondence>
-          data={correspondence.value}
-          columns={getColumns(onClickAction)}
-          pageSize={10}
-          // Expansible (similar a Access)
-          // expandable={(row: ICorrespondence) => (
-          //   <ExpandableCorrespondence row={row} />
-          // )}
-          visibility={{
-            contract: false,
-            client: false,
-            service: false,
-          }}
-          modules={modulesReport.Correspondence}
-        />
-      </div>
-
-      {showUpsertModal.value && (
-        <CorrespondenceForm
-          closed={showUpsertModal.value}
-          onClose={() => {
-            toggleUpsertModal();
-            fetchInitialData();
-          }}
-          id={idCorrespondence.value}
-        />
-      )}
-    </Section>
+          )}
+        </>
+      }
+    >
+      <Table<ICorrespondence>
+        data={correspondence.value}
+        columns={getColumns(onClickAction)}
+        pageSize={10}
+        visibility={{
+          contract: false,
+          client: false,
+          service: false,
+        }}
+        modules={modulesReport.Correspondence}
+      />
+    </SectionPage>
   );
 };

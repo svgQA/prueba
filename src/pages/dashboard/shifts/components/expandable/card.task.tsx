@@ -27,7 +27,10 @@ export const CardTask = ({ point, frequency }: CardTaskProps) => {
         <p>
           {t('h_frequency')}: {frequency}
         </p>
+        <Gauge gauges={[{ progress: percent, color: 'teal' }]} />
+        {/*
         <Gauge progress={percent} />
+        */}
       </div>
 
       <div className='flex flex-row items-center justify-between w-full justify-wrap max-w-96'>

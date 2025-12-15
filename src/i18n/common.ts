@@ -23,6 +23,7 @@ export const common_es = {
   friday: 'Viernes',
   saturday: 'Sábado',
   sunday: 'Domingo',
+  no_round: 'No hay ronda',
   // Días cortos
   mon: 'Lun',
   tue: 'Mar',
@@ -99,6 +100,7 @@ export const common_es = {
   Hour: 'Hora',
   'Quarter Day': 'Cuarto día',
   'Half Day': 'Medio día',
+  usuarios: 'Usuarios',
 };
 
 export const common_en = {
@@ -120,6 +122,7 @@ export const common_en = {
   no_requested: 'Not requested',
   hide: 'Hide',
   show: 'Show',
+  no_round: 'There are not round',
   description: 'Description',
   ADMIN: 'Administrator',
   USER: 'Employee',
@@ -137,6 +140,7 @@ export const common_en = {
   friday: 'Friday',
   saturday: 'Saturday',
   sunday: 'Sunday',
+  usuarios: 'Users',
   // Short days
   mon: 'Mon',
   tue: 'Tue',

@@ -131,7 +131,13 @@ const RoundInfo = ({
                       {t('h_percentage')}
                     </span>
                     <div className='bg-b-light-light dark:bg-b-dark-dark flex flex-col justify-center items-center p-1 rounded-md h-full'>
+                      <Gauge
+                        size={14}
+                        gauges={[{ progress: percent, color: 'teal' }]}
+                      />
+                      {/*
                       <Gauge progress={percent} size={14} color='teal' />
+                      */}
                     </div>
                     <span className='text-xs'>
                       {t('h_frequency')}: {frequency}

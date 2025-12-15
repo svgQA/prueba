@@ -198,6 +198,7 @@ export class BaseService {
         headers: model_request.header,
         body: model.data,
         method: model.method,
+        credentials: 'include',
       });
 
       if (!response.ok) {

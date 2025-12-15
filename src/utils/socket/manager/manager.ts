@@ -1,4 +1,5 @@
 import { Socket, Channel, Push } from 'phoenix';
+
 import {
   InSocketMessage,
   OutSocketMessage,
@@ -18,12 +19,13 @@ export class WebSocketManager {
   private static t: string;
   private static c: string;
   private static k: string;
-  // private static currentTopic: string | null = null;
+  private static i: string;
 
   static connect(
     tenant: () => string,
     company: () => string | undefined,
-    token: () => string,
+    token: (no?: boolean) => string,
+    cognito: () => string,
     url: string = tracking_service_url
   ) {
     const _company = company();
@@ -31,32 +33,31 @@ export class WebSocketManager {
 
     this.t = tenant();
     this.c = _company;
-    this.k = token();
+    this.k = token(true);
+    this.i = cognito();
 
     const r = `${url}/socket`;
-    this.socket = new Socket(r, {
-      params: {
-        tenant: this.t,
-        company: this.c,
-        awsToken: this.k,
-        type: 'web',
-      },
-    });
+    const params = {
+      tenant: this.t,
+      company: this.c,
+      token: this.k,
+      cognito: this.i,
+      type: 'web',
+    };
+    this.socket = new Socket(r, { params });
 
-    this.socket.onOpen(() => console.log('[WS] open: ', r));
-    this.socket.onError((e: any) => console.warn('[WS] error', e));
+    this.socket.onOpen(() => console.log('[WS] opened'));
+    this.socket.onError((e: any) => console.warn('[WS] error: ', e));
     this.socket.onClose(() => console.log('[WS] close'));
-
     this.socket.connect();
 
     const topic = `room:web:${this.t}:${this.c}`;
     this.channel = this.socket.channel(topic);
-    // this.currentTopic = topic;
 
     this.channel
       .join()
       .receive('ok', () => {
-        console.log('[WS] joined in room');
+        console.log('[WS] joined');
       })
       .receive('error', (e: any) => {
         console.warn('[WS] join error', e);
@@ -93,7 +94,6 @@ export class WebSocketManager {
     } finally {
       this.channel = null;
       this.socket = null;
-      // this.currentTopic = null;
     }
   }
 

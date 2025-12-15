@@ -9,7 +9,7 @@ import {
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 
-export const getColumns = (t: any,
+export const getColumns = (
   onClickAction: (params: {
     id: string;
     type: string;
@@ -25,7 +25,6 @@ export const getColumns = (t: any,
       const { title, description } = info.row.original;
       return (
         <div className='flex items-center'>
-          
           <div className='flex flex-col text-left'>
             <h5 className='font-bold text-left'>{title}</h5>
             <TextEllipsis text={description} maxWidth='250px' />
@@ -105,7 +104,7 @@ export const getColumns = (t: any,
         ...(report
           ? [
               {
-                label: t('actions.report'),
+                label: 'actions.report',
                 icon: 'vox-icon vx-icon-143 text-primary',
                 onClick: () => {
                   onClickAction({
@@ -118,7 +117,7 @@ export const getColumns = (t: any,
             ]
           : []),
         {
-          label: t('actions.delete'),
+          label: 'actions.delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {

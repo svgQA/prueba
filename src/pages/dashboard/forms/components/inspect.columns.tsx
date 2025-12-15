@@ -11,7 +11,7 @@ import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
 
-export const getColumns = (t: any,
+export const getColumns = (
   onClickAction: (params: {
     id: string;
     type: string;
@@ -25,14 +25,11 @@ export const getColumns = (t: any,
     meta: { headerAlign: 'center' },
     cell: (info) => {
       const { user } = info.row.original;
+      const name = `${user?.name} ${user?.surname}`;
       return (
-        <div className='flex items-center'>
-          <Avatar name={user?.name} src={user?.image} size='sm' square />
-          <div className='flex flex-col ml-3'>
-            <div className='font-bold'>
-              {user?.name} {user?.surname}
-            </div>
-          </div>
+        <div className='flex items-center gap-2 w-[250px]'>
+          <Avatar name={user?.name} size='sm' square />
+          <TextEllipsis text={name} maxWidth='250px' />
         </div>
       );
     },
@@ -46,7 +43,11 @@ export const getColumns = (t: any,
     meta: { headerAlign: 'center' },
     cell: (info) => {
       const service = String(info.getValue());
-      return <TextEllipsis text={service} maxWidth='250px' />;
+      return (
+        <div className='w-[300px]'>
+          <TextEllipsis text={service} maxWidth='300px' />
+        </div>
+      );
     },
   },
   {
@@ -58,7 +59,11 @@ export const getColumns = (t: any,
     meta: { headerAlign: 'center' },
     cell: (info) => {
       const contract = String(info.getValue());
-      return <TextEllipsis text={contract} maxWidth='250px' />;
+      return (
+        <div className='w-[250px]'>
+          <TextEllipsis text={contract} maxWidth='250px' />
+        </div>
+      );
     },
   },
   {
@@ -81,11 +86,18 @@ export const getColumns = (t: any,
     cell: (info) => {
       const { form } = info.row.original;
       return (
-        <div className='flex items-center'>
-          <span className='vox-icon vx-icon-152 mt-1 size-md' />
+        <div className='flex items-center gap-2 w-[400px]'>
           <div className='flex flex-col ml-3 text-left'>
-            <h5 className='font-bold text-left'>{form.title}</h5>
-            <TextEllipsis text={form.description} maxWidth='300px' />
+            <TextEllipsis
+              text={form.title}
+              maxWidth='400px'
+              className='text-sm font-bold'
+            />
+            <TextEllipsis
+              text={form.description}
+              maxWidth='400px'
+              className='text-xs'
+            />
           </div>
         </div>
       );
@@ -141,7 +153,7 @@ export const getColumns = (t: any,
               },
             }
           : {
-              label: t('actions.report'),
+              label: 'report',
               icon: 'vox-icon vx-icon-433 text-primary',
               onClick: () => {
                 onClickAction({
@@ -152,7 +164,7 @@ export const getColumns = (t: any,
               },
             },
         {
-          label: t('actions.delete'),
+          label: 'delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {

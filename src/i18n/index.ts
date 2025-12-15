@@ -12,9 +12,12 @@ import { history_en, history_es } from './history';
 import { panic_en, panic_es } from './panic';
 import { role_en, role_es } from './role';
 import { hero_en, hero_es } from './hero';
+import { smartGroup_en, smartGroup_es } from './smart-group';
+import { trybook_en, trybook_es } from './trybook';
 
 // Revisar
 import { schedule_en, schedule_es } from './schedule';
+
 // Validos
 import { common_en, common_es } from './common';
 import { buttons_en, buttons_es } from './button';
@@ -28,14 +31,14 @@ import { toast_en, toast_es } from './toast';
 import { page_en, page_es } from './page';
 import { description_en, description_es } from './description';
 import { message_en, message_es } from './message';
-import { smartGroup_en, smartGroup_es } from './smart-group';
-import { trybook_en, trybook_es } from './trybook';
 import { file_en, file_es } from './file';
 import { home_en, home_es } from './home';
+import { metric_en, metric_es } from './metric';
 
 const resources = {
   en: {
     translation: {
+      ...metric_en,
       ...common_en,
       ...columns_en,
       ...menus_en,
@@ -92,6 +95,7 @@ const resources = {
       ...trybook_es,
       ...file_es,
       ...buttons_es,
+      ...metric_es,
     },
   },
 };

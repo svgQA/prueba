@@ -2,8 +2,7 @@ import { FormService, IResponseSummary } from '@/services';
 import { IResponseResponse, modulesReport } from '@/types/form';
 import { useSignal } from '@preact/signals';
 import { type FunctionComponent } from 'preact';
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-import { Section } from '@/components/common/section/section';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 import { CardData } from '@/components/compose/cards';
 import { Table } from '@/components/common/table/table';
 import { IRowAction } from '@/components/common/table/interface';
@@ -35,6 +34,7 @@ import {
   MessageEvent,
   MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
+import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
 
 export const FormsPage: FunctionComponent = () => {
   const { t, i18n } = useTranslation();
@@ -163,40 +163,6 @@ export const FormsPage: FunctionComponent = () => {
     currentView.value = view;
   }, []);
 
-  const buttonMenu = useMemo(
-    () => (
-      <div className='flex items-center gap-2 ml-1'>
-        <Button
-          name='button-change-table'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.TABLE);
-          }}
-          selected={currentView.value === VIEW_NAME.TABLE}
-          icon='092'
-        />
-        <Button
-          name='button-change-scheduler'
-          // onClick={() => {
-          //   handleViewChange(VIEW_NAME.INSPECT);
-          // }}
-          disabled
-          selected={currentView.value === VIEW_NAME.INSPECT}
-          icon='418'
-        />
-        {/*
-        <Button
-          name='button-change-report'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.REPORT);
-          }}
-          selected={currentView.value === VIEW_NAME.REPORT}
-          icon='012'
-        /> */}
-      </div>
-    ),
-    [currentView.value]
-  );
-
   /**
    *
    * @param summary
@@ -216,78 +182,90 @@ export const FormsPage: FunctionComponent = () => {
   };
 
   return (
-    <Section padding>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <CardData
-          title='h_forms_total'
-          count={summary.value.total}
-          subtitle='h_forms_subtitle'
-          color='t-dark'
-          icon='0001'
-        />
-
-        <CardData
-          title='h_forms_active'
-          count={calculatePercentage(summary.value)}
-          subtitle='h_forms_active_subtitle'
-          color='t-dark'
-          icon='311'
-        />
-
-        <CardData
-          title='h_forms_archived'
-          count={calculatePercentage(summary.value, true)}
-          subtitle='h_forms_archived_subtitle'
-          color='t-dark'
-          icon='000'
-        />
-      </div>
-
-      <div className='max-h-screen'>
-        <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center overflow-visible xl:absolute relative z-10 bg-b-content dark:bg-b-dark'>
-          <div className='flex flex-wrap items-center justify-between gap-2 sm:gap-3 w-full'>
-            {buttonMenu}
-          </div>
-        </div>
-        {currentView.value === VIEW_NAME.TABLE && (
-          <Table<IResponseResponse>
-            key={i18n.language}
-            data={responses.value}
-            columns={getColumns(t, handleOnClick)}
-            pageSize={20}
-            onClickAction={handleOnClick}
-            loading={loading.value}
-            rowClassName={(row: IResponseResponse) =>
-              highlightedId === String(row.id) ? 'animate-highlight' : ''
-            }
-            visibility={{
-              contract: false,
-              service: false,
-              client: false,
-            }}
-            modules={modulesReport.Form}
-            range={true}
+    <SectionPage
+      padding
+      cards={
+        <CardsPage>
+          <CardData
+            title='h_forms_total'
+            count={summary.value.total}
+            subtitle='h_forms_subtitle'
+            color='t-dark'
+            icon='0001'
           />
-        )}
-        {(currentView.value === VIEW_NAME.INSPECT ||
-          currentView.value === VIEW_NAME.REPORT) && (
-          <div className='max-h-screen'>
-            <div className='w-full py-1 pb-3 flex items-center justify-end'>
-              <h2 className='text-xl font-bold pb-2 mb-2 border-b border-gray-300'>
-                {currentView.value === VIEW_NAME.INSPECT
-                  ? t('s_inspect_title')
-                  : t('s_title')}
-              </h2>
-            </div>
-            <FormResponseSettingPage
-              posFinishAction={handlePosFinishAction}
-              type={
-                currentView.value === VIEW_NAME.INSPECT ? 'INSPECT' : 'VIEW'
-              }
-            />
+
+          <CardData
+            title='h_forms_active'
+            count={calculatePercentage(summary.value)}
+            subtitle='h_forms_active_subtitle'
+            color='t-dark'
+            icon='311'
+          />
+
+          <CardData
+            title='h_forms_archived'
+            count={calculatePercentage(summary.value, true)}
+            subtitle='h_forms_archived_subtitle'
+            color='t-dark'
+            icon='000'
+          />
+        </CardsPage>
+      }
+      buttons={
+        <ButtonsPage>
+          <Button
+            name='button-change-table'
+            onClick={() => {
+              handleViewChange(VIEW_NAME.TABLE);
+            }}
+            selected={currentView.value === VIEW_NAME.TABLE}
+            icon='092'
+          />
+          <Button
+            name='button-change-scheduler'
+            disabled
+            selected={currentView.value === VIEW_NAME.INSPECT}
+            icon='418'
+          />
+        </ButtonsPage>
+      }
+    >
+      {currentView.value === VIEW_NAME.TABLE && (
+        <Table<IResponseResponse>
+          key={i18n.language}
+          data={responses.value}
+          columns={getColumns(handleOnClick)}
+          pageSize={20}
+          onClickAction={handleOnClick}
+          loading={loading.value}
+          rowClassName={(row: IResponseResponse) =>
+            highlightedId === String(row.id) ? 'animate-highlight' : ''
+          }
+          visibility={{
+            contract: false,
+            service: false,
+            client: false,
+          }}
+          modules={modulesReport.Form}
+          range={true}
+        />
+      )}
+      {(currentView.value === VIEW_NAME.INSPECT ||
+        currentView.value === VIEW_NAME.REPORT) && (
+        <div className='max-h-screen'>
+          <div className='w-full py-1 pb-3 flex items-center justify-end'>
+            <h2 className='text-xl font-bold pb-2 mb-2 border-b border-gray-300'>
+              {currentView.value === VIEW_NAME.INSPECT
+                ? t('s_inspect_title')
+                : t('s_title')}
+            </h2>
           </div>
-        )}
-      </div>
-    </Section>
+          <FormResponseSettingPage
+            posFinishAction={handlePosFinishAction}
+            type={currentView.value === VIEW_NAME.INSPECT ? 'INSPECT' : 'VIEW'}
+          />
+        </div>
+      )}
+    </SectionPage>
   );
 };

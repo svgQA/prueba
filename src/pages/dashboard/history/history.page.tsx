@@ -1,7 +1,6 @@
 import { FunctionComponent } from 'preact';
 import { useEffect } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
-import { Section } from '@/components/common/section/section';
 import { Table } from '@/components/common/table/table';
 import { CardData } from '@/components/compose/cards';
 import { INotificationListItem } from '@/types/notification/INotificationTypes';
@@ -13,6 +12,7 @@ import { NotificationHistoryService } from '@/services';
 import { useUserStore } from '@/store/slices';
 import { IRowAction } from '@/components/common/table/interface';
 import { HistoryForm } from './components/history.upsert';
+import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
 
 export const HistoryNotificationsPage: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -106,38 +106,60 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
   };
 
   return (
-    <Section padding>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <CardData
-          title={t('history.cards.notificationShifts')}
-          count={totalNotifications.value}
-          subtitle=''
-          color='t-dark'
-          icon='notify'
-        />
-        <CardData
-          title={t('history.cards.openRate')}
-          count={openRate.value}
-          subtitle='%'
-          color='t-dark'
-          icon='open-mail'
-        />
-        <CardData
-          title={t('history.cards.monthlyNotifications')}
-          count={notificationsThisMonth.value}
-          subtitle=''
-          color='t-dark'
-          icon='0002'
-        />
-      </div>
-      {/*       <div className='py-2 flex flex-row justify-between items-center overflow-visible xl:absolute relative z-20'>
-        <Button
-          name='run-cron-button'
-          label={t('history.buttons.executeReview')}
-          onClick={handleRunCron}
-          icon='137'
-        />
-      </div> */}
+    <SectionPage
+      padding
+      cards={
+        <CardsPage>
+          <CardData
+            title={t('history.cards.notificationShifts')}
+            count={totalNotifications.value}
+            subtitle=''
+            color='t-dark'
+            icon='notify'
+          />
+          <CardData
+            title={t('history.cards.openRate')}
+            count={openRate.value}
+            subtitle='%'
+            color='t-dark'
+            icon='open-mail'
+          />
+          <CardData
+            title={t('history.cards.monthlyNotifications')}
+            count={notificationsThisMonth.value}
+            subtitle=''
+            color='t-dark'
+            icon='0002'
+          />
+        </CardsPage>
+      }
+      buttons={
+        <ButtonsPage>
+          {/*
+          <Button
+            name='run-cron-button'
+            label={t('history.buttons.executeReview')}
+            onClick={handleRunCron}
+            icon='137'
+          />
+        */}
+        </ButtonsPage>
+      }
+      modals={
+        <>
+          {showUpsertModal.value && (
+            <HistoryForm
+              closed={showUpsertModal.value}
+              onClose={() => {
+                toggleUpsertModal();
+                fetchAll();
+              }}
+              id={idUpsert.value}
+            />
+          )}
+        </>
+      }
+    >
       <Table<INotificationListItem>
         data={notifications.value}
         columns={getColumns(onClickAction)}
@@ -145,17 +167,7 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
         showExpandableIcon={false}
         loading={loading.value}
       />
-      {showUpsertModal.value && (
-        <HistoryForm
-          closed={showUpsertModal.value}
-          onClose={() => {
-            toggleUpsertModal();
-            fetchAll();
-          }}
-          id={idUpsert.value}
-        />
-      )}
-    </Section>
+    </SectionPage>
   );
 };
 

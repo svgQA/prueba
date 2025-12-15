@@ -5,9 +5,23 @@ import { useSignal } from '@preact/signals';
 import { IProjectMetricsResponse } from '@/types/contract/contract.response';
 import { Badge } from '@/components/common/badge/badge';
 import { useTranslation } from 'react-i18next';
+import { SectionHeader } from './header';
+import { FieldInline } from './inline';
+import { MetricTile } from './tile';
+import { formatDate } from '@/utils/utilities/dates';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
+
+const priorityBadgeStatus = (priority?: string) => {
+  const p = (priority || '').toUpperCase();
+  if (p === 'HIGH') return 'warning';
+  if (p === 'MEDIUM') return 'info';
+  return 'success';
+};
 
 const ContractInfo = ({ contract }: { contract: IContract }) => {
   const { t } = useTranslation();
+
+  const loading = useSignal(false);
   const metrics = useSignal<IProjectMetricsResponse>({
     completedShifts: 0,
     completionPercentage: 0,
@@ -16,112 +30,118 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
   });
 
   const getMetrics = async () => {
-    const response = await ContractService.getProjectMetrics(contract.id);
-    if (!response.getStatus()) return;
-    metrics.value = response.getOne();
+    loading.value = true;
+    try {
+      const response = await ContractService.getProjectMetrics(contract.id);
+      if (!response.getStatus()) return;
+      metrics.value = response.getOne();
+    } finally {
+      loading.value = false;
+    }
   };
 
   useEffect(() => {
     getMetrics();
   }, []);
 
+  const start = formatDate(contract.startDate);
+  const end = formatDate(contract.endDate);
+
   return (
-    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4'>
-      <div className='grid grid-cols-12 gap-8'>
-        {/* Columna izquierda - Información del contrato */}
-        <div className='col-span-4 pr-4'>
-          <div className='flex flex-row justify-between'>
-            <h3 className='font-medium'>{contract.name}</h3>
-            <Badge label={contract.priority} status='warning' outline />
-          </div>
-          <p className='mt-1 pr-4'>{contract.description}</p>
-          <div className='mt-4'>
-            <p className='font-semibold'>{t('h_client')}</p>
-            <div className='flex items-center mt-1'>
-              <div className='flex-shrink-0 mr-2'>
-                <span className='!text-primary vox-icon size-sm vx-icon-308'></span>
+    <div className='w-full'>
+      <div className='bg-b-light-light dark:bg-b-dark-light rounded-xl border border-b-light dark:border-b-dark-light shadow-sm'>
+        <div className='p-4'>
+          <div className='grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch'>
+            <div className='xl:col-span-5'>
+              <div className='h-full rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
+                <SectionHeader
+                  icon='195'
+                  title={t('h_contract')}
+                  center={
+                    <TextEllipsis
+                      text={contract.name}
+                      maxWidth='200px'
+                    ></TextEllipsis>
+                  }
+                  right={
+                    <Badge
+                      label={contract.priority}
+                      status={priorityBadgeStatus(contract.priority) as any}
+                      outline
+                    />
+                  }
+                />
+
+                <div className='pt-3 space-y-3'>
+                  <div className='rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
+                    <div className='text-[11px] font-semibold text-t-light-dark dark:text-t-dark'>
+                      {t('h_client')}
+                    </div>
+                    <div className='mt-1 flex items-center gap-2 min-w-0'>
+                      <span className='vox-icon vx-icon-308 !text-primary !text-sm shrink-0' />
+                      <span className='text-xs text-gray-800 dark:text-gray-100 truncate'>
+                        {contract.client?.name} {contract.client?.surname}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className='rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
+                  <div className='text-xs font-semibold text-gray-800 dark:text-gray-100 mb-2'>
+                    {t('h_dates')}
+                  </div>
+                  <div className='grid grid-cols-1 gap-2'>
+                    <FieldInline
+                      label={t('h_date_start')}
+                      value={start}
+                      icon='195'
+                    />
+                    <FieldInline
+                      label={t('h_date_end')}
+                      value={end}
+                      icon='195'
+                    />
+                  </div>
+                </div>
               </div>
-              <p>
-                {contract.client.name} {contract.client.surname}
-              </p>
             </div>
-          </div>
-        </div>
 
-        {/* Columna derecha - Estado, fechas y métricas */}
-        <div className='col-span-8'>
-          {/* Estado */}
-          <div className='flex justify-between items-center pb-2 mb-4 border-b border-b-light-light dark:border-b-dark-light w-full'>
-            <p className='font-semibold'>{t('h_status')}</p>
-            <Badge label={contract.state} status='info' outline />
-          </div>
+            <div className='xl:col-span-7'>
+              <div className='h-full rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
+                <SectionHeader
+                  icon='341'
+                  title={t('h_status')}
+                  right={<Badge label={contract.state} status='info' outline />}
+                />
 
-          {/* Fechas y Métricas en dos columnas */}
-          <div className='grid grid-cols-2 gap-6 w-full'>
-            {/* Fechas - Columna izquierda */}
-            <div className='flex flex-col justify-between w-full'>
-              <div className='flex items-center mb-8'>
-                <div className='flex-shrink-0 mr-2'>
-                  <span className='!text-primary vox-icon size-sm vx-icon-195'></span>
-                </div>
-                <div>
-                  <p className='font-semibold'>{t('h_date_start')}</p>
-                  <p>{formatDate(contract.startDate)}</p>
-                </div>
-              </div>
-
-              <div className='flex items-center'>
-                <div className='flex-shrink-0 mr-2'>
-                  <span className='!text-primary vox-icon size-sm vx-icon-195'></span>
-                </div>
-                <div>
-                  <p className='font-semibold'>{t('h_date_end')}</p>
-                  <p>{formatDate(contract.endDate)}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Métricas - Columna derecha */}
-            <div className='flex flex-col justify-between w-full'>
-              <div className='grid grid-cols-2 gap-x-4 gap-y-3 w-full'>
-                <div className='flex items-center'>
-                  <div className='flex-shrink-0 mr-2'>
-                    <span className='!text-secondary vox-icon size-sm vx-icon-308'></span>
-                  </div>
-                  <div>
-                    <p className='font-semibold'>{t('l_completed')}</p>
-                    <p>{metrics.value.completedShifts}</p>
-                  </div>
-                </div>
-
-                <div className='flex items-center'>
-                  <div className='flex-shrink-0 mr-2'>
-                    <span className='!text-primary vox-icon size-sm vx-icon-308'></span>
-                  </div>
-                  <div>
-                    <p className='font-semibold'>{t('l_total_hours')}</p>
-                    <p>{metrics.value.totalHours}</p>
-                  </div>
-                </div>
-
-                <div className='flex items-center'>
-                  <div className='flex-shrink-0 mr-2'>
-                    <span className='text-error vox-icon size-sm vx-icon-308'></span>
-                  </div>
-                  <div>
-                    <p className='font-semibold'>{t('l_total_shifts')}</p>
-                    <p>{metrics.value.totalShifts}</p>
-                  </div>
-                </div>
-
-                <div className='flex items-center'>
-                  <div className='flex-shrink-0 mr-2'>
-                    <span className='!text-secondary vox-icon size-sm vx-icon-308'></span>
-                  </div>
-                  <div>
-                    <p className='font-semibold'>{t('l_completed')}</p>
-                    <p>{metrics.value.completionPercentage.toFixed(2)}%</p>
-                  </div>
+                <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+                  <MetricTile
+                    label={t('l_completed')}
+                    value={metrics.value.completedShifts}
+                    icon='308'
+                    tone='secondary'
+                    loading={loading.value}
+                  />
+                  <MetricTile
+                    label={t('l_total_hours')}
+                    value={metrics.value.totalHours}
+                    icon='308'
+                    tone='primary'
+                    loading={loading.value}
+                  />
+                  <MetricTile
+                    label={t('l_total_shifts')}
+                    value={metrics.value.totalShifts}
+                    icon='308'
+                    tone='error'
+                    loading={loading.value}
+                  />
+                  <MetricTile
+                    label={t('l_completion')}
+                    value={`${metrics.value.completionPercentage.toFixed(2)}%`}
+                    icon='308'
+                    tone='secondary'
+                    loading={loading.value}
+                  />
                 </div>
               </div>
             </div>
@@ -131,20 +151,5 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
     </div>
   );
 };
-
-export function formatDate(dateString: string): string {
-  if (!dateString) return '';
-
-  try {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('es-ES', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(date);
-  } catch {
-    return dateString;
-  }
-}
 
 export default ContractInfo;

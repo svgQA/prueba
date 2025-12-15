@@ -23,34 +23,41 @@ export const Select = ({
   ...props
 }: ISelectProps) => {
   const { t } = useTranslation();
+
   return (
     <div id={id} className='w-full my-1'>
       {label && (
         <label
-          for={`${id}-select`}
+          htmlFor={`${id}-select`}
           className='capitalize block text-sm font-medium text-gray-700 dark:text-gray-200'
         >
           {t(label)}
         </label>
       )}
+
       <div
         className={`
           ${borderless ? '' : 'border border-gray-200 dark:border-gray-700'}
-          rounded flex flex-row items-center
+          rounded-md flex flex-row items-center
           bg-white dark:bg-b-dark-dark
+          ${thin ? 'h-9' : 'h-10'}
         `}
       >
         {!end && icon && (
           <span className={`vox-icon size-sm vx-icon-${icon} px-2`} />
         )}
+
         <select
-          // focus:ring-blue-500 dark:focus:ring-blue-400
-          className={`w-full px-3 py-2 rounded
-            bg-white dark:bg-b-dark-dark
+          className={`
+            w-full px-3 py-2 pr-8 rounded-md
+            bg-transparent
             text-gray-700 dark:text-gray-200
-            border-gray-300 dark:border-gray-700
+            placeholder:text-gray-400 dark:placeholder:text-gray-500
             appearance-none
-            ${meta?.touched && meta?.error ? 'border-red-500 focus:ring-red-500' : ''}
+            border-0
+            focus:outline-none focus:ring-0
+            disabled:opacity-60 disabled:cursor-not-allowed
+            ${meta?.touched && meta?.error ? 'ring-1 ring-red-500' : ''}
           `}
           onChange={onChange}
           value={value}
@@ -58,7 +65,6 @@ export const Select = ({
           id={`${id}-select`}
           required={required}
           tabIndex={tabIndex}
-          style={{ WebkitAppearance: 'none' }}
           disabled={disabled}
           {...props}
         >
@@ -69,8 +75,10 @@ export const Select = ({
             </option>
           ))}
         </select>
-        {end && icon && <span className={`vox-icon vx-icon-${icon}`} />}
+
+        {end && icon && <span className={`vox-icon vx-icon-${icon} px-2`} />}
       </div>
+
       {meta && meta.touched && meta.error && (
         <span className='text-red-500 text-sm'>{meta.error}</span>
       )}

@@ -122,17 +122,18 @@ export const TaskForm = ({
     }
   }, []);
 
-const footerContent = useMemo(
+  const footerContent = useMemo(
     () => (
       <div className='flex justify-end items-center gap-2 p-4'>
         <Button
           name='btn-form-shift-close'
-          label={t('actions.cancel')} 
+          label={t('actions.cancel')}
           type='button'
           onClick={handleOnClose}
           icon='192'
         />
         <Button
+          id='btn-form-shift-save'
           name='btn-form-shift-save'
           type='submit'
           label={shiftId ? t('actions.edit') : t('actions.save')}

@@ -105,7 +105,7 @@ const WeeklyScheduler = ({
       </div>
 
       {/* Mostrar las horas seleccionadas por día agrupadas en bloques */}
-      <div className='mb-2 rounded-lg p-4 absolute -top-2 left-80'>
+      <div className='mb-2 rounded-lg p-4 absolute -top-2 left-80 pointer-events-none'>
         <ul className='flex flex-wrap gap-3 justify-center'>
           {getSelectedHoursByDay(daysOfWeek, hours, selectedCells).map(
             (daySelection) => (

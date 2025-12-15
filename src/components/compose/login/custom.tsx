@@ -177,7 +177,6 @@ const components = {
 export const CustomLoginPage = () => {
   const [_, navigate] = useLocation();
   const { route } = useAuthenticator((context) => [context.route]);
-  // const { t } = useTranslation();
 
   useEffect(() => {
     const handleFormSubmit = (event: Event) => {

@@ -72,7 +72,7 @@ export const getColumns = (
 
       const actions: IDropdownAction[] = [
         {
-          label: 'Editar plantilla',
+          label: 'edit',
           icon: 'vox-icon vx-icon-123 text-primary',
           onClick: () => {
             onClickAction({
@@ -83,7 +83,7 @@ export const getColumns = (
           },
         },
         {
-          label: 'Eliminar plantilla',
+          label: 'delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {

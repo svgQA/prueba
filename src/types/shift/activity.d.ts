@@ -190,7 +190,8 @@ export interface IShiftResponse {
     notes: string;
   };
   keywords: string[];
-  externalId: string;
+  externalId?: string;
+  externalPlatformId?: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;

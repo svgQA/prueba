@@ -1,5 +1,5 @@
 import { type FunctionComponent } from 'preact';
-import { Route, Router } from 'wouter';
+import { Route, Router, useLocation } from 'wouter';
 import { lazy, Suspense, useEffect, useState } from 'preact/compat';
 import { memo } from 'preact/compat';
 import 'react-toastify/dist/ReactToastify.css';
@@ -38,7 +38,6 @@ import { Sidebar } from '@/components/common/sidebar/sidebar';
 import { AuthAmplifyProps } from '@/utils/types/auth.interface';
 import { HistoryNotificationsPage } from './history/history.page';
 import { PqrsPage } from './pqrs/pqrs.page';
-import { WebSocketProvider } from '@/utils/socket';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { CustomSwitcher } from '@/components/common/CustomSwitcher';
 import { hasUserTenant, useUserStore } from '@/store/slices';
@@ -58,16 +57,24 @@ import { UserService } from '@/services/general/user';
 
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import { TenantsModal } from './tenants/tenants';
-import { FaroManager } from '@/utils/telemetry';
+// import { FaroManager } from '@/utils/telemetry';
 import { IClientResponse } from '@/types/user/user.response';
 import { USER_TYPE } from '@/types/user/user.enum';
 import { IDropdownOptions } from '@/components/common/dropdown/interface';
+import { INITIAL_DROPDOWN_OPTIONS } from './constant';
+// import { IconsModal } from '../globals/icons/icons';
+import { rawDataManager } from '@/utils/statistics/data.manager';
+import { metricsEngine } from '@/utils/statistics/metric.engine';
+
+type Props = {
+  location: string;
+};
 
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
-export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
-  ({ signOut }: AuthAmplifyProps) => {
+export const DashboardLayout: FunctionComponent<AuthAmplifyProps & Props> =
+  memo(({ signOut, location }: AuthAmplifyProps & Props) => {
     const {
       setCompanies,
       companies,
@@ -91,39 +98,33 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setPlaces,
       getPlaceId,
     } = useUserStore();
-
+    const [, navigate] = useLocation();
     const clients = useSignal<IClientResponse[]>([]);
-    const options = useSignal<IDropdownOptions[]>([
-      {
-        label: 'setting',
-        value: 1,
-        icon: '158',
-      },
-      {
-        label: 'logout',
-        value: 2,
-        icon: '099',
-      },
-    ]);
+    const options = useSignal<IDropdownOptions[]>(INITIAL_DROPDOWN_OPTIONS);
     const isModalOpen = useSignal<boolean>(false);
     const modalPanic = useSignal<IPanic | undefined>(undefined);
     const [modalKey, setModalKey] = useState(0);
     const openModalTenant = useSignal<boolean>(false);
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
       BaseService.setLoading(openLoading, closeLoading);
       BaseService.setUser(getTenant, getToken, getCompanyId, getPlaceId);
       validateUser();
+      if (location.includes('signin')) return;
+      navigate(location);
     }, []);
 
     useEffect(() => {
       if (selectedCompany) {
-        WebSocketManager.connect(getTenant, getCompanyId, getToken);
-        FaroManager.connect(getTenant, getCompanyId, getToken, getCognito);
+        WebSocketManager.connect(getTenant, getCompanyId, getToken, getCognito);
+        // FaroManager.connect(getTenant, getCompanyId, getToken, getCognito);
+        rawDataManager.connect(getCompanyId);
+        metricsEngine.connect();
+        metricsEngine.recalculate();
       }
       return () => {
         WebSocketManager.disconnect();
+        metricsEngine.disconnect();
       };
     }, [selectedCompany, selectedPlace]);
 
@@ -138,12 +139,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setLoaded(result);
 
       if (result) {
-        Promise.all([
-          getCompanies(),
-          setTenantOption(),
-          getPermissions(),
-          // getPlaces(),
-        ]);
+        Promise.all([getCompanies(), setTenantOption(), getPermissions()]);
       }
     };
 
@@ -241,10 +237,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
       setAllPermissions(permissions.model);
     };
 
-    const toggleSidebar = () => {
-      setSidebarOpen((prev) => !prev);
-    };
-
     return (
       <section>
         <Sidebar
@@ -253,24 +245,10 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
           onSettingHandler={toggleSettingModal}
           menus={SIDEBAR_MENUS}
           isNavigation
-          isOpen={isSidebarOpen}
         />
         <div className='flex flex-col lg:pl-[4.5rem]'>
-          <header className='h-auto lg:h-14 sticky top-0 bg-b-content dark:bg-b-dark z-10'>
-            <div className='flex items-center w-full justify-end px-10 h-13'>
-              <div className='w-full flex flex-row items-start px-10'>
-                <button
-                  type='button'
-                  className='flex flex-col items-center justify-center gap-1 p-2 rounded-md bg-white text-gray-800 dark:bg-gray-800 dark:text-gray-100 lg:hidden'
-                  onClick={toggleSidebar}
-                  aria-label='Toggle sidebar'
-                  aria-expanded={isSidebarOpen}
-                >
-                  <span className='block h-0.5 w-6 bg-current rounded-full'></span>
-                  <span className='block h-0.5 w-6 bg-current rounded-full'></span>
-                  <span className='block h-0.5 w-6 bg-current rounded-full'></span>
-                </button>
-              </div>
+          <header className='h-12 sticky top-0 bg-b-content dark:bg-b-dark z-10'>
+            <div className='flex items-center w-full justify-end h-13'>
               <div className='flex items-center gap-2 px-2'>
                 <LanguageSwitcher borderless />
                 <CustomSwitcher
@@ -333,80 +311,76 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps> = memo(
               panic={modalPanic.value}
             />
           )}
-          <WebSocketProvider>
-            <Router>
-              <Suspense fallback={<div></div>}>
-                <Route
-                  path={PAGES_LIST.HOME}
-                  component={MemosPage}
-                  key='memos-page'
-                />
-                <Route
-                  path={PAGES_LIST.SHIFTS}
-                  component={lazy(() =>
-                    Promise.resolve({
-                      default: ShiftsPage,
-                    })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.ACCESS}
-                  component={lazy(() =>
-                    Promise.resolve({ default: AccessPage })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.CORRESPONDENCE}
-                  component={lazy(() =>
-                    Promise.resolve({
-                      default: CorrespondencePage,
-                    })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.USERS}
-                  component={lazy(() =>
-                    Promise.resolve({ default: UsersPage })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.FORMS}
-                  component={lazy(() =>
-                    Promise.resolve({ default: FormsPage })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.DEVICES}
-                  component={lazy(() =>
-                    Promise.resolve({
-                      default: DevicesPage,
-                    })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.HISTORY}
-                  component={lazy(() =>
-                    Promise.resolve({
-                      default: HistoryNotificationsPage,
-                    })
-                  )}
-                />
-                <Route
-                  path={PAGES_LIST.PQRS}
-                  component={lazy(() =>
-                    Promise.resolve({
-                      default: PqrsPage,
-                    })
-                  )}
-                />
-              </Suspense>
-            </Router>
-          </WebSocketProvider>
+          <Router>
+            <Suspense fallback={<div></div>}>
+              <Route
+                path={PAGES_LIST.HOME}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: MemosPage,
+                  })
+                )}
+                key='memos-page'
+              />
+              <Route
+                path={PAGES_LIST.SHIFTS}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: ShiftsPage,
+                  })
+                )}
+              />
+              <Route
+                path={PAGES_LIST.ACCESS}
+                component={lazy(() => Promise.resolve({ default: AccessPage }))}
+              />
+              <Route
+                path={PAGES_LIST.CORRESPONDENCE}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: CorrespondencePage,
+                  })
+                )}
+              />
+              <Route
+                path={PAGES_LIST.USERS}
+                component={lazy(() => Promise.resolve({ default: UsersPage }))}
+              />
+              <Route
+                path={PAGES_LIST.FORMS}
+                component={lazy(() => Promise.resolve({ default: FormsPage }))}
+              />
+              <Route
+                path={PAGES_LIST.DEVICES}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: DevicesPage,
+                  })
+                )}
+              />
+              <Route
+                path={PAGES_LIST.HISTORY}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: HistoryNotificationsPage,
+                  })
+                )}
+              />
+              <Route
+                path={PAGES_LIST.PQRS}
+                component={lazy(() =>
+                  Promise.resolve({
+                    default: PqrsPage,
+                  })
+                )}
+              />
+            </Suspense>
+          </Router>
         </div>
 
         <SettingsModal />
         <TenantsModal open={openModalTenant} />
+        {/* <IconsModal /> */}
       </section>
     );
-  }
-);
+  });

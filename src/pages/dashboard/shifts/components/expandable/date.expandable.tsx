@@ -387,7 +387,7 @@ const ShiftCard = ({
             onClick={() =>
               showAlert({
                 title: btnLabel,
-                message: `${t('s_message')} ${btnLabel}?`,
+                message: `${t('s_request')} ${btnLabel}`,
                 onConfirm: () => handleCheck(),
                 onCancel: () => {},
               })
