@@ -34,6 +34,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   keyName = '',
   transparent = false,
   permissions,
+  ...props
 }: IButtonProps) => {
   const { t } = useTranslation();
   const getJustify = () => {
@@ -76,6 +77,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
           onClick={onClick}
           form={form}
           disabled={loading || disabled}
+          {...props}
           className={`
           ${square ? 'w-8 h-8' : ''}
           ${unpadded ? 'p-1' : 'p-2'}

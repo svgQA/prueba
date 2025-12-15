@@ -189,6 +189,7 @@ export const ShiftFormContent = ({
 
         <div class='col-span-1'>
           <MultipleInput
+            id='input-keywords'
             name='input-keywords'
             value={inputKeywords.value}
             onChange={(value: IOption[], _name?: string) => {

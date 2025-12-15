@@ -14,8 +14,8 @@ export const columns: ColumnDef<IResponseResponse>[] = [
     cell: (info) => {
       const { user } = info.row.original;
       return (
-        <div className='flex items-center'>
-          <Avatar name={user.name} src={user.image} size='sm' square />
+        <div className='flex items-center gap-2 w-[250px]'>
+          <Avatar name={user.name} size='sm' square />
           <div className='flex flex-col ml-3'>
             <div className='font-bold'>
               {user.name} {user.surname}

@@ -1,3 +1,4 @@
+import { IPresignedRequest, IPresignedResponse } from '@/types/file';
 import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
@@ -24,5 +25,14 @@ export class PqrsAiService extends BaseService {
       data: { stageId: Number(stageId) },
     };
     return await super.make_request(this.name, model);
+  }
+
+  static async presigned(data: IPresignedRequest) {
+    const model: IMakeRequest = {
+      url: ['file', 'presigned'],
+      method: REQUEST_METHODS.POST,
+      data,
+    };
+    return await super.make_request<IPresignedResponse>(this.name, model);
   }
 }

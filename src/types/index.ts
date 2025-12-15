@@ -14,6 +14,7 @@ export const allowedAreaTypesConst = [
   'shift',
   'user',
   'trybook',
+  'general',
 ] as const;
 
 export const allowedAudioTypesConst = [

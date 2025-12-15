@@ -165,6 +165,7 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                           showFiles={true}
                           multiple={true}
                           disabled={loading.value}
+                          service='ai_pqrs'
                         />
                       )}
                     </Field>

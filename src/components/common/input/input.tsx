@@ -150,6 +150,7 @@ export const Input = <T = string,>({
         </div>
         {button && (
           <Button
+            id='btn-input-action'
             onClick={() => onClick?.(value)}
             name='btn-input-action'
             icon={buttonIcon}

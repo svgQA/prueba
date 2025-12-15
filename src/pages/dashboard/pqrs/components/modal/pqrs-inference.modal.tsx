@@ -1,47 +1,36 @@
 import { Signal } from '@preact/signals';
-import { ICPqrsRequest } from '../../utils/interface';
+import { ICPqrsRequest, Inference } from '../../utils/interface';
+import { Badge } from '@/components/common/badge/badge';
+import { Slider } from '@/components/common/slider/slider';
+import { Chip } from '@/components/common/chip/chip';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 export interface IProps {
   pqrs: Signal<ICPqrsRequest | null>;
-}
-
-interface Inference {
-  id: number;
-  createdAt: string;
-  stage: {
-    id: number;
-    stageName: string;
-    goal: string;
-  };
-  inference: any;
-  createdBy: {
-    id: number;
-    name: string;
-  };
 }
 
 const PqrsInferenceModal = ({ pqrs }: IProps) => {
   const inferences = (pqrs.value as any)?.inferences || [];
 
   return (
-    <div>
-      {inferences.length > 0 ? (
-        <div class='space-y-4'>
-          <div class='flex items-center justify-between mb-2'>
-            <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide'>
-              Análisis de IA
-            </h4>
-            <span class='text-xs text-gray-500 dark:text-b-light-dark'>
-              {inferences.length} análisis realizados
-            </span>
-          </div>
+    <div class='space-y-4'>
+      <div class='flex items-center justify-between bg-white/95 dark:bg-b-dark-light/90 border border-gray-border/70 dark:border-b-dark-light rounded-xl px-3 py-2 shadow-sm'>
+        <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide'>
+          Análisis de IA
+        </h4>
+        <span class='text-xs text-gray-500 dark:text-b-light-dark'>
+          {inferences.length} análisis
+        </span>
+      </div>
 
+      {inferences.length > 0 ? (
+        <div class='space-y-3'>
           {inferences.map((inference: Inference) => (
             <InferenceCard key={inference.id} inference={inference} />
           ))}
         </div>
       ) : (
-        <div class='text-center py-10 bg-b-light dark:bg-b-dark rounded-lg border border-dashed border-gray-border dark:border-b-dark-light'>
+        <div class='text-center py-10 bg-b-light dark:bg-b-dark rounded-xl border border-dashed border-gray-border/70 dark:border-b-dark-light'>
           <svg
             class='w-12 h-12 text-gray-300 dark:text-b-light-dark mx-auto mb-3'
             fill='currentColor'
@@ -61,10 +50,47 @@ const PqrsInferenceModal = ({ pqrs }: IProps) => {
 const InferenceCard = ({ inference }: { inference: Inference }) => {
   const data = inference.inference;
 
+  // Campos conocidos que manejamos explícitamente
+  const KNOWN_KEYS = new Set([
+    'title',
+    'subtitle',
+    'description',
+    'analysisRequest',
+    'analysisResponse',
+    'confidence',
+    'etiquetas',
+    'reasons',
+    'razones',
+    'priority',
+    'prioridad',
+    'subarea',
+    'area',
+    'clasificacion',
+  ]);
+
+  // Utilidad para presentar valores dinámicos
+  const formatValue = (val: any): string => {
+    if (val == null) return 'N/A';
+    const t = typeof val;
+    if (t === 'string') return val;
+    if (t === 'number' || t === 'boolean') return String(val);
+    if (t === 'object') {
+      // Priorizar atributos comunes
+      const candidate = val.name ?? val.label ?? val.description ?? val.value;
+      if (candidate && typeof candidate === 'string') return candidate;
+      try {
+        return JSON.stringify(val);
+      } catch {
+        return '[object]';
+      }
+    }
+    return String(val);
+  };
+
   return (
-    <div class='border border-gray-200 dark:border-b-dark-light rounded-lg p-4 hover:shadow-lg transition-shadow bg-white dark:bg-b-dark'>
+    <div class='border border-gray-200/70 dark:border-b-dark-light rounded-xl p-4 hover:shadow-lg transition-shadow bg-white/95 dark:bg-b-dark-light/95 space-y-3'>
       {!(data.title || data.subtitle || data.description) && (
-        <div class='flex items-start justify-between mb-3'>
+        <div class='flex items-start justify-between mb-1.5'>
           <div class='flex-1'>
             <h4 class='font-semibold text-gray-900 dark:text-white text-sm mb-1'>
               {inference.stage.stageName}
@@ -73,44 +99,47 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
               Goal: {inference.stage.goal}
             </p>
           </div>
-          <span class='text-xs text-gray-400 dark:text-b-light-dark ml-2 whitespace-nowrap'>
+          <span class='text-[11px] text-gray-400 dark:text-b-light-dark ml-2 whitespace-nowrap'>
             {new Date(inference.createdAt).toLocaleDateString()}
           </span>
         </div>
       )}
-      <div class='space-y-3'>
-        {/* Main content section - title, subtitle, description */}
+      <div class='space-y-2.5'>
         {(data.title || data.subtitle || data.description) && (
           <div class='space-y-2'>
             {data.title && (
-              <div class='p-3 bg-indigo-50 rounded-lg'>
-                <h5 class='font-semibold text-indigo-900 text-sm mb-1'>
+              <div class='p-3 bg-indigo-50/80 dark:bg-indigo-950/40 rounded-lg border border-indigo-100/80 dark:border-indigo-900/50'>
+                <h5 class='font-semibold text-indigo-900 dark:text-indigo-100 text-sm mb-1'>
                   {data.title}
                 </h5>
                 {data.subtitle && (
-                  <p class='text-xs text-indigo-700'>{data.subtitle}</p>
+                  <p class='text-xs text-indigo-700 dark:text-indigo-200'>
+                    {data.subtitle}
+                  </p>
                 )}
               </div>
             )}
             {data.description && (
-              <div class='p-3 bg-gray-50 rounded-lg'>
-                <p class='text-xs text-gray-700 leading-relaxed whitespace-pre-line'>
-                  {data.description}
-                </p>
+              <div class='p-3 bg-gray-50/80 dark:bg-b-dark rounded-lg border border-gray-border/60 dark:border-b-dark-light'>
+                <TextEllipsis
+                  text={String(data.description)}
+                  maxWidth='100%'
+                  lines={4}
+                  className='text-xs text-gray-700 dark:text-b-light-dark leading-relaxed'
+                />
               </div>
             )}
           </div>
         )}
 
-        {/* Analysis Request & Response */}
         {(data.analysisRequest || data.analysisResponse) && (
           <div class='space-y-2'>
             {data.analysisRequest && (
-              <div class='p-2 bg-blue-50 rounded'>
-                <span class='text-xs font-medium text-blue-700 block mb-1'>
+              <div class='p-2.5 bg-blue-50/80 dark:bg-blue-900/30 rounded-lg border border-blue-100/80 dark:border-blue-800/50'>
+                <span class='text-xs font-medium text-blue-700 dark:text-blue-200 block mb-1'>
                   Análisis Realizado:
                 </span>
-                <p class='text-xs text-blue-900'>
+                <p class='text-xs text-blue-900 dark:text-blue-100 whitespace-pre-wrap'>
                   {typeof data.analysisRequest === 'string'
                     ? data.analysisRequest
                     : JSON.stringify(data.analysisRequest, null, 2)}
@@ -118,11 +147,11 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
               </div>
             )}
             {data.analysisResponse && (
-              <div class='p-2 bg-green-50 rounded'>
-                <span class='text-xs font-medium text-green-700 block mb-1'>
+              <div class='p-2.5 bg-green-50/80 dark:bg-green-900/25 rounded-lg border border-green-100/80 dark:border-green-800/50'>
+                <span class='text-xs font-medium text-green-700 dark:text-green-200 block mb-1'>
                   Resultado del Análisis:
                 </span>
-                <pre class='text-xs text-green-900 leading-relaxed whitespace-pre-wrap overflow-x-auto'>
+                <pre class='text-xs text-green-900 dark:text-green-100 leading-relaxed whitespace-pre-wrap overflow-x-auto'>
                   {typeof data.analysisResponse === 'string'
                     ? data.analysisResponse
                     : JSON.stringify(data.analysisResponse, null, 2)}
@@ -132,230 +161,85 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
           </div>
         )}
 
-        {/* Legacy tipo/clasificacion fields */}
-        {data.tipo && (
-          <div class='flex items-center gap-2'>
-            <span class='text-xs font-medium text-gray-500'>Tipo:</span>
-            <span class='px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded capitalize'>
-              {data.tipo}
-            </span>
+        {Object.entries(data).some(([key]) => !KNOWN_KEYS.has(key)) && (
+          <div class='grid grid-cols-1 sm:grid-cols-2 gap-2.5'>
+            {Object.entries(data)
+              .filter(([key, value]) => {
+                if (KNOWN_KEYS.has(key)) return false;
+                const fv = String(formatValue(value)).trim().toLowerCase();
+                return fv !== 'n/a' && fv !== 'null' && fv !== '';
+              })
+              .map(([key, value]) => (
+                <div
+                  key={key}
+                  class='flex flex-col gap-1.5 p-2.5 rounded-lg bg-b-light dark:bg-b-dark border border-gray-border/60 dark:border-b-dark-light'
+                >
+                  <span class='text-[11px] font-semibold text-gray-600 dark:text-b-light-dark capitalize'>
+                    {key.replace(/_/g, ' ')}
+                  </span>
+                  <Chip label={formatValue(value)} width='sm' />
+                </div>
+              ))}
           </div>
         )}
 
-        {data.clasificacion && (
-          <div class='flex items-center gap-2'>
-            <span class='text-xs font-medium text-gray-500'>
-              Clasificación:
-            </span>
-            <span class='px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded capitalize'>
-              {data.clasificacion}
-            </span>
-          </div>
-        )}
-
-        {/* Priority (prioridad or priority) */}
-        {(data.prioridad || data.priority) && (
-          <div class='flex items-center gap-2'>
-            <span class='text-xs font-medium text-gray-500'>Prioridad:</span>
-            <span
-              class={`px-2 py-1 text-xs font-medium rounded capitalize ${
-                (data.prioridad || data.priority) === 'alta'
-                  ? 'bg-red-100 text-red-800'
-                  : (data.prioridad || data.priority) === 'media'
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-green-100 text-green-800'
-              }`}
-            >
-              {data.prioridad || data.priority}
-            </span>
-          </div>
-        )}
-
-        {/* Severity */}
         {data.severity && (
           <div class='flex items-center gap-2'>
-            <span class='text-xs font-medium text-gray-500'>Severidad:</span>
-            <span
-              class={`px-2 py-1 text-xs font-medium rounded capitalize ${
-                data.severity === 'alto' || data.severity === 'alta'
-                  ? 'bg-red-100 text-red-800'
-                  : data.severity === 'medio' || data.severity === 'media'
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-green-100 text-green-800'
-              }`}
-            >
-              {data.severity}
-            </span>
+            <Badge
+              label={formatValue(data.severity)}
+              status={
+                ['alto', 'alta'].includes(String(data.severity).toLowerCase())
+                  ? 'error'
+                  : ['medio', 'media'].includes(
+                        String(data.severity).toLowerCase()
+                      )
+                    ? 'warning'
+                    : 'success'
+              }
+              size='sm'
+              outline
+            />
           </div>
         )}
 
-        {/* Reasons */}
-        {data.reasons && (
-          <div class='p-2 bg-amber-50 rounded'>
-            <span class='text-xs font-medium text-amber-700 block mb-1'>
+        {(data.reasons || data.razones) && (
+          <div class='p-2.5 bg-amber-50/80 dark:bg-amber-900/30 rounded-lg border border-amber-100/80 dark:border-amber-800/50'>
+            <span class='text-xs font-medium text-amber-700 dark:text-amber-200 block mb-1'>
               Razones:
             </span>
-            <p class='text-xs text-amber-900'>{data.reasons}</p>
+            <p class='text-xs text-amber-900 dark:text-amber-100 whitespace-pre-wrap'>
+              {Array.isArray(data.reasons || data.razones)
+                ? (data.reasons || data.razones).join('; ')
+                : formatValue(data.reasons || data.razones)}
+            </p>
           </div>
         )}
 
-        {/* {(data.area || data.subarea) && (
-          <div class='grid grid-cols-1 sm:grid-cols-2 gap-3'>
-            {data.area && (
-              <div>
-                <span class='text-xs font-medium text-gray-500 block mb-1'>
-                  Área:
-                </span>
-                <span class='text-sm text-gray-900 capitalize'>
-                  {data.area.replace(/_/g, ' ')}
-                </span>
-              </div>
-            )}
-            {data.subarea && (
-              <div>
-                <span class='text-xs font-medium text-gray-500 block mb-1'>
-                  Subárea:
-                </span>
-                <span class='text-sm text-gray-900 capitalize'>
-                  {data.subarea.replace(/_/g, ' ')}
-                </span>
-              </div>
-            )}
-          </div>
-        )} */}
-
         {data.etiquetas && data.etiquetas.length > 0 && (
-          <div>
-            <label class='block text-xs font-medium text-gray-500 mb-2'>
+          <div class='p-2.5 rounded-lg bg-b-light dark:bg-b-dark border border-gray-border/60 dark:border-b-dark-light'>
+            <label class='block text-xs font-medium text-gray-500 dark:text-b-light-dark mb-2'>
               Etiquetas
             </label>
             <div class='flex flex-wrap gap-2'>
               {data.etiquetas.map((tag: string, idx: number) => (
-                <span
-                  key={idx}
-                  class='px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded'
-                >
-                  #{tag}
-                </span>
+                <Chip key={idx} label={`#${String(tag)}`} />
               ))}
             </div>
           </div>
         )}
 
-        {/* Banderas - handle different formats */}
-        {(data.banderas ||
-          data.riesgo_vida !== undefined ||
-          data.multicliente !== undefined) && (
-          <div class='p-3 bg-orange-50 rounded-lg'>
-            <label class='block text-xs font-medium text-orange-800 mb-2'>
-              Banderas de Alerta
-            </label>
-            <div class='grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs'>
-              {data.banderas &&
-                Object.entries(data.banderas).map(
-                  ([key, value]: [string, any]) => (
-                    <div key={key} class='flex items-center gap-2'>
-                      <span class={value ? 'text-red-600' : 'text-green-600'}>
-                        {value ? '⚠️' : '✓'}
-                      </span>
-                      <span class='text-gray-700 capitalize'>
-                        {key.replace(/_/g, ' ')}
-                      </span>
-                    </div>
-                  )
-                )}
-              {!data.banderas && (
-                <>
-                  {data.riesgo_vida !== undefined && (
-                    <div class='flex items-center gap-2'>
-                      <span
-                        class={
-                          data.riesgo_vida ? 'text-red-600' : 'text-green-600'
-                        }
-                      >
-                        {data.riesgo_vida ? '⚠️' : '✓'}
-                      </span>
-                      <span class='text-gray-700'>riesgo vida</span>
-                    </div>
-                  )}
-                  {data.multicliente !== undefined && (
-                    <div class='flex items-center gap-2'>
-                      <span
-                        class={
-                          data.multicliente ? 'text-red-600' : 'text-green-600'
-                        }
-                      >
-                        {data.multicliente ? '⚠️' : '✓'}
-                      </span>
-                      <span class='text-gray-700'>multicliente</span>
-                    </div>
-                  )}
-                  {data.falta_ubicacion !== undefined && (
-                    <div class='flex items-center gap-2'>
-                      <span
-                        class={
-                          data.falta_ubicacion
-                            ? 'text-red-600'
-                            : 'text-green-600'
-                        }
-                      >
-                        {data.falta_ubicacion ? '⚠️' : '✓'}
-                      </span>
-                      <span class='text-gray-700'>falta ubicacion</span>
-                    </div>
-                  )}
-                  {data.tema_medidor_contador !== undefined && (
-                    <div class='flex items-center gap-2'>
-                      <span
-                        class={
-                          data.tema_medidor_contador
-                            ? 'text-red-600'
-                            : 'text-green-600'
-                        }
-                      >
-                        {data.tema_medidor_contador ? '⚠️' : '✓'}
-                      </span>
-                      <span class='text-gray-700'>tema medidor contador</span>
-                    </div>
-                  )}
-                  {data.posible_consumo_ilegal !== undefined && (
-                    <div class='flex items-center gap-2'>
-                      <span
-                        class={
-                          data.posible_consumo_ilegal
-                            ? 'text-red-600'
-                            : 'text-green-600'
-                        }
-                      >
-                        {data.posible_consumo_ilegal ? '⚠️' : '✓'}
-                      </span>
-                      <span class='text-gray-700'>posible consumo ilegal</span>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
-        )}
-
         {data.confidence !== undefined && (
-          <div class='flex items-center gap-2'>
-            <span class='text-xs font-medium text-gray-500'>Confianza:</span>
-            <div class='flex-1 bg-gray-200 rounded-full h-2'>
-              <div
-                class={`h-2 rounded-full ${
-                  data.confidence >= 0.8
-                    ? 'bg-green-500'
-                    : data.confidence >= 0.6
-                      ? 'bg-yellow-500'
-                      : 'bg-red-500'
-                }`}
-                style={{ width: `${data.confidence * 100}%` }}
-              />
-            </div>
-            <span class='text-xs font-medium text-gray-700'>
-              {(data.confidence * 100).toFixed(0)}%
-            </span>
+          <div class='pt-1'>
+            <Slider
+              min={0}
+              max={100}
+              step={1}
+              value={Math.round((Number(data.confidence) || 0) * 100)}
+              label='Confianza'
+              showValue={true}
+              onChange={() => {}}
+              disabled={true}
+            />
           </div>
         )}
       </div>

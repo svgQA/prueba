@@ -1,5 +1,6 @@
 import { IOption } from '@/components/common/multi/interface';
 import { IFormat } from './form';
+import { IPresignedRequest } from '../file';
 
 interface IUser {
   readonly cognitoId: string;
@@ -14,7 +15,7 @@ export interface IUserRequest extends IUser {
   readonly surname: string;
   readonly email: string;
   readonly address: string;
-  readonly image?: string;
+  readonly image?: IPresignedRequest;
   readonly phone?: string;
   companies?: IOption[];
   readonly cardId?: string;
