@@ -112,8 +112,11 @@ export const StageForm: FunctionComponent = () => {
           return {
             type: { value: 'internal', label: 'Internal' },
             internal: {
-              module: { value: res.internal.module, label: res.internal.module }
-            }
+              module: {
+                value: res.internal.module,
+                label: res.internal.module,
+              },
+            },
           };
         }
         // Fallback for external or legacy
@@ -121,9 +124,11 @@ export const StageForm: FunctionComponent = () => {
         return {
           type: { value: 'external', label: 'External' },
           external: {
-            method: ext.method ? { value: ext.method, label: ext.method } : null,
+            method: ext.method
+              ? { value: ext.method, label: ext.method }
+              : null,
             requestUrl: ext.requestUrl || '',
-          }
+          },
         };
       }
     );
@@ -144,16 +149,16 @@ export const StageForm: FunctionComponent = () => {
       hasArea: initialData.areaId ? true : false,
       type: initialData.type
         ? {
-          value: initialData.type,
-          label:
-            initialData.type === TypesOfStages.CONTINUE
-              ? t('h_automatic')
-              : t('h_manual'),
-        }
+            value: initialData.type,
+            label:
+              initialData.type === TypesOfStages.CONTINUE
+                ? t('h_automatic')
+                : t('h_manual'),
+          }
         : null,
       areaId: initialData.areaId
         ? areaList.value.find((area) => area.value === initialData.areaId) ||
-        null
+          null
         : null,
     });
     loading.value = false;
@@ -173,7 +178,9 @@ export const StageForm: FunctionComponent = () => {
           const selectedModule = res.internal?.module?.value;
           if (!selectedModule) return null;
 
-          const moduleConfig = listModulesUrls.find(m => m.module === selectedModule);
+          const moduleConfig = listModulesUrls.find(
+            (m) => m.module === selectedModule
+          );
           if (!moduleConfig) return null;
 
           return {
@@ -181,8 +188,8 @@ export const StageForm: FunctionComponent = () => {
             internal: {
               module: selectedModule,
               service: moduleConfig.service,
-              endpoint: moduleConfig.endpoint
-            }
+              endpoint: moduleConfig.endpoint,
+            },
           };
         } else {
           // External
@@ -191,8 +198,8 @@ export const StageForm: FunctionComponent = () => {
             type: 'external',
             external: {
               method: res.external.method?.value || res.external.method,
-              requestUrl: res.external.requestUrl
-            }
+              requestUrl: res.external.requestUrl,
+            },
           };
         }
       })
@@ -477,14 +484,16 @@ export const StageForm: FunctionComponent = () => {
 
               <div className='col-span-3 border-t border-gray-border dark:border-b-dark-dark pt-4'>
                 <div className='flex items-center justify-between mb-3'>
-                  <h3 className='text-sm font-medium text-t-light dark:text-t-dark'>{t('h_resource')}</h3>
+                  <h3 className='text-sm font-medium text-t-light dark:text-t-dark'>
+                    {t('h_resource')}
+                  </h3>
                   <Button
                     name='add-resource-button'
                     type='button'
                     onClick={() =>
                       form.mutators.push('resources', {
                         type: { value: 'external', label: 'External' },
-                        external: { method: null, requestUrl: '' }
+                        external: { method: null, requestUrl: '' },
                       })
                     }
                     disabled={loading.value}
@@ -502,8 +511,11 @@ export const StageForm: FunctionComponent = () => {
                     ) : (
                       <div className='space-y-4'>
                         {fields.map((name, index) => {
-                          const resourceValues = fields.value ? fields.value[index] : {};
-                          const isInternal = resourceValues.type?.value === 'internal';
+                          const resourceValues = fields.value
+                            ? fields.value[index]
+                            : {};
+                          const isInternal =
+                            resourceValues.type?.value === 'internal';
 
                           return (
                             <div
@@ -522,8 +534,14 @@ export const StageForm: FunctionComponent = () => {
                                         icon='191'
                                         label='Type'
                                         options={[
-                                          { value: 'internal', label: 'Internal' },
-                                          { value: 'external', label: 'External' },
+                                          {
+                                            value: 'internal',
+                                            label: 'Internal',
+                                          },
+                                          {
+                                            value: 'external',
+                                            label: 'External',
+                                          },
                                         ]}
                                         menuPortalTarget={document.body}
                                         placeholder='p_select'
@@ -542,9 +560,9 @@ export const StageForm: FunctionComponent = () => {
                                           id={`select-resource-module-${index}`}
                                           icon='191'
                                           label='Module'
-                                          options={listModulesUrls.map(m => ({
+                                          options={listModulesUrls.map((m) => ({
                                             value: m.module,
-                                            label: m.module
+                                            label: m.module,
                                           }))}
                                           menuPortalTarget={document.body}
                                           placeholder='Select Module'
@@ -575,7 +593,9 @@ export const StageForm: FunctionComponent = () => {
                                     </div>
 
                                     <div className='col-span-2'>
-                                      <Field<string> name={`${name}.external.requestUrl`}>
+                                      <Field<string>
+                                        name={`${name}.external.requestUrl`}
+                                      >
                                         {({ input, meta }) => (
                                           <Input
                                             {...input}

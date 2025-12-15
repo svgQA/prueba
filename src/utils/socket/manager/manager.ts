@@ -1,5 +1,4 @@
 import { Socket, Channel, Push } from 'phoenix';
-// import WebSocket from 'ws';
 
 import {
   InSocketMessage,
@@ -13,14 +12,6 @@ type NamedListener = {
   callback: { id: string; fn: (data: any) => void }[];
 };
 
-// class AuthWebSocket {
-//   constructor(url: string, protocols?: string | string[]) {
-//     return new WebSocket(url, protocols, {
-//       headers: { Authorization: `Bearer ${process.env.COGNITO_ACCESS_TOKEN}` },
-//     });
-//   }
-// }
-
 export class WebSocketManager {
   private static listeners: Set<NamedListener> = new Set();
   private static socket: Socket | null = null;
@@ -29,7 +20,6 @@ export class WebSocketManager {
   private static c: string;
   private static k: string;
   private static i: string;
-  // private static currentTopic: string | null = null;
 
   static connect(
     tenant: () => string,
@@ -105,7 +95,6 @@ export class WebSocketManager {
     } finally {
       this.channel = null;
       this.socket = null;
-      // this.currentTopic = null;
     }
   }
 

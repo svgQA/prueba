@@ -133,6 +133,7 @@ export const TaskForm = ({
           icon='041'
         />
         <Button
+          id='btn-form-shift-save'
           name='btn-form-shift-save'
           type='submit'
           label={shiftId ? 'edit' : 'save'}

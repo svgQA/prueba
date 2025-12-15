@@ -1,7 +1,11 @@
+import { Avatar } from '@/components/common/Avatar';
 import { Badge } from '@/components/common/badge/badge';
+import { Gauge } from '@/components/common/gauge/gauge';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { FormattedDate } from '@/components/compose/forms';
 import { IPlace, IService, IUser } from '@/types/shift/activity';
 import { useTranslation } from 'react-i18next';
+import { FieldInline } from './inline';
 
 const EmployeeInfo = ({
   employee,
@@ -17,141 +21,126 @@ const EmployeeInfo = ({
   service: IService;
 }) => {
   const { t } = useTranslation();
+
+  const fullName = `${employee?.name || ''} ${employee?.surname || ''}`.trim();
+  const companyName = service?.contract?.company?.name || '-';
+  const department =
+    employee?.extraData?.area || service?.place?.municipality?.name || '-';
+  const city = place?.municipality?.name || '-';
+
   return (
-    <>
-      <div className='flex flex-row gap-6'>
-        {/* Perfil */}
-        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 w-56 flex flex-col items-center shadow-sm'>
-          <img
-            src={employee.image}
-            alt='User'
-            className='w-20 h-20 rounded-full mb-2 object-cover'
-          />
-          <h3 className='text-base font-medium'>
-            {employee?.name} {employee?.surname}
-          </h3>
-          <p>{t('operative')}</p>
-          <Badge label='active' status='success' outline />
-        </div>
+    <div className='w-full'>
+      <div className='bg-b-light-light dark:bg-b-dark-light rounded-xl border border-b-light dark:border-b-dark-light shadow-sm'>
+        <div>
+          <div className='grid grid-cols-1 xl:grid-cols-10 gap-4 items-stretch'>
+            {/* Perfil */}
+            <div className='xl:col-span-2'>
+              <div className='flex flex-col items-center justify-center bg-white/60 dark:bg-b-dark-dark/30 h-full gap-2 p-3'>
+                <Avatar name={employee?.name} src={employee?.image} size='lg' />
+                <TextEllipsis
+                  text={fullName || '-'}
+                  className='text-sm font-semibold text-gray-800 dark:text-gray-100'
+                />
+                <Badge label='active' status='success' outline />
+              </div>
+            </div>
 
-        {/* Información Personal */}
-        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
-          <h4 className='font-semibold mb-3 flex items-center'>
-            <span className='mr-2 !text-primary size-sm vox-icon vx-icon-308'></span>
-            {t('h_personal_info')}
-          </h4>
-          <div className='grid grid-cols-2 gap-y-2'>
-            <div>
-              <p className='font-semibold'>{t('identification')}</p>
-              <p>{employee.cardId}</p>
-            </div>
-            <div>
-              <p className='font-semibold'>{t('h_phone')}</p>
-              <p>{employee.phone}</p>
-            </div>
-            <div>
-              <p className='font-semibold'>{t('h_email')}</p>
-              <p>{employee.email}</p>
-            </div>
-            <div>
-              <p className='font-semibold'>{t('h_city')}</p>
-              <p>{place.municipality.name}</p>
-            </div>
-          </div>
-        </div>
+            {/* Datos */}
+            <div className='xl:col-span-6'>
+              <div className='h-full rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-3 h-full'>
+                  <div>
+                    <div className='flex items-center gap-2 pb-2 border-b border-b-light dark:border-b-dark-light'>
+                      <span className='vox-icon vx-icon-308 !text-primary !text-sm' />
+                      <span className='text-xs font-semibold text-gray-800 dark:text-gray-100'>
+                        {t('h_personal_info')}
+                      </span>
+                    </div>
 
-        {/* Información de la Empresa */}
-        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
-          <h4 className='font-semibold mb-3 flex items-center'>
-            <span className='!text-primary mr-2 vox-icon size-sm vx-icon-195'></span>
-            {t('l_business_info')}
-          </h4>
-          <div className='grid grid-cols-2 gap-y-2'>
-            <div>
-              <p className='font-semibold'>{t('h_company')}</p>
-              <p>{service.contract.company?.name}</p>
-            </div>
-            <div>
-              <p className='font-semibold'>{t('h_department')}</p>
-              <p>
-                {employee.extraData?.area || service.place.municipality.name}
-              </p>
-            </div>
-            <div>
-              <p className='font-semibold'>{t('h_date_start')}</p>
-              <FormattedDate
-                date={service.contract.startDate}
-                format='datetime'
-              />
-            </div>
-          </div>
-        </div>
+                    <div className='pt-2 grid grid-cols-1 gap-2'>
+                      <FieldInline
+                        label={t('identification')}
+                        value={employee?.cardId}
+                      />
+                      <FieldInline label={t('h_city')} value={city} />
+                      <FieldInline
+                        label={t('h_email')}
+                        value={employee?.email}
+                      />
+                      <FieldInline
+                        label={t('h_phone')}
+                        value={employee?.phone}
+                      />
+                    </div>
+                  </div>
 
-        {/* Estadísticas */}
-        <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm'>
-          <h4 className='font-semibold mb-3 flex items-center'>
-            {t('l_statistics')}
-          </h4>
-          <div className='flex justify-around'>
-            <StatCircle title={t('l_activity')} percentage={activityPct} />
-            <StatCircle title={t('h_round')} percentage={roundPct} />
+                  <div className='md:border-l md:border-b-light md:dark:border-b-dark-light md:pl-3'>
+                    <div className='flex items-center gap-2 pb-2 border-b border-b-light dark:border-b-dark-light'>
+                      <span className='vox-icon vx-icon-023 !text-primary !text-sm' />
+                      <span className='text-xs font-semibold text-gray-800 dark:text-gray-100'>
+                        {t('l_business_info')}
+                      </span>
+                    </div>
+
+                    <div className='pt-2 grid grid-cols-1 gap-2'>
+                      <FieldInline label={t('h_company')} value={companyName} />
+                      <FieldInline
+                        label={t('h_department')}
+                        value={department}
+                      />
+                      <div className='flex items-center justify-between gap-3 min-w-0'>
+                        <span className='text-[11px] font-semibold text-t-light-dark dark:text-t-dark whitespace-nowrap'>
+                          {t('h_date_start')}
+                        </span>
+                        <span className='text-xs text-gray-800 dark:text-gray-100 truncate'>
+                          <FormattedDate
+                            date={service?.contract?.startDate}
+                            format='datetime'
+                          />
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Stats horizontales */}
+            <div className='xl:col-span-2'>
+              <div className='h-full rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
+                <div className='flex items-center gap-2 pb-2 border-b border-b-light dark:border-b-dark-light'>
+                  <span className='vox-icon vx-icon-112 !text-primary !text-sm' />
+                  <span className='text-xs font-semibold text-gray-800 dark:text-gray-100'>
+                    {t('l_statistics')}
+                  </span>
+                </div>
+
+                <div className='pt-3 grid grid-cols-2 gap-3 items-center'>
+                  <div className='flex flex-col items-center gap-2'>
+                    <div className='text-[11px] font-semibold text-t-light-dark dark:text-t-dark text-center'>
+                      {t('h_activity')}
+                    </div>
+                    <div className='shrink-0'>
+                      <Gauge
+                        gauges={[{ progress: activityPct, color: 'teal' }]}
+                      />
+                    </div>
+                  </div>
+
+                  <div className='flex flex-col items-center gap-2'>
+                    <div className='text-[11px] font-semibold text-t-light-dark dark:text-t-dark text-center'>
+                      {t('h_round')}
+                    </div>
+                    <div className='shrink-0'>
+                      <Gauge gauges={[{ progress: roundPct, color: 'teal' }]} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </>
-  );
-};
-
-const StatCircle = ({
-  title,
-  percentage,
-}: {
-  title: string;
-  percentage: number;
-}) => {
-  return (
-    <div className='text-center'>
-      <div className='relative w-20 h-20 flex items-center justify-center'>
-        <svg className='w-20 h-20' viewBox='0 0 36 36'>
-          {/* <path
-            className="text-b-light-dark"
-            d="M18 2.0845a15.9155 15.9155 0 1 1 0 31.831"
-            fill="none"
-            strokeWidth="3"
-            stroke="currentColor"
-          />
-          <path
-            className="text-secondary"
-            d={`M18 2.0845a15.9155 15.9155 0 0 1 ${(percentage / 100) * 31.83} 26.5`}
-            fill="none"
-            strokeWidth="3"
-            stroke="currentColor"
-            strokeLinecap="round"
-          /> */}
-          <circle
-            cx='18'
-            cy='18'
-            r='16'
-            fill='none'
-            className='stroke-b-light-dark'
-            strokeWidth='2'
-          />
-          <circle
-            cx='18'
-            cy='18'
-            r='16'
-            fill='none'
-            className='stroke-secondary'
-            strokeWidth='2'
-            strokeDasharray='100'
-            strokeDashoffset={100 - percentage}
-            strokeLinecap='round'
-            transform='rotate(-90 18 18)'
-          />
-        </svg>
-        <span className='absolute text-base font-medium'>{percentage}%</span>
-      </div>
-      <p className='text mt-1'>{title}</p>
     </div>
   );
 };

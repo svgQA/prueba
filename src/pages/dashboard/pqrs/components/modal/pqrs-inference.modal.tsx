@@ -9,7 +9,6 @@ export interface IProps {
   pqrs: Signal<ICPqrsRequest | null>;
 }
 
-
 const PqrsInferenceModal = ({ pqrs }: IProps) => {
   const inferences = (pqrs.value as any)?.inferences || [];
 
@@ -66,7 +65,7 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
     'prioridad',
     'subarea',
     'area',
-    'clasificacion'
+    'clasificacion',
   ]);
 
   // Utilidad para presentar valores dinámicos
@@ -114,7 +113,9 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                   {data.title}
                 </h5>
                 {data.subtitle && (
-                  <p class='text-xs text-indigo-700 dark:text-indigo-200'>{data.subtitle}</p>
+                  <p class='text-xs text-indigo-700 dark:text-indigo-200'>
+                    {data.subtitle}
+                  </p>
                 )}
               </div>
             )}
@@ -169,7 +170,10 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                 return fv !== 'n/a' && fv !== 'null' && fv !== '';
               })
               .map(([key, value]) => (
-                <div key={key} class='flex flex-col gap-1.5 p-2.5 rounded-lg bg-b-light dark:bg-b-dark border border-gray-border/60 dark:border-b-dark-light'>
+                <div
+                  key={key}
+                  class='flex flex-col gap-1.5 p-2.5 rounded-lg bg-b-light dark:bg-b-dark border border-gray-border/60 dark:border-b-dark-light'
+                >
                   <span class='text-[11px] font-semibold text-gray-600 dark:text-b-light-dark capitalize'>
                     {key.replace(/_/g, ' ')}
                   </span>
@@ -187,8 +191,8 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                 ['alto', 'alta'].includes(String(data.severity).toLowerCase())
                   ? 'error'
                   : ['medio', 'media'].includes(
-                    String(data.severity).toLowerCase()
-                  )
+                        String(data.severity).toLowerCase()
+                      )
                     ? 'warning'
                     : 'success'
               }
@@ -233,7 +237,7 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
               value={Math.round((Number(data.confidence) || 0) * 100)}
               label='Confianza'
               showValue={true}
-              onChange={() => { }}
+              onChange={() => {}}
               disabled={true}
             />
           </div>

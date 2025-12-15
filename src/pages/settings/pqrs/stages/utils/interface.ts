@@ -1,4 +1,4 @@
-import { IResourceStage } from "./resoruce.interface";
+import { IResourceStage } from './resoruce.interface';
 
 export interface IStages {
   id?: number;

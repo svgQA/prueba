@@ -103,14 +103,16 @@ export const PqrsCards = ({
           onClick(pqrs.id, tags, area);
         }}
       >
-        <div
-          class='absolute inset-x-0 top-0 h-1 rounded-t-xl bg-gradient-to-r from-primary/12 via-secondary/10 to-ternary/12 dark:from-primary/18 dark:via-secondary/15 dark:to-ternary/18'
-        />
+        <div class='absolute inset-x-0 top-0 h-1 rounded-t-xl bg-gradient-to-r from-primary/12 via-secondary/10 to-ternary/12 dark:from-primary/18 dark:via-secondary/15 dark:to-ternary/18' />
 
         <div class='flex items-center justify-between text-[11px] uppercase tracking-wide text-gray-text-light dark:text-t-dark'>
           <div class='flex items-center gap-2'>
-            <span class={`w-2 h-2 rounded-full ${accentBgClass} shadow-inner`} />
-            <span class='font-semibold text-t-light dark:text-t-dark-light'>Estado</span>
+            <span
+              class={`w-2 h-2 rounded-full ${accentBgClass} shadow-inner`}
+            />
+            <span class='font-semibold text-t-light dark:text-t-dark-light'>
+              Estado
+            </span>
             <Badge
               label={pqrs.status}
               width='w-fit'

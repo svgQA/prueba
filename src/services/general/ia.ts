@@ -1,3 +1,4 @@
+/*
 import {
   IModelFile,
   IModelStatus,
@@ -5,17 +6,19 @@ import {
   IQueryResponse,
   ITenantModelStatus,
 } from '@/types/ia';
-import { BaseService, IRequestModelOutput } from '@/utils/network';
+*/
+import { BaseService } from '@/utils/network';
 import {
   IMakeRequest,
   REQUEST_METHODS,
   VoxServices,
 } from '@/utils/network/types';
-import { streamIAResponse } from '@/utils/network/sse/sse.post';
+// import { streamIAResponse } from '@/utils/network/sse/sse.post';
 
 export class IaService extends BaseService {
-  static name: VoxServices = 'ia';
+  static name: VoxServices = 'ai_pqrs';
 
+  /*
   static async create_model() {
     const model: IMakeRequest = {
       url: ['model'],
@@ -59,6 +62,7 @@ export class IaService extends BaseService {
     };
     return await super.make_request<IQueryResponse>(this.name, model);
   }
+  */
 
   static async upload_file(file: any) {
     const formData = new FormData();
@@ -72,6 +76,7 @@ export class IaService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
+  /*
   static async streamQuery(
     prompt: string,
     onData: (chunk: string) => void,
@@ -93,4 +98,5 @@ export class IaService extends BaseService {
       onError?.(error);
     }
   }
+  */
 }

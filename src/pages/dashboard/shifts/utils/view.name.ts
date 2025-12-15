@@ -1,0 +1,8 @@
+export enum VIEW_NAME {
+  TABLE,
+  CALENDAR,
+  SCHEDULER,
+  SUPERVISOR,
+  MAP,
+  PLANNER,
+}

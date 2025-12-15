@@ -248,10 +248,11 @@ export const PqrsPage: FunctionComponent = () => {
                 ].map((option) => (
                   <button
                     key={option.id}
-                    class={`px-4 py-2 text-sm font-medium rounded-full transition-all ${viewMode.value === option.id
-                      ? 'bg-primary text-white shadow-primary/25'
-                      : 'text-gray-text-light hover:text-t-light dark:text-t-dark'
-                      }`}
+                    class={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
+                      viewMode.value === option.id
+                        ? 'bg-primary text-white shadow-primary/25'
+                        : 'text-gray-text-light hover:text-t-light dark:text-t-dark'
+                    }`}
                     onClick={() => (viewMode.value = option.id as ViewMode)}
                   >
                     {option.label}
@@ -263,17 +264,25 @@ export const PqrsPage: FunctionComponent = () => {
 
           <div class='grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4'>
             <div class='rounded-xl border border-gray-border/60 dark:border-gray-border/20 bg-b-light dark:bg-b-dark/60 px-3 py-2 flex items-center justify-between'>
-              <span class='text-sm text-gray-text-light dark:text-t-dark'>Total casos</span>
-              <span class='text-lg font-semibold text-t-light dark:text-white'>{pqrs.value.length}</span>
+              <span class='text-sm text-gray-text-light dark:text-t-dark'>
+                Total casos
+              </span>
+              <span class='text-lg font-semibold text-t-light dark:text-white'>
+                {pqrs.value.length}
+              </span>
             </div>
             <div class='rounded-xl border border-gray-border/60 dark:border-gray-border/20 bg-b-light dark:bg-b-dark/60 px-3 py-2 flex items-center justify-between'>
-              <span class='text-sm text-gray-text-light dark:text-t-dark'>Actualizado</span>
+              <span class='text-sm text-gray-text-light dark:text-t-dark'>
+                Actualizado
+              </span>
               <span class='text-sm font-medium text-t-light dark:text-white'>
                 {lastUpdated.value ? lastUpdated.value.toLocaleString() : '--'}
               </span>
             </div>
             <div class='rounded-xl border border-gray-border/60 dark:border-gray-border/20 bg-b-light dark:bg-b-dark/60 px-3 py-2 flex items-center justify-between'>
-              <span class='text-sm text-gray-text-light dark:text-t-dark'>Vista</span>
+              <span class='text-sm text-gray-text-light dark:text-t-dark'>
+                Vista
+              </span>
               <span class='text-sm font-medium text-primary'>
                 {viewMode.value === ViewMode.CARDS
                   ? 'Tarjetas'

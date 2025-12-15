@@ -62,11 +62,23 @@ export const getColumns = (
       const { companies } = info.row.original;
       return (
         <div className='flex justify-center gap-1 flex-row'>
-          {companies.map((company) => (
-            <div key={company.id} className='flex items-center gap-2'>
-              <Avatar name={company.company.name} size='sm' square />
+          {companies.map((company, index) => {
+            if (index >= 3) return null;
+
+            return (
+              <div key={company.id} className='flex items-center gap-2'>
+                <Avatar name={company.company.name} size='sm' square />
+              </div>
+            );
+          })}
+
+          {companies.length > 3 && (
+            <div className='flex items-center justify-center'>
+              <div className='w-9 h-8 flex items-center justify-center rounded bg-gray-200 text-xs font-medium text-gray-600 dark:bg-b-dark-light dark:text-white'>
+                +{companies.length - 3}
+              </div>
             </div>
-          ))}
+          )}
         </div>
       );
     },

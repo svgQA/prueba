@@ -1,7 +1,7 @@
 import { type FunctionComponent } from 'preact';
 
 import { type ISidebarProps } from './interface';
-import { useEffect, useMemo } from 'preact/hooks';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 import { useLocation } from 'wouter';
 import { ButtonMenu } from '../button/menu/button';
 import {
@@ -11,6 +11,7 @@ import {
 import { useSignal } from '@preact/signals';
 import { MenuItem } from './menu';
 import { validateModuleState } from '@/store/signals/access/permission';
+import { Button } from '../button/button';
 
 export const Sidebar: FunctionComponent<ISidebarProps> = ({
   id,
@@ -19,10 +20,10 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   onHomeHandler,
   isNavigation = false,
   onHandlerClick,
-  isOpen = false,
 }: ISidebarProps) => {
   const [location, navigate] = useLocation();
   const menuSelected = useSignal<string | null>('');
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!getStatusSettingModal.value) {
@@ -73,13 +74,30 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
     [isNavigation, onHandlerClick]
   );
 
+  const toggleSidebar = (e: any) => {
+    e.preventDefault();
+    setSidebarOpen((prev) => !prev);
+  };
+
   return (
     <nav
       id={`${id}-nav`}
       className={`fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen dark:border-gray-700 z-20 bg-b-white dark:bg-b-dark-light max-w-16 min-w-16 transition-transform duration-200 ease-in-out ${
-        isOpen ? 'translate-x-0' : '-translate-x-full'
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } lg:translate-x-0`}
     >
+      <div className='w-full flex flex-row items-start px-10 absolute -right-11 top-2 lg:hidden'>
+        <Button
+          id='btn-toggle-menu'
+          name='btn-toggle-menu'
+          onClick={toggleSidebar}
+          square
+          borderless
+          icon='011'
+          aria-label='Toggle sidebar'
+          aria-expanded={isSidebarOpen}
+        />
+      </div>
       {onHomeHandler && (
         <ul className='flex flex-col items-center'>
           <span onClick={onHomeHandler} className='cursor-pointer'>

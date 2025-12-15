@@ -127,7 +127,10 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
             )}
             {pqrs.value?.startDate && (
               <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
-                fecha: {DateUtils.dateToFrontend(pqrs.value?.startDate, { format: 'DD/MM/YYYY', })}
+                fecha:{' '}
+                {DateUtils.dateToFrontend(pqrs.value?.startDate, {
+                  format: 'DD/MM/YYYY',
+                })}
               </span>
             )}
             {pqrs.value?.contactEmail && (
@@ -145,57 +148,56 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
       </div>
 
       {/**
-        * TODO: REFACTORIZAR ESTA PARTE PORQUE NO DEBE IR AQUI:
-      */}
-      {pqrs.value?.area && pqrs.value?.area.map((area) => (
-        <div class='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
-          <div class='flex items-start gap-2'>
-            <Badge
-              key={area.id}
-              label={area.name}
-              status='warning'
-              size='sm'
-              outline
-              width='w-fit'
-            />
-          </div>
-
-          {area.subarea && (
+       * TODO: REFACTORIZAR ESTA PARTE PORQUE NO DEBE IR AQUI:
+       */}
+      {pqrs.value?.area &&
+        pqrs.value?.area.map((area) => (
+          <div class='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
             <div class='flex items-start gap-2'>
               <Badge
-                key={area?.subarea?.id}
-                label={area?.subarea?.name}
+                key={area.id}
+                label={area.name}
                 status='warning'
                 size='sm'
                 outline
                 width='w-fit'
               />
             </div>
-          )}
 
-          <div class='flex items-start gap-2'>
-            <Button
-              name='btn-click-ots'
-              label='create OTS'
-              onClick={() => handleCreateOts(pqrs.value?.id!!)}
-              className='!bg-secondary/15 !text-secondary hover:!bg-secondary/25'
-            />
+            {area.subarea && (
+              <div class='flex items-start gap-2'>
+                <Badge
+                  key={area?.subarea?.id}
+                  label={area?.subarea?.name}
+                  status='warning'
+                  size='sm'
+                  outline
+                  width='w-fit'
+                />
+              </div>
+            )}
+
+            <div class='flex items-start gap-2'>
+              <Button
+                name='btn-click-ots'
+                label='create OTS'
+                onClick={() => handleCreateOts(pqrs.value?.id!!)}
+                className='!bg-secondary/15 !text-secondary hover:!bg-secondary/25'
+              />
+            </div>
           </div>
+        ))}
+
+      {pqrs.value?.extraData?.observation && (
+        <div class='mb-3 pb-3 border-b border-gray-border/70 dark:border-b-dark-light'>
+          <TextEllipsis
+            text={pqrs.value.extraData.observation}
+            maxWidth='100%'
+            lines={3}
+            className='text-sm text-gray-text-light dark:text-b-light-dark leading-relaxed'
+          />
         </div>
-      ))}
-
-      {
-        pqrs.value?.extraData?.observation && (
-          <div class='mb-3 pb-3 border-b border-gray-border/70 dark:border-b-dark-light'>
-            <TextEllipsis
-              text={pqrs.value.extraData.observation}
-              maxWidth='100%'
-              lines={3}
-              className='text-sm text-gray-text-light dark:text-b-light-dark leading-relaxed'
-            />
-          </div>
-        )
-      }
+      )}
       {/* Mover badges al final para que no queden junto al título */}
       <div class='flex items-start gap-2 flex-wrap'>
         {pqrs.value?.extraData?.pqrsType && (
@@ -217,7 +219,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
           />
         )}
       </div>
-    </div >
+    </div>
   );
 
   return (
@@ -273,10 +275,11 @@ const TabInformation = ({ tabs, children, activeTab }: ITabProp) => (
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            class={`px-3 py-2 text-sm font-medium rounded-xl transition-colors border ${activeTab.value === tab.id
-              ? 'bg-primary text-white border-primary shadow-md'
-              : 'bg-white/80 dark:bg-b-dark/80 border-transparent text-gray-text-light dark:text-b-light-dark hover:border-gray-border/60 dark:hover:border-b-dark-light hover:text-t-light'
-              }`}
+            class={`px-3 py-2 text-sm font-medium rounded-xl transition-colors border ${
+              activeTab.value === tab.id
+                ? 'bg-primary text-white border-primary shadow-md'
+                : 'bg-white/80 dark:bg-b-dark/80 border-transparent text-gray-text-light dark:text-b-light-dark hover:border-gray-border/60 dark:hover:border-b-dark-light hover:text-t-light'
+            }`}
             onClick={() => (activeTab.value = tab.id)}
           >
             <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>

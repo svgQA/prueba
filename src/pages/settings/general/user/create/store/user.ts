@@ -15,7 +15,6 @@ const buildInitUser = (): IUserRequest => ({
   email: '',
   externalId: '',
   externalPlatformId: '',
-  image: '',
   phone: '',
   cardId: '',
   cardType: undefined,

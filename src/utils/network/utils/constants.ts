@@ -1,8 +1,7 @@
 import {
   ai_pqrs_service_url,
   default_service_url,
-  ia_service_url,
-  report_service_url,
+  latitude_service_url,
   tenant_service_url,
 } from '@/env.config';
 
@@ -13,9 +12,8 @@ export const VOX_DEFAULT_PATH = {
 
 export const VOS_SERVICES = {
   tenants: tenant_service_url,
-  report: report_service_url,
-  ia: ia_service_url,
   shift: default_service_url,
+  report: latitude_service_url,
   auth: default_service_url,
   form: default_service_url,
   memo: default_service_url,

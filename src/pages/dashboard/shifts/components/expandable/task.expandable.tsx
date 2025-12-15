@@ -134,7 +134,13 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
                               border-gray-200 dark:border-b-dark-dark
                               bg-gray-50 dark:bg-b-dark text-gray-700 dark:text-gray-300'
                   >
+                    <Gauge
+                      size={20}
+                      gauges={[{ progress: overallProgress, color: 'teal' }]}
+                    />
+                    {/*
                     <Gauge progress={overallProgress} size={20} color='teal' />
+                    */}
                     <p className='text-sm text-gray-600 dark:text-gray-400 mt-2 text-center'>
                       {t('l_overall')}
                     </p>

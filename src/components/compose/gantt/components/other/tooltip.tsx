@@ -203,7 +203,13 @@ export const StandardTooltipContent = ({
               </p>
             </div>
           )}
+          <Gauge
+            size={14}
+            gauges={[{ progress: task.progress, color: 'red' }]}
+          />
+          {/*
           <Gauge progress={task.progress} color='red' />
+          */}
         </div>
       </div>
     </div>
