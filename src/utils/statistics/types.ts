@@ -15,7 +15,10 @@ export type ShiftStatisticsData = {
   serviceId: number;
   pointsAmount?: number | null;
   frequency?: number | null;
+  // NO VIENE DESDE BACKEND: Agregado en metrica
   roundPctTime?: number;
+  active?: boolean;
+  risk?: number;
 };
 
 export enum MetricStatus {

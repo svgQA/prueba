@@ -1,7 +1,5 @@
-/* WebSocket: actualiza shifts localmente para UPDATE y refetch en CREATE. */
+/* WEBSOCKET: actualiza shifts localmente para UPDATE y refetch en CREATE. */
 import { useEffect } from 'preact/hooks';
-import { Signal } from '@preact/signals';
-import { IShiftResponse } from '@/types/shift/activity';
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import {
   InSocketMessage,
@@ -10,18 +8,16 @@ import {
   MessageEvent,
   MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
-import { rawDataManager } from '@/utils/statistics/data.manager';
-import { metricsEngine } from '@/utils/statistics/metric.engine';
-import { ShiftStatisticsData } from '@/utils/statistics/types';
+import { setSignalShifts, signalShifts } from '@/store/signals/shift';
+import { IShiftResponse } from '@/types/shift/activity';
 
 type DateRangeFilters = { [key: string]: [string, string] } | null;
 
 export function useShiftSocket(params: {
-  shifts: Signal<IShiftResponse[]>;
   dateRangeFilters: DateRangeFilters;
   onCreate: (range: DateRangeFilters) => void;
 }) {
-  const { shifts, dateRangeFilters, onCreate } = params;
+  const { dateRangeFilters, onCreate } = params;
 
   useEffect(() => {
     const handleMessage = (event: InSocketMessage<MessageEvent>) => {
@@ -34,26 +30,32 @@ export function useShiftSocket(params: {
         const _model = message as IShiftResponse;
         if (!_model || !_model.id) return;
 
-        const idx = shifts.value.findIndex(
-          (s) => Number(s.id) === Number(_model.id)
-        );
-        if (idx < 0) return;
-        const copy = shifts.value.slice();
-
-        copy[idx] = message;
-        shifts.value = copy;
-
-        const model: Partial<ShiftStatisticsData> = {
-          start: _model.start,
-          end: _model.end,
-          status: _model.status,
-          hasCheckIn: !!_model.checkIn,
-          hasCheckOut: !!_model.checkOut,
-          roundPct: _model.roundPct,
-          activityPct: _model.activityPct,
-        };
-        rawDataManager.updateOne(_model.id, model);
-        metricsEngine.recalculate();
+        setSignalShifts(_model);
+        {
+          /**
+           * OLD: Actualizar datos viejos desde
+           */
+          // const idx = shifts.value.findIndex(
+          //   (s) => Number(s.id) === Number(_model.id)
+          // );
+          // if (idx < 0) return;
+          // const copy = shifts.value.slice();
+          //
+          // copy[idx] = message;
+          // shifts.value = copy;
+          //
+          // const model: Partial<ShiftStatisticsData> = {
+          //   start: _model.start,
+          //   end: _model.end,
+          //   status: _model.status,
+          //   hasCheckIn: !!_model.checkIn,
+          //   hasCheckOut: !!_model.checkOut,
+          //   roundPct: _model.roundPct,
+          //   activityPct: _model.activityPct,
+          // };
+          // rawDataManager.updateOne(_model.id, model);
+          // metricsEngine.recalculate();
+        }
       }
 
       if (name === SOCKET_MESSAGE_EVENTS.CREATE) {
@@ -73,5 +75,5 @@ export function useShiftSocket(params: {
         MESSAGE_LISTENERS.SHIFTS
       );
     };
-  }, [dateRangeFilters, onCreate, shifts]);
+  }, [dateRangeFilters, onCreate, signalShifts]);
 }
