@@ -203,6 +203,10 @@ export interface IShiftResponse {
   timeBefore: number;
   promedio: number;
   resource: any[];
+  // Agregados desde metrics
+  active?: boolean;
+  roundPctTime?: number;
+  risk?: number;
 }
 
 interface ITaskHistory {

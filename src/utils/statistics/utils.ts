@@ -12,6 +12,10 @@ export function classifyStatus(
 export function toPercent(active: number, total: number, decimals = 0): number {
   if (total <= 0) return 0;
   const raw = (active / total) * 100;
+  return toRound(raw, decimals);
+}
+
+export function toRound(value: number, decimals: number) {
   const f = Math.pow(10, decimals);
-  return Math.round(raw * f) / f;
+  return Math.round(value * f) / f;
 }

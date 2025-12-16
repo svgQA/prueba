@@ -9,20 +9,21 @@ import {
 } from '@/services';
 import { UserService } from '@/services/general/user';
 import { MentionOption } from '@/components/common/mention-editor';
-import { IShiftResponse } from '@/types/shift/activity';
+// import { IShiftResponse } from '@/types/shift/activity';
 import {
   withShiftNotifications,
   hasUsersWithPlayerIdFromShifts,
 } from '../notification';
+import { signalShifts } from '@/store/signals/shift';
 
 type DateRangeFilters = { [key: string]: [string, string] } | null;
 
 export function useShiftsData(params: {
-  shifts: Signal<IShiftResponse[]>;
+  // shifts: Signal<IShiftResponse[]>;
   loading: Signal<boolean>;
   notificationValidate: Signal<boolean>;
 }) {
-  const { shifts, loading, notificationValidate } = params;
+  const { loading, notificationValidate } = params;
 
   const [services, setServices] = useState<MentionOption[]>([]);
   const [users, setUsers] = useState<MentionOption[]>([]);
@@ -49,7 +50,7 @@ export function useShiftsData(params: {
       if (shiftsResponse && shiftsResponse.getStatus()) {
         const normalized = withShiftNotifications(shiftsResponse.getMany());
         notificationValidate.value = normalized.hasSomeNotifications;
-        shifts.value = normalized.shifts;
+        signalShifts.value = normalized.shifts;
 
         const fallbackHasValid = hasUsersWithPlayerIdFromShifts(
           normalized.shifts
@@ -65,7 +66,7 @@ export function useShiftsData(params: {
 
       loading.value = false;
     },
-    [loading, notificationValidate, shifts]
+    [loading, notificationValidate]
   );
 
   return {

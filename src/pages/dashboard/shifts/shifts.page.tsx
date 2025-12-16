@@ -38,6 +38,7 @@ import { useShiftModals } from './utils/hooks/useShiftModal';
 import { useShiftActions } from './utils/hooks/useShiftAction';
 import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
 import { signalMetrics } from '@/store/signals/metric';
+import { signalShifts } from '@/store/signals/shift';
 
 export const ShiftsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -48,7 +49,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   const showShiftModal = useSignal(false);
 
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
-  const shifts = useSignal<IShiftResponse[]>([]);
+  // const shifts = useSignal<IShiftResponse[]>([]);
   const loading = useSignal(false);
 
   const [isChecked, setIsChecked] = useState(true);
@@ -85,18 +86,20 @@ export const ShiftsPage: FunctionalComponent = () => {
   }, []);
 
   const { services, users, hasValidPlayer, fetchInitialData } = useShiftsData({
-    shifts,
     loading,
     notificationValidate,
   });
 
-  useEffect(() => {
+  const reloadData = () => {
     if (!selectedCompany) return;
     fetchInitialData(dateRangeFilters);
+  };
+
+  useEffect(() => {
+    reloadData();
   }, [dateRangeFilters, fetchInitialData, selectedCompany]);
 
   useShiftSocket({
-    shifts,
     dateRangeFilters,
     onCreate: fetchInitialData,
   });
@@ -123,7 +126,6 @@ export const ShiftsPage: FunctionalComponent = () => {
   });
 
   const { onClickAction, checkItem, handleTaskDelete } = useShiftActions({
-    shifts,
     openUpsert: () => {
       toggleUpsertModal();
     },
@@ -219,6 +221,13 @@ export const ShiftsPage: FunctionalComponent = () => {
           onClick={() => handleViewChange(VIEW_NAME.MAP)}
           selected={currentView.value === VIEW_NAME.MAP}
           icon='103'
+        />
+        <Button
+          name='button-reload-data'
+          onClick={() => reloadData()}
+          transparent
+          borderless
+          icon='138'
         />
 
         <div className='relative'>
@@ -402,7 +411,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     >
       {currentView.value === VIEW_NAME.TABLE && (
         <Table<IShiftResponse>
-          data={shifts.value}
+          data={signalShifts.value}
           columns={getColumns(onClickAction)}
           pageSize={20}
           selectable

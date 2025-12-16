@@ -1,6 +1,7 @@
 import { ShiftService } from '@/services/shift';
 import type { ShiftStatisticsData } from './types';
 import {
+  idbDeleteByCompany,
   idbDeleteById,
   idbGetByCompany,
   idbUpsertMany,
@@ -31,29 +32,29 @@ class RawDataManager {
     const isStale = !last || now - last >= RAW_TTL_MS;
 
     if (!isStale) {
-      console.log('[MC] cached');
       const cached = await idbGetByCompany(company);
       this.setActive(cached);
       this.active = true;
+      console.log('[MC] cached: ', company, cached.length);
       return cached;
     }
 
-    console.log('[MC] backend');
     const res = await ShiftService.statistics();
     if (!res.getStatus()) {
       const cached = await idbGetByCompany(company);
       this.setActive(cached);
       this.active = true;
+      console.log('[MC] cached: ', company, cached.length);
       return cached;
     }
 
-    const list = (res.getMany() as ShiftStatisticsData[]).filter(
-      (s) => s.companyId === company
-    );
+    await idbDeleteByCompany(company);
 
+    const list = res.getMany();
     await idbUpsertMany(list);
     this.setActive(list);
     this.active = true;
+    console.log('[MC] backend: ', company, list.length);
     localStorage.setItem(lastSyncKey(company), String(now));
     return list;
   }
