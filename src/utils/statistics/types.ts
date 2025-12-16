@@ -18,6 +18,7 @@ export type ShiftStatisticsData = {
   // NO VIENE DESDE BACKEND: Agregado en metrica
   roundPctTime?: number;
   active?: boolean;
+  risk?: number;
 };
 
 export enum MetricStatus {

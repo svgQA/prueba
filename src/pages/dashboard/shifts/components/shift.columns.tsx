@@ -30,11 +30,15 @@ export const getColumns = (
       enableGrouping: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {
-        const { employee } = info.row.original;
+        const { employee, active, risk } = info.row.original;
         const name = `${employee?.name} ${employee?.surname}`;
         return (
           <div className='flex items-center gap-2 w-[250px]'>
-            <Avatar name={employee?.name} size='sm' square />
+            <span
+              className={`min-h-10 min-w-10 max-w-10 max-h-10 rounded flex justify-center items-center ${active ? 'bg-teal-700' : 'bg-transparent'}`}
+            >
+              {active && <p className='text-xs font-bold'>{risk}%</p>}
+            </span>
             <span
               className='p-1 size-sm cursor-pointer text-left'
               onClick={() => info.row.toggleExpanded()}
@@ -261,7 +265,8 @@ export const getColumns = (
       header: 'h_round',
       meta: { headerAlign: 'center' },
       cell: (info: any) => {
-        const { roundPct, service } = info.row.original as IShiftResponse;
+        const { roundPct, service, roundPctTime } = info.row
+          .original as IShiftResponse;
         let progressColor = '#E05858';
 
         if (roundPct >= 30 && roundPct < 70) {
@@ -277,7 +282,7 @@ export const getColumns = (
                 size={10}
                 gauges={[
                   { progress: roundPct, color: progressColor },
-                  { progress: 0, color: 'green' },
+                  { progress: roundPctTime || 0, color: 'teal' },
                 ]}
               />
             )}

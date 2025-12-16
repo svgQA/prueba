@@ -2,9 +2,9 @@ import dayjs from 'dayjs';
 import { rawDataManager } from './data.manager';
 import { ShiftStatisticsData } from './types';
 import { defaultThresholds, riskThresholds, roundThresholds } from './constant';
-import { classifyStatus, toPercent } from './utils';
+import { classifyStatus, toPercent, toRound } from './utils';
 import { setSignalMetric } from '@/store/signals/metric';
-import { setSignalShifts } from '@/store/signals/shift';
+import { setSignalMetricShifts } from '@/store/signals/shift';
 
 class MetricsEngine {
   private timer: number | null = null;
@@ -30,11 +30,6 @@ class MetricsEngine {
      * Sirve para intervención inmediata.
      */
     let shiftsAtRisk = 0;
-    const shiftsAtRiskRaw: Array<{
-      shiftId: number;
-      employeeId: number;
-      minutesLeft: number;
-    }> = [];
 
     /**
      * METRIC (ROUND RAW):
@@ -56,12 +51,16 @@ class MetricsEngine {
       const endMs = dayjs.utc(s.end).valueOf();
 
       let active = false;
-      let roundPctTime = -1;
+      let roundPctTime = 0;
+      let risk = 0;
 
       if (startMs <= nowMs && nowMs < endMs) {
         totalShifts++;
         active = true;
 
+        const duration = Math.max(1, endMs - startMs);
+        const elapsed = Math.max(0, Math.min(nowMs - startMs, duration));
+        const timeRatio = Math.max(0, Math.min(elapsed / duration, 1));
         /**
          * METRIC: Shifts
          */
@@ -78,14 +77,11 @@ class MetricsEngine {
          * METRIC (RISK): Shifts at risk
          * Turnos sin check-in y a menos de 30 minutos de finalizar
          */
-        const minutesLeft = (endMs - nowMs) / 60000;
-        if (!s.hasCheckIn && minutesLeft <= 30) {
-          shiftsAtRisk++;
-          shiftsAtRiskRaw.push({
-            shiftId: s.id,
-            employeeId: s.employeeId,
-            minutesLeft: Math.round(minutesLeft),
-          });
+        if (!s.hasCheckIn) {
+          risk = toRound(timeRatio * 100, 0);
+          if (risk >= 70) {
+            shiftsAtRisk++;
+          }
         }
 
         /**
@@ -94,10 +90,6 @@ class MetricsEngine {
          * (roundId > 0), independientemente de si hicieron check-in.
          */
         if (s.roundId && s.roundId > 0) {
-          const duration = Math.max(1, endMs - startMs);
-          const elapsed = Math.max(0, Math.min(nowMs - startMs, duration));
-          const timeRatio = Math.max(0, Math.min(elapsed / duration, 1));
-
           roundPctTime = timeRatio * 100;
 
           const totalPoints = (s.pointsAmount ?? 0) * (s.frequency ?? 0);
@@ -116,7 +108,7 @@ class MetricsEngine {
         }
       }
 
-      raw[i] = { ...raw[i], roundPctTime, active };
+      raw[i] = { ...raw[i], roundPctTime, active, risk };
     }
 
     /**
@@ -224,7 +216,7 @@ class MetricsEngine {
     };
 
     setSignalMetric(metric);
-    setSignalShifts(raw);
+    setSignalMetricShifts(raw);
     rawDataManager.setActive(raw);
   }
 
@@ -234,7 +226,7 @@ class MetricsEngine {
     this.compute(raw);
   }
 
-  connect(intervalMs = 0.2 * 60 * 1000) {
+  connect(intervalMs = 1 * 60 * 1000) {
     if (this.timer) return; // window.clearInterval(this.timer);
     this.timer = window.setInterval(() => this.recalculate(), intervalMs);
   }

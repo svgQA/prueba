@@ -172,7 +172,6 @@ export interface IShiftResponse {
   report: IReport[];
   bane;
   task: TaskItemShift[];
-  active?: boolean;
   checkIn: {
     time: string;
     location: {
@@ -204,6 +203,10 @@ export interface IShiftResponse {
   timeBefore: number;
   promedio: number;
   resource: any[];
+  // Agregados desde metrics
+  active?: boolean;
+  roundPctTime?: number;
+  risk?: number;
 }
 
 interface ITaskHistory {
