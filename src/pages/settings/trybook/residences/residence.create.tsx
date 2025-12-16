@@ -12,6 +12,7 @@ import { IOption } from '@/components/common/multi/interface';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
+import { useTranslation } from 'react-i18next'; 
 
 import { PlaceService } from '@/services';
 import { UserService } from '@/services/general/user';
@@ -22,22 +23,15 @@ import { ISiteCreate } from '@/types/trybook/sites';
 type SiteType = 'HOUSE' | 'APARTMENT' | 'OFFICE';
 
 interface FormData {
-  type?: IOption; // { value: 'HOUSE'|'APARTMENT'|'OFFICE' }
+  type?: IOption;
   houseNumber: string;
   block?: string;
   floor?: number;
-  placeId?: IOption; // { value, label, type: 'INDUSTRIAL'|'RESIDENTIAL' }
-  clientCompanyId?: IOption; // requerido si OFFICE
-  userId?: IOption; // NO TOCAR
+  placeId?: IOption; 
+  clientCompanyId?: IOption; 
+  userId?: IOption;
 }
 
-const TYPE_OPTIONS: IOption[] = [
-  { value: 'HOUSE', label: 'Casa' },
-  { value: 'APARTMENT', label: 'Apartamento' },
-  { value: 'OFFICE', label: 'Oficina' },
-];
-
-/** Asegura que cada opción tenga `.type` plano (sin usar meta) */
 const normalizePlaces = (arr: IOption[]): IOption[] =>
   (arr || []).map((o: any) => ({ ...o, type: o?.type }));
 
@@ -46,25 +40,29 @@ const isIndustrialOpt = (opt?: IOption | null) =>
   !!opt && (opt as any).type === 'INDUSTRIAL';
 
 export const SiteCreatePage: FunctionComponent = () => {
+  const { t } = useTranslation(); 
   const { go } = useNavigation();
   const { uuid } = useParams<{ uuid?: string }>();
   const { selectedCompany } = useUserStore();
 
-  // data
+  const typeOptions: IOption[] = [
+    { value: 'HOUSE', label: t('l_house') },
+    { value: 'APARTMENT', label: t('l_apartment') },
+    { value: 'OFFICE', label: t('l_office') },
+  ];
+
   const allPlaces: Signal<IOption[]> = useSignal([]);
-  const places: Signal<IOption[]> = useSignal([]); // FILTRADAS para el selector activo
+  const places: Signal<IOption[]> = useSignal([]); 
   const users: Signal<IOption[]> = useSignal([]);
   const clients: Signal<IOption[]> = useSignal([]);
 
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const loading = useSignal<boolean>(false);
 
-  // --- loaders ---
   const loadAllPlaces = useCallback(async () => {
     const req = await PlaceService.getSimpleList();
     if (req.getStatus()) {
       allPlaces.value = normalizePlaces(req.getMany());
-      // por defecto (no oficina) dejamos residenciales
       places.value = allPlaces.value.filter(
         (p: any) => p.type === 'RESIDENTIAL'
       );
@@ -90,7 +88,6 @@ export const SiteCreatePage: FunctionComponent = () => {
       );
       return;
     }
-    // fallback: si algo falla, no mostramos nada (mejor que mezclar residenciales)
     places.value = [];
   }, []);
 
@@ -101,14 +98,13 @@ export const SiteCreatePage: FunctionComponent = () => {
     if (!req.getStatus()) return (loading.value = false);
     const model = req.getOne();
 
-    // si es OFFICE, primero cargar places del cliente (industriales)
     if (model.type === 'OFFICE' && (model as any)?.clientCompanyId) {
       await loadClientPlaces(Number((model as any).clientCompanyId));
     }
 
     initialValues.value = {
       type: model.type
-        ? (TYPE_OPTIONS.find((o) => o.value === model.type) ?? {
+        ? (typeOptions.find((o) => o.value === model.type) ?? { 
             value: model.type,
             label: model.type,
           })
@@ -120,7 +116,7 @@ export const SiteCreatePage: FunctionComponent = () => {
         ? {
             value: model.placeId,
             label: model.place?.name ?? String(model.placeId),
-            type: (model as any)?.place?.type, // viene directo del backend
+            type: (model as any)?.place?.type, 
           }
         : undefined,
       clientCompanyId: (model as any)?.clientCompanyId
@@ -131,7 +127,6 @@ export const SiteCreatePage: FunctionComponent = () => {
               String((model as any).clientCompanyId),
           }
         : undefined,
-      // NO TOCAR user
       userId: (model as any)?.userId
         ? {
             value: (model as any).userId,
@@ -226,24 +221,20 @@ export const SiteCreatePage: FunctionComponent = () => {
           const isApartment = values.type?.value === 'APARTMENT';
           const isOffice = values.type?.value === 'OFFICE';
 
-          // Cuando cambia TYPE, actualizamos la lista de places a partir de .type
           const handleTypeChange = async (opt?: IOption) => {
             form.change('type', opt);
             form.change('placeId', undefined);
             form.change('clientCompanyId', undefined);
 
             if (opt?.value === 'OFFICE') {
-              // Espera cliente para cargar places industriales
               places.value = [];
             } else {
-              // Solo residenciales
               places.value = allPlaces.value.filter(
                 (p: any) => p.type === 'RESIDENTIAL'
               );
             }
           };
 
-          // Cuando cambia CLIENTE, cargamos lugares industriales de ese cliente
           const handleClientChange = async (opt?: IOption) => {
             form.change('clientCompanyId', opt);
             form.change('placeId', undefined);
@@ -281,10 +272,10 @@ export const SiteCreatePage: FunctionComponent = () => {
                         {...input}
                         meta={meta}
                         placeholder='p_select_type'
-                        label='Tipo de sitio'
+                        label={t('l_site_type') || 'Tipo de sitio'} 
                         id='type'
                         icon='home'
-                        options={TYPE_OPTIONS}
+                        options={typeOptions} 
                         disabled={loading.value}
                         onChange={handleTypeChange}
                       />
@@ -292,7 +283,6 @@ export const SiteCreatePage: FunctionComponent = () => {
                   </Field>
                 </div>
 
-                {/* Bloque */}
                 <div className='col-span-2'>
                   <Field<string> name='block'>
                     {({ input, meta }) => (
@@ -307,7 +297,6 @@ export const SiteCreatePage: FunctionComponent = () => {
                   </Field>
                 </div>
 
-                {/* Piso (solo APARTMENT) */}
                 <div className='col-span-2'>
                   <Field<number> name='floor'>
                     {({ input, meta }) => (
@@ -325,15 +314,14 @@ export const SiteCreatePage: FunctionComponent = () => {
                           typeof input.value === 'number'
                             ? input.value
                             : isApartment
-                              ? ''
-                              : 0
+                            ? ''
+                            : 0
                         }
                       />
                     )}
                   </Field>
                 </div>
 
-                {/* Número */}
                 <div className='col-span-2'>
                   <Field<string> name='houseNumber' validate={required}>
                     {({ input, meta }) => (
@@ -352,7 +340,6 @@ export const SiteCreatePage: FunctionComponent = () => {
                   </Field>
                 </div>
 
-                {/* Cliente (solo OFFICE) */}
                 {isOffice && (
                   <div className='col-span-2'>
                     <Field<IOption> name='clientCompanyId' validate={required}>
@@ -372,8 +359,6 @@ export const SiteCreatePage: FunctionComponent = () => {
                     </Field>
                   </div>
                 )}
-
-                {/* Place (en OFFICE se habilita tras cliente) */}
                 <div className='col-span-2'>
                   <Field<IOption> name='placeId' validate={required}>
                     {({ input, meta }) => (
@@ -390,8 +375,6 @@ export const SiteCreatePage: FunctionComponent = () => {
                     )}
                   </Field>
                 </div>
-
-                {/* Usuario (NO TOCAR) */}
                 <div className='col-span-2'>
                   <Field<IOption> name='userId' validate={required}>
                     {({ input, meta }) => (

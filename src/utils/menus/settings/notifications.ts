@@ -16,7 +16,7 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
   menus: [
     /*
     {
-      icon: '050',
+      icon: '049',
       label: 'm_programmed',
       description: 'd_programmed',
       base,
@@ -26,7 +26,7 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
     },
     */
     {
-      icon: '040',
+      icon: '151',
       label: 'm_template',
       description: 'd_template',
       base,

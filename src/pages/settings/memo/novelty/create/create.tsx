@@ -20,6 +20,7 @@ import {
 // import { Checkbox } from '@/components/common/checkbox/checkbox';
 import { Section } from '@/components/common/section/section';
 import { Switch } from '@/components/common/switch/switch';
+import { useTranslation } from 'react-i18next';
 interface FormData {
   name: string;
   description: string;
@@ -34,6 +35,7 @@ export const selectPriority: IOption[] = [
 ];
 
 export const NoveltyCreateSettingPage: FunctionComponent = () => {
+  const { t } = useTranslation();
   const { go } = useNavigation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const { id } = useParams(); // Obtiene el id de la URL
@@ -178,7 +180,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                       {...input}
                       min='3'
                       max='300'
-                      placeholder='Ingrese Descripción...'
+                      placeholder={t('p_enter_description')}
                       label='description'
                       type='text'
                       rows={2}

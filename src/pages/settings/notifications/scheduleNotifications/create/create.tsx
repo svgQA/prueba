@@ -13,9 +13,7 @@ import { useUserStore } from '@/store/slices';
 import { useSignal } from '@preact/signals';
 import { Section } from '@/components/common/section/section';
 
-
 export const ScheduledNotificationForm = () => {
-  
   const [templates, setTemplates] = useState<IOption[]>([]);
   const [pendingSubmission, setPendingSubmission] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -157,15 +155,15 @@ export const ScheduledNotificationForm = () => {
             <div className='flex justify-end gap-4 absolute top-14 right-2'>
               <Button
                 name='cancel-create-scheduled'
-                label='cancel'
+                label={t('cancel')}
                 icon='023'
                 onClick={redirectToList}
               />
               <Button
                 name='submit-create-scheduled'
-                label='save'
+                label={t('save')}
                 type='submit'
-                icon='022'
+                icon='146' 
                 disabled={pendingSubmission}
               />
             </div>
@@ -174,7 +172,8 @@ export const ScheduledNotificationForm = () => {
               name='overrideTitle'
               type='text'
               label='h_name'
-              placeholder='Ingrese el título de la notificación...'
+              placeholder={t('p_notification_title')}
+              icon='122'
               value={values.overrideTitle || ''}
               onChange={(e) => (values.overrideTitle = e.currentTarget.value)}
             />
@@ -184,6 +183,7 @@ export const ScheduledNotificationForm = () => {
               name='overrideDescription'
               label='description'
               placeholder='p_write'
+              icon='122' 
               value={values.overrideDescription || ''}
               onChange={(e: any) =>
                 (values.overrideDescription = e.currentTarget.value)
@@ -194,7 +194,8 @@ export const ScheduledNotificationForm = () => {
               id='sendAtInput'
               name='sendAt'
               type='datetime-local'
-              label='Fecha de Inicio *'
+              label={t('h_date_start')}
+              icon='342' 
               value={values.sendAt || ''}
               onChange={(e) => (values.sendAt = e.currentTarget.value)}
             />
@@ -203,7 +204,8 @@ export const ScheduledNotificationForm = () => {
               id='repeatUntilInput'
               name='repeatUntil'
               type='datetime-local'
-              label='Fecha de Finalización *'
+              label={t('h_date_end')} 
+              icon='342' 
               value={values.repeatUntil || ''}
               onChange={(e) => (values.repeatUntil = e.currentTarget.value)}
             />
@@ -212,9 +214,10 @@ export const ScheduledNotificationForm = () => {
               id='repeatEveryMinutes'
               name='repeatEveryMinutes'
               type='number'
-              label='Intervalo de Repetición'
+              label={t('h_repeat_interval')}
               placeholder='Ej: 30'
               min={1}
+              icon='135'
               value={values.repeatEveryMinutes || ''}
               onChange={(e) =>
                 (values.repeatEveryMinutes = e.currentTarget.value)
@@ -225,9 +228,10 @@ export const ScheduledNotificationForm = () => {
               id='maxRepeats'
               name='maxRepeats'
               type='number'
-              label='Máximo de Repeticiones'
+              label={t('h_max_repeats')}
               placeholder='Ej: 5'
               min={1}
+              icon='135' 
               value={values.maxRepeats || ''}
               onChange={(e) => (values.maxRepeats = e.currentTarget.value)}
             />
@@ -237,10 +241,12 @@ export const ScheduledNotificationForm = () => {
                 id='templateSelector'
                 name='templateId'
                 options={templates}
-                placeholder='Selecciona una plantilla...'
+                placeholder={t('p_select_template')}
+                icon='068' 
                 value={
-                  templates.find((t) => t.value === values.templateId?.value) ||
-                  undefined
+                  templates.find(
+                    (t) => t.value === values.templateId?.value
+                  ) || undefined
                 }
                 onChange={(option) => {
                   values.templateId = option || '';

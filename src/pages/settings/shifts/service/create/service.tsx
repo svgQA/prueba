@@ -242,6 +242,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       placeholder='p_name'
                       label='l_name'
                       type='text'
+                      icon='122' // Lápiz
                       meta={meta}
                       disabled={loading.value}
                     />
@@ -258,7 +259,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       placeholder='p_contract'
                       label='l_contract'
                       id='contractId'
-                      icon='241'
+                      icon='068' // Documento
                       options={projects.value}
                       disabled={loading.value}
                     />
@@ -275,7 +276,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       placeholder='p_select_place'
                       label='l_place'
                       id='placeId'
-                      icon='252'
+                      icon='321' // Pin Mapa
                       options={places.value}
                       disabled={loading.value}
                     />
@@ -291,7 +292,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       placeholder='p_select_round'
                       label='l_round'
                       id='roundId'
-                      icon='252'
+                      icon='135' // Ciclo/Ronda
                       options={rounds.value}
                       disabled={loading.value}
                     />
@@ -309,6 +310,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       placeholder='p_element_description'
                       label='description'
                       type='text'
+                      icon='122' // Lápiz
                       meta={meta}
                       disabled={loading.value}
                     />
@@ -324,6 +326,7 @@ export const ServiceCreateSettingPage: FunctionComponent = () => {
                       meta={meta}
                       options={schedules.value}
                       id='schedules'
+                      icon='342' // Calendario
                     />
                   )}
                 </Field>

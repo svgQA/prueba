@@ -17,6 +17,7 @@ interface IScheduleSelectorProps {
   id?: string;
   error?: string;
   warning?: string;
+  icon?: string; // Agregamos la prop icon opcional
 }
 
 export const ScheduleSelector: FunctionComponent<IScheduleSelectorProps> = ({
@@ -31,6 +32,7 @@ export const ScheduleSelector: FunctionComponent<IScheduleSelectorProps> = ({
   meta,
   error,
   warning,
+  icon = '342', // Default al calendario si no se pasa nada
 }) => {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
@@ -79,7 +81,7 @@ export const ScheduleSelector: FunctionComponent<IScheduleSelectorProps> = ({
           name='search_scheduler'
           type='text'
           value={search}
-          icon='123'
+          icon={icon} // Usamos el icono dinámico (Calendario 342)
           onChange={(e) => {
             setSearch(e.currentTarget.value);
           }}
@@ -94,7 +96,7 @@ export const ScheduleSelector: FunctionComponent<IScheduleSelectorProps> = ({
                 return (
                   <label
                     key={option.value}
-                    className={`flex items-start p-3 rounded-lg cursor-pointer transition-colors duration-200
+                    className={`flex items-start p-3 rounded-lg cursor-pointer transition-colors duration-200 
                     ${
                       selected
                         ? 'bg-primary/10 dark:bg-primary/20 border-primary dark:border-primary'

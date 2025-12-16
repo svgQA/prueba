@@ -24,7 +24,7 @@ export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '007',
+      icon: '339',
       label: 'm_user',
       description: 'd_user',
       base,
@@ -40,7 +40,7 @@ export const MODAL_SETTING_SECURITY: IModalSidebarMenu = {
       id: 'security:roles:state',
     },
     {
-      icon: '189',
+      icon: '339',
       label: 'm_group',
       description: 'd_group',
       base,

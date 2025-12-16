@@ -32,7 +32,7 @@ export const MODAL_SETTING_FORM: IModalSidebarMenu = {
       id: 'forms:analytic:state',
     },
     {
-      icon: '068', 
+      icon: '306', 
       label: 'm_scheduled_reports',
       description: 'd_scheduled_reports',
       base,

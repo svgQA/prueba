@@ -11,6 +11,7 @@ import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { FormattedDate } from '@/components/compose/forms';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
+import { useTranslation } from 'react-i18next'; // 1. Importamos el hook
 
 export const getColumns = (
   onClickAction: (params: {
@@ -144,12 +145,14 @@ export const getColumns = (
     size: 30,
     header: 'h_action',
     cell: (info) => {
+      // 2. Usamos el hook dentro del renderizado de la celda
+      const { t } = useTranslation();
       const { id, status } = info.row.original;
 
       const actions: IDropdownAction[] = [
         status === RESPONSE_STATUS.OPENED
           ? {
-              label: 'continue',
+              label: t('continue'), // 3. Traducimos la etiqueta
               icon: 'vox-icon vx-icon-030 text-primary',
               onClick: () => {
                 onClickAction({
@@ -160,7 +163,7 @@ export const getColumns = (
               },
             }
           : {
-              label: 'report',
+              label: t('report'), // 3. Traducimos la etiqueta "Reporte"
               icon: 'vox-icon vx-icon-433 text-primary',
               onClick: () => {
                 onClickAction({
@@ -171,7 +174,7 @@ export const getColumns = (
               },
             },
         {
-          label: 'delete',
+          label: t('delete'), // 3. Traducimos la etiqueta "Eliminar"
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
@@ -189,7 +192,7 @@ export const getColumns = (
           {status === RESPONSE_STATUS.OPENED && (
             <Button
               name='continue'
-              label='continue'
+              label='continue' // El botón suele traducir internamente si recibe una key
               icon='030'
               unpadded
               onClick={() => {

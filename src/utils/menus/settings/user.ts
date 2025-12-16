@@ -15,7 +15,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
   id: 'user:state',
   menus: [
     {
-      icon: '240',
+      icon: '321',
       label: 'm_area',
       description: 'd_area',
       base,
@@ -24,7 +24,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '190',
+      icon: '172',
       label: 'm_role',
       description: 'd_role',
       base,
@@ -33,7 +33,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       show: true,
     },
     {
-      icon: '189',
+      icon: '013',
       label: 'm_group',
       description: 'd_group',
       base,
@@ -42,7 +42,7 @@ export const MODAL_SETTING_USER: IModalSidebarMenu = {
       show: false,
     },
     {
-      icon: '063',
+      icon: '087',
       label: 'm_password',
       description: 'd_password',
       base,

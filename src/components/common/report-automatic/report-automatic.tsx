@@ -77,7 +77,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       {
         value: SelectCheckType.INTERNO,
         label: t('l_internal'),
-        icon: '306',
+        icon: '068',
         color: 'primary',
         //disabled: !getPermissionByModuleState('memo', 'internal:report'),
         disabled: false,
@@ -85,7 +85,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       {
         value: SelectCheckType.CLIENTE,
         label: t('l_client'),
-        icon: '307',
+        icon: '344',
         color: 'secondary',
         //disabled: !getPermissionByModuleState('memo', 'client:report'),
         disabled: false,

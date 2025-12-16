@@ -9,6 +9,7 @@ import {
 import { IAccess } from '@/types/access/accesses';
 import i18n from '@/i18n';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { useTranslation } from 'react-i18next';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -80,7 +81,7 @@ export const getColumns = (
   },
   {
     id: 'personName',
-    accessorKey: 'name', // Cambiado de 'checkIn.personName' a 'name'
+    accessorKey: 'name', 
     size: 160,
     header: 'h_visit',
     enableGrouping: true,
@@ -97,7 +98,7 @@ export const getColumns = (
   },
   {
     id: 'houseNumber',
-    accessorKey: 'houseNumber', // Cambiado de 'checkIn.house' a 'houseNumber'
+    accessorKey: 'houseNumber', 
     size: 140,
     header: 'h_house_number',
     enableGrouping: true,
@@ -228,15 +229,17 @@ export const getColumns = (
     size: 20,
     header: 'h_action',
     cell: (info) => {
-      const { uuid } = info.row.original; // Cambiado de 'id' a 'uuid'
+      const { t } = useTranslation();
+      const { uuid } = info.row.original; 
+      
       const actions: IDropdownAction[] = [
         {
-          label: 'delete',
+          label: t('delete'), 
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
             onClickAction({
-              id: uuid, // Usando uuid en lugar de id
+              id: uuid, 
               type: 'form',
               action: ROW_ACTIONS.DELETE,
             });

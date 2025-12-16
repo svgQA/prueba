@@ -68,7 +68,7 @@ export const MODAL_SETTING_SHIFT: IModalSidebarMenu = {
       id: 'shifts',
     },
     {
-      icon: '354', 
+      icon: '255', 
       label: 'm_service',
       description: 'd_service',
       base,

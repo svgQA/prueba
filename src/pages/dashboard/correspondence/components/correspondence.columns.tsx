@@ -11,6 +11,7 @@ import { ICorrespondence } from '@/types/access';
 import { Badge } from '@/components/common/badge/badge';
 // import { RelativeTime } from '@/components/common/relative/relative';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
+import { useTranslation } from 'react-i18next'; // 1. Importar el hook de traducción
 
 /**
  * Columnas para la tabla de Correspondencia.
@@ -226,7 +227,10 @@ export const getColumns = (
     size: 20,
     header: 'h_action',
     cell: (info) => {
+      // 2. Usar el hook dentro de la celda para traducir las acciones
+      const { t } = useTranslation();
       const { uuid } = info.row.original;
+      
       const actions: IDropdownAction[] = [
         // {
         //   label: 'update',
@@ -236,11 +240,12 @@ export const getColumns = (
         //       id: String(uuid),
         //       type: 'form',
         //       action: ROW_ACTIONS.UPDATE,
+        //       // TODO: Si descomentas esto, recuerda usar label: t('update')
         //     });
         //   },
         // },
         {
-          label: 'delete',
+          label: t('delete'), // 3. Usar t() para la traducción
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
