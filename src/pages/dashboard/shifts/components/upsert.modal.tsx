@@ -125,11 +125,7 @@ const footerContent = useMemo(
       <div className='flex justify-end items-center gap-2 p-4'>
         <Button
           name='btn-form-shift-close'
-<<<<<<< HEAD
           label={t('actions.cancel')}
-=======
-          label={t('actions.cancel')} 
->>>>>>> 62ebc4dd9 (Feat/e2e: Icons)
           type='button'
           onClick={handleOnClose}
           icon='192'
