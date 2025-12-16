@@ -158,11 +158,11 @@ export const PqrsPage: FunctionComponent = () => {
     grouped: Record<string, ICPqrsRequest[]>
   ): ColumnConfig[] => {
     const colors = [
-      { colorClass: 'text-blue-dark', bgColorClass: 'bg-primary-opacity-2' },
-      { colorClass: 'text-m5', bgColorClass: 'bg-primary-opacity-2' },
-      { colorClass: 'text-secondary', bgColorClass: 'bg-secondary-opacity' },
+      { colorClass: 'text-ternary', bgColorClass: 'bg-primary-opacity-2' },
+      { colorClass: 'text-ternary', bgColorClass: 'bg-primary-opacity-2' },
+      { colorClass: 'text-ternary', bgColorClass: 'bg-secondary-opacity' },
       { colorClass: 'text-ternary', bgColorClass: 'bg-primary-opacity' },
-      { colorClass: 'text-gray-text-dark', bgColorClass: 'bg-caution-opacity' },
+      { colorClass: 'text-ternary', bgColorClass: 'bg-caution-opacity' },
     ];
 
     return Object.entries(grouped).map(([status], index) => {
@@ -197,7 +197,7 @@ export const PqrsPage: FunctionComponent = () => {
 
   return (
     <div class='min-h-full text-t-light dark:text-t-dark'>
-      <div class='max-w-screen-2xl mx-auto px-4 md:px-6 py-6 space-y-6'>
+      <div class='w-full mx-auto px-4 md:px-6 py-6 space-y-6'>
         <div class='bg-white/90 dark:bg-b-dark-light/80 border border-gray-border/60 dark:border-gray-border/20 rounded-2xl shadow-sm px-4 py-3 md:px-6 md:py-4 flex flex-col gap-4'>
           <div class='flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
             <div class='space-y-2'>
@@ -248,11 +248,10 @@ export const PqrsPage: FunctionComponent = () => {
                 ].map((option) => (
                   <button
                     key={option.id}
-                    class={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
-                      viewMode.value === option.id
+                    class={`px-4 py-2 text-sm font-medium rounded-full transition-all ${viewMode.value === option.id
                         ? 'bg-primary text-white shadow-primary/25'
                         : 'text-gray-text-light hover:text-t-light dark:text-t-dark'
-                    }`}
+                      }`}
                     onClick={() => (viewMode.value = option.id as ViewMode)}
                   >
                     {option.label}
@@ -383,7 +382,9 @@ export const PqrsPage: FunctionComponent = () => {
       <PqrsModal
         id={pqrsSelected.value.id}
         showModal={openModalData}
-        closeModal={() => (openModalData.value = false)}
+        closeModal={() => {
+          openModalData.value = false;
+        }}
       />
     </div>
   );

@@ -7,38 +7,40 @@ interface IdName<T = number> {
 }
 
 interface IPqrsArea extends IdName {
+  area?: IdName;
   subarea: IdName;
 }
 
 export interface ICPqrsRequest {
   id?: number;
-  raw?: any | null;
-  rawFile?: any | null;
-  resources?: IPresignedRequest[] | null;
-  embedding?: number[] | null;
-  extraData?: ICPqrsExtraData | null;
+  raw?: any ;
+  rawFile?: any ;
+  resources?: IPresignedRequest[];
+  embedding?: number[];
+  extraData?: ICPqrsExtraData;
   status: string;
-  identifier?: string | null;
-  contract?: string | null;
-  municipality?: string | null;
-  address?: string | null;
-  department?: string | null;
-  transformer?: string | null;
-  pole?: string | null;
-  lat?: number | null;
-  lng?: number | null;
-  startDate?: string | Date | null;
-  clientName?: string | null;
-  contactEmail?: string | null;
-  assignedToId?: number | null;
-  areaId?: number | null;
-  subareaId?: number | null;
-  priorityId?: number | null;
+  identifier?: string;
+  contract?: string;
+  municipality?: string;
+  address?: string;
+  department?: string;
+  transformer?: string;
+  pole?: string;
+  lat?: number;
+  lng?: number;
+  startDate?: string | Date;
+  clientName?: string;
+  contactEmail?: string;
+  assignedToId?: number;
+  areaId?: number;
+  subareaId?: number;
+  priorityId?: number;
 
   //relations
   inferences: Inference[];
   area?: IPqrsArea[];
   priority?: IdName;
+  pqrs_ots?: ICOtsRequest[];
 }
 
 export interface Inference {
@@ -57,6 +59,7 @@ export interface Inference {
     prevStageId: number | null;
     type: string;
   };
+  ots?: ICOtsRequest | null;
   [key: string]: any;
 }
 
@@ -80,10 +83,12 @@ export interface ICPqrsExtraData {
 }
 
 export interface ICOtsRequest {
+  id?: number;
   cost: number;
   status: OTS_STATUS;
   executionDate: string | Date;
   pqrs: ICPqrsRequest;
+  inference?: Inference[];
 }
 
 export enum OTS_STATUS {

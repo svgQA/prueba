@@ -23,9 +23,11 @@ import { useTranslation } from 'react-i18next';
 import { PqrsService } from '@/services/pqrs/pqrs';
 import { OtsService } from '@/services/pqrs/ots';
 
-import { ICPqrsRequest } from '../utils/interface';
+import { ICPqrsRequest, IPqrsArea } from '../utils/interface';
 import PqrsInferenceModal from './modal/pqrs-inference.modal';
 import PqrsGeneralModal from './modal/pqrs-general.modal';
+import { PqrsAiService } from '@/services/pqrs/ai-pqrs';
+import PqrsOTSModal from './modal/pqrs.ots.modal';
 
 interface IProps {
   showModal: Signal<boolean>;
@@ -76,6 +78,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
   const tabs: ITab[] = [
     { id: 'general', label: 'General', icon: '310' },
     { id: 'analysis', label: 'Análisis IA', icon: '311' },
+    ...(pqrs.value?.pqrs_ots ? [{ id: 'ots', label: 'Órdenes de Trabajo', icon: '320' }] : []),
   ];
 
   const getBadgeStatus = ():
@@ -92,12 +95,14 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
     return 'info';
   };
 
-  const handleCreateOts = async (pqrsId: number) => {
+  const handleCreateOts = async (pqrsId: number, areaId: number) => {
     loading.value = true;
-    const response = await OtsService.create(pqrsId);
+    const response = await OtsService.create(pqrsId, areaId);
     if (!response.getStatus()) return (loading.value = false);
-    closeModal();
+    const ots = response.getOne();
+    await PqrsAiService.execute_ai_process_again(pqrsId, { otsId: ots.id, areaId })
     loading.value = false;
+    closeModal();
   };
 
   const HeaderInformation = () => (
@@ -151,12 +156,12 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
        * TODO: REFACTORIZAR ESTA PARTE PORQUE NO DEBE IR AQUI:
        */}
       {pqrs.value?.area &&
-        pqrs.value?.area.map((area) => (
+        pqrs.value?.area.map((area: IPqrsArea) => (
           <div class='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
             <div class='flex items-start gap-2'>
               <Badge
-                key={area.id}
-                label={area.name}
+                key={area?.area?.id}
+                label={area?.area?.name ?? ''}
                 status='warning'
                 size='sm'
                 outline
@@ -181,7 +186,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
               <Button
                 name='btn-click-ots'
                 label='create OTS'
-                onClick={() => handleCreateOts(pqrs.value?.id!!)}
+                onClick={() => Promise.all([handleCreateOts(pqrs.value?.id!, area?.area?.id!)])}
                 className='!bg-secondary/15 !text-secondary hover:!bg-secondary/25'
               />
             </div>
@@ -229,6 +234,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
       name='modal-pqrs-details'
       width='w-full max-w-7xl'
       position='fixed'
+      expandable
       header={
         <div className='flex flex-col gap-1'>
           <h3 className='text-xl font-semibold text-t-light dark:text-white'>
@@ -248,8 +254,14 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
           <>
             {activeTab.value === 'general' && <PqrsGeneralModal pqrs={pqrs} />}
             {activeTab.value === 'analysis' && (
-              <PqrsInferenceModal pqrs={pqrs} />
+              <PqrsInferenceModal
+                inferences={
+                  pqrs.value?.inferences
+                    ?.filter((inf) => inf.ots == null || inf.otsId == null) ?? []
+                }
+              />
             )}
+            {activeTab.value === 'ots' && (<PqrsOTSModal pqrs={pqrs} />)}
           </>
         </TabInformation>
       </div>
@@ -275,11 +287,10 @@ const TabInformation = ({ tabs, children, activeTab }: ITabProp) => (
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            class={`px-3 py-2 text-sm font-medium rounded-xl transition-colors border ${
-              activeTab.value === tab.id
-                ? 'bg-primary text-white border-primary shadow-md'
-                : 'bg-white/80 dark:bg-b-dark/80 border-transparent text-gray-text-light dark:text-b-light-dark hover:border-gray-border/60 dark:hover:border-b-dark-light hover:text-t-light'
-            }`}
+            class={`px-3 py-2 text-sm font-medium rounded-xl transition-colors border ${activeTab.value === tab.id
+              ? 'bg-primary text-white border-primary shadow-md'
+              : 'bg-white/80 dark:bg-b-dark/80 border-transparent text-gray-text-light dark:text-b-light-dark hover:border-gray-border/60 dark:hover:border-b-dark-light hover:text-t-light'
+              }`}
             onClick={() => (activeTab.value = tab.id)}
           >
             <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>
