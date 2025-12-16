@@ -26,6 +26,7 @@ import { OtsService } from '@/services/pqrs/ots';
 import { ICPqrsRequest, IPqrsArea } from '../utils/interface';
 import PqrsInferenceModal from './modal/pqrs-inference.modal';
 import PqrsGeneralModal from './modal/pqrs-general.modal';
+import { PqrsAiService } from '@/services/pqrs/ai-pqrs';
 
 interface IProps {
   showModal: Signal<boolean>;
@@ -96,6 +97,8 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
     loading.value = true;
     const response = await OtsService.create(pqrsId, areaId);
     if (!response.getStatus()) return (loading.value = false);
+    const ots = response.getOne();
+    await PqrsAiService.execute_ai_process_again(pqrsId, null, ots.id, areaId);
     closeModal();
     loading.value = false;
   };
