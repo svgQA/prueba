@@ -27,12 +27,6 @@ export class OtsService extends BaseService {
   }
 
   static async create(pqrsId: number, areaId: number) {
-
-    console.log('info: ', {
-      pqrsId,
-      areaId
-    });
-
     const model: IMakeRequest = {
       url: ['ots'],
       method: REQUEST_METHODS.POST,

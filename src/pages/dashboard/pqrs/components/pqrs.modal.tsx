@@ -27,6 +27,7 @@ import { ICPqrsRequest, IPqrsArea } from '../utils/interface';
 import PqrsInferenceModal from './modal/pqrs-inference.modal';
 import PqrsGeneralModal from './modal/pqrs-general.modal';
 import { PqrsAiService } from '@/services/pqrs/ai-pqrs';
+import PqrsOTSModal from './modal/pqrs.ots.modal';
 
 interface IProps {
   showModal: Signal<boolean>;
@@ -77,6 +78,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
   const tabs: ITab[] = [
     { id: 'general', label: 'General', icon: '310' },
     { id: 'analysis', label: 'Análisis IA', icon: '311' },
+    ...(pqrs.value?.pqrs_ots ? [{ id: 'ots', label: 'Órdenes de Trabajo', icon: '320' }] : []),
   ];
 
   const getBadgeStatus = ():
@@ -98,9 +100,9 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
     const response = await OtsService.create(pqrsId, areaId);
     if (!response.getStatus()) return (loading.value = false);
     const ots = response.getOne();
-    await PqrsAiService.execute_ai_process_again(pqrsId, null, ots.id, areaId);
-    closeModal();
+    await PqrsAiService.execute_ai_process_again(pqrsId, { otsId: ots.id, areaId })
     loading.value = false;
+    closeModal();
   };
 
   const HeaderInformation = () => (
@@ -184,7 +186,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
               <Button
                 name='btn-click-ots'
                 label='create OTS'
-                onClick={() => handleCreateOts(pqrs.value?.id!!, area?.area?.id!!)}
+                onClick={() => Promise.all([handleCreateOts(pqrs.value?.id!, area?.area?.id!)])}
                 className='!bg-secondary/15 !text-secondary hover:!bg-secondary/25'
               />
             </div>
@@ -251,8 +253,11 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
           <>
             {activeTab.value === 'general' && <PqrsGeneralModal pqrs={pqrs} />}
             {activeTab.value === 'analysis' && (
-              <PqrsInferenceModal pqrs={pqrs} />
+              <PqrsInferenceModal
+                inferences={pqrs.value?.inferences ?? []}
+              />
             )}
+            {activeTab.value === 'ots' && (<PqrsOTSModal pqrs={pqrs} />)}
           </>
         </TabInformation>
       </div>

@@ -68,7 +68,7 @@ export const PqrsCards = ({
       type === 'RETRY'
         ? pqrs.inferences[pqrs.inferences.length - 1]?.stage?.prevStageId
         : pqrs.inferences[pqrs.inferences.length - 1]?.stage?.nextStageId;
-    await PqrsAiService.execute_ai_process_again(String(stageId), id);
+    await PqrsAiService.execute_ai_process_again(id, { stageId: Number(stageId) });
   };
 
   const calculateDaysToExpire = useCallback(() => {

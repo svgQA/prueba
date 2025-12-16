@@ -1,51 +1,46 @@
-import { Signal } from '@preact/signals';
-import { ICPqrsRequest, Inference } from '../../utils/interface';
+import { Inference } from '../../utils/interface';
 import { Badge } from '@/components/common/badge/badge';
 import { Slider } from '@/components/common/slider/slider';
 import { Chip } from '@/components/common/chip/chip';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 export interface IProps {
-  pqrs: Signal<ICPqrsRequest | null>;
+  inferences: Inference[];
 }
 
-const PqrsInferenceModal = ({ pqrs }: IProps) => {
-  const inferences = (pqrs.value as any)?.inferences || [];
-
-  return (
-    <div class='space-y-4'>
-      <div class='flex items-center justify-between bg-white/95 dark:bg-b-dark-light/90 border border-gray-border/70 dark:border-b-dark-light rounded-xl px-3 py-2 shadow-sm'>
-        <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide'>
-          Análisis de IA
-        </h4>
-        <span class='text-xs text-gray-500 dark:text-b-light-dark'>
-          {inferences.length} análisis
-        </span>
-      </div>
-
-      {inferences.length > 0 ? (
-        <div class='space-y-3'>
-          {inferences.map((inference: Inference) => (
-            <InferenceCard key={inference.id} inference={inference} />
-          ))}
-        </div>
-      ) : (
-        <div class='text-center py-10 bg-b-light dark:bg-b-dark rounded-xl border border-dashed border-gray-border/70 dark:border-b-dark-light'>
-          <svg
-            class='w-12 h-12 text-gray-300 dark:text-b-light-dark mx-auto mb-3'
-            fill='currentColor'
-            viewBox='0 0 20 20'
-          >
-            <path d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' />
-          </svg>
-          <p class='text-sm text-gray-500 dark:text-b-light-dark'>
-            No hay análisis de IA disponible
-          </p>
-        </div>
-      )}
+const PqrsInferenceModal = ({ inferences }: IProps) => (
+  <div class='space-y-4'>
+    <div class='flex items-center justify-between bg-white/95 dark:bg-b-dark-light/90 border border-gray-border/70 dark:border-b-dark-light rounded-xl px-3 py-2 shadow-sm'>
+      <h4 class='font-semibold text-t-light dark:text-white text-sm uppercase tracking-wide'>
+        Análisis de IA
+      </h4>
+      <span class='text-xs text-gray-500 dark:text-b-light-dark'>
+        {inferences.length} análisis
+      </span>
     </div>
-  );
-};
+
+    {inferences.length > 0 ? (
+      <div class='space-y-3'>
+        {inferences.map((inference: Inference) => (
+          <InferenceCard key={inference.id} inference={inference} />
+        ))}
+      </div>
+    ) : (
+      <div class='text-center py-10 bg-b-light dark:bg-b-dark rounded-xl border border-dashed border-gray-border/70 dark:border-b-dark-light'>
+        <svg
+          class='w-12 h-12 text-gray-300 dark:text-b-light-dark mx-auto mb-3'
+          fill='currentColor'
+          viewBox='0 0 20 20'
+        >
+          <path d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z' />
+        </svg>
+        <p class='text-sm text-gray-500 dark:text-b-light-dark'>
+          No hay análisis de IA disponible
+        </p>
+      </div>
+    )}
+  </div>
+);
 
 const InferenceCard = ({ inference }: { inference: Inference }) => {
   const data = inference.inference;
@@ -191,8 +186,8 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                 ['alto', 'alta'].includes(String(data.severity).toLowerCase())
                   ? 'error'
                   : ['medio', 'media'].includes(
-                        String(data.severity).toLowerCase()
-                      )
+                    String(data.severity).toLowerCase()
+                  )
                     ? 'warning'
                     : 'success'
               }
@@ -237,7 +232,7 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
               value={Math.round((Number(data.confidence) || 0) * 100)}
               label='Confianza'
               showValue={true}
-              onChange={() => {}}
+              onChange={() => { }}
               disabled={true}
             />
           </div>

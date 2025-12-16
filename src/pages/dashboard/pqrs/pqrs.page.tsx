@@ -248,11 +248,10 @@ export const PqrsPage: FunctionComponent = () => {
                 ].map((option) => (
                   <button
                     key={option.id}
-                    class={`px-4 py-2 text-sm font-medium rounded-full transition-all ${
-                      viewMode.value === option.id
+                    class={`px-4 py-2 text-sm font-medium rounded-full transition-all ${viewMode.value === option.id
                         ? 'bg-primary text-white shadow-primary/25'
                         : 'text-gray-text-light hover:text-t-light dark:text-t-dark'
-                    }`}
+                      }`}
                     onClick={() => (viewMode.value = option.id as ViewMode)}
                   >
                     {option.label}
@@ -383,7 +382,9 @@ export const PqrsPage: FunctionComponent = () => {
       <PqrsModal
         id={pqrsSelected.value.id}
         showModal={openModalData}
-        closeModal={() => (openModalData.value = false)}
+        closeModal={() => {
+          openModalData.value = false;
+        }}
       />
     </div>
   );
