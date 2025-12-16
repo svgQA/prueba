@@ -391,20 +391,19 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   };
 
   return (
-    <div className='flex flex-col'>
-      <div className='absolute -top-11 right-0 flex items-center justify-center bg-red gap-10 flex-row'>
-        <StatusButton
-          onClickClean={onClean}
-          submitting={false}
-          pristine={false}
-          form='user-form'
-          label={
-            getUserMode.value.mode === USER_MODE_SERVICE.CREATE
-              ? t('btnSave')
-              : t('btnUpdate')
-          }
-        />
-      </div>
+    <div className='flex flex-col pt-16'>
+      <StatusButton
+        onClickClean={onClean}
+        submitting={false}
+        pristine={false}
+        form='user-form'
+        className='!top-2'
+        label={
+          getUserMode.value.mode === USER_MODE_SERVICE.CREATE
+            ? 'save'
+            : 'update'
+        }
+      />
 
       <Form
         initialValues={initialValues.value}
