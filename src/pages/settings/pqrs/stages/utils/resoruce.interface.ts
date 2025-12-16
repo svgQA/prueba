@@ -20,7 +20,7 @@ export enum IdsRequests {
 export interface IModuleExternalUrl {
   method: HttpMethod;
   requestUrl: string;
-};
+}
 
 export interface IModuleUrl {
   module: modulesResource;

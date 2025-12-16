@@ -186,8 +186,8 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
                 ['alto', 'alta'].includes(String(data.severity).toLowerCase())
                   ? 'error'
                   : ['medio', 'media'].includes(
-                    String(data.severity).toLowerCase()
-                  )
+                        String(data.severity).toLowerCase()
+                      )
                     ? 'warning'
                     : 'success'
               }
@@ -232,7 +232,7 @@ const InferenceCard = ({ inference }: { inference: Inference }) => {
               value={Math.round((Number(data.confidence) || 0) * 100)}
               label='Confianza'
               showValue={true}
-              onChange={() => { }}
+              onChange={() => {}}
               disabled={true}
             />
           </div>

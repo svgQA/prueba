@@ -13,8 +13,8 @@ interface IPqrsArea extends IdName {
 
 export interface ICPqrsRequest {
   id?: number;
-  raw?: any ;
-  rawFile?: any ;
+  raw?: any;
+  rawFile?: any;
   resources?: IPresignedRequest[];
   embedding?: number[];
   extraData?: ICPqrsExtraData;

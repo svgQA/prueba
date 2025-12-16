@@ -77,7 +77,8 @@ export const getColumns = (
         const pqrs = Array.isArray(row.pqrs) ? row.pqrs?.[0] : row.pqrs;
         const resources = (pqrs?.resources ?? pqrs?.resource ?? []) as any[];
         const rawFiles = (pqrs?.raw?.files ?? []) as any[];
-        const count = (Array.isArray(resources) ? resources.length : 0) +
+        const count =
+          (Array.isArray(resources) ? resources.length : 0) +
           (Array.isArray(rawFiles) ? rawFiles.length : 0);
         return count > 0;
       },
@@ -107,7 +108,8 @@ export const getColumns = (
         if (Array.isArray(infs) && infs.length) {
           for (let i = infs.length - 1; i >= 0; i--) {
             const inf = infs[i] as any;
-            const prName = inf?.inference?.prioridad?.name ?? inf?.prioridad?.name ?? null;
+            const prName =
+              inf?.inference?.prioridad?.name ?? inf?.prioridad?.name ?? null;
             if (prName) return prName;
           }
         }
@@ -137,14 +139,7 @@ export const getColumns = (
       cell: (info: any) => {
         const area = info.getValue() as { id: number; name: string };
 
-        return (
-          <Badge
-            label={area.name}
-            status={'info'}
-            full
-            outline
-          />
-        );
+        return <Badge label={area.name} status={'info'} full outline />;
       },
     },
     {
@@ -187,11 +182,7 @@ export const getColumns = (
       },
       cell: (info) => {
         const count = info.getValue() as number;
-        return <Chip
-          label={count.toString() ?? ''}
-          width='sm'
-          icon='320'
-        />;
+        return <Chip label={count.toString() ?? ''} width='sm' icon='320' />;
       },
     },
     {

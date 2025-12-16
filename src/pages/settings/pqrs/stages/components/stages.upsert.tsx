@@ -244,7 +244,7 @@ export const StageForm: FunctionComponent = () => {
 
   return (
     <Section
-      className='p-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design dark:bg-b-dark dark:text-t-dark'
+      className='pr-4 space-y-2 max-h-[67vh] overflow-y-auto vox-scroll-design dark:bg-b-dark dark:text-t-dark'
       loading={loading.value}
     >
       <Form
@@ -257,239 +257,279 @@ export const StageForm: FunctionComponent = () => {
             className='space-y-6'
             id='form-stages-upsert'
           >
-            <StatusButton
-              onClickClean={() => form.reset()}
-              submitting={submitting || loading.value}
-              pristine={pristine}
-              form='form-stages-upsert'
-              label={id ? 'edit' : 'save'}
-            />
-            <div className='grid grid-cols-3 gap-4'>
-              <div className='col-span-2'>
-                <Field<string> name='stageName'>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      placeholder={t('h_stage_name')}
-                      label={t('h_stage_name')}
-                      meta={meta}
-                      icon='120'
-                      type='text'
-                      disabled={loading.value}
-                      required
-                    />
-                  )}
-                </Field>
-              </div>
+            {/* Acciones */}
+            <div className='flex justify-end'>
+              <StatusButton
+                onClickClean={() => form.reset()}
+                submitting={submitting || loading.value}
+                pristine={pristine}
+                form='form-stages-upsert'
+                label={id ? 'edit' : 'save'}
+              />
+            </div>
 
-              <div className='col-span-1'>
-                <Field<string> name='status'>
-                  {({ input, meta }) => (
-                    <Input
-                      {...input}
-                      placeholder={t('h_status')}
-                      label={t('h_status')}
-                      meta={meta}
-                      icon='120'
-                      type='text'
-                      disabled={loading.value}
-                      required
-                    />
-                  )}
-                </Field>
-              </div>
+            <div className='space-y-1'>
+              <div className='flex flex-row flex-wrap w-full gap-1 justify-between'>
+                {/* 1) Información básica */}
+                <section className='flex-1 min-w-[450px] rounded-lg border border-gray-border dark:border-b-dark-dark bg-b-light dark:bg-b-dark-light p-4 relative'>
+                  <h3 className='mb-4 text-sm font-medium text-t-light dark:text-t-dark'>
+                    {t('m_general')}
+                  </h3>
 
-              <div className='col-span-3'>
-                <Field<boolean> name='visibility' type='checkbox'>
-                  {({ input }) => (
-                    <Switch
-                      id='visibility-switch'
-                      name={input.name}
-                      label='h_visibility'
-                      value={input.checked}
-                      onChange={input.onChange}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
-              </div>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                    <div className='md:col-span-2'>
+                      <Field<string> name='stageName'>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            placeholder={t('h_stage_name')}
+                            label={t('h_stage_name')}
+                            meta={meta}
+                            icon='120'
+                            type='text'
+                            disabled={loading.value}
+                            required
+                          />
+                        )}
+                      </Field>
+                    </div>
 
-              <div className='col-span-3'>
-                <Field<string> name='goal'>
-                  {({ input, meta }) => (
-                    <TextArea
-                      {...input}
-                      icon='120'
-                      type='text'
-                      placeholder={t('h_goal')}
-                      label={t('h_goal')}
-                      meta={meta}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
-              </div>
+                    <div className='md:col-span-1'>
+                      <Field<string> name='status'>
+                        {({ input, meta }) => (
+                          <Input
+                            {...input}
+                            placeholder={t('h_status')}
+                            label={t('h_status')}
+                            meta={meta}
+                            icon='120'
+                            type='text'
+                            disabled={loading.value}
+                            required
+                          />
+                        )}
+                      </Field>
+                    </div>
 
-              <div className='col-span-3'>
-                <Field<string> name='executionNotes'>
-                  {({ input, meta }) => (
-                    <TextArea
-                      {...input}
-                      icon='120'
-                      type='text'
-                      placeholder={t('h_execution_notes')}
-                      label={t('h_execution_notes')}
-                      meta={meta}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
-              </div>
+                    <div className='md:col-span-1'>
+                      <Field name='type'>
+                        {({ input, meta }) => (
+                          <SmartSelector
+                            {...input}
+                            meta={meta}
+                            id='select-stage-type'
+                            icon='191'
+                            label='h_type'
+                            options={[
+                              {
+                                value: TypesOfStages.CONTINUE,
+                                label: t('h_automatic'),
+                              },
+                              {
+                                value: TypesOfStages.MANUAL,
+                                label: t('h_manual'),
+                              },
+                            ]}
+                            menuPortalTarget={document.body}
+                            placeholder='p_select'
+                          />
+                        )}
+                      </Field>
+                    </div>
 
-              <div className='col-span-3'>
-                <Field<string> name='prompt'>
-                  {({ input, meta }) => (
-                    <TextArea
-                      {...input}
-                      icon='120'
-                      type='text'
-                      placeholder={t('h_prompt')}
-                      label={t('h_prompt')}
-                      meta={meta}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
-              </div>
+                    <div className='absolute top-0 right-0 bg-teal-900 p-2 rounded-bl-lg flex flex-row items-center justify-center'>
+                      <Field<boolean> name='visibility' type='checkbox'>
+                        {({ input }) => (
+                          <Switch
+                            id='visibility-switch'
+                            name={input.name}
+                            label='h_visibility'
+                            value={input.checked}
+                            onChange={input.onChange}
+                            disabled={loading.value}
+                          />
+                        )}
+                      </Field>
+                    </div>
+                  </div>
+                </section>
 
-              <div className='col-span-3'>
-                <Field name='type'>
-                  {({ input, meta }) => (
-                    <SmartSelector
-                      {...input}
-                      meta={meta}
-                      id={`select-stage-type`}
-                      icon='191'
-                      label='h_type'
-                      options={[
-                        {
-                          value: TypesOfStages.CONTINUE,
-                          label: t('h_automatic'),
-                        },
-                        {
-                          value: TypesOfStages.MANUAL,
-                          label: t('h_manual'),
-                        },
-                      ]}
-                      menuPortalTarget={document.body}
-                      placeholder='p_select'
-                    />
-                  )}
-                </Field>
-              </div>
+                {/* 2) Configuración del stage */}
+                <section className='flex-1 min-w-[450px] rounded-lg border border-gray-border dark:border-b-dark-dark bg-b-light dark:bg-b-dark-light p-4 relative'>
+                  <h3 className='mb-4 text-sm font-medium text-t-light dark:text-t-dark'>
+                    {t('h_type')}
+                  </h3>
 
-              <div className='col-span-3'>
-                <Field<boolean>
-                  name='hasArea'
-                  type='checkbox'
-                  initialValue={false}
-                >
-                  {({ input }) => (
-                    <Switch
-                      id='has-area-switch'
-                      name={input.name}
-                      label='¿Anexar área al stage?'
-                      value={input.checked}
-                      onChange={input.onChange}
-                      disabled={loading.value}
-                    />
-                  )}
-                </Field>
-              </div>
+                  <div className='grid grid-cols-1 gap-4'>
+                    <div className='absolute top-0 right-0 bg-teal-900 p-2 rounded-bl-lg flex flex-row items-center justify-center'>
+                      <Field<boolean>
+                        name='hasArea'
+                        type='checkbox'
+                        initialValue={false}
+                      >
+                        {({ input }) => (
+                          <Switch
+                            id='has-area-switch'
+                            name={input.name}
+                            label='¿Anexar área al stage?'
+                            value={input.checked}
+                            onChange={input.onChange}
+                            disabled={loading.value}
+                          />
+                        )}
+                      </Field>
+                    </div>
 
-              {form.getState().values.hasArea ? (
-                <div className='col-span-3'>
-                  <Field<IOption> name='areaId'>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        meta={meta}
-                        id='select-areaId'
-                        icon='191'
-                        label='h_area'
-                        options={areaList.value || []}
-                        menuPortalTarget={document.body}
-                        placeholder='p_select'
-                      />
+                    {/* Condicionales (misma lógica, solo orden/maquetación) */}
+                    {form.getState().values.hasArea ? (
+                      <div className='md:col-span-1'>
+                        <Field<IOption> name='areaId'>
+                          {({ input, meta }) => (
+                            <SmartSelector
+                              {...input}
+                              meta={meta}
+                              id='select-areaId'
+                              icon='191'
+                              label='h_area'
+                              options={areaList.value || []}
+                              menuPortalTarget={document.body}
+                              placeholder='p_select'
+                            />
+                          )}
+                        </Field>
+                      </div>
+                    ) : (
+                      stageList.value &&
+                      stageList.value.length > 0 && (
+                        <>
+                          <div className='md:col-span-1'>
+                            <Field<IOption> name='nextStageId'>
+                              {({ input, meta }) => (
+                                <SmartSelector
+                                  {...input}
+                                  meta={meta}
+                                  id='select-next-stageId'
+                                  icon='191'
+                                  label='h_next_stage'
+                                  options={stageList.value || []}
+                                  menuPortalTarget={document.body}
+                                  placeholder='p_select'
+                                />
+                              )}
+                            </Field>
+                          </div>
+
+                          <div className='md:col-span-1'>
+                            <Field<IOption> name='prevStageId'>
+                              {({ input, meta }) => (
+                                <SmartSelector
+                                  {...input}
+                                  meta={meta}
+                                  id='select-prev-stageId'
+                                  icon='191'
+                                  label='h_prev_stage'
+                                  options={stageList.value || []}
+                                  menuPortalTarget={document.body}
+                                  placeholder='p_select'
+                                />
+                              )}
+                            </Field>
+                          </div>
+
+                          {/* <div className="md:col-span-1">
+                        <Field<IOption> name="errorStageId">
+                          {({ input, meta }) => (
+                            <SmartSelector
+                              {...input}
+                              meta={meta}
+                              id="select-error-stageId"
+                              icon="191"
+                              label="h_error_stage"
+                              options={stageList.value || []}
+                              menuPortalTarget={document.body}
+                              placeholder="p_select"
+                            />
+                          )}
+                        </Field>
+                      </div> */}
+                        </>
+                      )
                     )}
-                  </Field>
+                  </div>
+                </section>
+              </div>
+
+              {/* 3) Contenido / textos (lo que normalmente se diligencia después) */}
+              <section className='rounded-lg border border-gray-border dark:border-b-dark-dark bg-b-light dark:bg-b-dark-light p-4'>
+                <h3 className='mb-4 text-sm font-medium text-t-light dark:text-t-dark'>
+                  {t('t_content')}
+                </h3>
+
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                  <div className='md:col-span-1'>
+                    <Field<string> name='goal'>
+                      {({ input, meta }) => (
+                        <TextArea
+                          {...input}
+                          // icon='120'
+                          type='text'
+                          rows={3}
+                          placeholder={'h_goal'}
+                          label={'h_goal'}
+                          meta={meta}
+                          disabled={loading.value}
+                          className='bg-white dark:bg-b-dark text-t-light dark:text-white resize-none'
+                        />
+                      )}
+                    </Field>
+                  </div>
+                  <div className='md:col-span-1'>
+                    <Field<string> name='executionNotes'>
+                      {({ input, meta }) => (
+                        <TextArea
+                          {...input}
+                          // icon='120'
+                          type='text'
+                          rows={3}
+                          placeholder={'h_execution_notes'}
+                          label={'h_execution_notes'}
+                          meta={meta}
+                          disabled={loading.value}
+                          className='bg-white dark:bg-b-dark text-t-light dark:text-white resize-none'
+                        />
+                      )}
+                    </Field>
+                  </div>
+                  <div className='md:col-span-2'>
+                    <Field<string> name='prompt'>
+                      {({ input, meta }) => (
+                        <TextArea
+                          {...input}
+                          // icon='120'
+                          type='text'
+                          rows={5}
+                          placeholder={'h_prompt'}
+                          label={'h_prompt'}
+                          meta={meta}
+                          disabled={loading.value}
+                        />
+                      )}
+                    </Field>
+                  </div>
                 </div>
-              ) : (
-                stageList.value &&
-                stageList.value.length > 0 && (
-                  <>
-                    <div className='col-span-1'>
-                      <Field<IOption> name='nextStageId'>
-                        {({ input, meta }) => (
-                          <SmartSelector
-                            {...input}
-                            meta={meta}
-                            id='select-next-stageId'
-                            icon='191'
-                            label='h_next_stage'
-                            options={stageList.value || []}
-                            menuPortalTarget={document.body}
-                            placeholder='p_select'
-                          />
-                        )}
-                      </Field>
-                    </div>
+              </section>
 
-                    <div className='col-span-1'>
-                      <Field<IOption> name='prevStageId'>
-                        {({ input, meta }) => (
-                          <SmartSelector
-                            {...input}
-                            meta={meta}
-                            id='select-prev-stageId'
-                            icon='191'
-                            label='h_prev_stage'
-                            options={stageList.value || []}
-                            menuPortalTarget={document.body}
-                            placeholder='p_select'
-                          />
-                        )}
-                      </Field>
-                    </div>
-
-                    {/* <div className='col-span-1'>
-                      <Field<IOption> name='errorStageId'>
-                        {({ input, meta }) => (
-                          <SmartSelector
-                            {...input}
-                            meta={meta}
-                            id='select-error-stageId'
-                            icon='191'
-                            label='h_error_stage'
-                            options={stageList.value || []}
-                            menuPortalTarget={document.body}
-                            placeholder='p_select'
-                          />
-                        )}
-                      </Field>
-                    </div> */}
-                  </>
-                )
-              )}
-
-              <div className='col-span-3 border-t border-gray-border dark:border-b-dark-dark pt-4'>
+              {/* 4) Resources */}
+              <section className='rounded-lg border border-gray-border dark:border-b-dark-dark bg-b-light dark:bg-b-dark-light p-4'>
                 <div className='flex items-center justify-between mb-3'>
                   <h3 className='text-sm font-medium text-t-light dark:text-t-dark'>
                     {t('h_resource')}
                   </h3>
+
                   <Button
                     name='add-resource-button'
                     type='button'
+                    icon='039'
                     onClick={() =>
                       form.mutators.push('resources', {
                         type: { value: 'external', label: 'External' },
@@ -520,38 +560,36 @@ export const StageForm: FunctionComponent = () => {
                           return (
                             <div
                               key={name}
-                              className='border border-gray-border dark:border-b-dark-dark rounded-lg p-4 bg-b-light dark:bg-b-dark-light text-t-light dark:text-t-dark'
+                              className='rounded-lg p-2 bg-white/40 dark:bg-black/10 text-t-light dark:text-t-dark'
                             >
-                              <div className='grid grid-cols-4 gap-4'>
-                                {/* Type Selector */}
-                                <div className='col-span-4 md:col-span-1'>
-                                  <Field name={`${name}.type`}>
-                                    {({ input, meta }) => (
-                                      <SmartSelector
-                                        {...input}
-                                        meta={meta}
-                                        id={`select-resource-type-${index}`}
-                                        icon='191'
-                                        label='Type'
-                                        options={[
-                                          {
-                                            value: 'internal',
-                                            label: 'Internal',
-                                          },
-                                          {
-                                            value: 'external',
-                                            label: 'External',
-                                          },
-                                        ]}
-                                        menuPortalTarget={document.body}
-                                        placeholder='p_select'
-                                      />
-                                    )}
-                                  </Field>
-                                </div>
+                              <div className='flex flex-row w-full items-end justify-between py-1 gap-x-2'>
+                                {/* Type */}
+                                <Field name={`${name}.type`}>
+                                  {({ input, meta }) => (
+                                    <SmartSelector
+                                      {...input}
+                                      meta={meta}
+                                      id={`select-resource-type-${index}`}
+                                      icon='041'
+                                      label='Type'
+                                      options={[
+                                        {
+                                          value: 'internal',
+                                          label: 'Internal',
+                                        },
+                                        {
+                                          value: 'external',
+                                          label: 'External',
+                                        },
+                                      ]}
+                                      menuPortalTarget={document.body}
+                                      placeholder='p_select'
+                                    />
+                                  )}
+                                </Field>
 
                                 {isInternal ? (
-                                  <div className='col-span-3'>
+                                  <div className='md:col-span-2'>
                                     <Field name={`${name}.internal.module`}>
                                       {({ input, meta }) => (
                                         <SmartSelector
@@ -572,55 +610,49 @@ export const StageForm: FunctionComponent = () => {
                                   </div>
                                 ) : (
                                   <>
-                                    <div className='col-span-1'>
-                                      <Field name={`${name}.external.method`}>
-                                        {({ input, meta }) => (
-                                          <SmartSelector
-                                            {...input}
-                                            meta={meta}
-                                            id={`select-resource-method-${index}`}
-                                            icon='191'
-                                            label='h_method'
-                                            options={[
-                                              { value: 'GET', label: 'GET' },
-                                              { value: 'POST', label: 'POST' },
-                                            ]}
-                                            menuPortalTarget={document.body}
-                                            placeholder='p_select'
-                                          />
-                                        )}
-                                      </Field>
-                                    </div>
+                                    <Field name={`${name}.external.method`}>
+                                      {({ input, meta }) => (
+                                        <SmartSelector
+                                          {...input}
+                                          meta={meta}
+                                          id={`select-resource-method-${index}`}
+                                          icon='191'
+                                          label='h_method'
+                                          options={[
+                                            { value: 'GET', label: 'GET' },
+                                            { value: 'POST', label: 'POST' },
+                                          ]}
+                                          menuPortalTarget={document.body}
+                                          placeholder='p_select'
+                                        />
+                                      )}
+                                    </Field>
 
-                                    <div className='col-span-2'>
-                                      <Field<string>
-                                        name={`${name}.external.requestUrl`}
-                                      >
-                                        {({ input, meta }) => (
-                                          <Input
-                                            {...input}
-                                            icon='120'
-                                            type='text'
-                                            placeholder={t('h_request_url')}
-                                            label={t('h_request_url')}
-                                            meta={meta}
-                                            disabled={loading.value}
-                                          />
-                                        )}
-                                      </Field>
-                                    </div>
+                                    <Field<string>
+                                      name={`${name}.external.requestUrl`}
+                                    >
+                                      {({ input, meta }) => (
+                                        <Input
+                                          {...input}
+                                          icon='120'
+                                          type='text'
+                                          placeholder={t('h_request_url')}
+                                          label={t('h_request_url')}
+                                          meta={meta}
+                                          disabled={loading.value}
+                                        />
+                                      )}
+                                    </Field>
                                   </>
                                 )}
-
-                                <div className='col-span-4 flex justify-end'>
+                                <div className='pb-2'>
                                   <Button
                                     name='remove-resource-button'
                                     type='button'
                                     onClick={() => fields.remove(index)}
                                     disabled={loading.value}
-                                    label='remove'
-                                    icon='312'
-                                    className='mt-2'
+                                    icon='181'
+                                    square
                                   />
                                 </div>
                               </div>
@@ -631,7 +663,7 @@ export const StageForm: FunctionComponent = () => {
                     )
                   }
                 </FieldArray>
-              </div>
+              </section>
             </div>
           </form>
         )}
