@@ -18,11 +18,20 @@ export class PqrsAiService extends BaseService {
     return await super.make_request(this.name, model);
   }
 
-  static async execute_ai_process_again(stageId: string, pqrsId: number) {
+  static async execute_ai_process_again(
+    pqrsId: number,
+    options: { stageId?: number; otsId?: number; areaId?: number } = {}
+  ) {
+    const { stageId, otsId, areaId } = options;
+    const data: Record<string, any> = {};
+    if (stageId !== undefined) data.stageId = stageId;
+    if (otsId !== undefined) data.otsId = otsId;
+    if (areaId !== undefined) data.areaId = areaId;
+
     const model: IMakeRequest = {
       url: ['validate-media-type', 'process-stage', pqrsId.toString()],
       method: REQUEST_METHODS.POST,
-      data: { stageId: Number(stageId) },
+      data,
     };
     return await super.make_request(this.name, model);
   }

@@ -1,15 +1,7 @@
 export interface IResourceStage {
   type: 'internal' | 'external';
   internal?: IModuleUrl;
-  external?: {
-    method: Methods;
-    requestUrl: string;
-  };
-}
-
-export enum Methods {
-  GET = 'GET',
-  POST = 'POST',
+  external?: IModuleExternalUrl;
 }
 
 export enum modulesResource {
@@ -20,45 +12,69 @@ export enum modulesResource {
   WORK_UNITS = 'work-units',
 }
 
-enum IdsRequests {
+export enum IdsRequests {
   AREA = 'area',
   PQRS = 'pqrs',
 }
 
-interface IModuleUrl {
+export interface IModuleExternalUrl {
+  method: HttpMethod;
+  requestUrl: string;
+};
+
+export interface IModuleUrl {
   module: modulesResource;
-  service: 'tryvoo' | 'step';
+  service: ServiceUrl;
   endpoint: string[] | string;
   idsRequests?: IdsRequests;
+  method: HttpMethod;
+}
+
+export enum HttpMethod {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE',
+}
+
+export enum ServiceUrl {
+  TRYVOO = 'tryvoo',
+  STEP = 'step',
 }
 
 export const listModulesUrls: IModuleUrl[] = [
   {
     module: modulesResource.AREA,
-    service: 'tryvoo',
+    service: ServiceUrl.TRYVOO,
     endpoint: ['area', 'simple', 'list'],
+    method: HttpMethod.GET,
   },
   {
     module: modulesResource.PRIORITY,
-    service: 'tryvoo',
+    service: ServiceUrl.TRYVOO,
     endpoint: ['priorities', 'simple', 'list'],
+    method: HttpMethod.GET,
   },
   {
     module: modulesResource.INFO_CONTRACT,
-    service: 'step',
+    service: ServiceUrl.STEP,
     endpoint: ['media-info', 'info-contract'],
+    method: HttpMethod.GET,
     idsRequests: IdsRequests.PQRS,
   },
   {
     module: modulesResource.WORK_ORDERS,
-    service: 'step',
+    service: ServiceUrl.STEP,
     endpoint: ['media-info', 'work-orders'],
+    method: HttpMethod.GET,
     idsRequests: IdsRequests.PQRS,
   },
   {
     module: modulesResource.WORK_UNITS,
-    service: 'step',
+    service: ServiceUrl.STEP,
     endpoint: ['media-info', 'work-units'],
+    method: HttpMethod.GET,
     idsRequests: IdsRequests.PQRS,
   },
 ];
