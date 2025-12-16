@@ -4,6 +4,7 @@ import { ShiftStatisticsData } from './types';
 import { defaultThresholds, riskThresholds, roundThresholds } from './constant';
 import { classifyStatus, toPercent } from './utils';
 import { setSignalMetric } from '@/store/signals/metric';
+import { setSignalShifts } from '@/store/signals/shift';
 
 class MetricsEngine {
   private timer: number | null = null;
@@ -43,13 +44,10 @@ class MetricsEngine {
      * - carga futura
      */
     const roundRaw: Array<{
-      // shiftId: number;
-      // roundId: number;
-      // timeRatio: number; // 0..1
-      roundPct: number; // actual
-      roundPctTime: number; // expected by time (0..100)
-      totalPoints: number; // pointsAmount * frequency
-      expectedPoints: number; // totalPoints * timeRatio
+      roundPct: number;
+      roundPctTime: number;
+      totalPoints: number;
+      expectedPoints: number;
     }> = [];
 
     for (let i = 0; i < raw.length; i++) {
@@ -57,8 +55,12 @@ class MetricsEngine {
       const startMs = dayjs.utc(s.start).valueOf();
       const endMs = dayjs.utc(s.end).valueOf();
 
+      let active = false;
+      let roundPctTime = -1;
+
       if (startMs <= nowMs && nowMs < endMs) {
         totalShifts++;
+        active = true;
 
         /**
          * METRIC: Shifts
@@ -96,7 +98,7 @@ class MetricsEngine {
           const elapsed = Math.max(0, Math.min(nowMs - startMs, duration));
           const timeRatio = Math.max(0, Math.min(elapsed / duration, 1));
 
-          const roundPctTime = timeRatio * 100;
+          roundPctTime = timeRatio * 100;
 
           const totalPoints = (s.pointsAmount ?? 0) * (s.frequency ?? 0);
           const expectedPoints = totalPoints * timeRatio;
@@ -105,18 +107,16 @@ class MetricsEngine {
           roundActualSum += s.roundPct ?? 0;
           roundExpectedSum += roundPctTime;
 
-          raw[i] = { ...raw[i], roundPctTime };
           roundRaw.push({
             roundPct: s.roundPct ?? 0,
             roundPctTime,
             totalPoints,
             expectedPoints,
-            // roundId: s.roundId,
-            // shiftId: s.id,
-            // timeRatio,
           });
         }
       }
+
+      raw[i] = { ...raw[i], roundPctTime, active };
     }
 
     /**
@@ -224,16 +224,18 @@ class MetricsEngine {
     };
 
     setSignalMetric(metric);
+    setSignalShifts(raw);
     rawDataManager.setActive(raw);
   }
 
   async recalculate() {
+    console.log('VAMOS A CALCULAR: ');
     const raw = await rawDataManager.getRaw();
     this.compute(raw);
   }
 
-  connect(intervalMs = 1 * 60 * 1000) {
-    if (this.timer) window.clearInterval(this.timer);
+  connect(intervalMs = 0.2 * 60 * 1000) {
+    if (this.timer) return; // window.clearInterval(this.timer);
     this.timer = window.setInterval(() => this.recalculate(), intervalMs);
   }
 

@@ -1,7 +1,7 @@
 /* WebSocket: actualiza shifts localmente para UPDATE y refetch en CREATE. */
 import { useEffect } from 'preact/hooks';
-import { Signal } from '@preact/signals';
-import { IShiftResponse } from '@/types/shift/activity';
+// import { Signal } from '@preact/signals';
+// import { IShiftResponse } from '@/types/shift/activity';
 import { WebSocketManager } from '@/utils/socket/manager/manager';
 import {
   InSocketMessage,
@@ -12,15 +12,16 @@ import {
 } from '@/utils/socket/manager/types';
 import { rawDataManager } from '@/utils/statistics/data.manager';
 import { metricsEngine } from '@/utils/statistics/metric.engine';
+import { signalShifts } from '@/store/signals/shift';
 
 type DateRangeFilters = { [key: string]: [string, string] } | null;
 
 export function useShiftSocket(params: {
-  shifts: Signal<IShiftResponse[]>;
+  // shifts: Signal<IShiftResponse[]>;
   dateRangeFilters: DateRangeFilters;
   onCreate: (range: DateRangeFilters) => void;
 }) {
-  const { shifts, dateRangeFilters, onCreate } = params;
+  const { dateRangeFilters, onCreate } = params;
 
   useEffect(() => {
     const handleMessage = (event: InSocketMessage<MessageEvent>) => {
@@ -37,13 +38,13 @@ export function useShiftSocket(params: {
         name === SOCKET_MESSAGE_EVENTS.UPDATE ||
         name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK
       ) {
-        const idx = shifts.value.findIndex(
+        const idx = signalShifts.value.findIndex(
           (s) => Number(s.id) === Number(message.id)
         );
         if (idx < 0) return;
-        const copy = shifts.value.slice();
+        const copy = signalShifts.value.slice();
         copy[idx] = message as any;
-        shifts.value = copy;
+        signalShifts.value = copy;
       }
 
       if (name === SOCKET_MESSAGE_EVENTS.CREATE) {
@@ -63,5 +64,5 @@ export function useShiftSocket(params: {
         MESSAGE_LISTENERS.SHIFTS
       );
     };
-  }, [dateRangeFilters, onCreate, shifts]);
+  }, [dateRangeFilters, onCreate, signalShifts]);
 }

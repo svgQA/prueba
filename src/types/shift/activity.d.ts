@@ -172,6 +172,7 @@ export interface IShiftResponse {
   report: IReport[];
   bane;
   task: TaskItemShift[];
+  active?: boolean;
   checkIn: {
     time: string;
     location: {

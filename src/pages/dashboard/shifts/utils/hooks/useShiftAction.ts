@@ -1,8 +1,8 @@
 /* Acciones de tabla: update/delete/check-in/out/download. */
 import { useCallback } from 'preact/hooks';
 import { useTranslation } from 'react-i18next';
-import { Signal } from '@preact/signals';
-import { IShiftResponse } from '@/types/shift/activity';
+// import { Signal } from '@preact/signals';
+// import { IShiftResponse } from '@/types/shift/activity';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { showAlert } from '@/components/common/show-alert/show-alert';
@@ -22,9 +22,10 @@ import {
   TaskStatus,
   TaskType,
 } from '@/components/compose/gantt/types/public-types';
+import { signalShifts } from '@/store/signals/shift';
 
 export function useShiftActions(params: {
-  shifts: Signal<IShiftResponse[]>;
+  // shifts: Signal<IShiftResponse[]>;
   openUpsert: () => void;
   setTaskSelected: (t?: Task) => void;
   setKeywordsSelected: (k: string[]) => void;
@@ -34,7 +35,7 @@ export function useShiftActions(params: {
 }) {
   const { t } = useTranslation();
   const {
-    shifts,
+    // shifts,
     openUpsert,
     setTaskSelected,
     setKeywordsSelected,
@@ -57,7 +58,7 @@ export function useShiftActions(params: {
     async (shiftId: number) => {
       openSpinner();
 
-      const shift = shifts.value.find((s) => s.id === shiftId);
+      const shift = signalShifts.value.find((s) => s.id === shiftId);
 
       const data: IShiftReportRequest = {
         shiftId,
@@ -81,7 +82,7 @@ export function useShiftActions(params: {
 
       closeSpinner();
     },
-    [shifts]
+    [signalShifts]
   );
 
   const handleCheck = useCallback(async (type: string, shiftId: number) => {
@@ -111,18 +112,18 @@ export function useShiftActions(params: {
       if (check.type === 'CHECK_IN') updatedRow.checkIn = check;
       else updatedRow.checkOut = check;
 
-      shifts.value = shifts.value.map((s) =>
+      signalShifts.value = signalShifts.value.map((s) =>
         s.id === row.id ? updatedRow : s
       );
     },
-    [shifts]
+    [signalShifts]
   );
 
   const onClickAction = useCallback(
     (paramsAction: { id: string; type: string; action: ROW_ACTIONS }) => {
       switch (paramsAction.action) {
         case ROW_ACTIONS.UPDATE: {
-          const shiftUpdate = shifts.value.find(
+          const shiftUpdate = signalShifts.value.find(
             (s) => s.id === Number(paramsAction.id)
           );
 
@@ -152,7 +153,7 @@ export function useShiftActions(params: {
         }
 
         case ROW_ACTIONS.DELETE: {
-          const shift = shifts.value.find(
+          const shift = signalShifts.value.find(
             (s) => s.id === Number(paramsAction.id)
           );
 
@@ -211,7 +212,6 @@ export function useShiftActions(params: {
       setKeywordsSelected,
       setTaskSelected,
       setTimeBeforeSelected,
-      shifts,
       t,
     ]
   );
