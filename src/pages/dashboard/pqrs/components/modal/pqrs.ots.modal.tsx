@@ -61,7 +61,7 @@ const PqrsOTSModal = ({ pqrs }: IProps) => {
                                 </div>
                             </div>
 
-                            <PqrsInferenceModal inferences={ot.inferences ?? []} />
+                            <PqrsInferenceModal inferences={ot.inference ?? []} />
                         </div>
                     ))}
                 </div>

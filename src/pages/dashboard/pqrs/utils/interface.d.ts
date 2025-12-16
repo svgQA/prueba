@@ -59,6 +59,7 @@ export interface Inference {
     prevStageId: number | null;
     type: string;
   };
+  ots?: ICOtsRequest | null;
   [key: string]: any;
 }
 
@@ -87,7 +88,7 @@ export interface ICOtsRequest {
   status: OTS_STATUS;
   executionDate: string | Date;
   pqrs: ICPqrsRequest;
-  inferences?: Inference[];
+  inference?: Inference[];
 }
 
 export enum OTS_STATUS {

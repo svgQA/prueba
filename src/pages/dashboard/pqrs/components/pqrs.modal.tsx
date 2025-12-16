@@ -160,8 +160,8 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
           <div class='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
             <div class='flex items-start gap-2'>
               <Badge
-                key={area.id}
-                label={area.name}
+                key={area?.area?.id}
+                label={area?.area?.name ?? ''}
                 status='warning'
                 size='sm'
                 outline
@@ -234,6 +234,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
       name='modal-pqrs-details'
       width='w-full max-w-7xl'
       position='fixed'
+      expandable
       header={
         <div className='flex flex-col gap-1'>
           <h3 className='text-xl font-semibold text-t-light dark:text-white'>
@@ -254,7 +255,10 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
             {activeTab.value === 'general' && <PqrsGeneralModal pqrs={pqrs} />}
             {activeTab.value === 'analysis' && (
               <PqrsInferenceModal
-                inferences={pqrs.value?.inferences ?? []}
+                inferences={
+                  pqrs.value?.inferences
+                    ?.filter((inf) => inf.ots == null || inf.otsId == null) ?? []
+                }
               />
             )}
             {activeTab.value === 'ots' && (<PqrsOTSModal pqrs={pqrs} />)}
