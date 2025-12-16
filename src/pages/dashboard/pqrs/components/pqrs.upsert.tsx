@@ -134,7 +134,7 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                         {...input}
                         type='text'
                         // placeholder={t('h_description')}
-                        label={t('h_description')}
+                        label={'h_description'}
                         meta={meta}
                         disabled={loading.value}
                         rows={12}

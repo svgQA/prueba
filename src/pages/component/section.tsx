@@ -8,6 +8,7 @@ interface Props extends PropsWithChildren {
   buttons?: any;
   modals?: any;
   className?: string;
+  relative?: boolean;
 }
 
 export const SectionPage: FunctionComponent<Props> = ({
@@ -17,11 +18,12 @@ export const SectionPage: FunctionComponent<Props> = ({
   cards,
   buttons,
   modals,
+  relative,
 }: Props) => {
   return (
     <section className={`${padding ? 'px-2 pt-2' : 'p-0'} ${className}`}>
       {cards}
-      <div className='max-h-screen'>
+      <div className={`max-h-screen ${relative ? 'relative' : ''}`}>
         {/* bg-b-content dark:bg-b-dark */}
         <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center overflow-visible xl:absolute z-0'>
           {buttons}

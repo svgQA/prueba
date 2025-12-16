@@ -223,6 +223,7 @@ export const UsersPage: FunctionalComponent = () => {
   return (
     <SectionPage
       padding
+      relative
       cards={
         <CardsPage>
           <CardData
@@ -288,16 +289,14 @@ export const UsersPage: FunctionalComponent = () => {
       }
     >
       {currentView.value === VIEW_NAME.CREATE && (
-        <div className='pt-16'>
-          <CreateUser
-            onUserCreated={() => {
-              handleViewChange(VIEW_NAME.TABLE);
-              user.value = undefined;
-              getUsers();
-            }}
-            user={user.value}
-          />
-        </div>
+        <CreateUser
+          onUserCreated={() => {
+            handleViewChange(VIEW_NAME.TABLE);
+            user.value = undefined;
+            getUsers();
+          }}
+          user={user.value}
+        />
       )}
       {currentView.value === VIEW_NAME.MESSAGE && <UserMessage />}
       {currentView.value === VIEW_NAME.TABLE && (

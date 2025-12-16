@@ -32,7 +32,7 @@ export class OtsService extends BaseService {
       method: REQUEST_METHODS.POST,
       data: {
         pqrsId,
-        areaId
+        areaId,
       },
     };
     return await super.make_request(this.name, model);

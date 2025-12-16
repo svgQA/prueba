@@ -78,7 +78,9 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
   const tabs: ITab[] = [
     { id: 'general', label: 'General', icon: '310' },
     { id: 'analysis', label: 'Análisis IA', icon: '311' },
-    ...(pqrs.value?.pqrs_ots ? [{ id: 'ots', label: 'Órdenes de Trabajo', icon: '320' }] : []),
+    ...(pqrs.value?.pqrs_ots
+      ? [{ id: 'ots', label: 'Órdenes de Trabajo', icon: '320' }]
+      : []),
   ];
 
   const getBadgeStatus = ():
@@ -100,7 +102,10 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
     const response = await OtsService.create(pqrsId, areaId);
     if (!response.getStatus()) return (loading.value = false);
     const ots = response.getOne();
-    await PqrsAiService.execute_ai_process_again(pqrsId, { otsId: ots.id, areaId })
+    await PqrsAiService.execute_ai_process_again(pqrsId, {
+      otsId: ots.id,
+      areaId,
+    });
     loading.value = false;
     closeModal();
   };
@@ -186,7 +191,11 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
               <Button
                 name='btn-click-ots'
                 label='create OTS'
-                onClick={() => Promise.all([handleCreateOts(pqrs.value?.id!, area?.area?.id!)])}
+                onClick={() =>
+                  Promise.all([
+                    handleCreateOts(pqrs.value?.id!, area?.area?.id!),
+                  ])
+                }
                 className='!bg-secondary/15 !text-secondary hover:!bg-secondary/25'
               />
             </div>
@@ -256,12 +265,13 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
             {activeTab.value === 'analysis' && (
               <PqrsInferenceModal
                 inferences={
-                  pqrs.value?.inferences
-                    ?.filter((inf) => inf.ots == null || inf.otsId == null) ?? []
+                  pqrs.value?.inferences?.filter(
+                    (inf) => inf.ots == null || inf.otsId == null
+                  ) ?? []
                 }
               />
             )}
-            {activeTab.value === 'ots' && (<PqrsOTSModal pqrs={pqrs} />)}
+            {activeTab.value === 'ots' && <PqrsOTSModal pqrs={pqrs} />}
           </>
         </TabInformation>
       </div>
@@ -287,10 +297,11 @@ const TabInformation = ({ tabs, children, activeTab }: ITabProp) => (
         {tabs.map((tab) => (
           <button
             key={tab.id}
-            class={`px-3 py-2 text-sm font-medium rounded-xl transition-colors border ${activeTab.value === tab.id
-              ? 'bg-primary text-white border-primary shadow-md'
-              : 'bg-white/80 dark:bg-b-dark/80 border-transparent text-gray-text-light dark:text-b-light-dark hover:border-gray-border/60 dark:hover:border-b-dark-light hover:text-t-light'
-              }`}
+            class={`px-3 py-2 text-sm font-medium rounded-xl transition-colors border ${
+              activeTab.value === tab.id
+                ? 'bg-primary text-white border-primary shadow-md'
+                : 'bg-white/80 dark:bg-b-dark/80 border-transparent text-gray-text-light dark:text-b-light-dark hover:border-gray-border/60 dark:hover:border-b-dark-light hover:text-t-light'
+            }`}
             onClick={() => (activeTab.value = tab.id)}
           >
             <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>

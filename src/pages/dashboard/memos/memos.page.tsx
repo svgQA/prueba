@@ -370,7 +370,9 @@ export const MemosPage: FunctionComponent = () => {
       className={currentView.value === VIEW_NAME.CHAT ? 'pt-0' : ''}
       padding
       cards={
-        <CardsPage>
+        <CardsPage
+          className={currentView.value === VIEW_NAME.CHAT ? '!mb-0' : ''}
+        >
           {(currentView.value === VIEW_NAME.TABLE ||
             currentView.value === VIEW_NAME.MAP) &&
             renderCardsInfo(summary.value)}
