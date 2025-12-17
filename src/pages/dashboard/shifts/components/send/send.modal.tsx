@@ -27,7 +27,7 @@ export const SendForm = ({ onClose, users, hasplayers }: Props) => {
   return (
     <div
       ref={ref}
-      className='bg-white dark:bg-b-dark-dark rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 max-h-[70vh] overflow-auto vox-scroll-design'
+      className='relative bg-white dark:bg-b-dark-dark rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 p-4 max-h-[70vh] overflow-auto vox-scroll-design z-50'
     >
       <div className='px-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center pb-2 bg-white dark:bg-b-dark-dark'>
         <h3 className='text-base font-semibold text-gray-900 dark:text-gray-200'>
