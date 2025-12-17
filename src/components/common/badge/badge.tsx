@@ -11,10 +11,10 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
   full = false,
   borderless = false,
   outline = false,
-  width = 'w-32',
   onRemove,
   onClick,
   count,
+  width,
 }: IBadgeProps) => {
   if (!label) return null;
   const { t } = useTranslation();
@@ -43,7 +43,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
         ${
           outline
             ? `border ${getStatusColor(status)} bg-transparent`
-            : `${borderless ? 'border-none' : 'border border-gray-100 dark:border-gray-700'} ${getStatusColor(status)}`
+            : `${borderless ? 'border-none' : 'border border-gray-100 dark:border-gray-700'} ${getStatusColor(status)} !text-white`
         }
       `}
       onClick={onClick}

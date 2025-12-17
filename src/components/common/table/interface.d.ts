@@ -38,4 +38,5 @@ export interface ITableProps<T> {
   onRangeChange?: (range: { [key: string]: [string, string] } | null) => void;
   fileName?: 'shift' | 'employee';
   range?: boolean;
+  className?: string;
 }

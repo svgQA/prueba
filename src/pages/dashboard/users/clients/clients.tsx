@@ -78,7 +78,6 @@ export const ClientsSettingPage: FunctionComponent = () => {
       <Table<IClientResponse>
         data={clients.value}
         columns={columns}
-        pageSize={20}
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}

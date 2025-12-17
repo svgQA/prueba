@@ -74,7 +74,6 @@ const ResourcesPage = () => {
     <Table<IResourceResponse>
       data={resources.value}
       columns={getColumns(onClickAction)}
-      pageSize={10}
       visibility={{
         id: false,
       }}

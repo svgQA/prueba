@@ -85,7 +85,6 @@ export const ScheduledNotificationsPage: FunctionComponent = () => {
       <Table<INotificationScheduledItem>
         data={notifications.value}
         columns={getColumns(onClickAction)}
-        pageSize={10}
         isSettingTable
         showExpandableIcon={false}
         loading={loading.value}

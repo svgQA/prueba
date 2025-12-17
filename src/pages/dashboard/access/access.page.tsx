@@ -202,7 +202,6 @@ export const AccessPage: FunctionalComponent = () => {
       <Table<IAccess>
         data={accesses.value}
         columns={getColumns(onClickAction)}
-        pageSize={10}
         expandable={(row: IAccess) => <ExpandableAccess row={row} />}
         visibility={{
           id: false,

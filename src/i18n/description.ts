@@ -28,6 +28,12 @@ export const description_es = {
   d_stages: '',
   d_residence: '',
   d_priorities: '',
+  pq_no_case: 'No hay PQRS en esta columna',
+  pq_new_case: 'Crea un nuevo caso para empezar',
+  pq_title: 'Gestión y experiencia ',
+  pq_description:
+    'Visualiza y gestiona tus casos con un tablero limpio y ordenado.',
+  pq_name: 'PQRS',
 };
 
 export const description_en = {
@@ -60,4 +66,10 @@ export const description_en = {
   d_stages: '',
   d_residence: '',
   d_priorities: '',
+  pq_no_case: 'There are no PQRS in this column',
+  pq_new_case: 'New PQRS case',
+  pq_title: 'Management and experience',
+  pq_description:
+    'View and manage your cases with a clean, well-organized dashboard.',
+  pq_name: 'PQRS',
 };

@@ -15,6 +15,7 @@ export const label_es = {
   l_check_pending: 'Registro pendiente',
   l_check_error: 'Registro tardío',
   l_check_success: 'Registro exitoso',
+  l_create_ots: 'Crear OTS',
   l_check_on_time: 'A tiempo',
   l_check_late: 'Tarde',
   l_check_early: 'Temprano',
@@ -217,6 +218,8 @@ export const label_es = {
   l_no_resources: 'No tienes recursos creados',
   l_delete_resource: 'Eliminar Recurso',
   l_delete_resource_confirm: '¿Estás seguro de querer eliminar este recurso?',
+  h_pqrs_description:
+    'Visualiza los datos clave del caso y el análisis de IA con una vista más legible.',
 };
 
 export const label_en = {
@@ -266,6 +269,7 @@ export const label_en = {
   l_clear_user: 'Clear user selection',
   l_template: 'Template',
   l_place: 'Place',
+  l_create_ots: 'Create OTS',
   l_custom_title: 'Custom title',
   l_custom_description: 'Custom description',
   l_send_notification: 'Send notification',
@@ -276,6 +280,10 @@ export const label_en = {
   l_code: 'Code',
   l_radius: 'Radius of coverage',
   l_date_start: 'Start date',
+
+  h_pqrs_description:
+    'View key case information and AI analysis in a clearer, more readable view.',
+
   l_date_end: 'End date',
   l_type_ubication: 'Location type',
   l_status: 'Status',

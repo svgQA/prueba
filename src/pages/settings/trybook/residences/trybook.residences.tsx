@@ -96,7 +96,6 @@ export const TrybookResidencesPage: FunctionComponent = () => {
       columns={columns}
       showExpandableIcon={false}
       onClickAction={handleOnClick}
-      pageSize={20}
       isSettingTable
       loading={loading.value}
       absolute

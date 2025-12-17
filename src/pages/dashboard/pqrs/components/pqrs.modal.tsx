@@ -83,6 +83,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
       : []),
   ];
 
+  /*
   const getBadgeStatus = ():
     | 'error'
     | 'success'
@@ -96,6 +97,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
     if (pqrsType === 'recurso') return 'ternary';
     return 'info';
   };
+  */
 
   const handleCreateOts = async (pqrsId: number, areaId: number) => {
     loading.value = true;
@@ -111,96 +113,103 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
   };
 
   const HeaderInformation = () => (
-    <div class='bg-white/95 dark:bg-b-dark-light/90 border border-gray-border/70 dark:border-b-dark-light rounded-2xl p-4 shadow-sm space-y-4'>
-      <div class='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
-        <div class='flex-1 min-w-0 space-y-1.5'>
-          <div class='flex items-start gap-2 flex-wrap'>
-            <h4 class='font-semibold text-t-light dark:text-white text-lg leading-tight'>
-              {pqrs.value?.extraData?.title}
-            </h4>
-          </div>
-          <div class='flex items-center flex-wrap gap-2 text-xs text-gray-text-light dark:text-b-light-dark'>
-            {pqrs.value?.clientName && (
-              <span class='font-mono px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
-                Nombre: {pqrs.value.clientName}
-              </span>
-            )}
-            {pqrs.value?.identifier && (
-              <span class='font-mono px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
-                Cedula: {pqrs.value.identifier}
-              </span>
-            )}
-            {pqrs.value?.contract && (
-              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
-                contract: {pqrs.value.contract}
-              </span>
-            )}
-            {pqrs.value?.startDate && (
-              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
-                fecha:{' '}
-                {DateUtils.dateToFrontend(pqrs.value?.startDate, {
-                  format: 'DD/MM/YYYY',
-                })}
-              </span>
-            )}
-            {pqrs.value?.contactEmail && (
-              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
-                Email: {pqrs.value.contactEmail}
-              </span>
-            )}
-            {pqrs.value?.address && (
-              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
-                Dirección: {pqrs.value.address}
-              </span>
-            )}
-          </div>
-        </div>
+    <div className='bg-white/95 dark:bg-b-dark-light/90 border border-gray-border/70 dark:border-b-dark-light rounded-2xl py-2 px-4 shadow-sm space-y-4 relative'>
+      <div className='flex flex-row justify-between'>
+        <h4 className='font-semibold text-t-light dark:text-white text-lg leading-tight'>
+          {pqrs.value?.extraData?.title}
+        </h4>
+        {pqrs.value?.priority && (
+          <Badge
+            label={pqrs.value?.priority.name}
+            status='warning'
+            size='sm'
+            borderless
+            width='w-fit'
+          />
+        )}
       </div>
+      <div className='flex flex-row w-full'>
+        <div class='grid grid-cols-2 gap-2 pr-5 border-r border-gray-500 w-1/2'>
+          {pqrs.value?.clientName && (
+            <TextEllipsis
+              text={pqrs.value.clientName}
+              maxWidth='100%'
+              className='font-mono px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark h-7'
+            ></TextEllipsis>
+          )}
+          {pqrs.value?.identifier && (
+            <span class='font-mono px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark h-7'>
+              {t('h_identification')}: {pqrs.value.identifier}
+            </span>
+          )}
+          {pqrs.value?.contract && (
+            <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark h-7'>
+              {t('h_contract')}: {pqrs.value.contract}
+            </span>
+          )}
+          {pqrs.value?.startDate && (
+            <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark h-7'>
+              {t('h_date')}:{' '}
+              {DateUtils.dateToFrontend(pqrs.value?.startDate, {
+                format: 'DD/MM/YYYY',
+              })}
+            </span>
+          )}
+          {pqrs.value?.contactEmail && (
+            <TextEllipsis
+              text={pqrs?.value?.contactEmail}
+              maxWidth='100%'
+              className='font-mono px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark h-7'
+            ></TextEllipsis>
+          )}
+          {pqrs.value?.address && (
+            <TextEllipsis
+              text={pqrs?.value?.address}
+              maxWidth='100%'
+              className='font-mono px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark h-7'
+            ></TextEllipsis>
+          )}
+        </div>
 
-      {/**
-       * TODO: REFACTORIZAR ESTA PARTE PORQUE NO DEBE IR AQUI:
-       */}
-      {pqrs.value?.area &&
-        pqrs.value?.area.map((area: IPqrsArea) => (
-          <div class='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
-            <div class='flex items-start gap-2'>
-              <Badge
-                key={area?.area?.id}
-                label={area?.area?.name ?? ''}
-                status='warning'
-                size='sm'
-                outline
-                width='w-fit'
-              />
-            </div>
-
-            {area.subarea && (
-              <div class='flex items-start gap-2'>
+        <div class='flex flex-col w-1/2 gap-2 pl-5'>
+          {pqrs.value?.area &&
+            pqrs.value?.area.map((area: IPqrsArea) => (
+              <div className='grid grid-cols-3 gap-x-3'>
                 <Badge
-                  key={area?.subarea?.id}
-                  label={area?.subarea?.name}
-                  status='warning'
+                  key={area?.area?.id}
+                  label={area?.area?.name ?? ''}
+                  status='info'
                   size='sm'
                   outline
-                  width='w-fit'
+                  full
+                />
+
+                {area.subarea && (
+                  <Badge
+                    key={area?.subarea?.id}
+                    label={area?.subarea?.name}
+                    status='warning'
+                    size='sm'
+                    outline
+                    full
+                  />
+                )}
+
+                <Button
+                  name='btn-click-ots'
+                  label='l_create_ots'
+                  icon='039'
+                  onClick={() =>
+                    Promise.all([
+                      handleCreateOts(pqrs.value?.id!, area?.area?.id!),
+                    ])
+                  }
+                  className='!bg-secondary/15 !text-secondary hover:!bg-secondary/25'
                 />
               </div>
-            )}
-
-            <div class='flex items-start gap-2'>
-              <Button
-                name='btn-click-ots'
-                label='create OTS'
-                onClick={() =>
-                  Promise.all([
-                    handleCreateOts(pqrs.value?.id!, area?.area?.id!),
-                  ])
-                }
-                className='!bg-secondary/15 !text-secondary hover:!bg-secondary/25'
-              />
-            </div>
-          </div>
-        ))}
+            ))}
+        </div>
+      </div>
 
       {pqrs.value?.extraData?.observation && (
         <div class='mb-3 pb-3 border-b border-gray-border/70 dark:border-b-dark-light'>
@@ -212,8 +221,10 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
           />
         </div>
       )}
+
       {/* Mover badges al final para que no queden junto al título */}
-      <div class='flex items-start gap-2 flex-wrap'>
+      <div class='flex items-start gap-2 flex-wrap '>
+        {/*
         {pqrs.value?.extraData?.pqrsType && (
           <Badge
             label={pqrs.value.extraData.pqrsType}
@@ -223,15 +234,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
             width='w-fit'
           />
         )}
-        {pqrs.value?.priority && (
-          <Badge
-            label={pqrs.value?.priority.name}
-            status='warning'
-            size='sm'
-            outline
-            width='w-fit'
-          />
-        )}
+        */}
       </div>
     </div>
   );
@@ -241,22 +244,24 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
       open={showModal.value}
       onClose={closeModal}
       name='modal-pqrs-details'
-      width='w-full max-w-7xl'
+      // width='w-full max-w-7xl'
       position='fixed'
-      expandable
       header={
         <div className='flex flex-col gap-1'>
           <h3 className='text-xl font-semibold text-t-light dark:text-white'>
             {t('h_pqrs_details')}
           </h3>
           <p className='text-sm text-gray-text-light dark:text-b-light-dark'>
+            {t('h_pqrs_description')}
+            {/*
             Visualiza los datos clave del caso y el análisis de IA con una vista
             más legible.
+          */}
           </p>
         </div>
       }
     >
-      <div class='h-[75vh] w-full flex flex-col gap-4 bg-white dark:bg-b-dark px-4 pb-6 pt-2 overflow-hidden'>
+      <div class='h-[70rem] w-full flex flex-col gap-4 bg-white dark:bg-b-dark px-4 pb-6 pt-2 overflow-hidden'>
         <HeaderInformation />
 
         <TabInformation tabs={tabs} activeTab={activeTab}>
@@ -290,29 +295,30 @@ interface ITabProp {
   activeTab: Signal<string>;
 }
 
-const TabInformation = ({ tabs, children, activeTab }: ITabProp) => (
-  <div class='rounded-2xl border border-gray-border/70 dark:border-b-dark-light bg-white/90 dark:bg-b-dark-light/90 shadow-sm overflow-hidden flex flex-col h-full'>
-    <div class='border-b border-gray-border/60 dark:border-b-dark-light bg-b-light/60 dark:bg-b-dark/60 px-2'>
-      <nav class='flex space-x-1 overflow-x-auto vox-scroll-design py-2'>
+const TabInformation = ({ tabs, children, activeTab }: ITabProp) => {
+  const { t } = useTranslation();
+  return (
+    <div class='rounded-2xl border border-gray-border/70 dark:border-b-dark-light bg-white/90 dark:bg-b-dark-light/90 shadow-sm overflow-hidden flex flex-col h-full'>
+      <nav class='flex space-x-1 overflow-x-auto vox-scroll-design py-2 bg-b-light/60 dark:bg-b-dark/10 px-2 border-b border-b-gray-500 shadow-xl'>
         {tabs.map((tab) => (
           <button
             key={tab.id}
             class={`px-3 py-2 text-sm font-medium rounded-xl transition-colors border ${
               activeTab.value === tab.id
-                ? 'bg-primary text-white border-primary shadow-md'
+                ? 'bg-ternary text-white border-primary shadow-md'
                 : 'bg-white/80 dark:bg-b-dark/80 border-transparent text-gray-text-light dark:text-b-light-dark hover:border-gray-border/60 dark:hover:border-b-dark-light hover:text-t-light'
             }`}
             onClick={() => (activeTab.value = tab.id)}
           >
             <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>
-            {tab.label}
+            {t(tab.label)}
           </button>
         ))}
       </nav>
-    </div>
 
-    <div class='flex-1 overflow-y-auto p-4 bg-b-light/60 dark:bg-b-dark/60 vox-scroll-design'>
-      {children}
+      <div class='flex-1 overflow-y-auto p-1 bg-b-light/60 dark:bg-b-dark/60 vox-scroll-design'>
+        {children}
+      </div>
     </div>
-  </div>
-);
+  );
+};

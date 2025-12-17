@@ -235,7 +235,6 @@ export const FormsPage: FunctionComponent = () => {
           key={i18n.language}
           data={responses.value}
           columns={getColumns(handleOnClick)}
-          pageSize={20}
           onClickAction={handleOnClick}
           loading={loading.value}
           rowClassName={(row: IResponseResponse) =>

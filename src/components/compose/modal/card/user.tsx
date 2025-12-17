@@ -14,7 +14,7 @@ export const CardSettingUser: FunctionComponent<ICardSettingUserProps> = ({
 }: ICardSettingUserProps) => {
   return (
     <Card id={id} name={name} borderless rounded={false} transparent>
-      <div className='px-2'>
+      <div className='py-1'>
         <div className='flex gap-2 w-full pb-2 justify-between px-3 py-1'>
           <Avatar name={username} src={image} size='lg' />
           <div className='flex flex-col justify-center'>

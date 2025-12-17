@@ -589,7 +589,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   );
 
   return (
-    <div className='w-full h-[calc(100vh-9vh)]'>
+    <div className='w-full h-[calc(100vh-7vh)] pr-3'>
       <div className='flex flex-1 overflow-y-auto border rounded-lg border-b-light-dark dark:border-b-dark-light h-full w-full'>
         <div className='w-[30%] flex flex-col h-[100%] border-r border-b-light-dark dark:border-b-dark-light max-w-96'>
           <div className='pt-[50px] px-2 border-b-light-dark dark:border-b-dark-light'>

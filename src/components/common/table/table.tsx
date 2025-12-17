@@ -72,7 +72,7 @@ const SkeletonRow = ({ columns }: { columns: number }) => {
 export const Table = <T,>({
   data,
   columns = [],
-  pageSize = 10,
+  pageSize = 50,
   expandable,
   unsettings,
   visibility,
@@ -93,6 +93,7 @@ export const Table = <T,>({
   onRangeChange,
   fileName,
   range,
+  className,
 }: ITableProps<T>) => {
   const { t } = useTranslation();
   const [selectedCells, setSelectedCells] = useState<Record<string, string>>(
@@ -797,7 +798,7 @@ export const Table = <T,>({
 
         <div className='text-sm flex items-center gap-2 px-2'>
           {t('page')}:
-          <div className='inline-block border rounded-md px-3 py-1 min-w-[40px] text-center border-b-light-dark dark:border-b-darkt'>
+          <div className='inline-block rounded-md px-3 py-1 min-w-[40px] text-center font-bold bg-ternary'>
             {currentPage + 1}
           </div>
           {t('of')} {totalPages}
@@ -838,13 +839,13 @@ export const Table = <T,>({
       >
         <div
           onClick={handleClick}
-          className='pb-12 min-h-[60vh] border-2 border-gray-200 dark:border-b-dark-light rounded-lg relative'
+          className='pb-12 min-h-[50vh] border-2 border-gray-200 dark:border-b-dark-light rounded-lg relative'
         >
           <div
             className={`${
               isSettingTable
-                ? 'max-h-setting-table min-h-setting-table h-[62vh]'
-                : 'max-h-general-table h-[65vh]'
+                ? `max-h-setting-table ${className ? className : '!min-h-[65vh]'}`
+                : `max-h-general-table h-[calc(100vh-23.5vh)] ${className}`
             } overflow-auto vox-scroll-design`}
             // ${data.length > 10 ? 'overflow-auto' : 'overflow-hidden'} relative vox-scroll-design min-h-[20vh]`}
           >

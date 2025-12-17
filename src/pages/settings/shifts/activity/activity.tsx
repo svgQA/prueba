@@ -93,7 +93,6 @@ export const ActivitySettingPage: FunctionComponent = () => {
       <Table<IActivity>
         data={activity.value}
         columns={columns}
-        pageSize={20}
         onClickAction={handleOnClick}
         isSettingTable
         absolute

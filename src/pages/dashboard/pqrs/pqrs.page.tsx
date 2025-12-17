@@ -30,6 +30,7 @@ import OtsPage from './components/pqrs.ots';
 import DashboardPreview from './components/pqrs.dashboard';
 
 import { ICPqrsRequest } from './utils/interface';
+import { useUserStore } from '@/store/slices';
 
 interface ColumnConfig {
   title: string;
@@ -56,8 +57,15 @@ export const PqrsPage: FunctionComponent = () => {
   const lastUpdated = useSignal<Date | null>(null);
   const pqrsSelected = useSignal<any>({ id: 0, tags: [], area: {} });
 
+  const { selectedCompany } = useUserStore();
   useEffect(() => {
-    Promise.all([fetchingAllData()]);
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      Promise.all([fetchingAllData()]);
+    }
+  }, [selectedCompany, location]);
+
+  useEffect(() => {
     WebSocketManager.add(
       SOCKET_MESSAGE_AREA.PQRS,
       handleMessage,
@@ -172,6 +180,7 @@ export const PqrsPage: FunctionComponent = () => {
   };
 
   // Mapear colorClass a status del Badge
+  /*
   const getColumnBadgeStatus = (
     colorClass: string
   ): 'error' | 'success' | 'warning' | 'info' | 'ternary' => {
@@ -181,6 +190,7 @@ export const PqrsPage: FunctionComponent = () => {
     if (colorClass.includes('ternary')) return 'ternary';
     return 'info';
   };
+  */
 
   const closeModalUpsert = async () => {
     openModalUpsert.value = false;
@@ -195,15 +205,15 @@ export const PqrsPage: FunctionComponent = () => {
   return (
     <div class='min-h-full text-t-light dark:text-t-dark'>
       <div class='w-full mx-auto px-4 py-2 space-y-2'>
-        <div class='bg-white/90 dark:bg-b-dark-light/80 border border-gray-border/60 dark:border-gray-border/20 rounded-lg shadow-sm px-4 py-3 md:px-6 md:py-4 flex flex-col bg-red-600'>
+        <div class='bg-white/90 dark:bg-b-dark-light/80 border border-gray-border/60 dark:border-gray-border/20 rounded-lg shadow-sm px-4 py-3 md:px-6 md:py-4 flex flex-col'>
           <div class='flex flex-row xl:justify-between w-full items-center flex-wrap gap-y-2 justify-center'>
             <div class='space-y-2'>
               <div class='flex items-center gap-3 flex-wrap'>
                 <h1 class='text-2xl font-semibold text-t-light dark:text-white'>
-                  Gestión y experiencia
+                  {t('pq_title')}
                 </h1>
                 <Badge
-                  label={t('PQRS') || 'PQRS'}
+                  label='pq_name'
                   status='info'
                   outline
                   size='sm'
@@ -211,9 +221,10 @@ export const PqrsPage: FunctionComponent = () => {
                 />
               </div>
               <p class='text-sm text-gray-text-light dark:text-t-dark'>
-                Visualiza y gestiona tus casos con un tablero limpio y ordenado.
+                {t('pq_description')}
               </p>
             </div>
+
             <div class='bg-b-light dark:bg-b-dark rounded-full py-1 px-4 flex gap-1 shadow-sm h-12 items-center'>
               {viewMode.value === ViewMode.CARDS && (
                 <div class='flex gap-2 border-r border-b-light-dark dark:border-b-dark-light px-2'>
@@ -292,37 +303,28 @@ export const PqrsPage: FunctionComponent = () => {
 
         {/* border border-gray-border/50 dark:border-gray-border/20 shadow-sm */}
         {viewMode.value === ViewMode.CARDS && (
-          <div className='rounded-lg bg-white/80 dark:bg-b-dark-light/70 px-3 md:px-4 py-4 space-y-4 border border-gray-border/60 dark:border-gray-border/20 min-h-screen'>
+          <div className='w-full h-[calc(100vh-17vh)] overflow-y-auto vox-scroll-design rounded-lg bg-white/80 dark:bg-b-dark-light/70 px-3 md:px-4 py-4 space-y-4 border border-gray-border/60 dark:border-gray-border/20'>
             <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-5 w-full'>
               {columns.value.map((column, index) => {
                 const items = groupedPqrs.value[column.title] ?? [];
                 return (
                   <div
                     key={`${column.title}-${index}`}
-                    // shadow-[0_8px_24px_rgba(0,0,0,0.05)] backdrop-blur-sm flex flex-col gap-3 transition hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)]
-                    className='group rounded-2xl p-4 min-h-96 w-full border border-gray-border/80 bg-white/90 dark:bg-b-dark-light/90 dark:border-gray-border/10'
+                    className='group rounded-lg p-2 min-h-96 w-full border border-gray-border/80 bg-white/90 dark:bg-b-dark-light/90 dark:border-gray-border/10'
                   >
-                    <div className='flex items-center justify-between mb-3 gap-2 sticky top-0 bg-white/90 dark:bg-b-dark-light/90 py-1 -mx-1 px-1 backdrop-blur-sm border-b border-transparent group-hover:border-gray-border/60 dark:group-hover:border-gray-border/30'>
-                      <h3
-                        className={`font-semibold flex items-center gap-2 flex-1 min-w-0 text-base capitalize`}
-                      >
-                        <TextEllipsis
-                          text={t(column.title)}
-                          maxWidth='100%'
-                          lines={1}
-                        />
-                      </h3>
-                      <Badge
-                        label={String(items.length)}
-                        status={getColumnBadgeStatus(column.colorClass)}
-                        outline
-                        borderless
-                        size='xs'
-                        width='w-fit'
+                    <div className='flex items-center justify-between mb-3 gap-2 sticky top-0 bg-white/90 dark:bg-b-dark-light/90 py-1 -mx-1 px-1 backdrop-blur-sm border-b border-transparent '>
+                      <TextEllipsis
+                        text={t(column.title)}
+                        maxWidth='16rem'
+                        lines={1}
+                        className='capitalize'
                       />
+                      <span className='font-bold px-2 bg-teal-700 rounded-md'>
+                        {String(items.length)} und
+                      </span>
                     </div>
 
-                    <div class='space-y-2 max-h-96 overflow-y-auto vox-scroll-design pr-1 pb-1'>
+                    <div class='space-y-2 max-h-96 overflow-y-auto'>
                       {items.map((item: ICPqrsRequest, index) => {
                         return (
                           <PqrsCards
@@ -383,6 +385,7 @@ export const PqrsPage: FunctionComponent = () => {
         showModal={openModalUpsert}
         closeModal={() => closeModalUpsert()}
       />
+
       <PqrsModal
         id={pqrsSelected.value.id}
         showModal={openModalData}

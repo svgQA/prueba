@@ -125,7 +125,6 @@ export const ListFormModal = ({ onSelected }: IListFormModalProps) => {
         <Table<IListResponse>
           data={lists.value}
           columns={columns}
-          pageSize={50}
           // unsettings
           isSettingTable
           onClickAction={handleOnClick}
