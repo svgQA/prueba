@@ -1,3 +1,5 @@
+import { IResourceStage } from './resoruce.interface';
+
 export interface IStages {
   id?: number;
   stageName: string;
@@ -11,14 +13,10 @@ export interface IStages {
   errorStageId?: number | null;
   visibility?: boolean;
   areaId?: number | null;
+  type?: TypesOfStages | null;
 }
 
-export interface IResourceStage {
-  method: Methods;
-  requestUrl: string;
-}
-
-export enum Methods {
-  GET = 'GET',
-  POST = 'POST',
+export enum TypesOfStages {
+  CONTINUE = 'CONTINUE',
+  MANUAL = 'MANUAL',
 }

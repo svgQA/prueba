@@ -19,6 +19,20 @@ export const validation_es = {
   password_strength:
     'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial',
   passwords_not_match: 'Las contraseñas no coinciden',
+  phone_start_with: 'El teléfono debe comenzar con +',
+  size_8: 'El teléfono debe tener al menos 8 caracteres',
+  invalid_format: 'Formato inválido',
+  min_leng: 'Longitud mínima: {{min}} caracteres',
+  eql_len_param: 'Longitud exacta: {{len}} caracteres',
+  ran_len_param: 'Longitud entre {{min}} y {{max}} caracteres',
+  number_required: 'El número es requerido',
+  number_length_1_20: 'El número debe tener entre 1 y 20 dígitos',
+  email_required: 'El correo electrónico es requerido',
+  email_invalid: 'Por favor ingrese un correo electrónico válido',
+  phone_required_13: 'El teléfono es requerido',
+  phone_invalid_13: 'Por favor ingrese un teléfono válido',
+  card_id_required: 'El número de documento es requerido',
+  card_id_length_5_20: 'El número de documento debe tener entre 5 y 20 dígitos',
 };
 
 export const validation_en = {
@@ -42,4 +56,18 @@ export const validation_en = {
   password_strength:
     'The password must be at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character',
   passwords_not_match: 'The passwords do not match',
+  phone_start_with: 'Phone number must start with +',
+  size_8: 'Phone number must have at least 8 characters',
+  invalid_format: 'Invalid format',
+  min_leng: 'Minimum length: {{min}} characters',
+  eql_len_param: 'Exact length: {{len}} characters',
+  ran_len_param: 'Length between {{min}} and {{max}} characters',
+  number_required: 'Number is required',
+  number_length_1_20: 'Number must have between 1 and 20 digits',
+  email_required: 'Email is required',
+  email_invalid: 'Please enter a valid email address',
+  phone_required_13: 'Phone number is required',
+  phone_invalid_13: 'Please enter a valid phone number',
+  card_id_required: 'Document number is required',
+  card_id_length_5_20: 'Document number must have between 5 and 20 digits',
 };

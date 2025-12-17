@@ -19,7 +19,7 @@ import { ExpandeableContent } from './expandeable-content';
 import { useTranslation } from 'react-i18next';
 import { MentionOption } from '../mention-editor';
 import { selectPriority } from '@/pages/settings/memo/novelty/create/create';
-import { getPermissionByModuleState } from '@/store/signals/access/permission';
+//import { getPermissionByModuleState } from '@/store/signals/access/permission';
 import { closeSpinner, openSpinner } from '@/store/signals/modals';
 
 interface ReportFinishedSubmit {
@@ -76,17 +76,19 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
     checkList.value = [
       {
         value: SelectCheckType.INTERNO,
-        label: 'Interno',
+        label: t('l_internal'),
         icon: '306',
         color: 'primary',
-        disabled: !getPermissionByModuleState('memo', 'internal:report'),
+        //disabled: !getPermissionByModuleState('memo', 'internal:report'),
+        disabled: false,
       },
       {
         value: SelectCheckType.CLIENTE,
-        label: 'Cliente',
+        label: t('l_client'),
         icon: '307',
         color: 'secondary',
-        disabled: !getPermissionByModuleState('memo', 'client:report'),
+        //disabled: !getPermissionByModuleState('memo', 'client:report'),
+        disabled: false,
       },
     ];
   };
@@ -186,23 +188,23 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       <div className='flex justify-end items-center gap-2 p-4'>
         <Button
           name='btn-report-automatic-close'
-          label='cancel'
+          label={t('cancel')}
           type='button'
           onClick={() => setIsOpen(false)}
-          icon='041'
+          icon='192'
           disabled={loading.value}
         />
         <Button
           name='btn-report-automatic-save'
           type='submit'
-          label='save'
+          label={t('btnSave')}
           form='form-report-automatic-create'
-          icon='041'
+          icon='146'
           disabled={loading.value}
         />
       </div>
     ),
-    [loading.value]
+    [loading.value, setIsOpen, t]
   );
 
   const onClose = () => {

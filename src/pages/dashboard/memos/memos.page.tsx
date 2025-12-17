@@ -12,8 +12,6 @@ import './utils/memos.css';
 import { useLocation } from 'wouter';
 import { UserService } from '@/services/general/user';
 import { IUserResponse } from '@/types/auth';
-import { useWebSocket } from '@/utils/socket';
-import { Section } from '@/components/common/section/section';
 import { useTranslation } from 'react-i18next';
 import { Table } from '@/components/common/table/table';
 import { getColumns } from './components/memos.columns';
@@ -46,6 +44,7 @@ import {
   MESSAGE_LISTENERS,
 } from '@/utils/socket/manager/types';
 import { allPermissions } from '@/store/signals/access/permission';
+import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
 
 enum VIEW_NAME {
   TABLE,
@@ -71,7 +70,7 @@ export const MemosPage: FunctionComponent = () => {
     string | null
   >(null);
 
-  const wsManager = useWebSocket();
+  // const wsManager = useWebSocket();
   const users = useSignal<IUserResponse[]>([]);
   const routePath = useSignal<RoutePoint[]>([]);
 
@@ -96,20 +95,6 @@ export const MemosPage: FunctionComponent = () => {
 
   useEffect(() => {
     document.title = t('p_chat');
-    return () => {
-      wsManager.removeListener('memos');
-    };
-  }, []);
-
-  useEffect(() => {
-    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
-    if (selectedCompany) {
-      fetchInitialData(dateRangeFilters);
-      selectedNotifier();
-    }
-  }, [selectedCompany, location, dateRangeFilters, selectedPlace]);
-
-  useEffect(() => {
     WebSocketManager.add(
       SOCKET_MESSAGE_AREA.MEMOS,
       handleMessage,
@@ -122,6 +107,14 @@ export const MemosPage: FunctionComponent = () => {
       );
     };
   }, []);
+
+  useEffect(() => {
+    // TODO: Para cargar cuando se haya seleccionado una empresa, sino falla por tenant
+    if (selectedCompany) {
+      fetchInitialData(dateRangeFilters);
+      selectedNotifier();
+    }
+  }, [selectedCompany, location, dateRangeFilters, selectedPlace]);
 
   const selectedNotifier = () => {
     handleNotificationEvent('notification-click', (id: any) => {
@@ -248,7 +241,7 @@ export const MemosPage: FunctionComponent = () => {
 
   const buttonMenu = useMemo(
     () => (
-      <div className='flex items-center gap-2'>
+      <>
         <Button
           name='button-change-table'
           onClick={() => {
@@ -259,6 +252,15 @@ export const MemosPage: FunctionComponent = () => {
           icon='320'
         />
         <Button
+          name='button-change-panic'
+          onClick={() => {
+            handleViewChange(VIEW_NAME.PANIC);
+          }}
+          rounded={false}
+          selected={currentView.value === VIEW_NAME.PANIC}
+          icon='359'
+        />
+        <Button
           name='button-change-scheduler'
           onClick={() => {
             handleViewChange(VIEW_NAME.CHAT);
@@ -267,15 +269,6 @@ export const MemosPage: FunctionComponent = () => {
           selected={currentView.value === VIEW_NAME.CHAT}
           icon='418'
           permissions={{ name: 'memo', state: 'chat' }}
-        />
-        <Button
-          name='button-change-panic'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.PANIC);
-          }}
-          rounded={false}
-          selected={currentView.value === VIEW_NAME.PANIC}
-          icon='359'
         />
 
         {/* <Button
@@ -298,7 +291,7 @@ export const MemosPage: FunctionComponent = () => {
         */}
         {/* <Button name='button-change-scheduler' rounded={false} icon='331' />
         <Button name='button-change-scheduler' rounded={false} icon='314' /> */}
-      </div>
+      </>
     ),
     [currentView.value, allPermissions.value]
   );
@@ -308,7 +301,7 @@ export const MemosPage: FunctionComponent = () => {
    * @returns cards
    */
   const renderCardsInfo = (summary: MemosSummary, _type: string = 'memos') => (
-    <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
+    <>
       <CardData
         title='h_memos_total'
         count={summary.total}
@@ -330,7 +323,7 @@ export const MemosPage: FunctionComponent = () => {
         color='t-dark'
         icon='000'
       />
-    </div>
+    </>
   );
 
   /**
@@ -373,110 +366,105 @@ export const MemosPage: FunctionComponent = () => {
   };
 
   return (
-    <Section
-      className={
-        currentView.value === VIEW_NAME.CHAT
-          ? 'flex flex-col lg:flex-row h-auto lg:h-[94.5vh]'
-          : 'mr-3 my-1 relative'
+    <SectionPage
+      className={currentView.value === VIEW_NAME.CHAT ? 'pt-0' : ''}
+      padding
+      cards={
+        <CardsPage
+          className={currentView.value === VIEW_NAME.CHAT ? '!mb-0' : ''}
+        >
+          {(currentView.value === VIEW_NAME.TABLE ||
+            currentView.value === VIEW_NAME.MAP) &&
+            renderCardsInfo(summary.value)}
+
+          {currentView.value === VIEW_NAME.PANIC &&
+            renderCardsInfo(summaryPanic.value, 'panic')}
+        </CardsPage>
       }
-      padding={currentView.value !== VIEW_NAME.CHAT}
+      buttons={
+        <ButtonsPage
+          className={currentView.value === VIEW_NAME.CHAT ? 'px-2' : ''}
+        >
+          {buttonMenu}
+          <NotificationBanner
+            ref={notificationBannerRef}
+            message='Memo nuevo'
+            reload={fetchInitialData}
+          />
+        </ButtonsPage>
+      }
     >
-      {(currentView.value === VIEW_NAME.TABLE ||
-        currentView.value === VIEW_NAME.MAP) &&
-        renderCardsInfo(summary.value)}
-      {currentView.value === VIEW_NAME.PANIC &&
-        renderCardsInfo(summaryPanic.value, 'panic')}
+      {currentView.value === VIEW_NAME.TABLE && (
+        <Table<Memo>
+          data={memos.value}
+          columns={getColumns(onClickAction)}
+          showExpandableIcon
+          pageSize={20}
+          selectable
+          loading={loading.value}
+          onRangeChange={(range) => {
+            setDateRangeFilters(range);
+          }}
+          expandable={(row: Memo, column?: string) => (
+            <ExpandableMultiple type={column} data={row} />
+          )}
+          visibility={{
+            id: false,
+            city: false,
+            address: false,
+            noveltyDate: false,
+            contact: false,
+            updatedAt: false,
+            service: false,
+            contract: false,
+            client: false,
+          }}
+          searchable={{
+            history: false,
+          }}
+          rowClassName={(row: Memo) =>
+            row.id === highlightedMemoId ? 'animate-highlight' : ''
+          }
+          modules={modulesReport.Memo}
+        />
+      )}
 
-      <div
-        className={`max-h-screen ${currentView.value === VIEW_NAME.CHAT ? '' : 'relative'}`}
-      >
-        <div className='py-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between overflow-visible xl:absolute relative z-10 top-0 pl-1'>
-          <div className='flex flex-wrap items-center justify-between gap-2 sm:gap-3'>
-            {buttonMenu}
-            <NotificationBanner
-              ref={notificationBannerRef}
-              message='Memo nuevo'
-              reload={fetchInitialData}
+      {currentView.value === VIEW_NAME.PANIC && (
+        <Table<Memo>
+          data={panic.value}
+          columns={getColumnsPanic(onClickAction)}
+          showExpandableIcon
+          pageSize={20}
+          selectable
+          loading={loading.value}
+          expandable={(row: Memo, column?: string) => (
+            <ExpandableMultiple
+              type={column}
+              data={row}
+              onStatusChange={handleStatusChange}
             />
-          </div>
-        </div>
+          )}
+          visibility={{
+            id: false,
+            city: false,
+            address: false,
+            noveltyDate: false,
+            contact: false,
+            updatedAt: false,
+            history: false,
+          }}
+          searchable={{
+            history: false,
+          }}
+          rowClassName={(row: Memo) =>
+            row.panicUuid === highlightedPanicMemoId ? 'animate-highlight' : ''
+          }
+        />
+      )}
 
-        {currentView.value === VIEW_NAME.TABLE && (
-          <Table<Memo>
-            data={memos.value}
-            columns={getColumns(onClickAction)}
-            showExpandableIcon
-            pageSize={20}
-            selectable
-            loading={loading.value}
-            onRangeChange={(range) => {
-              setDateRangeFilters(range);
-            }}
-            expandable={(row: Memo, column?: string) => (
-              <ExpandableMultiple type={column} data={row} />
-            )}
-            visibility={{
-              id: false,
-              city: false,
-              address: false,
-              noveltyDate: false,
-              contact: false,
-              updatedAt: false,
-              service: false,
-              contract: false,
-              client: false,
-            }}
-            searchable={{
-              history: false,
-            }}
-            rowClassName={(row: Memo) =>
-              row.id === highlightedMemoId ? 'animate-highlight' : ''
-            }
-            modules={modulesReport.Memo}
-          />
-        )}
-
-        {currentView.value === VIEW_NAME.PANIC && (
-          <Table<Memo>
-            data={panic.value}
-            columns={getColumnsPanic(onClickAction)}
-            showExpandableIcon
-            pageSize={20}
-            selectable
-            loading={loading.value}
-            expandable={(row: Memo, column?: string) => (
-              <ExpandableMultiple
-                type={column}
-                data={row}
-                onStatusChange={handleStatusChange}
-              />
-            )}
-            visibility={{
-              id: false,
-              city: false,
-              address: false,
-              noveltyDate: false,
-              contact: false,
-              updatedAt: false,
-              history: false,
-            }}
-            searchable={{
-              history: false,
-            }}
-            rowClassName={(row: Memo) =>
-              row.panicUuid === highlightedPanicMemoId
-                ? 'animate-highlight'
-                : ''
-            }
-          />
-        )}
-
-        {currentView.value === VIEW_NAME.MAP && (
-          <div className='p-5 pt-16'>
-            <MapPath route={routePath.value} height='70vh'></MapPath>
-          </div>
-        )}
-      </div>
+      {currentView.value === VIEW_NAME.MAP && (
+        <MapPath route={routePath.value} height='70vh'></MapPath>
+      )}
 
       {currentView.value === VIEW_NAME.CHAT && (
         <ChatView
@@ -486,6 +474,6 @@ export const MemosPage: FunctionComponent = () => {
           memosGroupedByUser={memosGroupedByUser.value}
         />
       )}
-    </Section>
+    </SectionPage>
   );
 };

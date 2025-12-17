@@ -1,7 +1,7 @@
 import { FunctionalComponent } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
-import { IaService } from '@/services';
+// import { IaService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useTranslation } from 'react-i18next';
 import {
@@ -12,7 +12,7 @@ import {
   ShiftsGanttViewer,
   Shift,
 } from '@/components/common/shift-viewer/shift.viewer';
-import { fixTruncatedJSONArray } from '@/components/common/mention-editor/utils';
+// import { fixTruncatedJSONArray } from '@/components/common/mention-editor/utils';
 // import turnos from '@/components/common/shift-viewer/turnos_semanales.json';
 
 export const PlannerView: FunctionalComponent<{
@@ -22,7 +22,7 @@ export const PlannerView: FunctionalComponent<{
   const currentPrompt = useSignal<string>('');
   const [streamingResponse, setStreamingResponse] = useState<string>('');
   const [isStreaming, setIsStreaming] = useState<boolean>(false);
-  const [shifts, setShifts] = useState<Shift[]>([]);
+  const [shifts, _] = useState<Shift[]>([]);
   const { t } = useTranslation();
   const handleShiftUpdate = useCallback((_: Shift) => {
     // console.log('Turno actualizado:', turnoActualizado);
@@ -33,8 +33,9 @@ export const PlannerView: FunctionalComponent<{
 
     setStreamingResponse('');
     setIsStreaming(true);
-    let accumulatedResponse = '';
+    // let accumulatedResponse = '';
     try {
+      /*
       await IaService.streamQuery(
         currentPrompt.value,
         (chunk) => {
@@ -54,6 +55,7 @@ export const PlannerView: FunctionalComponent<{
           //ToastManager.error(`Error en el stream: ${error.message}`);
         }
       );
+    */
     } catch (error) {
       setIsStreaming(false);
       ToastManager.error(

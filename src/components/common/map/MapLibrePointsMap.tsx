@@ -1,4 +1,7 @@
-import type React from 'react';
+/**
+ * MapLibrePointsMap.tsx:185 Unable to perform style diff: Cannot read properties
+ * of undefined (reading 'setState').  Rebuilding the style from scratch.
+ */
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import maplibregl, { type Map as MaplibreMap } from 'maplibre-gl';

@@ -1,4 +1,5 @@
 import { Button } from '@/components/common/button/button';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   onClickClean: () => void;
@@ -9,6 +10,7 @@ interface Props {
   clear?: boolean;
   lock?: boolean;
   top?: boolean;
+  className?: string;
 }
 
 export const StatusButton = ({
@@ -20,18 +22,20 @@ export const StatusButton = ({
   clear = false,
   lock = false,
   top = true,
+  className,
 }: Props) => {
+  const { t } = useTranslation();
   return (
     <div
-      className={`flex justify-end space-x-4 absolute ${top ? 'top-14' : 'bottom-0'} right-2`}
+      className={`flex justify-end space-x-4 absolute ${top ? 'top-14' : 'bottom-0'} right-2 ${className}`}
     >
       <div className='w-full flex-row flex justify-end items-center gap-4'>
         <Button
           id='btn-clean'
           name='btn-clean'
           type='button'
-          label='clean'
-          icon='023'
+          label={t('clean')}
+          icon='181'
           onClick={onClickClean}
           disabled={clear ? lock && pristine : submitting || pristine}
         />
@@ -40,9 +44,9 @@ export const StatusButton = ({
           id='btn-save'
           name='btn-save'
           type='submit'
-          label={label}
+          label={label === 'save' ? t('btnSave') : label}
           form={form}
-          icon='022'
+          icon='146'
           disabled={submitting}
         />
       </div>

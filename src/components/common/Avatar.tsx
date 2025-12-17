@@ -1,6 +1,6 @@
-import { cdn_service_url } from '@/env.config';
 import { useUserStore } from '@/store/slices';
 import { IPresignedRequest } from '@/types/file';
+import { getUrlImage } from '@/utils/utilities/presigned';
 import { FunctionalComponent } from 'preact';
 
 interface AvatarProps {
@@ -12,6 +12,7 @@ interface AvatarProps {
   icon?: string;
   iconSize?: 'sm' | 'md' | 'lg' | 'xl' | 'auto';
   toolTipLabel?: string;
+  bgColor?: string;
 }
 
 const sizeMap = {
@@ -37,16 +38,13 @@ export const Avatar: FunctionalComponent<AvatarProps> = ({
   square = false,
   toolTipLabel = '',
   icon,
+  bgColor = 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200',
 }) => {
   const { getTenant, getCompanyId } = useUserStore();
-  const getUrl = (file: IPresignedRequest) => {
-    const validation = `${cdn_service_url}/${getTenant()}/${getCompanyId()}/${file.area}/${file.uuid}-${file.name}`;
-    return validation;
-  };
   const shape = square ? 'rounded' : 'rounded-full';
   const classes = `
-    flex items-center justify-center ${shape} bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold overflow-hidden text-center
-    ${sizeMap[size] || sizeMap.md} ${className} ${icon ? 'px-6' : ''} ${toolTipLabel ? 'cursor-pointer' : ''}
+    flex items-center justify-center ${shape} font-bold overflow-hidden text-center
+    ${sizeMap[size] || sizeMap.md} ${className} ${bgColor} ${icon ? 'px-6' : ''} ${toolTipLabel ? 'cursor-pointer' : ''}
   `;
   const initial = name ? name.trim().charAt(0).toUpperCase() : '';
 
@@ -73,9 +71,10 @@ export const Avatar: FunctionalComponent<AvatarProps> = ({
   }
 
   if (src !== null && typeof src === 'object' && src.uuid) {
+    const _url = getUrlImage(src, getTenant(), getCompanyId());
     return (
       <img
-        src={getUrl(src)}
+        src={_url}
         alt={name || 'avatar'}
         className={classes + ' object-cover'}
         loading='lazy'

@@ -18,6 +18,7 @@ import { MultiSelect } from '../../forms/create/MultiSelect';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { INPUT_TYPES } from '@/components/common/input/interface';
 import { validateContactByType, validateOptionalUrl } from './utils';
+import { ResourceService } from '@/services/form/resources';
 
 interface IMultiSelect {
   id: number;
@@ -50,7 +51,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
   };
 
   const getResources = async () => {
-    const response = await GeneralService.resource();
+    const response = await ResourceService.get_all();
     if (!response.getStatus()) return;
     resources.value = response.getMany();
   };
@@ -72,9 +73,9 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
 
     let response;
     if (values.id) {
-      response = await GeneralService.updateResource(values.id, output);
+      response = await ResourceService.update(values.id, output);
     } else {
-      response = await GeneralService.createResource(output);
+      response = await ResourceService.create(output);
     }
     if (!response.getStatus()) return;
 
@@ -101,7 +102,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
   };
 
   const handleDelete = async (id: number) => {
-    const response = await GeneralService.deleteResource(id);
+    const response = await ResourceService.delete(id);
     if (!response.getStatus()) return;
     ToastManager.success('s_deleted_success');
     getResources();
@@ -127,8 +128,8 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                 onEdit={() => handleEdit(data.id)}
                 onDelete={() =>
                   showAlert({
-                    title: 'Eliminar Recurso',
-                    message: '¿Estás seguro de querer eliminar este recurso?',
+                    title: t('l_delete_resource'),
+                    message: t('l_delete_resource_confirm'),
                     onConfirm: () => {
                       handleDelete(data.id);
                     },
@@ -140,7 +141,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
             ))}
             {resources.value.length === 0 && (
               <div className='text-center text-gray-500'>
-                No tienes recursos creados
+                {t('l_no_resources')}
               </div>
             )}
           </div>
@@ -161,12 +162,12 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                     submitting={initialValues.value.id ? false : submitting}
                     pristine={initialValues.value.id ? false : pristine}
                     form='form-resource-create'
-                    label={'Guardar'}
+                    label={t('btnSave')}
                   />
                   <h2 className='text-2xl font-bold'>
                     {initialValues.value.id
-                      ? 'Editar Recurso'
-                      : 'Nuevo Recurso'}
+                      ? t('l_edit_resource')
+                      : t('l_new_resource')}
                   </h2>
 
                   <div className='flex flex-col gap-4'>
@@ -177,8 +178,8 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                           <Input
                             {...input}
                             type='text'
-                            placeholder='Agregar Título'
-                            label='Título'
+                            placeholder={t('l_title')}
+                            label={t('l_title')}
                             meta={meta}
                           />
                         )}
@@ -193,8 +194,8 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                             {...input}
                             id='Description'
                             className='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-sm border border-gray-300 focus:border-cyan-500'
-                            placeholder='Descripción'
-                            label='Descripción'
+                            placeholder={t('description')}
+                            label={t('description')}
                             type='text'
                             meta={meta}
                           />
@@ -211,7 +212,7 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                           validate={required}
                           initialValue='WHATSAPP'
                         >
-                          {({ input, meta }) => (
+                          {({ input }) => (
                             <Dropdown
                               id='type'
                               name={input.name}
@@ -221,13 +222,12 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                                 input.onChange(nextVal);
                                 form.change('link', '');
                               }}
-                              label='Tipo de comunicación'
+                              label={t('l_type_communication')}
                               options={[
-                                { value: 'WHATSAPP', label: 'WhatsApp' },
-                                { value: 'EMAIL', label: 'Email' },
-                                { value: 'LINK', label: 'Link' },
+                                { value: 'WHATSAPP', label: t('l_whatsapp') },
+                                { value: 'EMAIL', label: t('l_email') },
+                                { value: 'LINK', label: t('l_link') },
                               ]}
-                              meta={meta}
                             />
                           )}
                         </Field>
@@ -242,8 +242,8 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                             <Input
                               {...input}
                               type='url'
-                              placeholder='URL de la imagen (PNG)'
-                              label='URL de la imagen (PNG)'
+                              placeholder={t('l_image_url_png')}
+                              label={t('l_image_url_png')}
                               meta={meta}
                               onBlur={(e: any) => {
                                 const v = (e?.target?.value ?? '').trim();
@@ -270,20 +270,19 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                             const { label, placeholder, typeAttr } =
                               currentType === 'WHATSAPP'
                                 ? {
-                                    label:
-                                      'Número de WhatsApp (con indicativo E.164)',
-                                    placeholder: 'Ej: +34911222333',
+                                    label: t('l_whatsapp_number'),
+                                    placeholder: t('l_example_phone'),
                                     typeAttr: 'tel',
                                   }
                                 : currentType === 'EMAIL'
                                   ? {
-                                      label: 'Correo electrónico',
-                                      placeholder: 'Ej: usuario@dominio.com',
+                                      label: t('l_email_address'),
+                                      placeholder: t('l_example_email'),
                                       typeAttr: 'email',
                                     }
                                   : {
-                                      label: 'URL del enlace',
-                                      placeholder: 'Ej: https://ejemplo.com',
+                                      label: t('l_link_url'),
+                                      placeholder: t('l_example_url'),
                                       typeAttr: 'url',
                                     };
 
@@ -315,10 +314,10 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
                               onChange={(selectedIds) => {
                                 form.change('groups', selectedIds as number[]);
                               }}
-                              label='Seleccione un grupo'
+                              label={t('l_select_group')}
                               getLabel={(item) => item.name}
                               getId={(item) => item.id}
-                              placeholder='Seleccione uno o más grupos inteligentes'
+                              placeholder={t('l_select_smart_groups')}
                             />
                           )}
                         </Field>

@@ -8,6 +8,7 @@ import { AWS_AMPLIFY_SETTINGS } from './aws-exports';
 import { AuthAmplifyProps } from './utils/types/auth.interface';
 import { DashboardLayout } from './pages/dashboard/dashboard.layout';
 import { Amplify } from 'aws-amplify';
+import { useLocation } from 'wouter';
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import { CustomLoginPage } from '@/components/compose/login/custom';
 import { getIsInErrorState } from './store/signals/service/service.signals';
@@ -20,16 +21,17 @@ Amplify.configure(AWS_AMPLIFY_SETTINGS);
 
 // Componente AuthenticatedContent que decide qué renderizar basado en el estado de autenticación
 const AuthenticatedContent = ({ props }: any) => {
+  const [location] = useLocation();
   const { route, signOut } = useAuthenticator((context) => [
     context.route,
     context.signOut,
   ]);
 
-  if (route !== 'authenticated') {
-    return <CustomLoginPage />;
+  if (route === 'authenticated') {
+    return <DashboardLayout {...props} location={location} signOut={signOut} />;
   }
 
-  return <DashboardLayout {...props} signOut={signOut} />;
+  return <CustomLoginPage />;
 };
 
 export const App: FunctionComponent<AuthAmplifyProps> = (props) => {

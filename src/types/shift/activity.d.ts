@@ -190,7 +190,8 @@ export interface IShiftResponse {
     notes: string;
   };
   keywords: string[];
-  externalId: string;
+  externalId?: string;
+  externalPlatformId?: string;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
@@ -202,6 +203,10 @@ export interface IShiftResponse {
   timeBefore: number;
   promedio: number;
   resource: any[];
+  // Agregados desde metrics
+  active?: boolean;
+  roundPctTime?: number;
+  risk?: number;
 }
 
 interface ITaskHistory {

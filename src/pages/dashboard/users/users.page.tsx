@@ -1,12 +1,5 @@
 import { FunctionalComponent } from 'preact';
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'preact/hooks';
-import { Section } from '@/components/common/section/section';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { CardData } from '@/components/compose/cards';
 import { useSignal } from '@preact/signals';
 import { Button } from '@/components/common/button/button';
@@ -24,7 +17,7 @@ import { IRowAction } from '@/components/common/table/interface';
 import { Table } from '@/components/common/table/table';
 import { setUser, USER_MODE_SERVICE } from './store/user.store';
 import { useUserStore } from '@/store/slices';
-import { allPermissions } from '@/store/signals/access/permission';
+import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
 
 enum VIEW_NAME {
   TABLE,
@@ -33,7 +26,7 @@ enum VIEW_NAME {
 }
 
 export const UsersPage: FunctionalComponent = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const currentView = useSignal<VIEW_NAME>(VIEW_NAME.TABLE);
   const user = useSignal<IUserResponse | any>();
   const loading = useSignal<boolean>(false);
@@ -135,55 +128,6 @@ export const UsersPage: FunctionalComponent = () => {
     }
   };
 
-  const buttonMenu = useMemo(
-    () => (
-      <div className='flex items-center gap-2'>
-        <Button
-          name='button-change-table'
-          onClick={() => handleViewChange(VIEW_NAME.TABLE)}
-          rounded={false}
-          selected={currentView.value === VIEW_NAME.TABLE}
-          icon='320'
-        />
-        <Button
-          name='button-change-table'
-          onClick={() => handleViewChange(VIEW_NAME.CREATE)}
-          rounded={false}
-          selected={currentView.value === VIEW_NAME.CREATE}
-          icon='039'
-          permissions={{ name: 'user', state: 'upsert' }}
-        />
-        <div className='relative'>
-          <Button
-            name='button-action'
-            rounded={false}
-            icon='314'
-            onClick={toggleSendModal}
-            disabled={!hasValidPlayer}
-            selected={onNotifications}
-          />
-          {showSendModal.value && (
-            <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
-              <SendForm
-                onClose={handleCloseSendModal}
-                hasplayers={hasValidPlayer}
-                users={selectedUsers as []}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    ),
-    [
-      currentView.value,
-      onNotifications,
-      showSendModal.value,
-      selectedUsers,
-      hasValidPlayer,
-      allPermissions.value,
-    ]
-  );
-
   const users = useSignal<IUserResponse[]>([]);
 
   const getUsers = async () => {
@@ -277,77 +221,106 @@ export const UsersPage: FunctionalComponent = () => {
   };
 
   return (
-    <Section padding>
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
-        <CardData
-          title={t('l_total_users')}
-          count={totalUsers.value}
-          subtitle={t('l_registered')}
-          color='text-secondary'
-          icon='users'
-        />
-        <CardData
-          title={t('l_active_connection')}
-          count={connectedUsers.value}
-          subtitle={t('l_connected_users')}
-          color='text-primary'
-          icon='user-active'
-        />
-        <CardData
-          title={t('l_inactive_connection')}
-          count={disconnectedUsers.value}
-          subtitle={t('l_disconnected_users')}
-          color='text-error'
-          icon='user-inactive'
-        />
-      </div>
-
-      <div className='max-h-screen relative'>
-        <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-center xl:justify-between px-1 items-center overflow-visible xl:absolute relative z-10 w-full xl:w-fit'>
-          <div className='flex flex-wrap items-center !w-full xl:!w-fit md:w-auto justify-between gap-2 sm:gap-3'>
-            {buttonMenu}
-          </div>
-        </div>
-
-        {currentView.value === VIEW_NAME.CREATE && (
-          <div className='pt-16'>
-            <CreateUser
-              onUserCreated={() => {
-                handleViewChange(VIEW_NAME.TABLE);
-                user.value = undefined;
-                getUsers();
-              }}
-              user={user.value}
-            />
-          </div>
-        )}
-
-        {currentView.value === VIEW_NAME.MESSAGE && <UserMessage />}
-
-        {currentView.value === VIEW_NAME.TABLE && (
-          <Table<IUserResponse>
-            data={users.value}
-            columns={getColumns(handleOnClick)}
-            pageSize={20}
-            selectable
-            onClickAction={handleOnClick}
-            onNotifications={onNotifications}
-            hasNotifications={notificationValidate.value}
-            loading={loading.value}
-            // showExpandableIcon
-            // expandable={() => <></>}
-            visibility={{
-              id: false,
-              connection: false,
-              taskProgress: false,
-            }}
-            onSelectionChange={(rows) => {
-              setSelectedUsers(rows);
-            }}
-            fileName='employee'
+    <SectionPage
+      padding
+      relative
+      cards={
+        <CardsPage>
+          <CardData
+            title={t('l_total_users')}
+            count={totalUsers.value}
+            subtitle={t('l_registered')}
+            color='text-secondary'
+            icon='users'
           />
-        )}
-      </div>
-    </Section>
+          <CardData
+            title={t('l_active_connection')}
+            count={connectedUsers.value}
+            subtitle={t('l_connected_users')}
+            color='text-primary'
+            icon='user-active'
+          />
+          <CardData
+            title={t('l_inactive_connection')}
+            count={disconnectedUsers.value}
+            subtitle={t('l_disconnected_users')}
+            color='text-error'
+            icon='user-inactive'
+          />
+        </CardsPage>
+      }
+      buttons={
+        <ButtonsPage>
+          <Button
+            name='button-change-table'
+            onClick={() => handleViewChange(VIEW_NAME.TABLE)}
+            rounded={false}
+            selected={currentView.value === VIEW_NAME.TABLE}
+            icon='320'
+          />
+          <Button
+            name='button-change-table'
+            onClick={() => handleViewChange(VIEW_NAME.CREATE)}
+            rounded={false}
+            selected={currentView.value === VIEW_NAME.CREATE}
+            icon='039'
+            permissions={{ name: 'user', state: 'upsert' }}
+          />
+          <div className='relative'>
+            <Button
+              name='button-action'
+              rounded={false}
+              icon='314'
+              onClick={toggleSendModal}
+              disabled={!hasValidPlayer}
+              selected={onNotifications}
+            />
+            {showSendModal.value && (
+              <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
+                <SendForm
+                  onClose={handleCloseSendModal}
+                  hasplayers={hasValidPlayer}
+                  users={selectedUsers as []}
+                />
+              </div>
+            )}
+          </div>
+        </ButtonsPage>
+      }
+    >
+      {currentView.value === VIEW_NAME.CREATE && (
+        <CreateUser
+          onUserCreated={() => {
+            handleViewChange(VIEW_NAME.TABLE);
+            user.value = undefined;
+            getUsers();
+          }}
+          user={user.value}
+        />
+      )}
+      {currentView.value === VIEW_NAME.MESSAGE && <UserMessage />}
+      {currentView.value === VIEW_NAME.TABLE && (
+        <Table<IUserResponse>
+          key={i18n.language}
+          data={users.value}
+          columns={getColumns(t, handleOnClick)}
+          pageSize={20}
+          selectable
+          onClickAction={handleOnClick}
+          onNotifications={onNotifications}
+          hasNotifications={notificationValidate.value}
+          loading={loading.value}
+          visibility={{
+            id: false,
+            connection: false,
+            taskProgress: false,
+          }}
+          onSelectionChange={(rows) => {
+            setSelectedUsers(rows);
+          }}
+          fileName='employee'
+        />
+      )}
+    </SectionPage>
   );
 };

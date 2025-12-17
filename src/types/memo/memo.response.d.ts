@@ -13,4 +13,7 @@ export interface IResourceResponse {
     };
   }>;
   updatedAt: Date;
+  lat?: number;
+  lng?: number;
+  code?: string;
 }

@@ -39,14 +39,14 @@ export const FileControl = ({ fileName }: FileControlProps) => {
       {
         value: FileControlType.UPLOAD,
         label: t('file_upload'),
-        icon: '070',
+        icon: '187',
         color: 'primary',
         disabled: false,
       },
       {
         value: FileControlType.DOWNLOAD,
         label: t('file_download'),
-        icon: '069',
+        icon: '057',
         color: 'secondary',
         disabled: false,
       },
@@ -234,7 +234,7 @@ export const FileControl = ({ fileName }: FileControlProps) => {
             label={t('file_cancel')}
             type='button'
             onClick={onClose}
-            icon='041'
+            icon='192'
             disabled={loading.value}
             transparent
           />

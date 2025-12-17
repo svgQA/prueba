@@ -1,3 +1,5 @@
+import i18n from '@/i18n';
+
 type FieldValidator<T> = (value: T) => string | undefined;
 
 /**
@@ -5,25 +7,23 @@ type FieldValidator<T> = (value: T) => string | undefined;
  * @param validators - Array of validators to compose
  * @returns A single validator that runs all validators
  */
-export const composeValidators = (...validators: FieldValidator<any>[]) => {
-  return (value: any): string | undefined => {
-    for (const validator of validators) {
-      const error = validator(value);
-      if (error) return error;
-    }
-    return undefined;
-  };
-};
+export const composeValidators =
+  (...validators: any[]) =>
+  (value: any) =>
+    validators.reduce(
+      (error, validator) => error || validator(value),
+      undefined
+    );
 
 export const validateNumber: FieldValidator<string> = (
   value: string
 ): string | undefined => {
-  if (!value) return 'El número es requerido';
+  if (!value) return i18n.t('number_required');
 
   const numberRegex = /^\d{1,20}$/;
 
   if (!numberRegex.test(value)) {
-    return 'El número debe tener entre 1 y 20 dígitos';
+    return i18n.t('number_length_1_20');
   }
 
   return undefined;
@@ -37,11 +37,11 @@ export const validateNumber: FieldValidator<string> = (
 export const validateEmail: FieldValidator<string> = (
   value: string
 ): string | undefined => {
-  if (!value) return 'El correo electrónico es requerido';
+  if (!value) return i18n.t('email_required');
 
   const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
   if (!emailRegex.test(value)) {
-    return 'Por favor ingrese un correo electrónico válido';
+    return i18n.t('email_invalid');
   }
 
   return undefined;
@@ -50,12 +50,12 @@ export const validateEmail: FieldValidator<string> = (
 export const validatePhone: FieldValidator<string> = (
   value: string
 ): string | undefined => {
-  if (!value) return 'El teléfono es requerido';
+  if (!value) return i18n.t('phone_required_13');
 
   const phoneRegex = /^\d{13}$/;
 
   if (!phoneRegex.test(value)) {
-    return 'Por favor ingrese un teléfono válido';
+    return i18n.t('phone_invalid_13');
   }
 
   return undefined;
@@ -64,12 +64,12 @@ export const validatePhone: FieldValidator<string> = (
 export const validateCardId: FieldValidator<string> = (
   value: string
 ): string | undefined => {
-  if (!value) return 'El número de documento es requerido';
+  if (!value) return i18n.t('card_id_required');
 
   const cardIdRegex = /^\d{5,20}$/;
 
   if (!cardIdRegex.test(value)) {
-    return 'El número de documento debe tener entre 5 y 20 dígitos';
+    return i18n.t('card_id_length_5_20');
   }
 
   return undefined;

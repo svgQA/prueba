@@ -9,8 +9,6 @@ import { useMemo, useCallback } from 'preact/hooks';
 import { Button } from '@/components/common/button/button';
 import { File } from '@/components/common/file/file';
 import { IPresignedRequest } from '@/types/file';
-import { fileManager } from '@/utils/network/file/file';
-import { useUserStore } from '@/store/slices';
 import { PqrsAiService } from '@/services/pqrs/ai-pqrs';
 import { Loading } from '@/components/common/loading/loading';
 
@@ -21,22 +19,19 @@ interface IProps {
 
 export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
   const { t } = useTranslation();
-  const { getTenant, getCompanyId } = useUserStore();
 
   const loading = useSignal<boolean>(false);
   const files = useSignal<IPresignedRequest[]>([]);
 
   const handleSubmit = async (model: any, _form: any) => {
     loading.value = true;
-    let description = model.description;
 
-    if (files.value && files.value.length > 0) {
-      let getUrls = files.value.map((file: IPresignedRequest) =>
-        fileManager.getUrl(getTenant(), getCompanyId(), file)
-      );
-      description += `\n\nAttachments:\n` + getUrls.join('\n');
-    }
-    const response = await PqrsAiService.execute_ai_pqrs({ description });
+    let data = {
+      information: model.description,
+      files: files.value,
+    };
+
+    const response = await PqrsAiService.execute_ai_pqrs(data);
     if (!response.getStatus()) {
       loading.value = false;
       return;
@@ -101,10 +96,12 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
               enviarlo a IA.
             </p>
           </div>
+          {/*
           <div className='hidden sm:flex items-center gap-2 px-3 py-2 rounded-full bg-primary-opacity text-primary text-xs font-medium border border-primary/40'>
             <span className='vox-icon vx-icon-201 text-base'></span>
             Redacción asistida
           </div>
+          */}
         </div>
       }
       footer={footerContent}
@@ -135,13 +132,13 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                     {({ input, meta }) => (
                       <TextArea
                         {...input}
-                        icon='120'
                         type='text'
-                        placeholder={t('h_description')}
-                        label={t('h_description')}
+                        // placeholder={t('h_description')}
+                        label={'h_description'}
                         meta={meta}
                         disabled={loading.value}
-                        className='bg-white dark:bg-b-dark text-t-light dark:text-white'
+                        rows={12}
+                        className='bg-white dark:bg-b-dark text-t-light dark:text-white resize-none'
                       />
                     )}
                   </Field>
@@ -155,19 +152,20 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                     Agrega capturas, videos o documentos que ayuden a
                     contextualizar la solicitud.
                   </p>
-                  <div className='rounded-lg border border-dashed border-gray-border dark:border-b-dark-light p-3 bg-white dark:bg-b-dark shadow-inner'>
+                  <div className='rounded-lg border border-dashed border-gray-border dark:border-b-dark-light p-3 bg-white dark:bg-b-dark shadow-inner h-72'>
                     <Field name='attachments'>
                       {() => (
                         <File
                           name='attachments'
                           onChange={handleAttachmentUpload}
                           value={files.value}
-                          accept='image/*, video/*'
-                          label='h_attachment'
+                          accept='image/*, video/*, application/pdf'
+                          // label='h_attachment'
                           area='trybook'
                           showFiles={true}
                           multiple={true}
                           disabled={loading.value}
+                          service='ai_pqrs'
                         />
                       )}
                     </Field>

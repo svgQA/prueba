@@ -1,7 +1,6 @@
 import { IOnboardingModel } from '@/store/signals/interface';
 import { ICompany } from '@/store/slices/interface';
 import { AuthEventData } from '@/types';
-import { extend } from 'immutability-helper';
 import { PropsWithChildren } from 'preact/compat';
 
 export interface IOnboardingProps extends PropsWithChildren {

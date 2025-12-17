@@ -1,10 +1,11 @@
 import { IService, IShiftResponse } from '@/types/shift/activity';
-import { useSignal } from '@preact/signals';
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import ShowFiles from '@/components/common/file/show.file';
 import { Badge } from '@/components/common/badge/badge';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { useTranslation } from 'react-i18next';
+import { SectionHeader } from './header';
+import { FieldInline } from './inline';
 
 const ServiceInfo = ({
   service,
@@ -14,109 +15,133 @@ const ServiceInfo = ({
   shift: IShiftResponse;
 }) => {
   const { t } = useTranslation();
-  const points = useSignal<any>([
+
+  const lat = service?.place?.latitude;
+  const lng = service?.place?.longitude;
+  const radius = service?.place?.radius || 50;
+
+  const pointsRef = [
     {
       id: 1,
-      position: {
-        lat: service?.place?.latitude,
-        lng: service?.place?.longitude,
-      },
+      position: { lat, lng },
     },
-  ]);
+  ];
 
   return (
-    <div className='flex flex-row gap-6'>
-      {/* Detalles del Servicio */}
-      <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm text-t-light dark:text-t-dark'>
-        <div className='flex flex-row items-center justify-between mb-3'>
-          <h4 className='font-semibold mb-3 flex items-center'>
-            <span className='!text-primary mr-2 vox-icon size-sm vx-icon-341'></span>
-            {t('h_service')}
-          </h4>
-          <Badge label={service?.state} status='info' outline />
-        </div>
+    <div className='w-full'>
+      <div className='bg-b-light-light dark:bg-b-dark-light rounded-xl border border-b-light dark:border-b-dark-light shadow-sm'>
+        <div className='p-4'>
+          <div className='grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch'>
+            <div className='xl:col-span-4'>
+              <div className='h-full rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
+                <SectionHeader
+                  icon='341'
+                  title={t('h_service')}
+                  right={<Badge label={service?.state} status='info' outline />}
+                />
 
-        <div className='space-y-4'>
-          <div>
-            <p className='mb-1 font-semibold'>{t('h_name')}</p>
-            <TextEllipsis
-              text={service?.description}
-              maxWidth='500px'
-            ></TextEllipsis>
-          </div>
-          {shift.resource && (
-            <div className='w-40'>
-              {/* <p className='mb-1 font-semibold'>Archivos</p> */}
-              <ShowFiles resources={shift.resource} />
+                <div className='pt-3 grid grid-cols-1 gap-2'>
+                  <div className='min-w-0'>
+                    <div className='text-[11px] font-semibold text-t-light-dark dark:text-t-dark'>
+                      {t('h_name')}
+                    </div>
+                    <div className='text-xs text-gray-800 dark:text-gray-100'>
+                      <TextEllipsis
+                        text={service?.description || '-'}
+                        maxWidth='420px'
+                      />
+                    </div>
+                  </div>
+
+                  <FieldInline
+                    label={t('h_contract')}
+                    value={service?.contract?.name}
+                    icon='195'
+                  />
+
+                  <FieldInline
+                    label={t('h_round')}
+                    value={service?.round?.name}
+                    icon='331'
+                  />
+
+                  {shift?.resource && (
+                    <div className='pt-2'>
+                      <div className='text-[11px] font-semibold text-t-light-dark dark:text-t-dark mb-2'>
+                        {t('h_files')}
+                      </div>
+                      <ShowFiles resources={shift.resource} />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          )}
-          <div>
-            <p className='mb-1 font-semibold'>{t('h_contract')}</p>
-            <p className='capitalize'>{service?.contract?.name}</p>
-          </div>
-          {/* <div className='flex flex-row items-center justify-between mb-3'>
-            <h4 className='font-semibold'>Contrato</h4>
-              <p className='text-primary capitalize'>{service.contract.name}</p>
-          </div> */}
-        </div>
-      </div>
 
-      {/* Ubicación y Descripción */}
-      <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-4 flex-1 shadow-sm text-t-light dark:text-t-dark'>
-        <h4 className='font-semibold mb-3 flex items-center'>
-          <span className='!text-primary mr-2 vox-icon size-sm vx-icon-103'></span>
-          {t('h_location')}
-        </h4>
-        <div className='space-y-4'>
-          <div>
-            <p className='mb-1 font-semibold'>{t('h_location')}</p>
-            <div className='flex items-center'>
-              <span className='!text-primary mr-2 vox-icon size-sm vx-icon-351'></span>
-              <p>{service?.place?.name}</p>
+            <div className='xl:col-span-4'>
+              <div className='h-full rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
+                <SectionHeader
+                  icon='103'
+                  title={t('h_location')}
+                  right={
+                    <Badge
+                      label={`${t('h_radius')}: ${radius}m`}
+                      color='primary'
+                      status='info'
+                      outline
+                    />
+                  }
+                />
+
+                <div className='pt-3 grid grid-cols-1 gap-2'>
+                  <FieldInline
+                    label={t('h_location')}
+                    value={service?.place?.name}
+                    icon='351'
+                  />
+                  <FieldInline
+                    label={t('h_city')}
+                    value={service?.place?.municipality?.name}
+                    icon='072'
+                  />
+                  <FieldInline
+                    label={t('h_address')}
+                    value={service?.place?.address}
+                    icon='072'
+                  />
+
+                  <div className='pt-2'>
+                    <div className='text-[11px] font-semibold text-t-light-dark dark:text-t-dark'>
+                      {t('h_description')}
+                    </div>
+                    <div className='text-xs text-gray-800 dark:text-gray-100 line-clamp-3'>
+                      {service?.place?.description || '-'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className='xl:col-span-4'>
+              <div className='h-full rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light flex flex-col'>
+                <MapLibrePointsMap
+                  sendPoints={() => {}}
+                  name='Map'
+                  center={{ lat, lng }}
+                  pointsAmount={1}
+                  pointsRef={pointsRef}
+                  condition={false}
+                  errorCondition=''
+                  radialPoint={null}
+                  errorRadialPoint=''
+                  radius={radius}
+                  draggable={true}
+                  height='100%'
+                  clickPoint={() => {}}
+                  disablePointSelection={true}
+                />
+              </div>
             </div>
           </div>
-          <div>
-            <p className='mb-1 font-semibold'>{t('h_description')}</p>
-            <p>{service?.place?.description}</p>
-          </div>
-          <div>
-            <p className='mb-1 font-semibold'>{t('h_round')}</p>
-            <p className='capitalize'>{service?.round?.name}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Área de cobertura */}
-      <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg p-3 flex-1 shadow-sm text-t-light dark:text-t-dark'>
-        <div className='flex flex-row items-center justify-between mb-3'>
-          <h4 className='font-semibold'>{t('h_coverage')}</h4>
-          <Badge
-            label={`h_radius: ${service?.place?.radius || 50}m`}
-            color='primary'
-            status='info'
-            outline
-          />
-        </div>
-        <div className='relative w-full h-56'>
-          <MapLibrePointsMap
-            sendPoints={() => {}}
-            name='Map'
-            center={{
-              lat: service?.place?.latitude,
-              lng: service?.place?.longitude,
-            }}
-            pointsAmount={1}
-            pointsRef={points.value}
-            condition={false}
-            errorCondition=''
-            radialPoint={null}
-            errorRadialPoint=''
-            radius={service?.place?.radius || 50}
-            draggable={true}
-            height='100%'
-            clickPoint={() => {}}
-            disablePointSelection={true}
-          />
         </div>
       </div>
     </div>

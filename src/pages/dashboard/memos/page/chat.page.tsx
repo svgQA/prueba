@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
 import { IUserResponse } from '@/types/auth';
 import { Chats, FrequentQuestion } from '../interface';
-import { useWebSocket } from '@/utils/socket';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useSignal } from '@preact/signals';
 import { IMessage } from '@/utils/socket/interface';
@@ -83,7 +82,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
 }) => {
   const { t } = useTranslation();
   const { cognito } = useUserStore();
-  const wsManager = useWebSocket();
+  // const wsManager = useWebSocket();
   const userSelected = useSignal<IUserResponse | undefined>();
   const currentPage = useSignal<number>(1);
   const totalPages = useSignal<number>(3);
@@ -128,12 +127,14 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     }
   };
 
+  /*
   useEffect(() => {
     wsManager.addListener('memos', handleReceiveMessage);
     return () => {
       wsManager.removeListener('memos');
     };
   }, []);
+  */
 
   useEffect(() => {
     // Reset pagination when view mode changes
@@ -152,9 +153,11 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
     userSelected.value = undefined;
   }, [viewMode.value]);
 
+  /*
   const handleReceiveMessage = (message: IMessage) => {
     chats.value = addMessageArray(message.from, message);
   };
+  */
 
   const addMessageArray = (
     sender: string,
@@ -204,7 +207,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
       message,
       replyTo: replyId,
     };
-    wsManager.sendMessage(objMessage);
+    // wsManager.sendMessage(objMessage);
 
     chats.value = addMessageArray(objMessage.to, objMessage, true);
     replyToId.value = undefined;
@@ -517,8 +520,8 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   meta={meta}
                   name='predefined'
                   id='select-predefined'
-                  placeholder='Opciones predefinidas'
-                  label='Opciones predefinidas'
+                  placeholder={t('l_predefined_options')}
+                  label={t('l_predefined_options')}
                   options={predefined.value}
                   menuPortalTarget={document.body}
                   end={false}
@@ -536,7 +539,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   type='number'
                   name='duration'
                   disabled={true}
-                  label='Duración'
+                  label={t('l_duration')}
                   placeholder='Min'
                 />
               )}
@@ -547,7 +550,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                 <DateField
                   {...input}
                   name='date'
-                  label='Fecha'
+                  label={t('l_date')}
                   type='datetime-local'
                   defaultToNow={true}
                   disabled={true}
@@ -563,7 +566,7 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                   value={[]}
                   accept='image/*'
                   multiple={true}
-                  label='Adjuntos'
+                  label={t('l_attachments')}
                   area='memo'
                 />
               )}
@@ -586,20 +589,11 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
   );
 
   return (
-    <div className='w-full flex flex-col h-full'>
-      <div className='flex flex-1 overflow-y-auto border-t border-b-light-dark dark:border-b-dark-light'>
-        <div className='w-[30%] flex flex-col h-full border-r border-b-light-dark dark:border-b-dark-light bg max-w-96'>
-          <div className='p-4 border-b-light-dark dark:border-b-dark-light'>
+    <div className='w-full h-[calc(100vh-9vh)]'>
+      <div className='flex flex-1 overflow-y-auto border rounded-lg border-b-light-dark dark:border-b-dark-light h-full w-full'>
+        <div className='w-[30%] flex flex-col h-[100%] border-r border-b-light-dark dark:border-b-dark-light max-w-96'>
+          <div className='pt-[50px] px-2 border-b-light-dark dark:border-b-dark-light'>
             <div className='flex gap-2 items-center'>
-              {/*
-                <Button
-                  name='users'
-                  icon='321'
-                  borderless
-                  onClick={() => (viewMode.value = TypeChatView.USERS)}
-                  label={t('i_view_user')}
-                />
-                */}
               <Dropdown
                 name='view-mode'
                 borderless
@@ -626,21 +620,18 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
               />
             </div>
           </div>
-          {/* Chat info card grouped by */}
+
           {chatCardGroupedBy()}
-          {/* Chat pagination */}
-          <div className='flex justify-between items-center p-4 border-t dark:border-b-dark-light border-b-light-dark'>
+
+          <div className='flex justify-between items-center p-4 border-t dark:border-b-dark-light border-b-light-dark flex-wrap'>
             <Button
-              // TODO: Los name no se traducen
               name='btn-chat-prev'
               onClick={handlePrevPage}
               disabled={currentPage.value === 1}
-              icon='014'
-              // El button ya tiene traduccion interna por
-              // eso se puede utilizar todo asi
-              // y mirar las traducciones en /i18n/button.ts
+              icon='003'
               label='prev'
               borderless
+              transparent
             />
             <span className='text-sm text-gray-500'>
               {t('page')} {currentPage.value} {t('of')} {totalPages.value}
@@ -649,13 +640,14 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
               name='btn-chat-next'
               onClick={handleNextPage}
               disabled={currentPage.value >= totalPages.value}
-              icon='015'
+              icon='004'
               label='next'
               borderless
+              transparent
+              end
             />
           </div>
         </div>
-
         <div className='w-[70%] flex flex-col h-full container-chat'>
           <div className='flex-1 overflow-y-auto p-4 vox-scroll-design'>
             {selectedChat.value === '0' && <FrequentQuestions />}
@@ -689,11 +681,6 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                 name='chat-input-form-memo'
                 onSubmit={handleSubmit}
               >
-                {/*
-            {viewMode.value === TypeChatView.USERS ? (
-              <ChatInput onSend={handleSendMessage} input={messages} />
-            ) : (
-            */}
                 <ChatInput
                   onSend={handleSendMessage}
                   onCancelReply={handleCancelReply}
@@ -705,7 +692,6 @@ export const ChatView: FunctionComponent<ChatViewProps> = ({
                 >
                   {formMinutesByInputs()}
                 </ChatInput>
-                {/* )} */}
               </form>
             )}
           />

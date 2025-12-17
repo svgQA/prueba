@@ -12,6 +12,7 @@ import { getPermissionByModuleState } from '@/store/signals/access/permission';
 import i18n from '@/i18n';
 
 export const getColumns = (
+  t: any,
   onClickAction: (params: {
     id: string;
     type: string;
@@ -61,11 +62,23 @@ export const getColumns = (
       const { companies } = info.row.original;
       return (
         <div className='flex justify-center gap-1 flex-row'>
-          {companies.map((company) => (
-            <div key={company.id} className='flex items-center gap-2'>
-              <Avatar name={company.company.name} size='sm' square />
+          {companies.map((company, index) => {
+            if (index >= 3) return null;
+
+            return (
+              <div key={company.id} className='flex items-center gap-2'>
+                <Avatar name={company.company.name} size='sm' square />
+              </div>
+            );
+          })}
+
+          {companies.length > 3 && (
+            <div className='flex items-center justify-center'>
+              <div className='w-9 h-8 flex items-center justify-center rounded bg-gray-200 text-xs font-medium text-gray-600 dark:bg-b-dark-light dark:text-white'>
+                +{companies.length - 3}
+              </div>
             </div>
-          ))}
+          )}
         </div>
       );
     },
@@ -222,7 +235,7 @@ export const getColumns = (
         ...(getPermissionByModuleState('user', 'upsert')
           ? [
               {
-                label: 'edit',
+                label: t('actions.edit'),
                 icon: 'vox-icon vx-icon-123 text-primary',
                 onClick: () => {
                   onClickAction({
@@ -237,7 +250,7 @@ export const getColumns = (
         ...(getPermissionByModuleState('user', 'delete')
           ? [
               {
-                label: 'delete',
+                label: t('actions.delete'),
                 icon: 'vox-icon vx-icon-053 text-red-500',
                 color: 'text-red-600',
                 onClick: () => {

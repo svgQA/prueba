@@ -29,10 +29,26 @@ import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { t } from 'i18next';
 import { RoleService } from '@/services/general/role';
 import { useUserStore } from '@/store/slices';
+import { useTranslation } from 'react-i18next';
 interface CreateUserProps {
   onUserCreated?: (user: any) => void;
   user?: IUserResponse;
 }
+const DOCUMENT_TYPE_TRANSLATIONS: Record<string, string> = {
+  'Cédula de ciudadanía': 'l_citizenship_id',
+  'Tarjeta de identidad': 'l_identity_card',
+  'Registro civil': 'l_civil_registry',
+  'Tarjeta de extranjería': 'l_foreign_id_card',
+  'Cédula de extranjería': 'l_foreign_citizenship_id',
+  Pasaporte: 'l_passport',
+  'Permiso especial de permanencia': 'l_special_permit',
+  'Permiso por protección temporal': 'l_temporary_protection_permit',
+  'Documento de identificación extranjero': 'l_foreign_identification_document',
+};
+const translateDocumentType = (name: string): string => {
+  const translationKey = DOCUMENT_TYPE_TRANSLATIONS[name];
+  return translationKey ? t(`users.documentTypes.${translationKey}`) : name;
+};
 
 export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const {} = useUserStore();
@@ -55,6 +71,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const image = useSignal<IPresignedRequest[]>([]);
   const requiredRole = useSignal<boolean>(true);
   const typeSelected = useSignal<string | null>(null);
+  const rawDocumentTypes = useSignal<IDocumentTypeResponse[]>([]);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     // applyAllData();
@@ -72,6 +90,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
     // getDepartments();
     // getAllCompanies();
   }, []);
+
+  useEffect(() => {
+    if (rawDocumentTypes.value.length > 0) {
+      documentTypes.value = rawDocumentTypes.value.map((docType) => ({
+        ...docType,
+        name: translateDocumentType(docType.name),
+      }));
+    }
+  }, [i18n.language]);
 
   // const applyAllData = async (): Promise<void> => {
   //   await Promise.all([
@@ -201,6 +228,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const getRoles = async (): Promise<void> => {
     const response = await RoleService.getRoles();
     if (!response.getStatus()) return;
+
     roles.value = response.getMany().map((role) => ({
       label: role.name,
       value: role.id,
@@ -262,7 +290,15 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const getDocumentTypes = async (): Promise<void> => {
     const response = await UserService.getDocumentTypes();
     if (!response.getStatus()) return;
-    documentTypes.value = response.getMany();
+
+    const types = response.getMany();
+
+    rawDocumentTypes.value = types;
+
+    documentTypes.value = types.map((docType) => ({
+      ...docType,
+      name: translateDocumentType(docType.name),
+    }));
   };
 
   const onSubmit = async (user: IUserRequest) => {
@@ -355,20 +391,19 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   };
 
   return (
-    <div className='flex flex-col'>
-      <div className='absolute top-0 right-0 flex items-center justify-center bg-red gap-10 flex-row'>
-        <StatusButton
-          onClickClean={onClean}
-          submitting={false}
-          pristine={false}
-          form='user-form'
-          label={
-            getUserMode.value.mode === USER_MODE_SERVICE.CREATE
-              ? t('btnSave')
-              : t('btnUpdate')
-          }
-        />
-      </div>
+    <div className='flex flex-col pt-16'>
+      <StatusButton
+        onClickClean={onClean}
+        submitting={false}
+        pristine={false}
+        form='user-form'
+        className='!top-2'
+        label={
+          getUserMode.value.mode === USER_MODE_SERVICE.CREATE
+            ? 'save'
+            : 'update'
+        }
+      />
 
       <Form
         initialValues={initialValues.value}
@@ -389,7 +424,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         placeholder='l_name'
                         label='l_name'
                         type='text'
-                        icon='231'
+                        icon='174'
                         meta={meta}
                       />
                     )}
@@ -402,7 +437,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         placeholder='l_surname'
                         label='l_surname'
                         type='text'
-                        icon='231'
+                        icon='174'
                         meta={meta}
                       />
                     )}
@@ -418,7 +453,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         placeholder='p_email'
                         label='l_email'
                         type='email'
-                        icon='231'
+                        icon='100'
                         meta={meta}
                         normal
                       />
@@ -436,7 +471,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         label={'h_phone'}
                         type='tel'
                         meta={meta}
-                        icon='231'
+                        icon='402'
                         normal
                         onChange={(e) => {
                           const value = e.currentTarget.value;
@@ -463,7 +498,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         placeholder='p_select_document_type'
                         label='l_card_type'
                         name='cardType'
-                        icon='231'
+                        icon='096'
                         optionValue='id'
                         optionLabel='name'
                         onChange={(e) => {
@@ -486,7 +521,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         placeholder='p_enter_document_number'
                         label='l_card_id'
                         type='text'
-                        icon='231'
+                        icon='174'
                         meta={meta}
                       />
                     )}
@@ -511,7 +546,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         id='country'
                         label='h_country'
                         placeholder='p_select'
-                        icon='321'
                         options={countries.value}
                       />
                     )}
@@ -528,7 +562,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         id='departmentId'
                         label='h_department'
                         placeholder='p_select'
-                        icon='321'
                         options={departments.value}
                         onChange={(e) => {
                           if (e?.value) {
@@ -552,7 +585,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         id='municipalityId'
                         label='l_municipality'
                         placeholder='p_search'
-                        icon='321'
                         options={municipalities.value}
                       />
                     )}
@@ -564,7 +596,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         {...input}
                         placeholder='p_address'
                         label='l_address'
-                        icon='321'
+                        icon='142'
                         type='text'
                         meta={meta}
                       />
@@ -587,7 +619,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         placeholder='p_select_user_type'
                         label='l_user_type'
                         name='userType'
-                        icon='231'
+                        icon='096'
                         onChange={(e) => {
                           requiredRole.value =
                             e.currentTarget.value !== 'CLIENT';
@@ -611,7 +643,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                             id='clients'
                             label='l_client'
                             placeholder='p_select'
-                            icon='231'
+                            icon='096'
                             multiple={true}
                             allowAll={true}
                             options={clients.value}
@@ -632,7 +664,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                             meta={meta}
                             id='select-places'
                             label={t('h_place')}
-                            icon='231'
                             options={places.value}
                             multiple={true}
                             allowAll={true}
@@ -653,7 +684,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         meta={meta}
                         id='select-roles'
                         label='l_role'
-                        icon='231'
+                        icon='096'
                         options={roles.value}
                         multiple={true}
                         allowAll={true}
@@ -671,7 +702,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         meta={meta}
                         id='select-companies'
                         label='l_company'
-                        icon='231'
+                        icon='023'
                         options={companies.value}
                         multiple={true}
                         allowAll={true}

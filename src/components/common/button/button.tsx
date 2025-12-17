@@ -34,6 +34,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
   keyName = '',
   transparent = false,
   permissions,
+  ...props
 }: IButtonProps) => {
   const { t } = useTranslation();
   const getJustify = () => {
@@ -76,6 +77,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
           onClick={onClick}
           form={form}
           disabled={loading || disabled}
+          {...props}
           className={`
           ${square ? 'w-8 h-8' : ''}
           ${unpadded ? 'p-1' : 'p-2'}
@@ -93,7 +95,7 @@ export const Button: FunctionComponent<IButtonProps> = ({
         >
           {icon && !end && (
             <span
-              className={`${mode ? 'text-white' : selected ? 'text-white' : 'text-primary'} left-0 px-1 size-${iconSize} vx-icon vx-icon-${icon} hidden sm:inline ${iconColor} ${label ? 'mr-2' : ''}`}
+              className={`${mode ? 'text-white' : selected ? 'text-white' : 'text-primary'} left-0 px-1 size-${iconSize} vx-icon vx-icon-${icon} ${iconColor} ${label ? 'mr-2' : ''}`}
             />
           )}
 

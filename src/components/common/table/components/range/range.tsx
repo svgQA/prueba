@@ -35,8 +35,8 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
 
     const range: IRangeValues = {
       [column]: [
-        DateUtils.dateToBackend(model.start, 'date'),
-        DateUtils.dateToBackend(model.end, 'date'),
+        DateUtils.dateToBackend(model.start, 'full'),
+        DateUtils.dateToBackend(model.end, 'full'),
       ] as [string, string],
     };
 
@@ -115,7 +115,7 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
                         <DateField
                           name='start'
                           label='h_date_start'
-                          format='date'
+                          format='full'
                           // type='date'
                           validate={(value) => {
                             if (value && values.end) {
@@ -131,7 +131,7 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
                               end.setHours(0, 0, 0, 0);
 
                               if (start > end) {
-                                return t('invalid_start_date');
+                                return t('error.invalid_start_date');
                               }
                             }
                             return undefined;
@@ -143,7 +143,7 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
                         <DateField
                           name='end'
                           label='h_date_end'
-                          format='date'
+                          format='full'
                           // type='date'
                           validate={(value) => {
                             if (value && values.start) {
@@ -159,7 +159,7 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
                               end.setHours(0, 0, 0, 0);
 
                               if (end < start) {
-                                return t('invalid_end_date');
+                                return t('error.invalid_end_date');
                               }
                             }
                             return undefined;

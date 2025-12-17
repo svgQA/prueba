@@ -10,7 +10,7 @@ export const Section: FunctionComponent<ISectionProps> = ({
   header,
 }: ISectionProps) => {
   return (
-    <section className={`${padding ? 'px-7 pt-7' : 'p-0'} ${className}`}>
+    <section className={`${padding ? 'px-2 pt-2' : 'p-0'} ${className}`}>
       <div className='flex flex-col gap-2 md:flex-row md:items-center md:justify-between absolute -top-20 z-10 right-0'>
         {header}
       </div>

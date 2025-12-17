@@ -5,12 +5,17 @@ import { ICPqrsRequest } from '../utils/interface';
 import { Badge } from '@/components/common/badge/badge';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
 import { useCallback } from 'preact/compat';
+import { Button } from '@/components/common/button/button';
+import { PqrsAiService } from '@/services/pqrs/ai-pqrs';
+import dayjs from 'dayjs';
 
 export interface IProps {
   pqrs: ICPqrsRequest;
   index: number;
   columnColorClass?: string;
   onClick?: (id: number, tags: unknown[], area: any) => void;
+  onRetry?: (id: number) => void;
+  onContinue?: (id: number) => void;
 }
 
 export const PqrsCards = ({
@@ -19,7 +24,8 @@ export const PqrsCards = ({
   columnColorClass = 'text-primary',
   onClick,
 }: IProps) => {
-  const borderColorClass = columnColorClass.replace('text-', 'border-');
+  const accentBgClass = columnColorClass.replace('text-', 'bg-');
+  const accentBorderClass = columnColorClass.replace('text-', 'border-');
 
   const getBadgeStatus = useCallback(():
     | 'error'
@@ -27,16 +33,13 @@ export const PqrsCards = ({
     | 'warning'
     | 'info'
     | 'ternary' => {
-    if (columnColorClass.includes('error')) return 'error';
-    if (
-      columnColorClass.includes('secondary') ||
-      columnColorClass.includes('m6')
-    )
-      return 'success';
-    if (columnColorClass.includes('caution')) return 'warning';
-    if (columnColorClass.includes('ternary')) return 'ternary';
+    const pqrsType = pqrs?.extraData?.pqrsType?.toLowerCase();
+    if (pqrsType === 'queja') return 'error';
+    if (pqrsType === 'sugerencia') return 'success';
+    if (pqrsType === 'reclamo') return 'warning';
+    if (pqrsType === 'recurso') return 'ternary';
     return 'info';
-  }, []);
+  }, [pqrs?.extraData?.pqrsType]);
 
   const getTags = useCallback(() => {
     const allTags =
@@ -57,124 +60,204 @@ export const PqrsCards = ({
     return areaInference?.inference?.area || (pqrs as any)?.area || null;
   }, []);
 
+  const onExecuteButtonByStage = async (
+    id: number,
+    type: 'RETRY' | 'CONTINUE'
+  ) => {
+    const stageId =
+      type === 'RETRY'
+        ? pqrs.inferences[pqrs.inferences.length - 1]?.stage?.prevStageId
+        : pqrs.inferences[pqrs.inferences.length - 1]?.stage?.nextStageId;
+    await PqrsAiService.execute_ai_process_again(id, {
+      stageId: Number(stageId),
+    });
+  };
+
+  const calculateDaysToExpire = useCallback(() => {
+    if (!pqrs?.startDate) return null;
+
+    const startDate = dayjs(pqrs.startDate);
+    const expirationDate = startDate.add(15, 'days');
+    const today = dayjs();
+
+    const daysRemaining = expirationDate.diff(today, 'days');
+
+    return {
+      daysRemaining,
+      isExpired: daysRemaining < 0,
+      isExpiringSoon: daysRemaining >= 0 && daysRemaining <= 3,
+    };
+  }, [pqrs?.startDate]);
+
   const tags = getTags();
   const area = getArea();
+  const expirationStatus = calculateDaysToExpire();
+  const pqrsButtonByStage =
+    pqrs.status?.toLowerCase() === 'error' ||
+    pqrs.inferences[pqrs.inferences.length - 1]?.stage?.type === 'MANUAL';
 
   return (
-    <Card key={`pqrs-card-${index}`} borderless={false} shadow={true}>
+    <Card key={`pqrs-card-${index}`} borderless shadow={false}>
+      {/*
+          hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgba(0,0,0,0.06)] 
+  */}
       <div
-        class={`p-4 space-y-3 cursor-pointer hover:-translate-y-0.5 hover:shadow-[0_10px_25px_rgba(0,0,0,0.06)] transition-all duration-200 ${borderColorClass}`}
+        class={`relative p-4 space-y-4 cursor-pointer transition-all duration-200 rounded-xl border border-gray-border/60 dark:border-gray-border/30 bg-white/95 dark:bg-b-dark-light/95 
+          ${accentBorderClass}`}
         onClick={() => {
           if (!pqrs.id || !onClick) return;
           onClick(pqrs.id, tags, area);
         }}
       >
-        <div class='flex items-center justify-between text-[11px] uppercase tracking-wide'>
+        <div class='absolute inset-x-0 top-0 h-1 rounded-t-xl bg-gradient-to-r from-primary/12 via-secondary/10 to-ternary/12 dark:from-primary/18 dark:via-secondary/15 dark:to-ternary/18' />
+
+        <div class='flex items-center justify-between text-[11px] uppercase tracking-wide text-gray-text-light dark:text-t-dark'>
           <div class='flex items-center gap-2'>
             <span
-              class={`w-2 h-2 rounded-full ${columnColorClass.replace('text-', 'bg-')} shadow-inner`}
+              class={`w-2 h-2 rounded-full ${accentBgClass} shadow-inner`}
             />
-            <span class='font-semibold text-t-light'>Estado</span>
-            <Badge label={pqrs.status} width='w-24' />
+            <span class='font-semibold text-t-light dark:text-t-dark-light'>
+              Estado
+            </span>
+            <Badge
+              label={pqrs.status}
+              width='w-fit'
+              outline
+              status='info'
+              size='xs'
+            />
           </div>
-          <Badge label={`#${index + 1}`} width='w-12' />
+          <Badge label={`#${index + 1}`} width='w-fit' outline size='xs' />
         </div>
 
         <div class='flex items-start justify-between gap-3'>
-          <div class='flex-1 min-w-0'>
+          <div class='flex-1 min-w-0 space-y-1.5'>
             <TextEllipsis
-              text={pqrs?.extraData?.clientOrCompanyName || 'Sin nombre'}
+              text={pqrs?.extraData?.title || pqrs?.clientName || 'Sin nombre'}
               maxWidth='100%'
               lines={1}
-              className='font-semibold text-sm leading-tight'
+              className='font-semibold text-sm leading-tight text-t-light dark:text-t-dark-light'
             />
-            <div class='flex items-center gap-2 mt-1'>
-              {pqrs?.extraData?.ticketNumber && (
-                <span class='text-xs font-mono'>
-                  #{pqrs?.extraData?.ticketNumber}
+            <div class='flex items-center flex-wrap gap-2 text-[11px] text-gray-text-light dark:text-t-dark'>
+              {pqrs?.identifier && (
+                <span class='font-mono px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                  #{pqrs?.identifier}
                 </span>
               )}
-              {pqrs?.extraData?.accountNumber && (
-                <>
-                  <span class=''>•</span>
-                  <span class='text-xs'>{pqrs?.extraData?.accountNumber}</span>
-                </>
+              {pqrs?.contract && (
+                <span class='px-2 py-0.5 rounded-full bg-primary-opacity text-primary'>
+                  {pqrs?.contract}
+                </span>
+              )}
+              {area && area.name && (
+                <span class='px-2 py-0.5 rounded-full bg-b-light text-gray-text-light dark:bg-b-dark'>
+                  {area.name}
+                </span>
               )}
             </div>
           </div>
 
-          {pqrs?.extraData?.requestType && (
+          {pqrs?.extraData?.pqrsType && (
             <div class='flex flex-col gap-1.5 items-end'>
               <Badge
-                label={pqrs?.extraData?.requestType}
+                label={pqrs?.extraData?.pqrsType}
                 status={getBadgeStatus()}
-                full
                 outline
+                width='w-fit'
               />
             </div>
           )}
         </div>
 
-        {pqrs?.extraData?.registerObservation && (
+        {pqrs?.extraData?.observation && (
           <TextEllipsis
-            text={pqrs?.extraData?.registerObservation}
+            text={pqrs?.extraData?.observation}
             maxWidth='100%'
             lines={2}
-            className='text-xs leading-relaxed'
+            className='text-xs leading-relaxed text-gray-text-light dark:text-t-dark'
           />
         )}
 
         {/* Metadata Grid */}
-        <div class='grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs'>
-          {pqrs?.extraData?.filingDate && (
+        <div class='grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-text-light dark:text-t-dark'>
+          {pqrs?.startDate && (
             <div class='flex items-center gap-1.5'>
               <span>📅</span>
-              <FormattedDate
-                date={String(pqrs?.extraData?.filingDate)}
-                format='date'
-              />
+              <FormattedDate date={String(pqrs?.startDate)} format='date' />
             </div>
           )}
 
-          {area && (
-            <div class='flex items-center gap-1.5 text-gray-text-light'>
-              <span>🏢</span>
-              <span class='truncate capitalize'>{area.replace(/_/g, ' ')}</span>
+          {pqrs?.contactEmail && (
+            <div class='flex items-center gap-1.5'>
+              <span>📧</span>
+              <TextEllipsis
+                text={pqrs.contactEmail}
+                maxWidth='100%'
+                lines={1}
+              />
             </div>
           )}
         </div>
 
-        {(tags.length > 0 ||
-          pqrs?.extraData?.hasFiles ||
-          typeof pqrs?.extraData?.daysToExpire === 'number') && (
-          <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border'>
+        {(tags.length > 0 || pqrs?.resources || expirationStatus) && (
+          <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border/60 dark:border-gray-border/30'>
             {tags.map((tag, idx) => (
               <span
                 key={idx}
-                class='px-2 py-0.5 bg-b-light text-gray-text-light text-xs rounded'
+                class='px-2 py-0.5 bg-b-light text-gray-text-light text-xs rounded-full dark:bg-b-dark'
               >
                 #{String(tag)}
               </span>
             ))}
 
-            {pqrs?.extraData?.hasFiles && (
-              <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1'>
+            {pqrs?.resources && (
+              <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded-full flex items-center gap-1'>
                 📎 Archivos
               </span>
             )}
 
-            {typeof pqrs?.extraData?.daysToExpire === 'number' &&
-              pqrs?.extraData?.daysToExpire <= 3 && (
-                <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium'>
-                  ⏰ {pqrs?.extraData?.daysToExpire}d
+            {expirationStatus?.isExpired && (
+              <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded-full flex items-center gap-1 font-medium'>
+                ⏰ Expirado hace {Math.abs(expirationStatus.daysRemaining)}d
+              </span>
+            )}
+
+            {expirationStatus?.isExpiringSoon &&
+              !expirationStatus?.isExpired && (
+                <span class='px-2 py-0.5 bg-caution-opacity text-caution text-xs rounded-full flex items-center gap-1 font-medium'>
+                  ⏰ Expira en {expirationStatus.daysRemaining}d
                 </span>
               )}
           </div>
         )}
 
-        <div
-          class={`h-1.5 -mx-0.5 -mb-0.5 mt-0 opacity-30 ${columnColorClass.replace('text-', 'bg-')}`}
-        />
+        {/* Actions Stage */}
+        {pqrsButtonByStage && (
+          <div class='flex gap-2 pt-1'>
+            <Button
+              name='retry-button'
+              label='h_retry'
+              onClick={(e: Event) => {
+                e.stopPropagation();
+                if (pqrs.id) onExecuteButtonByStage(pqrs.id, 'RETRY');
+              }}
+              className='flex-1 py-1.5 text-xs bg-primary/12 text-primary rounded-lg hover:bg-primary/20 transition-colors'
+              icon='refresh'
+            />
+            <Button
+              name='continue-button'
+              label='h_continue'
+              onClick={(e: Event) => {
+                e.stopPropagation();
+                if (pqrs.id) onExecuteButtonByStage(pqrs.id, 'CONTINUE');
+              }}
+              className='flex-1 py-1.5 text-xs bg-secondary/12 text-secondary rounded-lg hover:bg-secondary/20 transition-colors'
+              icon='arrow-right'
+            />
+          </div>
+        )}
+
+        <div class={`h-1 rounded-full opacity-25 ${accentBgClass}`} />
       </div>
     </Card>
   );

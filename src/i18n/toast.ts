@@ -57,6 +57,7 @@ export const toast_es = {
   s_title_delete: 'Eliminar Turno',
   s_message: '¿Está seguro que desea eliminar el turno?',
   s_success: 'Turno creado exitosamente!',
+  s_request: '¿Desea realizar esta acciòn?',
   s_error_template: 'Error al crear la plantilla',
   s_error_template_invalid:
     'Error al crear plantilla. Asegúrate de que el JSON es válido.',
@@ -133,6 +134,7 @@ export const toast_en = {
     'The shift cannot be deleted because it is already in progress or completed',
   s_title_delete: 'Delete Shift',
   s_message: 'Are you sure you want to delete the shift?',
+  s_request: 'Do you want to execute this action?',
   s_success: 'Shift created successfully!',
   s_error_template: 'Error creating template',
   s_error_template_invalid:

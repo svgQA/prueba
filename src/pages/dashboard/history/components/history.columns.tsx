@@ -9,7 +9,6 @@ import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { FormattedDate } from '@/components/compose/forms';
 import { Badge } from '@/components/common/badge/badge';
 import { FloatBadge } from '@/components/common/badge/float';
-import { useTranslation } from 'react-i18next';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -18,8 +17,6 @@ export const getColumns = (
     action: ROW_ACTIONS;
   }) => void
 ): ColumnDef<INotificationListItem>[] => {
-  const { t } = useTranslation();
-
   return [
     {
       id: 'title',
@@ -49,10 +46,11 @@ export const getColumns = (
       size: 120,
       cell: (info) => {
         const type = String(info.getValue());
+        const value = type.toLowerCase();
         return (
           <Badge
-            status={type === t('history.types.users') ? 'success' : 'warning'}
-            label={type}
+            status={value === 'usuarios' ? 'success' : 'warning'}
+            label={value}
             outline
           />
         );
@@ -118,7 +116,7 @@ export const getColumns = (
 
         const actions: IDropdownAction[] = [
           {
-            label: t('history.actions.reschedule'),
+            label: 'history.actions.reschedule',
             icon: 'vox-icon vx-icon-123 text-primary',
             onClick: () => {
               onClickAction({
@@ -129,7 +127,7 @@ export const getColumns = (
             },
           },
           {
-            label: t('history.actions.delete'),
+            label: 'history.actions.delete',
             icon: 'vox-icon vx-icon-053 text-red-500',
             color: 'text-red-600',
             onClick: () => {

@@ -1,35 +1,41 @@
+import { VNode } from 'preact';
 import { Signal, useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 
-import { PqrsService } from '@/services/pqrs/pqrs';
+import { WebSocketManager } from '@/utils/socket/manager/manager';
+import {
+  InSocketMessage,
+  SOCKET_MESSAGE_AREA,
+  MessageEvent,
+  MESSAGE_LISTENERS,
+  SOCKET_MESSAGE_EVENTS,
+} from '@/utils/socket/manager/types';
 
 import { Modal } from '@/components/common/modal/modal';
 import { Badge } from '@/components/common/badge/badge';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
-import { FormattedDate } from '@/components/compose/forms';
+import { Button } from '@/components/common/button/button';
 
+import { DateUtils } from '@/utils/utilities/dates';
 import { useUserStore } from '@/store/slices';
 import { useTranslation } from 'react-i18next';
 
-import { ICPqrsRequest } from '../utils/interface';
+import { PqrsService } from '@/services/pqrs/pqrs';
+import { OtsService } from '@/services/pqrs/ots';
+
+import { ICPqrsRequest, IPqrsArea } from '../utils/interface';
 import PqrsInferenceModal from './modal/pqrs-inference.modal';
 import PqrsGeneralModal from './modal/pqrs-general.modal';
+import { PqrsAiService } from '@/services/pqrs/ai-pqrs';
+import PqrsOTSModal from './modal/pqrs.ots.modal';
 
 interface IProps {
   showModal: Signal<boolean>;
   closeModal: () => void;
   id?: number;
-  tags?: any[];
-  areas?: any;
 }
 
-export const PqrsModal = ({
-  showModal,
-  closeModal,
-  id,
-  tags,
-  areas,
-}: IProps) => {
+export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
   const { t } = useTranslation();
   const { selectedCompany } = useUserStore();
 
@@ -40,8 +46,25 @@ export const PqrsModal = ({
   useEffect(() => {
     if (selectedCompany) {
       fetchInitialValues();
+
+      WebSocketManager.add(
+        SOCKET_MESSAGE_AREA.PQRS,
+        handleMessage,
+        MESSAGE_LISTENERS.PQRS_AI
+      );
+      return () => {
+        WebSocketManager.remove(
+          SOCKET_MESSAGE_AREA.PQRS,
+          MESSAGE_LISTENERS.PQRS_AI
+        );
+      };
     }
   }, [selectedCompany, id]);
+
+  const handleMessage = (event: InSocketMessage<MessageEvent>) => {
+    const { type: name } = event.payload;
+    if (name === SOCKET_MESSAGE_EVENTS.UPDATE) fetchInitialValues();
+  };
 
   const fetchInitialValues = async () => {
     if (!id) return;
@@ -52,9 +75,12 @@ export const PqrsModal = ({
     loading.value = false;
   };
 
-  const tabs = [
+  const tabs: ITab[] = [
     { id: 'general', label: 'General', icon: '310' },
     { id: 'analysis', label: 'Análisis IA', icon: '311' },
+    ...(pqrs.value?.pqrs_ots
+      ? [{ id: 'ots', label: 'Órdenes de Trabajo', icon: '320' }]
+      : []),
   ];
 
   const getBadgeStatus = ():
@@ -63,20 +89,161 @@ export const PqrsModal = ({
     | 'warning'
     | 'info'
     | 'ternary' => {
-    const requestType = pqrs.value?.extraData?.requestType?.toLowerCase();
-    if (requestType === 'queja') return 'error';
-    if (requestType === 'sugerencia') return 'success';
-    if (requestType === 'reclamo') return 'warning';
+    const pqrsType = pqrs.value?.extraData?.pqrsType?.toLowerCase();
+    if (pqrsType === 'queja') return 'error';
+    if (pqrsType === 'sugerencia') return 'success';
+    if (pqrsType === 'reclamo') return 'warning';
+    if (pqrsType === 'recurso') return 'ternary';
     return 'info';
   };
+
+  const handleCreateOts = async (pqrsId: number, areaId: number) => {
+    loading.value = true;
+    const response = await OtsService.create(pqrsId, areaId);
+    if (!response.getStatus()) return (loading.value = false);
+    const ots = response.getOne();
+    await PqrsAiService.execute_ai_process_again(pqrsId, {
+      otsId: ots.id,
+      areaId,
+    });
+    loading.value = false;
+    closeModal();
+  };
+
+  const HeaderInformation = () => (
+    <div class='bg-white/95 dark:bg-b-dark-light/90 border border-gray-border/70 dark:border-b-dark-light rounded-2xl p-4 shadow-sm space-y-4'>
+      <div class='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
+        <div class='flex-1 min-w-0 space-y-1.5'>
+          <div class='flex items-start gap-2 flex-wrap'>
+            <h4 class='font-semibold text-t-light dark:text-white text-lg leading-tight'>
+              {pqrs.value?.extraData?.title}
+            </h4>
+          </div>
+          <div class='flex items-center flex-wrap gap-2 text-xs text-gray-text-light dark:text-b-light-dark'>
+            {pqrs.value?.clientName && (
+              <span class='font-mono px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                Nombre: {pqrs.value.clientName}
+              </span>
+            )}
+            {pqrs.value?.identifier && (
+              <span class='font-mono px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                Cedula: {pqrs.value.identifier}
+              </span>
+            )}
+            {pqrs.value?.contract && (
+              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                contract: {pqrs.value.contract}
+              </span>
+            )}
+            {pqrs.value?.startDate && (
+              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                fecha:{' '}
+                {DateUtils.dateToFrontend(pqrs.value?.startDate, {
+                  format: 'DD/MM/YYYY',
+                })}
+              </span>
+            )}
+            {pqrs.value?.contactEmail && (
+              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                Email: {pqrs.value.contactEmail}
+              </span>
+            )}
+            {pqrs.value?.address && (
+              <span class='px-2 py-0.5 rounded-full bg-b-light dark:bg-b-dark'>
+                Dirección: {pqrs.value.address}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/**
+       * TODO: REFACTORIZAR ESTA PARTE PORQUE NO DEBE IR AQUI:
+       */}
+      {pqrs.value?.area &&
+        pqrs.value?.area.map((area: IPqrsArea) => (
+          <div class='flex flex-col gap-3 md:flex-row md:items-start md:justify-between'>
+            <div class='flex items-start gap-2'>
+              <Badge
+                key={area?.area?.id}
+                label={area?.area?.name ?? ''}
+                status='warning'
+                size='sm'
+                outline
+                width='w-fit'
+              />
+            </div>
+
+            {area.subarea && (
+              <div class='flex items-start gap-2'>
+                <Badge
+                  key={area?.subarea?.id}
+                  label={area?.subarea?.name}
+                  status='warning'
+                  size='sm'
+                  outline
+                  width='w-fit'
+                />
+              </div>
+            )}
+
+            <div class='flex items-start gap-2'>
+              <Button
+                name='btn-click-ots'
+                label='create OTS'
+                onClick={() =>
+                  Promise.all([
+                    handleCreateOts(pqrs.value?.id!, area?.area?.id!),
+                  ])
+                }
+                className='!bg-secondary/15 !text-secondary hover:!bg-secondary/25'
+              />
+            </div>
+          </div>
+        ))}
+
+      {pqrs.value?.extraData?.observation && (
+        <div class='mb-3 pb-3 border-b border-gray-border/70 dark:border-b-dark-light'>
+          <TextEllipsis
+            text={pqrs.value.extraData.observation}
+            maxWidth='100%'
+            lines={3}
+            className='text-sm text-gray-text-light dark:text-b-light-dark leading-relaxed'
+          />
+        </div>
+      )}
+      {/* Mover badges al final para que no queden junto al título */}
+      <div class='flex items-start gap-2 flex-wrap'>
+        {pqrs.value?.extraData?.pqrsType && (
+          <Badge
+            label={pqrs.value.extraData.pqrsType}
+            status={getBadgeStatus()}
+            size='sm'
+            outline
+            width='w-fit'
+          />
+        )}
+        {pqrs.value?.priority && (
+          <Badge
+            label={pqrs.value?.priority.name}
+            status='warning'
+            size='sm'
+            outline
+            width='w-fit'
+          />
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <Modal
       open={showModal.value}
       onClose={closeModal}
       name='modal-pqrs-details'
-      width='w-11/12 max-w-6xl'
+      width='w-full max-w-7xl'
       position='fixed'
+      expandable
       header={
         <div className='flex flex-col gap-1'>
           <h3 className='text-xl font-semibold text-t-light dark:text-white'>
@@ -90,142 +257,62 @@ export const PqrsModal = ({
       }
     >
       <div class='h-[75vh] w-full flex flex-col gap-4 bg-white dark:bg-b-dark px-4 pb-6 pt-2 overflow-hidden'>
-        <div class='bg-b-light dark:bg-b-dark-light border border-gray-border dark:border-b-dark-light rounded-xl p-4 shadow-sm'>
-          <div class='flex items-start justify-between gap-3 mb-3'>
-            <div class='flex-1 min-w-0'>
-              <div class='flex items-center gap-2 mb-1'>
-                <h4 class='font-semibold text-t-light dark:text-white text-lg leading-tight'>
-                  {pqrs.value?.extraData?.clientOrCompanyName || 'Sin nombre'}
-                </h4>
-              </div>
-              <div class='flex items-center gap-2 text-xs text-gray-text-light dark:text-b-light-dark'>
-                {pqrs.value?.extraData?.ticketNumber && (
-                  <>
-                    <span class='font-mono'>
-                      #{pqrs.value.extraData.ticketNumber}
-                    </span>
-                    {pqrs.value?.extraData?.accountNumber && (
-                      <>
-                        <span>•</span>
-                        <span>{pqrs.value.extraData.accountNumber}</span>
-                      </>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
+        <HeaderInformation />
 
-            {pqrs.value?.extraData?.requestType && (
-              <Badge
-                label={pqrs.value.extraData.requestType}
-                status={getBadgeStatus()}
-                outline={false}
-                size='md'
-                width='w-fit'
+        <TabInformation tabs={tabs} activeTab={activeTab}>
+          <>
+            {activeTab.value === 'general' && <PqrsGeneralModal pqrs={pqrs} />}
+            {activeTab.value === 'analysis' && (
+              <PqrsInferenceModal
+                inferences={
+                  pqrs.value?.inferences?.filter(
+                    (inf) => inf.ots == null || inf.otsId == null
+                  ) ?? []
+                }
               />
             )}
-          </div>
-
-          {pqrs.value?.extraData?.registerObservation && (
-            <div class='mb-3 pb-3 border-b border-gray-border dark:border-b-dark-light'>
-              <TextEllipsis
-                text={pqrs.value.extraData.registerObservation}
-                maxWidth='100%'
-                lines={2}
-                className='text-sm text-gray-text-light dark:text-b-light-dark leading-relaxed'
-              />
-            </div>
-          )}
-
-          <div class='space-y-3'>
-            <div class='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs'>
-              {pqrs.value?.extraData?.filingDate && (
-                <div class='flex items-center gap-1.5 text-gray-text-light dark:text-b-light-dark bg-white dark:bg-b-dark rounded-lg px-3 py-2 border border-gray-border dark:border-b-dark-light'>
-                  <span>📅</span>
-                  <FormattedDate
-                    date={String(pqrs.value.extraData.filingDate)}
-                    format='date'
-                  />
-                </div>
-              )}
-
-              {areas && (
-                <div class='flex items-center gap-1.5 text-gray-text-light dark:text-b-light-dark bg-white dark:bg-b-dark rounded-lg px-3 py-2 border border-gray-border dark:border-b-dark-light'>
-                  <span>🏢</span>
-                  <span class='truncate capitalize'>
-                    {areas.replace(/_/g, ' ')}
-                  </span>
-                </div>
-              )}
-
-              {pqrs.value?.extraData?.contactEmail && (
-                <div class='flex items-center gap-1.5 text-gray-text-light dark:text-b-light-dark bg-white dark:bg-b-dark rounded-lg px-3 py-2 border border-gray-border dark:border-b-dark-light'>
-                  <span>📧</span>
-                  <TextEllipsis
-                    text={pqrs.value.extraData.contactEmail}
-                    maxWidth='100%'
-                    lines={1}
-                  />
-                </div>
-              )}
-            </div>
-
-            {((tags && tags.length > 0) ||
-              pqrs.value?.extraData?.hasFiles ||
-              typeof pqrs.value?.extraData?.daysToExpire === 'number') && (
-              <div class='flex flex-wrap gap-1.5 pt-2 border-t border-gray-border dark:border-b-dark-light'>
-                {tags &&
-                  tags.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      class='px-2 py-0.5 bg-b-light dark:bg-b-dark text-gray-text-light dark:text-b-light-dark text-xs rounded border border-gray-border/60 dark:border-b-dark-light/60'
-                    >
-                      #{String(tag)}
-                    </span>
-                  ))}
-
-                {pqrs.value?.extraData?.hasFiles && (
-                  <span class='px-2 py-0.5 bg-primary-opacity text-primary text-xs rounded flex items-center gap-1 border border-primary/30'>
-                    📎 Archivos
-                  </span>
-                )}
-
-                {typeof pqrs.value?.extraData?.daysToExpire === 'number' &&
-                  pqrs.value.extraData.daysToExpire <= 3 && (
-                    <span class='px-2 py-0.5 bg-error-opacity text-error text-xs rounded flex items-center gap-1 font-medium border border-error/40'>
-                      ⏰ {pqrs.value.extraData.daysToExpire}d
-                    </span>
-                  )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/*This is the tabs*/}
-        <div class='border-b border-gray-border dark:border-b-dark-light mb-1 px-1'>
-          <nav class='flex space-x-1 overflow-x-auto vox-scroll-design pb-1'>
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                class={`px-3 py-2 text-sm font-medium rounded-t-lg transition-colors ${
-                  activeTab.value === tab.id
-                    ? 'bg-primary-opacity text-primary border-b-2 border-primary shadow-sm'
-                    : 'text-gray-text-light dark:text-b-light-dark hover:text-t-light hover:bg-b-light dark:hover:bg-b-dark-light'
-                }`}
-                onClick={() => (activeTab.value = tab.id)}
-              >
-                <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>
-                {tab.label}
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        <div class='flex-1 overflow-y-auto p-3 rounded-lg bg-b-light dark:bg-b-dark-light shadow-inner vox-scroll-design'>
-          {activeTab.value === 'general' && <PqrsGeneralModal pqrs={pqrs} />}
-          {activeTab.value === 'analysis' && <PqrsInferenceModal pqrs={pqrs} />}
-        </div>
+            {activeTab.value === 'ots' && <PqrsOTSModal pqrs={pqrs} />}
+          </>
+        </TabInformation>
       </div>
     </Modal>
   );
 };
+
+interface ITab<T = string> {
+  id: T;
+  label: string;
+  icon: string;
+}
+interface ITabProp {
+  tabs: ITab[];
+  children: VNode | VNode[];
+  activeTab: Signal<string>;
+}
+
+const TabInformation = ({ tabs, children, activeTab }: ITabProp) => (
+  <div class='rounded-2xl border border-gray-border/70 dark:border-b-dark-light bg-white/90 dark:bg-b-dark-light/90 shadow-sm overflow-hidden flex flex-col h-full'>
+    <div class='border-b border-gray-border/60 dark:border-b-dark-light bg-b-light/60 dark:bg-b-dark/60 px-2'>
+      <nav class='flex space-x-1 overflow-x-auto vox-scroll-design py-2'>
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            class={`px-3 py-2 text-sm font-medium rounded-xl transition-colors border ${
+              activeTab.value === tab.id
+                ? 'bg-primary text-white border-primary shadow-md'
+                : 'bg-white/80 dark:bg-b-dark/80 border-transparent text-gray-text-light dark:text-b-light-dark hover:border-gray-border/60 dark:hover:border-b-dark-light hover:text-t-light'
+            }`}
+            onClick={() => (activeTab.value = tab.id)}
+          >
+            <span class={`mr-1 vox-icon vx-icon-${tab.icon}`}></span>
+            {tab.label}
+          </button>
+        ))}
+      </nav>
+    </div>
+
+    <div class='flex-1 overflow-y-auto p-4 bg-b-light/60 dark:bg-b-dark/60 vox-scroll-design'>
+      {children}
+    </div>
+  </div>
+);

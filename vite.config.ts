@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite';
+import { defineConfig, loadEnv, PluginOption } from 'vite';
 import preact from '@preact/preset-vite';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     plugins: [
-      preact(),
+      preact() as PluginOption[],
       visualizer({
         open: false, // Abre el reporte automáticamente en el navegador
         filename: 'stats.html', // Nombre del archivo de salida
@@ -31,102 +31,96 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id: string) {
-            // if (id.includes('wouter')) {
-            //   return '@router-base';
+            const prioritizedChunks: Array<{
+              name: string;
+              test: (id: string) => boolean;
+            }> = [
+              {
+                name: '@maps',
+                test: (target) =>
+                  /react-google-maps|maplibre-gl|mapbox-gl|ol\/|ol\//.test(
+                    target
+                  ),
+              },
+              { name: '@lodash', test: (target) => target.includes('lodash') },
+              {
+                name: '@pdf',
+                test: (target) => /jspdf|pdf-lib|pako/.test(target),
+              },
+              {
+                name: '@tanstack',
+                test: (target) => target.includes('tanstack'),
+              },
+              { name: '@qrcode', test: (target) => target.includes('qrcode') },
+              {
+                name: '@dnd-kit',
+                test: (target) => target.includes('dnd-kit'),
+              },
+              {
+                name: '@aws-amplify',
+                test: (target) => target.includes('aws-amplify'),
+              },
+              {
+                name: '@charts',
+                test: (target) => /chart|apexcharts/.test(target),
+              },
+              { name: '@excel', test: (target) => target.includes('exceljs') },
+              {
+                name: '@forms',
+                test: (target) => target.includes('react-final'),
+              },
+              {
+                name: '@calendar',
+                test: (target) => target.includes('@fullcalendar'),
+              },
+              {
+                name: '@sockets',
+                test: (target) => target.includes('socket.io-client'),
+              },
+              {
+                name: '@phoenix',
+                test: (target) => target.includes('phoenix'),
+              },
+              {
+                name: '@pdfme',
+                test: (target) => target.includes('@pdfme'),
+              },
+              {
+                name: '@reactflow',
+                test: (target) => target.includes('reactflow'),
+              },
+              {
+                name: '@grafana',
+                test: (target) => target.includes('grafana'),
+              },
+            ];
+
+            const matchingChunk = prioritizedChunks.find(({ test }) =>
+              test(id)
+            );
+            if (matchingChunk) {
+              return matchingChunk.name;
+            }
+
+            // if (id.includes('node_modules')) {
+            //   const pnpmMatch = id.match(
+            //     /node_modules\/\.pnpm\/([^/]+)\/node_modules\/([^/]+)/
+            //   );
+            //   if (pnpmMatch) {
+            //     const [_, encodedName, nestedPkg] = pnpmMatch;
+            //     // encodedName: "@scope+pkg@1.0.0" or "pkg@1.0.0"
+            //     const decodedName = encodedName
+            //       .replace(/^@/, '')
+            //       .replace(/\+.*/, '-')
+            //       .replace(/@.*/, '');
+            //     return `vendor-${decodedName || nestedPkg}`;
+            //   }
+            //
+            //   const [, scope = '', pkg = ''] =
+            //     id.match(/node_modules\/(?:@([^/]+)\/)?([^/]+)/) ?? [];
+            //   const cleanedScope = scope ? `${scope}-` : '';
+            //   return `vendor-${cleanedScope}${pkg}`;
             // }
-            // if (id.includes('preact')) {
-            //   return '@preact-base';
-            // }
-            // if (id.includes('components/common')) {
-            //   return '@components-common-base';
-            // }
-            // if (id.includes('components/compose')) {
-            //   return '@components-compose-base';
-            // }
-            // if (id.includes('utils')) {
-            //   return '@utils-base';
-            // }
-            // if (id.includes('assets')) {
-            //   return '@assets-base';
-            // }
-            if (id.includes('react-google-maps')) {
-              return '@google-base'; // 148.81 kB
-            }
-            if (id.includes('lodash')) {
-              return '@lodash-base'; // 98.54 kB
-            }
-            if (id.includes('jspdf')) {
-              return '@jspdf-base'; // 358.25 kB
-            }
-            if (id.includes('tanstack')) {
-              return '@tanstack-base'; // 55.80 kB
-            }
-            if (id.includes('html')) {
-              return '@html-base'; // 55.80 kB
-            }
-            if (id.includes('qrcode')) {
-              return '@qrcode-base'; // 24.56 kB
-            }
-            if (id.includes('dnd-kit')) {
-              return '@dnd-kit-base'; // 67.50 kB
-            }
-            if (id.includes('aws-amplify')) {
-              return '@aws-amplify-base'; // 413.17 kB
-            }
-            if (id.includes('chart')) {
-              return '@chart-base';
-            }
-            if (id.includes('exceljs')) {
-              return '@excel-base';
-            }
-            if (id.includes('react-final')) {
-              return '@react-final-base';
-            }
-            if (id.includes('@fullcalendar')) {
-              return '@calendar-base'; // 257.94 kB
-            }
-            if (id.includes('maplibre-gl')) {
-              return '@maplibre-gl-base'; // 148.81 kB
-            }
-            if (id.includes('textarea-caret')) {
-              return '@caret-base'; // 148.81 kB
-            }
-            if (id.includes('socket.io-client')) {
-              return '@socket-io-client-base'; // 148.81 kB
-            }
-            if (id.includes('jspdf')) {
-              return '@jspdf'; // 148.81 kB
-            }
-            if (id.includes('pdf-lib')) {
-              return '@pdf-lib'; // 148.81 kB
-            }
-            if (id.includes('pako')) {
-              return '@pako-lib'; // 148.81 kB
-            }
-            if (id.includes('phoenix')) {
-              return '@phoenix';
-            }
-            if (id.includes('@pdfme/common')) {
-              return '@pdfme/common'; // 148.81 kB
-            }
-            if (id.includes('@pdfme/generator')) {
-              return '@pdfme/generator';
-            }
-            if (id.includes('@pdfme/schemas')) {
-              return '@pdfme/schemas';
-            }
-            if (id.includes('@pdfme/ui')) {
-              return '@pdfme/ui';
-            }
-            if (id.includes('reactflow')) {
-              return '@reactflow/ui';
-            }
-            if (id.includes('grafana')) {
-              return '@grafana/sx';
-            }
-            if (id.includes('@grafana')) {
-              return '@grafana';
-            }
           },
         },
       },

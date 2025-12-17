@@ -154,6 +154,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         type='text'
                         placeholder='p_name'
                         label='l_name'
+                        icon='174'
                         meta={meta}
                         disabled={loading.value}
                       />
@@ -168,7 +169,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         meta={meta}
                         placeholder='p_select_client'
                         label='l_client'
-                        icon='252'
+                        icon='007'
                         options={clients.value}
                         disabled={loading.value}
                       />
@@ -202,6 +203,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         placeholder='p_element_description'
                         label='description'
                         type='text'
+                        icon='174'
                         meta={meta}
                         disabled={loading.value}
                       />
@@ -216,7 +218,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         {...input}
                         placeholder='p_select_priority'
                         label='l_priority'
-                        icon='252'
+                        icon='454'
                         options={[
                           { value: 'HIGH', label: t('l_high') },
                           { value: 'MEDIUM', label: t('l_medium') },
@@ -234,7 +236,7 @@ export const ProjectCreateSettingPage: FunctionComponent = () => {
                         {...input}
                         placeholder='p_select_state'
                         label='l_status'
-                        icon='252'
+                        // icon='252'
                         options={[
                           { value: 'IN_PROGRESS', label: t('l_in_progress') },
                           { value: 'COMPLETED', label: t('COMPLETED') },

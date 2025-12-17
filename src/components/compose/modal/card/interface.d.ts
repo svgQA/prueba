@@ -1,5 +1,6 @@
 import { type IMenu } from '@/components/common/interface';
 import { type IComponentProps } from '@/components/utils/interface';
+import { IPresignedRequest } from '@/types/file';
 
 export interface ICardSettingMenuProps {
   id: string;
@@ -12,7 +13,7 @@ export interface ICardSettingMenuProps {
 
 export interface ICardSettingUserProps extends IComponentProps {
   username: string;
-  image: string;
+  image?: IPresignedRequest;
   company: string;
   rol: string;
 }

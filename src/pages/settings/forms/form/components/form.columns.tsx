@@ -3,7 +3,6 @@ import { ColumnDef } from '@tanstack/react-table';
 import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Avatar } from '@/components/common/Avatar';
-import { Button } from '@/components/common/button/button';
 import {
   DropdownActionsMenu,
   IDropdownAction,
@@ -26,8 +25,7 @@ export const getColumns = (
       const { title, description } = info.row.original;
       return (
         <div className='flex items-center'>
-          <span className='vox-icon vx-icon-152 mt-1 size-md' />
-          <div className='flex flex-col ml-3 text-left'>
+          <div className='flex flex-col text-left'>
             <h5 className='font-bold text-left'>{title}</h5>
             <TextEllipsis text={description} maxWidth='250px' />
           </div>
@@ -106,7 +104,7 @@ export const getColumns = (
         ...(report
           ? [
               {
-                label: 'report',
+                label: 'actions.report',
                 icon: 'vox-icon vx-icon-143 text-primary',
                 onClick: () => {
                   onClickAction({
@@ -119,7 +117,7 @@ export const getColumns = (
             ]
           : []),
         {
-          label: 'l_delete',
+          label: 'actions.delete',
           icon: 'vox-icon vx-icon-053 text-red-500',
           color: 'text-red-600',
           onClick: () => {
@@ -134,19 +132,6 @@ export const getColumns = (
 
       return (
         <div className='w-full flex justify-center items-center'>
-          <Button
-            name='continue'
-            label='l_response'
-            icon='030'
-            unpadded
-            onClick={() => {
-              onClickAction({
-                id: String(id),
-                type: 'form',
-                action: ROW_ACTIONS.RESPONSE,
-              });
-            }}
-          ></Button>
           <DropdownActionsMenu actions={actions} />
         </div>
       );
