@@ -203,7 +203,7 @@ export class BaseService {
 
       if (!response.ok) {
         const result = (await response.json()) as VoxError;
-        if (Number(result.code) === 401) {
+        if (Number(response.status) === 401) {
           setIsInErrorState(true);
           setTypeOfError('authorization');
         }
