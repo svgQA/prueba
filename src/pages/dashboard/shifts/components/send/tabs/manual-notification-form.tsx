@@ -174,7 +174,7 @@ export const ManualNotificationForm = ({
       render={({ handleSubmit }) => (
         <form
           onSubmit={handleSubmit}
-          className='space-y-6 w-full max-w-5xl mx-auto p-1'
+          className='space-y-6 w-full max-w-5xl mx-auto p-1 z-[3]'
         >
           <div className='flex items-center text-gray-700 dark:text-gray-200'>
             <Switch
