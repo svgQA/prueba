@@ -163,7 +163,6 @@ export const HistoryNotificationsPage: FunctionComponent = () => {
       <Table<INotificationListItem>
         data={notifications.value}
         columns={getColumns(onClickAction)}
-        pageSize={10}
         showExpandableIcon={false}
         loading={loading.value}
       />

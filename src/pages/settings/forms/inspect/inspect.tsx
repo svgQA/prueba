@@ -99,7 +99,6 @@ export const FormInspectSettingPage: FunctionComponent = () => {
       <Table<IResponseResponse>
         data={responses.value}
         columns={columns}
-        pageSize={20}
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}

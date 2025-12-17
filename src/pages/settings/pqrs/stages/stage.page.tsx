@@ -112,13 +112,13 @@ export const StagePage: FunctionalComponent = () => {
         <Table<IStages>
           data={stages.value}
           columns={getColumns(onClickAction)}
-          pageSize={10}
           expandable={(row: IStages) => <ExpandableAccess row={row} />}
           visibility={{
             id: false,
           }}
           absolute
           unsearch
+          className='!max-h-[65vh]'
         />
       ) : (
         <StageFlow stages={stages.value} />

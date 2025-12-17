@@ -47,7 +47,6 @@ const OtsPage = () => {
           data={pqrsOts.value}
           columns={getColumns(onClickAction)}
           showExpandableIcon
-          pageSize={20}
           selectable
           loading={loading.value}
         />

@@ -83,7 +83,6 @@ export const NoveltySettingPage: FunctionComponent = () => {
       <Table<INovelty>
         data={novelties.value}
         columns={columns}
-        pageSize={20}
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}

@@ -413,12 +413,12 @@ export const ShiftsPage: FunctionalComponent = () => {
         <Table<IShiftResponse>
           data={signalShifts.value}
           columns={getColumns(onClickAction)}
-          pageSize={20}
           selectable
           onNotifications={onNotifications}
           hasNotifications={notificationValidate.value}
           loading={loading.value}
           onRangeChange={(range) => setDateRangeFilters(range)}
+          className='!h-[calc(100vh-27.5vh)]'
           onSelectionChange={(rows) => {
             const validUsers = rows.map((row: any) => ({
               id: row.employee.id,

@@ -88,7 +88,6 @@ export const TemplateNotificationPage = () => {
       <Table<any>
         data={templates}
         columns={getColumns(handleOnClick)}
-        pageSize={10}
         isSettingTable
         loading={loading.value}
         absolute

@@ -160,7 +160,12 @@ export const WebHookSettingPage: FunctionComponent = () => {
             />
           </div>
         </div>
-        <Table data={hooks.value} columns={columns} loading={loading.value} />
+        <Table
+          data={hooks.value}
+          columns={columns}
+          loading={loading.value}
+          className='!max-h-[46.5vh]'
+        />
       </div>
     </Section>
   );

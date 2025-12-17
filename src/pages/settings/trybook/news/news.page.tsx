@@ -74,12 +74,12 @@ export const NewsPage: FunctionalComponent = () => {
     <Table<INews>
       data={news.value}
       columns={getColumns(onClickAction)}
-      pageSize={10}
       expandable={(row: INews) => <ExpandableAccess row={row} />}
       visibility={{
         id: false,
       }}
       absolute
+      className='!max-h-[65vh]'
     />
   );
 };

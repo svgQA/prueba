@@ -84,7 +84,6 @@ export const UserRolesPage: FunctionComponent = () => {
       <Table<IRole>
         data={roles.value}
         columns={columns}
-        pageSize={20}
         visibility={{
           name: true,
           description: true,
