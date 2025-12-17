@@ -261,7 +261,7 @@ export const PqrsModal = ({ showModal, closeModal, id }: IProps) => {
         </div>
       }
     >
-      <div class='h-[70rem] w-full flex flex-col gap-4 bg-white dark:bg-b-dark px-4 pb-6 pt-2 overflow-hidden'>
+      <div class='h-[90vh] w-full flex flex-col gap-4 bg-white dark:bg-b-dark px-4 pb-6 pt-2 overflow-hidden'>
         <HeaderInformation />
 
         <TabInformation tabs={tabs} activeTab={activeTab}>
