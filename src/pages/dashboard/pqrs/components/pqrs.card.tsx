@@ -101,7 +101,7 @@ export const PqrsCards = ({
   return (
     <div
       key={`pqrs-card-${index}`}
-      className={`relative p-4 space-y-4 cursor-pointer transition-all duration-200 rounded-xl border border-gray-border/60 dark:border-gray-border/30 bg-white/95 dark:bg-b-dark-light/95
+      className={`relative p-4 space-y-4 cursor-pointer transition-all duration-200 rounded-lg border border-gray-border/60 dark:border-gray-border/30 bg-white/95 dark:bg-b-dark-light/95
           ${accentBorderClass}`}
       onClick={() => {
         if (!pqrs.id || !onClick) return;

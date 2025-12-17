@@ -309,8 +309,7 @@ export const PqrsPage: FunctionComponent = () => {
                 return (
                   <div
                     key={`${column.title}-${index}`}
-                    // shadow-[0_8px_24px_rgba(0,0,0,0.05)] backdrop-blur-sm flex flex-col gap-3 transition hover:-translate-y-1 hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)]
-                    className='group rounded-2xl p-4 min-h-96 w-full border border-gray-border/80 bg-white/90 dark:bg-b-dark-light/90 dark:border-gray-border/10'
+                    className='group rounded-lg p-2 min-h-96 w-full border border-gray-border/80 bg-white/90 dark:bg-b-dark-light/90 dark:border-gray-border/10'
                   >
                     <div className='flex items-center justify-between mb-3 gap-2 sticky top-0 bg-white/90 dark:bg-b-dark-light/90 py-1 -mx-1 px-1 backdrop-blur-sm border-b border-transparent '>
                       <TextEllipsis
@@ -324,7 +323,7 @@ export const PqrsPage: FunctionComponent = () => {
                       </span>
                     </div>
 
-                    <div class='space-y-2 max-h-96 overflow-y-auto pr-1 pb-1'>
+                    <div class='space-y-2 max-h-96 overflow-y-auto'>
                       {items.map((item: ICPqrsRequest, index) => {
                         return (
                           <PqrsCards
