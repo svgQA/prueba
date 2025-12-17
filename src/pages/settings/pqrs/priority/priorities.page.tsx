@@ -75,7 +75,6 @@ const PrioritiesPage = () => {
     <Table<ICPrioritiesResponse>
       data={priorities.value}
       columns={getColumns(onClickAction)}
-      pageSize={10}
       visibility={{
         id: false,
       }}

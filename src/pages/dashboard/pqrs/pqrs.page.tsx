@@ -224,6 +224,7 @@ export const PqrsPage: FunctionComponent = () => {
                 {t('pq_description')}
               </p>
             </div>
+
             <div class='bg-b-light dark:bg-b-dark rounded-full py-1 px-4 flex gap-1 shadow-sm h-12 items-center'>
               {viewMode.value === ViewMode.CARDS && (
                 <div class='flex gap-2 border-r border-b-light-dark dark:border-b-dark-light px-2'>
@@ -384,6 +385,7 @@ export const PqrsPage: FunctionComponent = () => {
         showModal={openModalUpsert}
         closeModal={() => closeModalUpsert()}
       />
+
       <PqrsModal
         id={pqrsSelected.value.id}
         showModal={openModalData}

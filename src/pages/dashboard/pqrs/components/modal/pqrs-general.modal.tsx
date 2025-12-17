@@ -72,108 +72,75 @@ const InfoPill: FunctionalComponent<{
 
 const PqrsGeneralModal = ({ pqrs }: IProps) => {
   return (
-    <div class='space-y-5'>
+    <div class='space-y-1'>
       {/* Primera fila: resumen arriba y mapa a ancho completo */}
-      <div class='grid grid-cols-1 gap-5 items-start'>
-        <div class='space-y-4'>
-          <SectionCard>
-            <div class='space-y-3'>
-              <div class='space-y-1'>
-                <h3 class='text-xl font-semibold text-t-light dark:text-white'>
-                  {pqrs.value?.clientName || 'Detalle del caso'}
-                </h3>
-              </div>
-              <div class='flex flex-wrap gap-2'>
-                <InfoPill
-                  icon='📑'
-                  label='Tipo de Recurso'
-                  value={pqrs.value?.extraData?.legalResourceType}
-                />
-                <InfoPill
-                  icon='🎫'
-                  label='Ticket'
-                  value={pqrs.value?.extraData?.referencedTicketNumber}
-                />
-                <InfoPill
-                  icon='🛰️'
-                  label='Servicio Afectado'
-                  value={pqrs.value?.extraData?.affectedService}
-                />
-                <InfoPill
-                  icon='📍'
-                  label='Municipio'
-                  value={pqrs.value?.municipality}
-                />
-                <InfoPill
-                  icon='🗺️'
-                  label='Departamento'
-                  value={pqrs.value?.department}
-                />
-                <InfoPill
-                  icon='📡'
-                  label='Canal de Recepción'
-                  value={pqrs.value?.extraData?.receptionChannel}
-                />
-                <InfoPill
-                  icon='💬'
-                  label='Sentimiento'
-                  value={pqrs.value?.extraData?.sentiment}
-                />
-                {pqrs.value?.transformer && (
-                  <InfoPill
-                    icon='🛰️'
-                    label='Transformador'
-                    value={pqrs.value?.transformer}
-                  />
-                )}
-                {pqrs.value?.pole && (
-                  <InfoPill icon='🛰️' label='Poste' value={pqrs.value?.pole} />
-                )}
-                {pqrs.value?.lat && (
-                  <InfoPill icon='🛰️' label='Latitud' value={pqrs.value?.lat} />
-                )}
-                {pqrs.value?.lng && (
-                  <InfoPill
-                    icon='🛰️'
-                    label='Longitud'
-                    value={pqrs.value?.lng}
-                  />
-                )}
-              </div>
-            </div>
-          </SectionCard>
-        </div>
-
-        <SectionCard title='Mapa' icon='🗺️'>
-          <div class='h-[420px] rounded-xl overflow-hidden border border-gray-border/60 dark:border-b-dark-light bg-white dark:bg-b-dark w-full'>
-            <MapLibreShowPoints
-              name='pqrs-location-map'
-              pointsRef={[
-                {
-                  id: pqrs.value?.id || 0,
-                  position: {
-                    lat: pqrs.value?.lat || 0,
-                    lng: Number(pqrs.value?.lng) || 0,
-                  },
-                  name: pqrs.value?.clientName || 'Ubicación PQRS',
-                },
-              ]}
-              sendPoints={() => {}}
-              center={{
-                lat: pqrs.value?.lat || 0,
-                lng: Number(pqrs.value?.lng) || 0,
-              }}
-              height='100%'
-              disablePointSelection={true}
-            />
+      <SectionCard>
+        <div class='space-y-3'>
+          <div class='space-y-1'>
+            <h3 class='text-xl font-semibold text-t-light dark:text-white'>
+              {pqrs.value?.clientName || 'Detalle del caso'}
+            </h3>
           </div>
-        </SectionCard>
-      </div>
+          <div class='flex flex-wrap gap-2'>
+            <InfoPill
+              icon='📑'
+              label='Tipo de Recurso'
+              value={pqrs.value?.extraData?.legalResourceType}
+            />
+            <InfoPill
+              icon='🎫'
+              label='Ticket'
+              value={pqrs.value?.extraData?.referencedTicketNumber}
+            />
+            <InfoPill
+              icon='🛰️'
+              label='Servicio Afectado'
+              value={pqrs.value?.extraData?.affectedService}
+            />
+            <InfoPill
+              icon='📍'
+              label='Municipio'
+              value={pqrs.value?.municipality}
+            />
+            <InfoPill
+              icon='🗺️'
+              label='Departamento'
+              value={pqrs.value?.department}
+            />
+            <InfoPill
+              icon='📡'
+              label='Canal de Recepción'
+              value={pqrs.value?.extraData?.receptionChannel}
+            />
+            <InfoPill
+              icon='💬'
+              label='Sentimiento'
+              value={pqrs.value?.extraData?.sentiment}
+            />
+            {pqrs.value?.transformer && (
+              <InfoPill
+                icon='🛰️'
+                label='Transformador'
+                value={pqrs.value?.transformer}
+              />
+            )}
+            {pqrs.value?.pole && (
+              <InfoPill icon='🛰️' label='Poste' value={pqrs.value?.pole} />
+            )}
+            {pqrs.value?.lat && (
+              <InfoPill icon='🛰️' label='Latitud' value={pqrs.value?.lat} />
+            )}
+            {pqrs.value?.lng && (
+              <InfoPill icon='🛰️' label='Longitud' value={pqrs.value?.lng} />
+            )}
+          </div>
+        </div>
+      </SectionCard>
 
       {/* Segunda fila: contexto del caso y referencias */}
-      <div class='grid grid-cols-1 xl:grid-cols-[1.4fr_1fr] gap-5 items-start'>
+      <div class='grid grid-cols-1 xl:grid-cols-[1.4fr_1fr] gap-1 items-start'>
         <SectionCard title='Resumen del caso' icon='🧭' className='h-full'>
-          <div class='space-y-3'>
+          <div class='space-y-1'>
             {pqrs.value?.extraData?.mainIssue && (
               <div class='p-3 rounded-xl bg-b-light/80 dark:bg-b-dark border border-gray-border/60 dark:border-b-dark-light'>
                 <p class='text-[11px] uppercase tracking-[0.16em] text-gray-text-light dark:text-b-light-dark font-semibold'>
@@ -227,7 +194,7 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
           icon='🔗'
           className='h-full'
         >
-          <div class='space-y-3'>
+          <div class='space-y-1'>
             {pqrs.value?.extraData?.referencedInvoicePeriods &&
               pqrs.value?.extraData?.referencedInvoicePeriods.length > 0 && (
                 <div class='p-3 rounded-xl bg-gradient-to-br from-purple-50 via-white to-purple-100 dark:from-purple-950/60 dark:via-b-dark/50 dark:to-purple-900/50 border border-purple-200 dark:border-purple-800 shadow-sm space-y-2'>
@@ -287,65 +254,92 @@ const PqrsGeneralModal = ({ pqrs }: IProps) => {
       </div>
 
       {/* Datos y archivos */}
-      {(pqrs.value?.raw || pqrs.value?.rawFile || pqrs.value?.resources) && (
-        <SectionCard title='Datos y adjuntos' icon='📂'>
-          <div class='grid grid-cols-1 lg:grid-cols-3 gap-4 items-start'>
-            {pqrs.value?.raw && (
-              <div class='lg:col-span-2 space-y-2'>
-                <div class='flex items-center gap-2 text-xs font-semibold text-gray-text-light dark:text-b-light-dark uppercase tracking-[0.12em]'>
-                  <span>📄</span>
-                  <span>Raw</span>
+      <div class='grid grid-cols-1 xl:grid-cols-[1.4fr_1fr] gap-1 items-start'>
+        {(pqrs.value?.raw || pqrs.value?.rawFile || pqrs.value?.resources) && (
+          <SectionCard title='Datos y adjuntos' icon='📂'>
+            <div class='grid grid-cols-1 lg:grid-cols-3 gap-4 items-start'>
+              {pqrs.value?.raw && (
+                <div class='lg:col-span-2 space-y-2'>
+                  <div class='flex items-center gap-2 text-xs font-semibold text-gray-text-light dark:text-b-light-dark uppercase tracking-[0.12em]'>
+                    <span>📄</span>
+                    <span>Raw</span>
+                  </div>
+                  <div class='bg-b-light dark:bg-b-dark rounded-lg p-3 border border-gray-border/60 dark:border-b-dark-light'>
+                    <TextEllipsis
+                      text={
+                        typeof pqrs.value.raw === 'string'
+                          ? pqrs.value.raw
+                          : JSON.stringify(pqrs.value.raw, null, 2)
+                      }
+                      maxWidth='100%'
+                      lines={10}
+                      className='text-xs text-gray-text-light dark:text-b-light-dark font-mono whitespace-pre-wrap'
+                    />
+                  </div>
                 </div>
-                <div class='bg-b-light dark:bg-b-dark rounded-lg p-3 border border-gray-border/60 dark:border-b-dark-light'>
-                  <TextEllipsis
-                    text={
-                      typeof pqrs.value.raw === 'string'
-                        ? pqrs.value.raw
-                        : JSON.stringify(pqrs.value.raw, null, 2)
-                    }
-                    maxWidth='100%'
-                    lines={10}
-                    className='text-xs text-gray-text-light dark:text-b-light-dark font-mono whitespace-pre-wrap'
-                  />
-                </div>
-              </div>
-            )}
+              )}
 
-            {pqrs.value?.rawFile && (
-              <div class='space-y-2'>
-                <div class='flex items-center gap-2 text-xs font-semibold text-gray-text-light dark:text-b-light-dark uppercase tracking-[0.12em]'>
-                  <span>📁</span>
-                  <span>Raw File</span>
+              {pqrs.value?.rawFile && (
+                <div class='space-y-2'>
+                  <div class='flex items-center gap-2 text-xs font-semibold text-gray-text-light dark:text-b-light-dark uppercase tracking-[0.12em]'>
+                    <span>📁</span>
+                    <span>Raw File</span>
+                  </div>
+                  <div class='bg-b-light dark:bg-b-dark rounded-lg p-3 border border-gray-border/60 dark:border-b-dark-light'>
+                    <TextEllipsis
+                      text={
+                        typeof pqrs.value.rawFile === 'string'
+                          ? pqrs.value.rawFile
+                          : JSON.stringify(pqrs.value.rawFile, null, 2)
+                      }
+                      maxWidth='100%'
+                      lines={10}
+                      className='text-xs text-gray-text-light dark:text-b-light-dark font-mono whitespace-pre-wrap'
+                    />
+                  </div>
                 </div>
-                <div class='bg-b-light dark:bg-b-dark rounded-lg p-3 border border-gray-border/60 dark:border-b-dark-light'>
-                  <TextEllipsis
-                    text={
-                      typeof pqrs.value.rawFile === 'string'
-                        ? pqrs.value.rawFile
-                        : JSON.stringify(pqrs.value.rawFile, null, 2)
-                    }
-                    maxWidth='100%'
-                    lines={10}
-                    className='text-xs text-gray-text-light dark:text-b-light-dark font-mono whitespace-pre-wrap'
-                  />
-                </div>
-              </div>
-            )}
+              )}
 
-            {pqrs.value?.resources && (
-              <div class='space-y-2 lg:col-span-3'>
-                <div class='flex items-center gap-2 text-xs font-semibold text-gray-text-light dark:text-b-light-dark uppercase tracking-[0.12em]'>
-                  <span>📎</span>
-                  <span>Archivos Adjuntos</span>
+              {pqrs.value?.resources && (
+                <div class='space-y-2 lg:col-span-3'>
+                  <div class='flex items-center gap-2 text-xs font-semibold text-gray-text-light dark:text-b-light-dark uppercase tracking-[0.12em]'>
+                    <span>📎</span>
+                    <span>Archivos Adjuntos</span>
+                  </div>
+                  <div class='grid gap-3'>
+                    <ShowFiles resources={pqrs.value.resources} />
+                  </div>
                 </div>
-                <div class='grid gap-3'>
-                  <ShowFiles resources={pqrs.value.resources} />
-                </div>
-              </div>
-            )}
+              )}
+            </div>
+          </SectionCard>
+        )}
+
+        <SectionCard title='Mapa' icon='🗺️'>
+          <div class='h-[420px] rounded-xl overflow-hidden border border-gray-border/60 dark:border-b-dark-light bg-white dark:bg-b-dark w-full'>
+            <MapLibreShowPoints
+              name='pqrs-location-map'
+              pointsRef={[
+                {
+                  id: pqrs.value?.id || 0,
+                  position: {
+                    lat: pqrs.value?.lat || 0,
+                    lng: Number(pqrs.value?.lng) || 0,
+                  },
+                  name: pqrs.value?.clientName || 'Ubicación PQRS',
+                },
+              ]}
+              sendPoints={() => {}}
+              center={{
+                lat: pqrs.value?.lat || 0,
+                lng: Number(pqrs.value?.lng) || 0,
+              }}
+              height='100%'
+              disablePointSelection={true}
+            />
           </div>
         </SectionCard>
-      )}
+      </div>
     </div>
   );
 };

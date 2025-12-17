@@ -212,7 +212,6 @@ export const FormSettingPage = () => {
       <Table<IFormResponse>
         data={forms.value}
         columns={getColumns(handleOnClick)}
-        pageSize={10}
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}

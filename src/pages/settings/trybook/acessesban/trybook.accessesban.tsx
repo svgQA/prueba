@@ -70,7 +70,6 @@ export const AccessBansPage: FunctionalComponent = () => {
             ({ id, action }: { id: string; action: ROW_ACTIONS }) =>
               onClickAction({ id, type: 'ban', action })
           )}
-          pageSize={10}
           visibility={{ id: false }}
         />
       </div>

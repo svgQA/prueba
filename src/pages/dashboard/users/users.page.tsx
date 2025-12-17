@@ -304,7 +304,6 @@ export const UsersPage: FunctionalComponent = () => {
           key={i18n.language}
           data={users.value}
           columns={getColumns(t, handleOnClick)}
-          pageSize={20}
           selectable
           onClickAction={handleOnClick}
           onNotifications={onNotifications}

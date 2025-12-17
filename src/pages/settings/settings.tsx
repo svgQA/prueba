@@ -100,8 +100,8 @@ export const SettingsModal = () => {
         </div>
       }
     >
-      <div className='flex flex-col w-full h-full gap-3 md:gap-6'>
-        <div className='flex flex-col w-full h-full gap-4 md:gap-6 md:flex-row relative'>
+      <div className='flex flex-col w-full h-full gap-2 md:gap-1'>
+        <div className='flex flex-col w-full h-full relative md:flex-row'>
           <div
             onClick={(event) => {
               selectMenu(event);
@@ -126,11 +126,11 @@ export const SettingsModal = () => {
             />
           </div>
           <div
-            className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} ${showMobileMenu ? 'opacity-20 pointer-events-none md:opacity-100 md:pointer-events-auto' : ''}`}
+            className={`w-full relative ${expand ? 'max-h-[88vh] min-h-[88vh]' : 'max-h-[73vh] min-h-[73vh]'} ${showMobileMenu ? 'opacity-20 pointer-events-none md:opacity-100 md:pointer-events-auto' : ''} p-3`}
             onClick={() => setShowMobileMenu(false)}
           >
             <CardSettingHeader id='setting-header' name='setting-header' />
-            <div className='w-full p-2 border-t-2 py-4 dark:border-b-dark-light border-b-light-light'>
+            <div className='w-full border-t-2 dark:border-b-dark-light border-b-light-light pt-2'>
               <RoutingContent />
             </div>
           </div>

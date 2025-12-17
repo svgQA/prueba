@@ -75,7 +75,6 @@ export const FormReportSettingPage = () => {
       <Table<IReportResponse>
         data={report.value}
         columns={getColumns(handleOnClick)}
-        pageSize={10}
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}

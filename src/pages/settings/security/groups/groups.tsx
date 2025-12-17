@@ -74,7 +74,6 @@ export const GroupSettingPage: FunctionComponent = () => {
       <Table<any>
         data={groups.value}
         columns={columns}
-        pageSize={20}
         onClickAction={handleOnClick}
         isSettingTable
         absolute

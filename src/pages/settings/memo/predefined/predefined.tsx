@@ -69,7 +69,6 @@ export const PredefinedSettingPage: FunctionComponent = () => {
       <Table<IPredefined>
         data={predefined.value}
         columns={columns}
-        pageSize={20}
         onClickAction={handleOnClick}
         isSettingTable
         loading={loading.value}

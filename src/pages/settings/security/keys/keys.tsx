@@ -99,6 +99,7 @@ export const KeysSettingPage: FunctionalComponent = () => {
           columns={columns}
           loading={loading.value}
           onClickAction={handleOnClick}
+          className='!h-[52.5vh]'
         />
       </div>
     </Section>

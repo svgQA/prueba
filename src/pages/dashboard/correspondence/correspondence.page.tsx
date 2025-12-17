@@ -194,7 +194,6 @@ export const CorrespondencePage: FunctionalComponent = () => {
       <Table<ICorrespondence>
         data={correspondence.value}
         columns={getColumns(onClickAction)}
-        pageSize={10}
         visibility={{
           contract: false,
           client: false,

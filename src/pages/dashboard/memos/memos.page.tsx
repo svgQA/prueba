@@ -354,7 +354,7 @@ export const MemosPage: FunctionComponent = () => {
   };
 
   const handleStatusChange = (newStatus: string, memoId: number) => {
-    console.log('newStatus', newStatus, 'memoId', memoId);
+    // console.log('newStatus', newStatus, 'memoId', memoId);
 
     // Actualizar el estado del memo en el array de panic
     const panicIndex = panic.value.findIndex((memo) => memo.id === memoId);
@@ -399,7 +399,6 @@ export const MemosPage: FunctionComponent = () => {
           data={memos.value}
           columns={getColumns(onClickAction)}
           showExpandableIcon
-          pageSize={20}
           selectable
           loading={loading.value}
           onRangeChange={(range) => {
@@ -434,7 +433,6 @@ export const MemosPage: FunctionComponent = () => {
           data={panic.value}
           columns={getColumnsPanic(onClickAction)}
           showExpandableIcon
-          pageSize={20}
           selectable
           loading={loading.value}
           expandable={(row: Memo, column?: string) => (
