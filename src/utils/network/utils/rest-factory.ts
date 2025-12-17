@@ -8,7 +8,7 @@ export class GenericResponse<T> {
 
   constructor(model: IGenericData) {
     this.status = (model.code >= 200 && model.code < 300) || false;
-    if (!this.status) {
+    if (!this.status && model.code !== 401) {
       ToastManager.error(model.message);
     }
     const data = this.status ? model.data : [];
