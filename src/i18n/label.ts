@@ -220,9 +220,11 @@ export const label_es = {
   l_delete_resource_confirm: '¿Estás seguro de querer eliminar este recurso?',
   h_pqrs_description:
     'Visualiza los datos clave del caso y el análisis de IA con una vista más legible.',
+  l_auto_resolve: 'Auto-resolver',
 };
 
 export const label_en = {
+  l_auto_resolve: 'Auto-resolver',
   l_predefined_options: 'Predefined options',
   l_duration: 'Duration',
   l_attachments: 'Attachments',

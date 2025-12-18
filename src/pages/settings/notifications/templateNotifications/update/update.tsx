@@ -56,13 +56,13 @@ export const TemplateNotificationEditPage = () => {
   };
 
   return (
-    <Section loading={loading.value}>
-      <div className='flex justify-end gap-4 absolute top-14 right-2'>
+    <Section className='pt-2 px-4 sm:px-8 lg:px-20 xl:px-40'>
+      <div className='flex justify-end gap-4 absolute top-[4.5rem] right-2'>
         <Button
           name='save-template'
           label='Guardar'
           className='bg-primary text-white p-2'
-          icon='022'
+          icon='146'
           onClick={handleSubmit}
           disabled={loading.value}
         />

@@ -109,7 +109,7 @@ export const SettingsModal = () => {
             }}
             className={`${showMobileMenu ? 'flex fixed inset-0 z-30 p-2 shadow-2xl max-h-[99vh]' : 'hidden md:flex'} w-full ${
               showMobileMenu ? 'max-w-full sm:max-w-xl' : 'max-w-80'
-            } md:max-w-80 md:min-w-60  border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex-col gap-1 dark:bg-dark-bg text-dark dark:text-white md:static md:p-0 md:shadow-none rounded-lg md:rounded-none mx-auto md:mx-0 dark:bg-b-dark-light bg-white`}
+            } md:max-w-72 md:min-w-72 border-b-2 md:border-b-0 md:border-r-2 border-b-light-light md:border-r-b-light-light dark:border-b-dark-light flex-col gap-1 dark:bg-dark-bg text-dark dark:text-white md:static md:p-0 md:shadow-none rounded-lg md:rounded-none mx-auto md:mx-0 dark:bg-b-dark-light bg-white`}
           >
             <CardSettingUser
               id='user-information'

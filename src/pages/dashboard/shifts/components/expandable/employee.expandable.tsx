@@ -56,7 +56,6 @@ const EmployeeInfo = ({
                         {t('h_personal_info')}
                       </span>
                     </div>
-
                     <div className='pt-2 grid grid-cols-1 gap-2'>
                       <FieldInline
                         label={t('identification')}

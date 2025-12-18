@@ -109,7 +109,7 @@ export const getColumns = (
         ];
 
         return (
-          <div className='w-full flex justify-center items-center'>
+          <div className='w-full flex justify-end items-center'>
             <DropdownActionsMenu actions={actions} />
           </div>
         );

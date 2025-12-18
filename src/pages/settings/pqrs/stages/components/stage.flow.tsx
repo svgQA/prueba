@@ -160,15 +160,13 @@ export const StageFlow: FunctionComponent<StageFlowProps> = ({ stages }) => {
   if (!stages.length) {
     return (
       <section>
-        <div className='flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/50 p-10 text-center'>
-          <div className='flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-inner shadow-slate-200'>
-            <i className='vox-icon vx-icon-191 text-2xl text-primary' />
+        <div className='flex flex-col items-center justify-center gap-3 rounded-2xl border border-gray-300 dark:border-b-dark-dark borderorder--dashed bslate-200 bg-slate-50/10 p-10 text-center'>
+          <div className='flex h-12 w-12 items-center justify-center rounded-full bg-b-dark-light dark:bg-b-light'>
+            <span className='vx-icon vx-icon-022 text-2xl text-primary' />
           </div>
           <div className='space-y-1'>
-            <h3 className='text-lg font-semibold text-slate-900'>
-              {t('h_stages')}
-            </h3>
-            <p className='max-w-xl text-sm text-slate-500'>
+            <h3 className='text-lg font-semibold'>{t('h_stages')}</h3>
+            <p className='max-w-xl text-sm'>
               {t(
                 'i_stages_empty',
                 'Crea etapas para visualizar cómo se conectan dentro del flujo de PQRS.'

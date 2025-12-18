@@ -58,13 +58,13 @@ import { UserAreasPage } from '../dashboard/users/areas/user.areas';
 import { UserGroupsPage } from '../dashboard/users/groups/user.groups';
 import { UserRolesPage } from '../dashboard/users/roles/roles';
 import { UserPasswordPage } from '../dashboard/users/password/user.password';
-import { ScheduledNotificationsPage } from './notifications/scheduleNotifications/scheduledNotifications';
+// import { ScheduledNotificationsPage } from './notifications/scheduleNotifications/scheduledNotifications';
 import { TemplateNotificationPage } from './notifications/templateNotifications/templateNotifications';
 import { TemplateCreateForm } from './notifications/templateNotifications/create/create';
 import { AreaCreatePage } from '../dashboard/users/areas/area.create';
-import { ScheduledNotificationForm } from './notifications/scheduleNotifications/create/create';
 import { TemplateNotificationEditPage } from './notifications/templateNotifications/update/update';
-import { ScheduledNotificationEditPage } from './notifications/scheduleNotifications/update/update';
+// import { ScheduledNotificationForm } from './notifications/scheduleNotifications/create/create';
+// import { ScheduledNotificationEditPage } from './notifications/scheduleNotifications/update/update';
 import { PredefinedSettingPage } from './memo/predefined/predefined';
 import { PredefinedCreateSettingPage } from './memo/predefined/create/create';
 import { GroupCreateSettingPage } from './security/groups/create/create';
@@ -661,16 +661,11 @@ export const RoutingContent = memo(() => {
         />
         {/* NOTIFICATIONS MENU */}
         {/* SCHEDULED OPTIONS */}
+        {/*
         <Route
           path={PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.to}
           component={lazy(() =>
             Promise.resolve({ default: ScheduledNotificationsPage })
-          )}
-        />
-        <Route
-          path={PAGES_LIST_ROUTER.dashboard.setting.notification.settings}
-          component={lazy(() =>
-            Promise.resolve({ default: SNotificationSettingPage })
           )}
         />
         <Route
@@ -687,6 +682,13 @@ export const RoutingContent = memo(() => {
           }
           component={lazy(() =>
             Promise.resolve({ default: ScheduledNotificationEditPage })
+          )}
+        />
+        */}
+        <Route
+          path={PAGES_LIST_ROUTER.dashboard.setting.notification.settings}
+          component={lazy(() =>
+            Promise.resolve({ default: SNotificationSettingPage })
           )}
         />
         {/* TEMPLATE OPTIONS */}

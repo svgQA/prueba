@@ -37,7 +37,6 @@ export const columns: ColumnDef<ResourceZoneRow>[] = [
   {
     id: 'name',
     header: 'l_name',
-    size: 280,
     cell: ({ row }) => {
       const r = row.original;
       return (
@@ -53,7 +52,6 @@ export const columns: ColumnDef<ResourceZoneRow>[] = [
   {
     id: 'zone',
     header: 'h_common_area',
-    size: 260,
     cell: ({ row }) => {
       const z = row.original.zone;
       const place = z?.place?.name ? ` · ${z.place?.name}` : '';
@@ -69,7 +67,6 @@ export const columns: ColumnDef<ResourceZoneRow>[] = [
   {
     id: 'config',
     header: 'setting',
-    size: 220,
     cell: ({ row }) => {
       const { quantity, isBookable, requiresApproval } = row.original;
       return (
@@ -82,13 +79,12 @@ export const columns: ColumnDef<ResourceZoneRow>[] = [
   {
     id: 'actions',
     header: 'h_action',
-    size: 120,
     enableSorting: false,
     enableHiding: false,
     cell: ({ row }) => {
       const { id } = row.original;
       return (
-        <div className='w-full flex justify-center gap-1'>
+        <div className='w-full flex justify-end gap-1 items-center'>
           <ButtonAction
             id={String(id)}
             type='shift'

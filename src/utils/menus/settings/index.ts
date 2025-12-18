@@ -51,4 +51,5 @@ export const NEW_BLACK_LIST = [
   'notification:tools:state',
   'trybook:tools:state',
   'pqrs:tools:state',
+  // 'user:areas:state',
 ];

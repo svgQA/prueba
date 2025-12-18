@@ -213,18 +213,20 @@ export const PAGES_LIST_ROUTER = {
       notification: {
         base: '/notification',
         settings: '/notification/settings',
-        scheduled: {
-          base: '/scheduled',
-          to: '/notification/scheduled',
-          create: {
-            base: '/scheduled/create',
-            to: '/notification/scheduled/create',
-          },
-          update: {
-            base: '/scheduled/update/:id',
-            to: '/notification/scheduled/update/:id',
-          },
-        },
+        /*
+			  scheduled: {
+				  base: '/scheduled',
+				  to: '/notification/scheduled',
+				  create: {
+					  base: '/scheduled/create',
+					  to: '/notification/scheduled/create',
+				  },
+				  update: {
+					  base: '/scheduled/update/:id',
+					  to: '/notification/scheduled/update/:id',
+				  },
+			  },
+			  */
         template: {
           base: '/template',
           to: '/notification/template',

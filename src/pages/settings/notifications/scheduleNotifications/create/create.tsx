@@ -4,12 +4,12 @@ import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { SchedulerService, TemplateService } from '@/services';
 import { ToastManager } from '@/utils/toast/toast-manager';
-import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
+// import { PAGES_LIST_ROUTER } from '@/utils/routing/router';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
 import { IOption } from '@/components/common/smart-selector/smart-select';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/store/slices';
-import { useNavigation } from '@/utils/hooks/navigation';
+// import { useNavigation } from '@/utils/hooks/navigation';
 import { useSignal } from '@preact/signals';
 import { Section } from '@/components/common/section/section';
 
@@ -18,7 +18,7 @@ export const ScheduledNotificationForm = () => {
   const [pendingSubmission, setPendingSubmission] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [formValues, setFormValues] = useState<any>(null);
-  const { go } = useNavigation();
+  // const { go } = useNavigation();
   const loading = useSignal<boolean>(false);
 
   const { t } = useTranslation();
@@ -47,12 +47,16 @@ export const ScheduledNotificationForm = () => {
   }, [selectedCompany, location]);
 
   const redirectToList = () => {
+    {
+      /*
     go({
       to: PAGES_LIST_ROUTER.dashboard.setting.notification.scheduled.to,
       label: 'notificaciones',
       base: 'setting',
       id: 'notification:scheduled:state',
     });
+  */
+    }
   };
 
   const handleSubmit = async (values: any) => {
