@@ -1,7 +1,6 @@
 import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { ToastManager } from '@/utils/toast/toast-manager';
-//import i18n from '@/i18n';
 
 import { ShiftService } from '@/services';
 import { Button } from '@/components/common/button/button';
@@ -14,6 +13,8 @@ import ShowFiles from '@/components/common/file/show.file';
 import { Avatar } from '@/components/common/Avatar';
 import { useSignal } from '@preact/signals';
 import { useTranslation } from 'react-i18next';
+import { toSafeInteger } from 'lodash';
+import { toSafeNumber } from '@/utils/general';
 interface ICheckData {
   time?: string;
   date?: string;
@@ -109,18 +110,13 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       platform: checkData.platform,
       distance: checkData.distance,
       location: {
-        lat: checkData.location.lat,
-        lng: checkData.location.lng,
+        lat: toSafeInteger(checkData.location.lat),
+        lng: toSafeInteger(checkData.location.lng),
       },
       url: '',
       type: checkData.type,
     };
 
-    // if (checkData.type === 'CHECK_IN') {
-    //   setCheckInData(check);
-    // } else {
-    //   setCheckOutData(check);
-    // }
     onCheck(check);
   };
   useEffect(() => {
@@ -138,11 +134,39 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
     setCheckOutData(checkOut);
   }, [checkIn, checkOut, shift]);
 
+  const ci_longitude = toSafeNumber(
+    checkInData?.location?.lng ||
+      checkInData?.lng ||
+      checkInData?.longitude ||
+      0.0
+  );
+
+  const ci_latitude = toSafeNumber(
+    checkInData?.location?.lat ||
+      checkInData?.lat ||
+      checkInData?.latitude ||
+      0.0
+  );
+
+  const co_latitude = toSafeNumber(
+    checkOutData?.location?.lat ||
+      checkOutData?.lat ||
+      checkInData?.latitude ||
+      0.0
+  );
+
+  const co_longitude = toSafeNumber(
+    checkOutData?.location?.lng ||
+      checkOutData?.lng ||
+      checkInData?.longitude ||
+      0.0
+  );
+
   return (
     <div class='flex gap-6 justify-center'>
       {/* Inicio del Turno */}
       <ShiftCard
-        title={t('shiftStart')}
+        // title={t('shiftStart')}
         name={employeeName}
         date={checkInData?.time || checkInData?.date || ''}
         time={checkInData?.time || checkInData?.date || ''}
@@ -153,18 +177,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         distance={checkInData?.distance || ''}
         btnLabel='Check In' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
-        latitude={
-          checkInData?.location?.lat ||
-          checkInData?.lat ||
-          checkInData?.latitude ||
-          0.0
-        }
-        longitude={
-          checkInData?.location?.lng ||
-          checkInData?.lng ||
-          checkInData?.longitude ||
-          0.0
-        }
+        latitude={ci_longitude}
+        longitude={ci_latitude}
         file={checkInData?.file || []}
         disabled={shift?.status !== 'CREATED'}
         onCheck={handleCheck}
@@ -172,7 +186,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
 
       {/* Finalización del Turno */}
       <ShiftCard
-        title={t('shiftEnd')}
+        // title={t('shiftEnd')}
         name={employeeName}
         date={checkOutData?.time || checkOutData?.date || ''}
         time={checkOutData?.time || checkOutData?.date || ''}
@@ -183,18 +197,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         distance={checkOutData?.distance || ''}
         btnLabel='Check Out' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
-        latitude={
-          checkOutData?.location?.lat ||
-          checkOutData?.lat ||
-          checkInData?.latitude ||
-          0.0
-        }
-        longitude={
-          checkOutData?.location?.lng ||
-          checkOutData?.lng ||
-          checkInData?.longitude ||
-          0.0
-        }
+        latitude={co_latitude}
+        longitude={co_longitude}
         file={checkOutData?.file || []}
         disabled={shift?.status !== 'OPENED'}
         onCheck={handleCheck}
@@ -205,7 +209,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
 };
 
 interface IShiftCardProps {
-  title: string;
+  title?: string;
   name: string;
   date: string;
   time: string;
@@ -320,85 +324,83 @@ const ShiftCard = ({
   };
 
   return (
-    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-4 p-4'>
-      <div>
-        <div className='flex flex-col gap-4 justify-between h-full'>
-          {/* Columna izquierda - Foto y nombre */}
-          <div className='flex flex-col items-center mr-4 w-full'>
-            {file.length ? (
-              <ShowFiles resources={file} />
-            ) : (
-              <Avatar icon='023' size='md' />
-            )}
+    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-3 p-1'>
+      <div className='flex flex-col justify-between h-full'>
+        {/* Columna izquierda - Foto y nombre */}
+        <div className='flex flex-col items-center w-full'>
+          {file.length ? (
+            <ShowFiles resources={file} />
+          ) : (
+            <Avatar icon='023' size='md' />
+          )}
+          <div className='flex flex-col justify-center items-center pt-3'>
             <TextEllipsis text={name} maxWidth='200px'></TextEllipsis>
             <Badge label={status} status={statusColor} outline />
             <p>{label}</p>
           </div>
+        </div>
 
-          {/* Columna central - Información */}
-          <div className='flex flex-col justify-center space-y-3 mr-4'>
-            <div className='flex items-center'>
-              <div className='flex-shrink-0 mr-2'>
-                <span className='!text-primary vox-icon size-sm vx-icon-323'></span>
-              </div>
-              <div>
-                <p className='font-semibold'>{t('h_date')}</p>
-                <FormattedDate date={date} format='date' />
-              </div>
-            </div>
-
-            <div className='flex items-center'>
-              <div className='flex-shrink-0 mr-2'>
-                <span className='!text-primary vox-icon size-sm vx-icon-325'></span>
-              </div>
-              <div className='flex flex-row justify-between w-full'>
-                <div>
-                  <p className='font-semibold'>{t('h_time')}</p>
-                  <FormattedDate date={time} format='time' />
-                </div>
-                <div>
-                  <p className='font-semibold'>{t('h_device')}</p>
-                  <p>{source}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className='flex items-center'>
-              <div className='flex-shrink-0 mr-2'>
-                <span className='!text-primary vox-icon size-sm vx-icon-326'></span>
-              </div>
-              <div>
-                <p className='font-semibold'>{t('h_distance')}</p>
-                <p>{(Number(distance) / 1000).toFixed(2)} Km</p>
-              </div>
+        {/* Columna central - Información */}
+        <div className='flex flex-col justify-center space-y-3 w-full'>
+          <div className='flex items-center gap-x-2'>
+            <span className='!text-primary vox-icon size-sm vx-icon-120'></span>
+            <div className='flex flex-row justify-between w-full'>
+              <p className='font-semibold'>{t('h_date')}</p>
+              <FormattedDate date={date} format='date' />
             </div>
           </div>
 
-          {resource && (
-            <div className='flex flex-col items-center mr-4 w-full'>
-              <ShowFiles resources={formatResource(resource)} />
+          <div className='flex items-center gap-x-2'>
+            <span className='!text-primary vox-icon size-sm vx-icon-130'></span>
+            <div className='flex flex-row justify-between w-full'>
+              <p className='font-semibold'>{t('h_time')}</p>
+              <FormattedDate date={time} format='time' />
             </div>
-          )}
+          </div>
 
-          <Button
-            label={btnLabel}
-            icon={btnLabel === 'Check In' ? '023' : '024'}
-            disabled={disabled}
-            onClick={() =>
-              showAlert({
-                title: btnLabel,
-                message: `${t('s_request')} ${btnLabel}`,
-                onConfirm: () => handleCheck(),
-                onCancel: () => {},
-              })
-            }
-            name={btnLabel}
-          />
+          <div className='flex items-center gap-x-2'>
+            <span className='!text-primary vox-icon size-sm vx-icon-130'></span>
+            <div className='flex flex-row justify-between w-full'>
+              <p className='font-semibold'>{t('h_device')}</p>
+              <p>{source}</p>
+            </div>
+          </div>
+
+          <div className='flex items-center gap-x-2'>
+            <span className='!text-primary vox-icon size-sm vx-icon-326'></span>
+            <div className='flex flex-row justify-between w-full'>
+              <p className='font-semibold'>{t('h_distance')}</p>
+              <p>{(Number(distance) / 1000).toFixed(2)} Km</p>
+            </div>
+          </div>
         </div>
+
+        {resource && (
+          <div className='flex flex-col items-center mr-4 w-full'>
+            <ShowFiles resources={formatResource(resource)} />
+          </div>
+        )}
+
+        <Button
+          label={btnLabel}
+          icon={btnLabel === 'Check In' ? '023' : '024'}
+          disabled={disabled}
+          onClick={() =>
+            showAlert({
+              title: btnLabel,
+              message: `${t('s_request')} ${btnLabel}`,
+              onConfirm: () => handleCheck(),
+              onCancel: () => {},
+            })
+          }
+          name={btnLabel}
+        />
       </div>
 
       {/* Columna derecha - Mapa */}
-      <div className='flex-1 w-full max-h-[44vh] overflow-hidden'>
+      <div
+        className={`flex-1 w-full max-h-[44vh] overflow-hidden ring-1 rounded-lg ${lat + lng === 0 ? ' ring-error' : 'ring-primary'}`}
+      >
         <MapLibrePointsMap
           sendPoints={() => {}}
           name='Map'
