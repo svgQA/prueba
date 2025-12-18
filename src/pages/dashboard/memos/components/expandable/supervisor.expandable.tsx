@@ -148,7 +148,7 @@ const SupervisorInfo = ({
     <div className='w-full rounded-lg shadow-sm'>
       <div className='flex flex-row gap-4 w-full'>
         <div className='w-8/12 flex flex-col'>
-          <div className='flex items-center justify-end gap-x-4 dark:bg-gray-600 bg-gray-200 rounded-2xl px-3'>
+          <div className='flex items-center justify-end gap-x-4 dark:bg-b-dark-dark/40 bg-gray-200 rounded-2xl px-3 h-20'>
             <ShowFiles resources={memo.resource} alertEmpty={true} />
             {status.value != 'IN_REVISION' && status.value != 'CREATED' && (
               <Button

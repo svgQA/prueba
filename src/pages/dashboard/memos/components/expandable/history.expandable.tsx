@@ -229,20 +229,15 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   const messageHistory = () => {
     return (
-      <div
-        className={`w-[60%] max-h-[250px] overflow-y-auto vox-scroll-design`}
-      >
-        <div className='p-4 space-y-3'>
+      <div className='overflow-y-auto vox-scroll-design w-full p-1 pt-2'>
+        <div className='space-y-2 flex flex-row flex-wrap'>
           {memos.value.map((memo: Memo) => (
-            <div key={memo.id} className='flex gap-3'>
-              <Avatar
-                name={
-                  memo.user?.name + ' ' + memo.user?.surname || 'Unknown User'
-                }
-                size='sm'
-                square
-              />
-              <div className='flex-1'>
+            <div
+              key={memo.id}
+              className='flex dark:bg-b-dark-dark/30 bg-gray-200 rounded-2xl w-full'
+            >
+              <Avatar name={memo.user?.name} size='sm' square />
+              <div className='flex-1 pl-2 min-h-24 max-h-28'>
                 <div className='flex items-center gap-2 mb-1'>
                   <span className='font-medium text-t-light dark:text-t-dark text-sm'>
                     {memo.user?.name + ' ' + memo.user?.surname ||
@@ -326,7 +321,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
                     </div>
                   </div>
                 </div>
-                {expandedMemoId === memo.id && memo.resource && (
+                {expandedMemoId === memo.id && (
                   <ShowFiles resources={memo.resource} />
                 )}
               </div>
@@ -359,6 +354,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
   };
 
   const messageInput = () => {
+    if (status.value === 'RESOLVED') return null;
     return (
       <div
         className={`w-[40%] max-h-[250px] overflow-y-hidden border-l border-l-b-light-dark dark:border-l-b-dark-dark`}
@@ -497,9 +493,9 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
 
   return (
     <div className='w-full rounded-lg bg-b-white-light max-h-[450px]'>
-      <div className='flex items-center justify-between gap-1 border-b border-b-light-dark dark:border-b-dark max-h-20 w-full dark:bg-b-dark-dark bg-b-light-dark rounded-lg'>
+      <div className='flex items-center justify-end gap-x-4 dark:bg-b-dark-dark/40 bg-gray-200 rounded-2xl px-3 h-20'>
         <div className='flex-1 rounded-lg ml-5 w-7/12'>
-          {memo.resource && <ShowFiles resources={memo.resource} />}
+          <ShowFiles resources={memo.resource} />
         </div>
 
         <div className='flex flex-col gap-2 w-2/12'>
@@ -521,6 +517,7 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               label={status.value === 'OPENED' ? 'SOLVE' : 'RESOLVED'}
               icon='030'
               disabled={status.value === 'RESOLVED'}
+              borderless
               onClick={() =>
                 showAlert({
                   title: status.value ? `${t(status.value)}` : '',
@@ -543,16 +540,19 @@ const HistoryInfo = ({ memo }: { memo: Memo }) => {
               'datetime'
             )}
 
-          <Button
-            name='memo-send-response'
-            form='form-message-memo'
-            type='submit'
-            disabled={disable}
-            label='send'
-            icon='311'
-            loading={loading.value}
-            permissions={{ name: 'memo', state: 'comment' }}
-          />
+          {status.value !== 'RESOLVED' && (
+            <Button
+              name='memo-send-response'
+              form='form-message-memo'
+              type='submit'
+              disabled={disable}
+              label='send'
+              icon='311'
+              loading={loading.value}
+              permissions={{ name: 'memo', state: 'comment' }}
+              borderless
+            />
+          )}
         </div>
       </div>
 
