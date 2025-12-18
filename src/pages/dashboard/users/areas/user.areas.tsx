@@ -1,9 +1,6 @@
-// import { Section } from '@/components/common/section/section';
-// import { Button } from '@/components/common/button/button';
 import { Table } from '@/components/common/table/table';
 import { FunctionComponent } from 'preact';
 import { columns } from './area.columns';
-import { UserService } from '@/services/general/user';
 import { useSignal } from '@preact/signals';
 import { useEffect } from 'preact/hooks';
 import { IUserAreaResponse } from '@/types/user/user.response';
@@ -14,6 +11,8 @@ import { useTranslation } from 'react-i18next';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 import { useUserStore } from '@/store/slices';
 import { useNavigation } from '@/utils/hooks/navigation';
+import { AreaService } from '@/services/general/area';
+
 export const UserAreasPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const areas = useSignal<IUserAreaResponse[]>([]);
@@ -34,7 +33,7 @@ export const UserAreasPage: FunctionComponent = () => {
 
   const fetchAreas = async () => {
     loading.value = true;
-    const response = await UserService.getAreas();
+    const response = await AreaService.get_all();
     if (response.getStatus()) {
       areas.value = response.getMany();
     }
@@ -42,7 +41,7 @@ export const UserAreasPage: FunctionComponent = () => {
   };
 
   const deleteArea = async (id: number) => {
-    const request = await UserService.deleteArea(id);
+    const request = await AreaService.delete(id);
     if (!request.getStatus()) return;
     ToastManager.success('s_deleted_success');
     fetchAreas();

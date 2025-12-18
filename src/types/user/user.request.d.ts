@@ -1,3 +1,5 @@
+import { IdName } from '../general/general';
+
 export interface ISettingModuleUser {
   id?: number;
   type: string;
@@ -15,6 +17,8 @@ export interface IUserAreaRequest {
   name: string;
   description?: string;
   companyId: number;
+  children?: IdName[];
+  smartGroups?: number[];
 }
 
 export interface IClientRequest {
