@@ -11,7 +11,6 @@ import { required } from '@/utils/utilities/validate';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { ToastManager } from '@/utils/toast/toast-manager';
 
-
 import { AreaService } from '@/services/general/area';
 import { useUserStore } from '@/store/slices';
 
@@ -203,7 +202,10 @@ export const AreaCreatePage: FunctionComponent = () => {
 
                             {/* Name */}
                             <div className='flex-1'>
-                              <Field<string> name={`${name}.name`} validate={required}>
+                              <Field<string>
+                                name={`${name}.name`}
+                                validate={required}
+                              >
                                 {({ input, meta }) => (
                                   <Input
                                     id={`child-name-${index}`}

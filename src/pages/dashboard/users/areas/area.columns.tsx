@@ -8,7 +8,6 @@ export const columns: ColumnDef<any>[] = [
   {
     id: 'name',
     accessorKey: 'name',
-    size: 180,
     header: 'h_name',
     enableGrouping: true,
     cell: (info) => {
@@ -19,7 +18,6 @@ export const columns: ColumnDef<any>[] = [
   {
     id: 'description',
     accessorKey: 'description',
-    size: 180,
     header: 'h_description',
     enableGrouping: true,
     cell: (info) => {
@@ -30,7 +28,6 @@ export const columns: ColumnDef<any>[] = [
   {
     id: 'children',
     accessorKey: 'children',
-    size: 180,
     header: 'h_children',
     enableGrouping: true,
     cell: (info) => {
@@ -50,12 +47,11 @@ export const columns: ColumnDef<any>[] = [
   },
   {
     id: 'actions',
-    size: 20,
     header: 'h_action',
     cell: (info) => {
       const { id } = info.row.original;
       return (
-        <div className='w-full flex justify-center'>
+        <div className='w-full flex justify-end items-center'>
           <ButtonAction
             id={id}
             type='shift'

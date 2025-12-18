@@ -61,14 +61,14 @@ export interface IRelationArea {
   area: {
     id: number;
     name: string;
-  }
+  };
 }
 
 export interface IRelationPlace {
   place: {
     id: number;
     name: string;
-  }
+  };
 }
 
 export interface IUserResponse extends IUserRequest {

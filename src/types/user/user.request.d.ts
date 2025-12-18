@@ -1,4 +1,4 @@
-import { IdName } from "../general/general";
+import { IdName } from '../general/general';
 
 export interface ISettingModuleUser {
   id?: number;

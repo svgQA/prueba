@@ -1,4 +1,3 @@
-
 export interface IdName<T = number> {
   id: T;
   name: string;

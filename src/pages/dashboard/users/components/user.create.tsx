@@ -52,7 +52,7 @@ const translateDocumentType = (name: string): string => {
 };
 
 export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
-  const { } = useUserStore();
+  const {} = useUserStore();
 
   const documentTypes = useSignal<IDocumentTypeResponse[]>([]);
   const roles = useSignal<IOption[]>([]);
@@ -117,7 +117,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
 
     if (props.user) {
       const user = props.user;
-      
+
       const roles = user.roles?.map((role) => ({
         label: role.role.name,
         value: role.role.id,
@@ -668,7 +668,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                             allowAll={true}
                             menuPortalTarget={document.body}
                             placeholder={t('h_place')}
-                            onChange={() => { }}
+                            onChange={() => {}}
                           />
                         )}
                       </Field>
@@ -689,7 +689,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         allowAll={true}
                         menuPortalTarget={document.body}
                         placeholder='p_select'
-                        onChange={() => { }}
+                        onChange={() => {}}
                       />
                     )}
                   </Field>
@@ -709,7 +709,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         allowAll={true}
                         menuPortalTarget={document.body}
                         placeholder='p_select_role'
-                        onChange={() => { }}
+                        onChange={() => {}}
                       />
                     )}
                   </Field>
@@ -727,7 +727,7 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         allowAll={true}
                         menuPortalTarget={document.body}
                         placeholder='p_company'
-                        onChange={() => { }}
+                        onChange={() => {}}
                       />
                     )}
                   </Field>
