@@ -1,3 +1,5 @@
+import { IdName } from "../general/general";
+
 export interface IDocumentTypeResponse {
   id: number;
   name: string;
@@ -21,10 +23,9 @@ export interface ICountryResponse {
   iso3Code: string;
 }
 
-export interface IUserAreaResponse {
-  id: number;
-  name: string;
-  description: string;
+export interface IUserAreaResponse  extends IdName  {
+  children?: IdName[];
+  groups?: any[];
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -33,7 +34,7 @@ export interface IUserAreaResponse {
   deletedBy: string;
 }
 
-export interface IUserResidenceResponse {
+export interface IUserResidenceResponse{
   id: number;
   houseNumber: string;
   block?: string | null;

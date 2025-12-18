@@ -1,10 +1,5 @@
 import { IPresignedRequest } from '@/types/file';
-
-interface IdName<T = number> {
-  id: T;
-  name: string;
-  description?: string;
-}
+import { IdName } from '@/types/general/general';
 
 interface IPqrsArea extends IdName {
   area?: IdName;

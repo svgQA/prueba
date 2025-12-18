@@ -1,8 +1,21 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ButtonAction } from '@/components/common/button/column';
+import { Chip } from '@/components/common/chip/chip';
+import { FormattedDate } from '@/components/compose/forms';
 
 export const columns: ColumnDef<any>[] = [
+  {
+    id: 'name',
+    accessorKey: 'name',
+    size: 180,
+    header: 'h_name',
+    enableGrouping: true,
+    cell: (info) => {
+      const name = info.getValue() as string;
+      return <span>{name}</span>;
+    },
+  },
   {
     id: 'description',
     accessorKey: 'description',
@@ -15,14 +28,24 @@ export const columns: ColumnDef<any>[] = [
     },
   },
   {
-    id: 'name',
-    accessorKey: 'name',
+    id: 'children',
+    accessorKey: 'children',
     size: 180,
-    header: 'h_name',
+    header: 'h_children',
     enableGrouping: true,
     cell: (info) => {
-      const name = info.getValue() as string;
-      return <span>{name}</span>;
+      const { children } = info.row.original;
+      return <Chip label={children.length} width='xs' />;
+    },
+  },
+  {
+    id: 'updatedAt',
+    accessorKey: 'updatedAt',
+    header: 'h_updated',
+    enableGrouping: true,
+    meta: { headerAlign: 'end', type: 'date' },
+    cell: (info) => {
+      return <FormattedDate date={String(info.getValue())} format='date' />;
     },
   },
   {
