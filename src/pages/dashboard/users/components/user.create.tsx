@@ -30,6 +30,7 @@ import { t } from 'i18next';
 import { RoleService } from '@/services/general/role';
 import { useUserStore } from '@/store/slices';
 import { useTranslation } from 'react-i18next';
+import { AreaService } from '@/services/general/area';
 interface CreateUserProps {
   onUserCreated?: (user: any) => void;
   user?: IUserResponse;
@@ -56,6 +57,8 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const documentTypes = useSignal<IDocumentTypeResponse[]>([]);
   const roles = useSignal<IOption[]>([]);
   const places = useSignal<IOption[]>([]);
+  const areas = useSignal<IOption[]>([]);
+
   // const countries = useSignal<ICountryResponse[]>([]);
   // const departments = useSignal<IDepartmentResponse[]>([]);
   // const municipalities = useSignal<IMunicipalityResponse[]>([]);
@@ -65,7 +68,6 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   const departments = useSignal<IOption[]>([]);
   const municipalities = useSignal<IOption[]>([]);
   const companies = useSignal<IOption[]>([]);
-  const areas = useSignal<IOption[]>([]);
   const clients = useSignal<IOption[]>([]);
   const initialValues: Signal<Partial<IUserRequest>> = useSignal({});
   const image = useSignal<IPresignedRequest[]>([]);
@@ -111,8 +113,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   // };
 
   const getInitialValues = async (): Promise<void> => {
+    await getAreas();
+
     if (props.user) {
       const user = props.user;
+
       const roles = user.roles?.map((role) => ({
         label: role.role.name,
         value: role.role.id,
@@ -121,6 +126,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
       const places = user.userPlaces?.map((place) => ({
         label: place.place.name,
         value: place.place.id,
+      }));
+
+      const areas = user.userArea?.map((info) => ({
+        label: info.area.name,
+        value: info.area.id,
       }));
 
       const userClients = user.clients?.map((client) => ({
@@ -162,19 +172,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
         extraData: userExtraData,
         roles: roles,
         places: places,
+        area: areas,
         clients: userClients,
       };
 
       if (user.userType) typeSelected.value = user.userType;
-
-      // TODO: Luego validar las areas porque estas dependend
-      // de cada empresa por eso debe ser un objeto mas general que esa area
-      // que se seleccione quede asociada a la empresa.
-      /*
-      if (user.companies?.[0]?.company?.id) {
-        await getAreas(user.companies[0].company.id.toString());
-      }
-      */
 
       if (user.extraData?.state) {
         await getDepartments();
@@ -255,14 +257,11 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
   };
   */
 
-  /*
-  const getAreas = async (company: string): Promise<void> => {
-    const id = Number(company);
-    const response = await AreaService.getAreaList(id);
+  const getAreas = async (): Promise<void> => {
+    const response = await AreaService.get_simple_List();
     if (!response.getStatus()) return;
     areas.value = response.getMany();
   };
-  */
 
   const onChangeDepartment = async (departmentId: number) => {
     await getMunicipalities(departmentId);
@@ -674,6 +673,26 @@ export const CreateUser: FunctionComponent<CreateUserProps> = (props) => {
                         )}
                       </Field>
                     ))}
+
+                  <Field<IOption[]>
+                    name='area'
+                    validate={requiredRole.value ? required : undefined}
+                  >
+                    {({ input, meta }) => (
+                      <SmartSelector
+                        {...input}
+                        meta={meta}
+                        id='select-areas'
+                        label={t('h_area')}
+                        options={areas.value}
+                        multiple={true}
+                        allowAll={true}
+                        menuPortalTarget={document.body}
+                        placeholder='p_select'
+                        onChange={() => {}}
+                      />
+                    )}
+                  </Field>
                   <Field<IOption[]>
                     name='roles'
                     validate={requiredRole.value ? required : undefined}

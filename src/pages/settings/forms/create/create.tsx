@@ -47,19 +47,16 @@ import { MultiSelect } from './MultiSelect';
 import { useSignal } from '@preact/signals';
 import { useUserStore } from '@/store/slices';
 import { Loading } from '@/components/common/loading/loading';
-const AUTO_SAVE_INTERVAL = 4000; // 4 seconds
+import { IMultiSelect } from '@/types/general/general';
 
-interface IMultiSelect {
-  id: number;
-  name: string;
-}
+const AUTO_SAVE_INTERVAL = 4000; // 4 seconds
 
 export const FormCreateSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const [_, navigate] = useLocation();
   const [isAutoSaving, setIsAutoSaving] = useState(false);
   const group = useSignal<number[]>(getForm.value.groups);
-  const smartGroups = useSignal<{ name: string; id: number }[]>([]);
+  const smartGroups = useSignal<IMultiSelect[]>([]);
   const { selectedCompany } = useUserStore();
   const loading = useSignal<boolean>(false);
 
