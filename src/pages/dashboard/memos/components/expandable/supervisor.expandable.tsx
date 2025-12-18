@@ -148,17 +148,14 @@ const SupervisorInfo = ({
     <div className='w-full rounded-lg shadow-sm'>
       <div className='flex flex-row gap-4 w-full'>
         <div className='w-8/12 flex flex-col'>
-          <div className='flex items-center justify-between gap-1 border-b border-b-light-dark dark:border-b-dark max-h-20 w-full dark:bg-b-dark-dark bg-b-light-dark rounded-lg px-5'>
-            <div className='flex-1'>
-              {memo?.resource && (
-                <ShowFiles resources={memo.resource} alertEmpty={true} />
-              )}
-            </div>
+          <div className='flex items-center justify-end gap-x-4 dark:bg-gray-600 bg-gray-200 rounded-2xl px-3'>
+            <ShowFiles resources={memo.resource} alertEmpty={true} />
             {status.value != 'IN_REVISION' && status.value != 'CREATED' && (
               <Button
                 name='btn-check-memo'
                 label={status.value === 'OPENED' ? 'SOLVE' : 'RESOLVED'}
                 icon='030'
+                borderless
                 disabled={status.value === 'RESOLVED'}
                 onClick={() =>
                   showAlert({
@@ -180,6 +177,7 @@ const SupervisorInfo = ({
               onClick={handleDownloadMemo}
               name='btn-memo-download'
               icon='411'
+              borderless
               label='h_download_memo'
               className='mb-4'
             />
@@ -251,7 +249,7 @@ const SupervisorInfo = ({
             </div>
           </div>
         </div>
-        <div className='w-4/12 h-[250px]'>
+        <div className='w-4/12 h-[270px]'>
           <MapLibrePointsMap
             name='map-points'
             pointsRef={[
