@@ -14,6 +14,7 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
     show: true,
   },
   menus: [
+    /*
     {
       icon: '050',
       label: 'm_programmed',
@@ -23,6 +24,7 @@ export const MODAL_SETTING_NOTIFICATIONS: IModalSidebarMenu = {
       show: true,
       id: 'notification:scheduled:state',
     },
+    */
     {
       icon: '040',
       label: 'm_template',

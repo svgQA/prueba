@@ -811,7 +811,7 @@ export const Table = <T,>({
     <>
       {/* sticky top-[3.4rem] z-[8] */}
       <div
-        className={`py-1 pb-3 flex items-center justify-end ${absolute ? 'absolute top-10 right-2 w-1/2' : 'w-full'}`}
+        className={`py-1 pb-3 flex items-center justify-end ${absolute ? 'absolute top-16 right-2 w-1/2' : 'w-full'}`}
       >
         {button && <div className='mr-auto'>{button}</div>}
         {!unsearch && (

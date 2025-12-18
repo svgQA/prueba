@@ -25,6 +25,7 @@ const showFiles = ({
   disabled,
   svg,
 }: ShowFilesProps) => {
+  if (!resources.length) return null;
   const { getTenant, getCompanyId } = useUserStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(1);

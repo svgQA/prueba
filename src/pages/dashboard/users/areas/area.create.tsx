@@ -1,4 +1,3 @@
-import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { Section } from '@/components/common/section/section';
 import { FunctionComponent } from 'preact';
@@ -13,6 +12,7 @@ import { useEffect } from 'preact/hooks';
 import { required } from '@/utils/utilities/validate';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { useUserStore } from '@/store/slices';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 
 export const AreaCreatePage: FunctionComponent = () => {
   const { id } = useParams();
@@ -72,9 +72,20 @@ export const AreaCreatePage: FunctionComponent = () => {
       <Form
         onSubmit={onSubmit}
         initialValues={{ ...initialValues.value, companyId: 1 }}
-        render={({ handleSubmit, submitting }) => (
-          <form onSubmit={handleSubmit} className='space-y-6'>
+        render={({ handleSubmit, form, submitting, pristine }) => (
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-area-change'
+          >
             <div className='grid grid-cols-2 gap-4'>
+              <StatusButton
+                onClickClean={() => form.reset()}
+                submitting={submitting}
+                pristine={pristine}
+                form='form-area-change'
+                label={id ? 'update' : 'save'}
+              />
               <div className='col-span-1'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
@@ -106,17 +117,6 @@ export const AreaCreatePage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-            </div>
-            <div className='flex justify-end space-x-4'>
-              <Button
-                id='btn-save'
-                name='btn-save'
-                type='submit'
-                label={id ? 'update' : 'save'}
-                icon='022'
-                className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
-                disabled={submitting}
-              />
             </div>
           </form>
         )}

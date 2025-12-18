@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Field, Form } from 'react-final-form';
-import { Button } from '@/components/common/button/button';
+// import { Button } from '@/components/common/button/button';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { TemplateService } from '@/services';
@@ -16,6 +16,7 @@ import { useSignal } from '@preact/signals';
 import { useUserStore } from '@/store/slices';
 import { required } from '@/utils/utilities/validate';
 import { Section } from '@/components/common/section/section';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 
 export const TemplateCreateForm = () => {
   const [useForm, _setUseForm] = useState(false);
@@ -97,11 +98,25 @@ export const TemplateCreateForm = () => {
   };
 
   return (
-    <Section loading={loading.value}>
+    <Section className='pt-2 px-4 sm:px-8 lg:px-20 xl:px-40'>
       <Form
         onSubmit={handleSubmit}
-        render={({ handleSubmit }) => (
-          <form className='space-y-6 w-full' onSubmit={handleSubmit}>
+        render={({ handleSubmit, form, submitting, pristine }) => (
+          <form
+            className='space-y-6 w-full'
+            onSubmit={handleSubmit}
+            id='form-template-create'
+          >
+            <StatusButton
+              onClickClean={() => {
+                () => form.reset();
+              }}
+              submitting={submitting}
+              pristine={pristine}
+              form='form-template-create'
+              label={'save'}
+            />
+            {/*
             <div className='flex justify-end gap-4 absolute top-14 right-2'>
               <Button
                 name='cancel-create-scheduled'
@@ -117,6 +132,7 @@ export const TemplateCreateForm = () => {
                 disabled={loading.value}
               />
             </div>
+            */}
 
             <Field<string> name='title' validate={required}>
               {({ input, meta }) => (
@@ -140,7 +156,8 @@ export const TemplateCreateForm = () => {
                   id='template-description'
                   label='Descripción *'
                   meta={meta}
-                  placeholder='Ingrese una descripción...'
+                  className='resize-none'
+                  rows={2}
                   value={input.value || ''}
                   onChange={input.onChange}
                   required

@@ -43,7 +43,6 @@ export const columns: ColumnDef<SiteRow>[] = [
   {
     id: 'site',
     header: 'l_residence', // si tu i18n sigue usando esta key, la dejo igual
-    size: 320,
     cell: ({ row }) => {
       const r = row.original;
       const t = typeLabel(r.type);
@@ -59,7 +58,6 @@ export const columns: ColumnDef<SiteRow>[] = [
   {
     id: 'owners',
     header: 'h_owner',
-    size: 260,
     cell: ({ row }) => {
       const res = row.original.residents ?? [];
       const names = res
@@ -76,7 +74,6 @@ export const columns: ColumnDef<SiteRow>[] = [
   {
     id: 'place',
     header: 'l_set_place',
-    size: 240,
     cell: ({ row }) => {
       const r = row.original;
       const label = r.place?.name ?? String(r.placeId ?? '');
@@ -86,7 +83,6 @@ export const columns: ColumnDef<SiteRow>[] = [
   {
     id: 'actions',
     header: 'h_action',
-    size: 120,
     enableSorting: false,
     enableHiding: false,
     cell: ({ row }) => {

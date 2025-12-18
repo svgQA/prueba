@@ -342,7 +342,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                 form='form-place-create'
                 label={id ? 'edit' : 'btnSave'}
               />
-              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3'>
+              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pb-3'>
                 <div class='col-span-1'>
                   <Field<string> name='name' validate={required}>
                     {({ input, meta }) => (
@@ -394,10 +394,12 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                         {...input}
                         min='3'
                         max='300'
+                        rows={2}
                         placeholder='h_description'
                         label='h_description'
                         type='text'
                         meta={meta}
+                        className='resize-none'
                       />
                     )}
                   </Field>
@@ -411,7 +413,7 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                         id='groups'
                         label='l_groups'
                         placeholder='p_select'
-                        icon='231'
+                        icon='146'
                         multiple={true}
                         allowAll={true}
                         options={groups.value}
@@ -425,38 +427,37 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
         }}
       />
 
-      <div className='mt-6 shadow-sm p-4 rounded-lg border bg-b-light-light dark:bg-b-dark-light '>
-        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4'>
-          <h3 className='text-lg font-semibold text-gray-800 dark:text-gray-200'>
-            {t('users.client.users_client.title')}
+      <div className='mt-6 shadow-sm p-4 rounded-lg border dark:border-gray-600 border-gray-200'>
+        <div className='flex flex-row w-full justify-between items-center mb-3'>
+          <h3 className='text-lg font-semibold text-gray-800 dark:text-gray-200 w-2/6'>
+            {t('t_user_client')}
           </h3>
 
-          <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto'>
-            <div className='flex-1 sm:flex-initial sm:min-w-[300px]'>
-              <Select
-                name='users'
-                placeholder='h_user_existing'
-                label='h_user_existing'
-                icon='252'
-                options={currentUsers.value}
-                optionValue='value'
-                optionLabel='label'
-                value={selectedUserId.value}
-                onChange={handleUserSelect}
-              />
-            </div>
+          <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:w-auto !w-4/6 px-2'>
+            <Select
+              name='users'
+              placeholder='h_user_existing'
+              icon='252'
+              options={currentUsers.value}
+              optionValue='value'
+              optionLabel='label'
+              value={selectedUserId.value}
+              onChange={handleUserSelect}
+            />
 
             <Button
               name='toggle-user-form'
               onClick={toggleUserForm}
-              mode='primary'
+              mode='ternary'
+              icon='063'
+              borderless
               label={showUserForm.value ? 'h_hide_form' : 'h_add_user'}
             />
           </div>
         </div>
 
         {showUserForm.value && (
-          <div className='mb-6 bg-white p-4 rounded-lg border border-gray-200 max-h-80 overflow-y-auto'>
+          <div className='border-y border-y-light-dark dark:border-b-dark-light max-h-80 overflow-y-auto py-4'>
             <Form
               onSubmit={(values: UserFormData) => {
                 addUserToList(values);
@@ -551,7 +552,8 @@ export const ClientsCreateSettingPage: FunctionComponent = () => {
                       <Button
                         name='add-user-to-list'
                         type='submit'
-                        mode='primary'
+                        icon='042'
+                        mode='ternary'
                         disabled={submitting || pristine}
                         label='btnSave'
                         big={true}

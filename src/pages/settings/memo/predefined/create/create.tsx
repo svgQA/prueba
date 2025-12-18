@@ -63,7 +63,7 @@ export const PredefinedCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section loading={loading.value}>
+    <Section className='pt-2 px-4 sm:px-8 lg:px-20 xl:px-40'>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}

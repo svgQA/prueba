@@ -76,90 +76,88 @@ export const UserPasswordPage: FunctionComponent = () => {
           </h1>
         </div>
       </div>
-      <div className='flex flex-col justify-center mt-16'>
-        <Form
-          onSubmit={onSubmit}
-          initialValues={{}}
-          render={({ handleSubmit, form, submitting, pristine, values }) => (
-            <form
-              onSubmit={handleSubmit}
-              className='space-y-6'
-              id='form-password-change'
-            >
-              <StatusButton
-                onClickClean={() => form.reset()}
-                submitting={submitting}
-                pristine={pristine}
-                form='form-password-change'
-                label='save'
-              />
-              <div className='grid grid-cols-1 gap-4'>
-                <div className='col-span-1'>
-                  <Field<IOption> name='userId'>
-                    {({ input, meta }) => (
-                      <SmartSelector
-                        {...input}
-                        meta={meta}
-                        label='g_user'
-                        placeholder='p_select'
-                        options={users.value}
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                <div className='col-span-1'>
-                  <Field
-                    name='newPassword'
-                    validate={(value) => {
-                      const passwordRegex =
-                        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-                      if (!passwordRegex.test(value)) {
-                        return t('password_strength');
-                      }
-                    }}
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        id='newPassword'
-                        type='password'
-                        placeholder='p_new_password'
-                        meta={meta}
-                        label='m_password'
-                        autoComplete='new-password'
-                      />
-                    )}
-                  </Field>
-                </div>
-
-                <div className='col-span-1'>
-                  <Field
-                    name='confirmPassword'
-                    validate={(value) => {
-                      if (value !== values.newPassword) {
-                        return t('passwords_not_match');
-                      }
-                    }}
-                  >
-                    {({ input, meta }) => (
-                      <Input
-                        {...input}
-                        id='confirmPassword'
-                        type='password'
-                        placeholder='p_confirm_password'
-                        label='p_confirm_password'
-                        meta={meta}
-                        autoComplete='new-password'
-                      />
-                    )}
-                  </Field>
-                </div>
+      <Form
+        onSubmit={onSubmit}
+        initialValues={{}}
+        render={({ handleSubmit, form, submitting, pristine, values }) => (
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-password-change'
+          >
+            <StatusButton
+              onClickClean={() => form.reset()}
+              submitting={submitting}
+              pristine={pristine}
+              form='form-password-change'
+              label='save'
+            />
+            <div className='grid grid-cols-1 gap-4'>
+              <div className='col-span-1'>
+                <Field<IOption> name='userId'>
+                  {({ input, meta }) => (
+                    <SmartSelector
+                      {...input}
+                      meta={meta}
+                      label='g_user'
+                      placeholder='p_select'
+                      options={users.value}
+                    />
+                  )}
+                </Field>
               </div>
-            </form>
-          )}
-        />
-      </div>
+
+              <div className='col-span-1'>
+                <Field
+                  name='newPassword'
+                  validate={(value) => {
+                    const passwordRegex =
+                      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{12,}$/;
+                    if (!passwordRegex.test(value)) {
+                      return t('password_strength');
+                    }
+                  }}
+                >
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      id='newPassword'
+                      type='password'
+                      placeholder='p_new_password'
+                      meta={meta}
+                      label='m_password'
+                      autoComplete='new-password'
+                    />
+                  )}
+                </Field>
+              </div>
+
+              <div className='col-span-1'>
+                <Field
+                  name='confirmPassword'
+                  validate={(value) => {
+                    if (value !== values.newPassword) {
+                      return t('passwords_not_match');
+                    }
+                  }}
+                >
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      id='confirmPassword'
+                      type='password'
+                      placeholder='p_confirm_password'
+                      label='p_confirm_password'
+                      meta={meta}
+                      autoComplete='new-password'
+                    />
+                  )}
+                </Field>
+              </div>
+            </div>
+          </form>
+        )}
+      />
     </Section>
   );
 };

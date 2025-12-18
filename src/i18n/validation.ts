@@ -17,7 +17,7 @@ export const validation_es = {
   shiftStart: 'Inicio del Turno',
   shiftEnd: 'Finalización del Turno',
   password_strength:
-    'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial',
+    'La contraseña debe tener al menos 12 caracteres, una mayúscula, una minúscula, un número y un carácter especial',
   passwords_not_match: 'Las contraseñas no coinciden',
   phone_start_with: 'El teléfono debe comenzar con +',
   size_8: 'El teléfono debe tener al menos 8 caracteres',
@@ -54,7 +54,7 @@ export const validation_en = {
   shiftStart: 'Shift Start',
   shiftEnd: 'Shift End',
   password_strength:
-    'The password must be at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character',
+    'The password must be at least 12 characters, one uppercase letter, one lowercase letter, one number and one special character',
   passwords_not_match: 'The passwords do not match',
   phone_start_with: 'Phone number must start with +',
   size_8: 'Phone number must have at least 8 characters',

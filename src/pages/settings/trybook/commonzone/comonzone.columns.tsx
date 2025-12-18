@@ -30,7 +30,6 @@ export const columns: ColumnDef<CommonZoneRow>[] = [
   {
     id: 'name',
     header: 'l_name',
-    size: 260,
     cell: ({ row }) => {
       const { name } = row.original;
       return <span>{name ?? '-'}</span>;
@@ -39,7 +38,6 @@ export const columns: ColumnDef<CommonZoneRow>[] = [
   {
     id: 'type',
     header: 'l_table_type',
-    size: 160,
     cell: ({ row }) => {
       const k = row.original.type;
       return <span>{TYPE_LABEL[k] ?? k}</span>;
@@ -48,7 +46,6 @@ export const columns: ColumnDef<CommonZoneRow>[] = [
   {
     id: 'place',
     header: 'l_set_place',
-    size: 220,
     cell: ({ row }) => {
       const r = row.original;
       const label = r.place?.name ?? String(r.placeId ?? '');
@@ -58,7 +55,6 @@ export const columns: ColumnDef<CommonZoneRow>[] = [
   {
     id: 'status',
     header: 'h_status',
-    size: 120,
     cell: ({ row }) => {
       const isActive = !!row.original.isActive;
       return (
@@ -71,13 +67,12 @@ export const columns: ColumnDef<CommonZoneRow>[] = [
   {
     id: 'actions',
     header: 'h_action',
-    size: 120,
     enableSorting: false,
     enableHiding: false,
     cell: ({ row }) => {
       const { id } = row.original;
       return (
-        <div className='w-full flex justify-center gap-1'>
+        <div className='w-full flex justify-end gap-1 items-center'>
           <ButtonAction
             id={String(id)}
             type='shift'

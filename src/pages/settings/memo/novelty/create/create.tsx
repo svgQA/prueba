@@ -17,8 +17,9 @@ import {
   IOption,
   SmartSelector,
 } from '@/components/common/smart-selector/smart-select';
-import { Checkbox } from '@/components/common/checkbox/checkbox';
+// import { Checkbox } from '@/components/common/checkbox/checkbox';
 import { Section } from '@/components/common/section/section';
+import { Switch } from '@/components/common/switch/switch';
 interface FormData {
   name: string;
   description: string;
@@ -92,7 +93,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
   }, []);
 
   return (
-    <Section loading={loading.value}>
+    <Section className='pt-2 px-4 sm:px-8 lg:px-20 xl:px-40'>
       <Form
         onSubmit={onSubmit}
         initialValues={initialValues.value}
@@ -119,10 +120,9 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
               form='form-place-create'
               label={id ? 'edit' : 'save'}
             />
-
             {/** FORMULARIO PRINCIPAL */}
-            <div className='grid grid-cols-4 gap-3'>
-              <div class='col-span-2'>
+            <div className='grid grid-cols-2 gap-3 relative pt-8'>
+              <div class='col-span-1'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
@@ -151,26 +151,27 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div class='col-span-1 mt-8'>
+              <div class='absolute top-0 right-0 bg-ternary flex items-center py-2 px-3 rounded-es-lg'>
                 <Field<boolean> name='autoResolve' defaultValue={false}>
                   {({ input }) => (
-                    <Checkbox
+                    <Switch
                       {...input}
                       name='autoResolve'
-                      label=''
-                      options={[
-                        {
-                          value: 'autoResolve',
-                          label: 'Activar resolución automática',
-                        },
-                      ]}
-                      value={input.value ? { autoResolve: true } : {}}
-                      checked={input.value}
+                      label='l_auto_resolve'
+                      // options={[
+                      //   {
+                      //     value: 'autoResolve',
+                      //     label: 'Activar resolución automática',
+                      //   },
+                      // ]}
+                      value={input.checked}
+                      // value={input.value ? { autoResolve: true } : {}}
+                      // checked={input.value}
                     />
                   )}
                 </Field>
               </div>
-              <div class='col-span-4'>
+              <div class='col-span-2'>
                 <Field<string> name='description' validate={required}>
                   {({ input, meta }) => (
                     <TextArea
@@ -180,7 +181,9 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                       placeholder='Ingrese Descripción...'
                       label='description'
                       type='text'
+                      rows={2}
                       meta={meta}
+                      className='resize-none'
                     />
                   )}
                 </Field>
