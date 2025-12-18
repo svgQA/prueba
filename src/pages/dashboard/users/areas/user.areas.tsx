@@ -33,7 +33,7 @@ export const UserAreasPage: FunctionComponent = () => {
 
   const fetchAreas = async () => {
     loading.value = true;
-    const response = await AreaService.getAreas();
+    const response = await AreaService.get_all();
     if (response.getStatus()) {
       areas.value = response.getMany();
     }
@@ -41,7 +41,7 @@ export const UserAreasPage: FunctionComponent = () => {
   };
 
   const deleteArea = async (id: number) => {
-    const request = await AreaService.deleteArea(id);
+    const request = await AreaService.delete(id);
     if (!request.getStatus()) return;
     ToastManager.success('s_deleted_success');
     fetchAreas();

@@ -14,7 +14,6 @@ import { ToastManager } from '@/utils/toast/toast-manager';
 
 import { AreaService } from '@/services/general/area';
 import { useUserStore } from '@/store/slices';
-import { StatusButton } from '@/pages/settings/components/custom.button';
 
 import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
@@ -48,7 +47,7 @@ export const AreaCreatePage: FunctionComponent = () => {
     await getGroups();
     if (!id) return (loading.value = false);
 
-    const request = await AreaService.getArea(id);
+    const request = await AreaService.get_one(id);
     if (!request.getStatus()) return (loading.value = false);
 
     const { name, description, children, groups } = request.getOne();
@@ -74,10 +73,10 @@ export const AreaCreatePage: FunctionComponent = () => {
     model.smartGroups = group.value;
 
     if (id) {
-      request = await AreaService.updateArea(id, model);
+      request = await AreaService.update(id, model);
       message = 's_updated_success';
     } else {
-      request = await AreaService.createArea(model);
+      request = await AreaService.create(model);
       message = 's_created_success';
     }
 
