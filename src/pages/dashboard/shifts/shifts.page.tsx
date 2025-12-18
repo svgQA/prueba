@@ -1,6 +1,12 @@
 /* ShiftsPage queda como composición de hooks + UI; lógica pesada sale a hooks para legibilidad y mejor performance. */
 import { FunctionalComponent } from 'preact';
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'preact/hooks';
 import { useSignal } from '@preact/signals';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
@@ -62,6 +68,8 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [externalSelected, setExternalSelected] = useState<string>('');
 
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
+  const sendButtonRef = useRef<HTMLDivElement>(null);
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   const [dateRangeFilters, setDateRangeFilters] = useState<{
     [key: string]: [string, string];
@@ -98,6 +106,30 @@ export const ShiftsPage: FunctionalComponent = () => {
   useEffect(() => {
     reloadData();
   }, [dateRangeFilters, fetchInitialData, selectedCompany]);
+
+  // Calcular posición del modal basada en el botón
+  useEffect(() => {
+    if (showSendModal.value && sendButtonRef.current) {
+      const updatePosition = () => {
+        if (sendButtonRef.current) {
+          const rect = sendButtonRef.current.getBoundingClientRect();
+          setModalPosition({
+            top: rect.bottom + window.scrollY + 12,
+            left: rect.left + window.scrollX,
+          });
+        }
+      };
+
+      updatePosition();
+      window.addEventListener('scroll', updatePosition, true);
+      window.addEventListener('resize', updatePosition);
+
+      return () => {
+        window.removeEventListener('scroll', updatePosition, true);
+        window.removeEventListener('resize', updatePosition);
+      };
+    }
+  }, [showSendModal.value]);
 
   useShiftSocket({
     dateRangeFilters,
@@ -230,7 +262,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           icon='138'
         />
 
-        <div className='relative'>
+        <div ref={sendButtonRef} className='relative'>
           <Button
             name='button-action'
             rounded={false}
@@ -240,15 +272,6 @@ export const ShiftsPage: FunctionalComponent = () => {
             selected={showSendModal.value}
             disabled={!hasValidPlayer}
           />
-          {showSendModal.value && (
-            <div className='my-3 absolute left-0 rounded-lg shadow-lg w-[600px]'>
-              <SendForm
-                onClose={handleCloseSendModal}
-                hasplayers={hasValidPlayer}
-                users={selectedUsers as []}
-              />
-            </div>
-          )}
         </div>
       </div>
     );
@@ -382,6 +405,21 @@ export const ShiftsPage: FunctionalComponent = () => {
       }
       modals={
         <>
+          {showSendModal.value && (
+            <div
+              className='fixed rounded-lg shadow-lg z-[9999] w-[600px]'
+              style={{
+                top: `${modalPosition.top}px`,
+                left: `${modalPosition.left}px`,
+              }}
+            >
+              <SendForm
+                onClose={handleCloseSendModal}
+                hasplayers={hasValidPlayer}
+                users={selectedUsers as []}
+              />
+            </div>
+          )}
           <TaskForm
             closed={showUpsertModal.value}
             onClose={() => {

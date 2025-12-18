@@ -17,7 +17,6 @@ export const getColumns = (
     {
       id: 'subject',
       header: 'h_user',
-      size: 260,
       accessorFn: (row) => {
         if (row.user) {
           const full =
@@ -33,7 +32,6 @@ export const getColumns = (
     {
       id: 'cardId',
       header: 'cardId',
-      size: 180,
       accessorKey: 'cardId',
       cell: (info) => (info.getValue() ? String(info.getValue()) : '-'),
     },
@@ -43,7 +41,6 @@ export const getColumns = (
       id: 'reason',
       accessorKey: 'reason',
       header: 'h_reason',
-      size: 220,
       enableGrouping: true,
       cell: (info) => (info.getValue() ? String(info.getValue()) : '-'),
     },
@@ -53,7 +50,6 @@ export const getColumns = (
       id: 'type',
       accessorKey: 'type',
       header: 'Tipo',
-      size: 120,
       cell: (info) => {
         const type = String(info.getValue() ?? 'BAN');
         const color =
@@ -74,7 +70,6 @@ export const getColumns = (
       id: 'expiresAt',
       accessorKey: 'expiresAt',
       header: 'h_expires',
-      size: 160,
       cell: (info) =>
         info.getValue() ? (
           <RelativeTime date={info.getValue() as string} />
@@ -88,7 +83,6 @@ export const getColumns = (
       id: 'isActive',
       accessorKey: 'isActive',
       header: 'h_status',
-      size: 100,
       cell: (info) => {
         const v = Boolean(info.getValue());
         return (
@@ -104,7 +98,6 @@ export const getColumns = (
       id: 'updatedAt',
       accessorKey: 'updatedAt',
       header: 'h_updated',
-      size: 160,
       cell: (info) => <RelativeTime date={info.getValue() as string} />,
     },
 
@@ -112,7 +105,6 @@ export const getColumns = (
     {
       id: 'action',
       header: 'h_action',
-      size: 60,
       cell: (info) => {
         const { id } = info.row.original;
         const actions: IDropdownAction[] = [
@@ -131,7 +123,7 @@ export const getColumns = (
           },
         ];
         return (
-          <div className='w-full flex justify-center items-center'>
+          <div className='w-full flex justify-end items-center'>
             <DropdownActionsMenu actions={actions} />
           </div>
         );

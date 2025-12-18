@@ -20,6 +20,8 @@ export const buttons_es = {
   page: 'Página',
   of: 'de',
   cancel: 'Cancelar',
+  b_check_in: 'Check In',
+  b_check_out: 'Check Out',
 };
 
 export const buttons_en = {
@@ -44,4 +46,6 @@ export const buttons_en = {
   page: 'Page',
   of: 'of',
   cancel: 'Cancel',
+  b_check_in: 'Check In',
+  b_check_out: 'Check Out',
 };

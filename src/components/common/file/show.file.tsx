@@ -25,6 +25,7 @@ const showFiles = ({
   disabled,
   svg,
 }: ShowFilesProps) => {
+  if (!resources.length) return null;
   const { getTenant, getCompanyId } = useUserStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleCount, setVisibleCount] = useState(1);
@@ -73,20 +74,22 @@ const showFiles = ({
 
   return (
     <div
-      className={`relative w-full flex justify-center items-center ${resources.length > 0 ? 'bg-b-light-light dark:bg-b-dark-dark' : ''}`}
+      className='rounded-2xl relative w-full flex justify-center items-center bg-b-light-light dark:bg-gray-600/30 my-2'
       ref={containerRef}
     >
-      {visibleFiles && resources.length > 0 && (
-        <Button
-          name='button-change-scheduler'
-          onClick={goLeft}
-          icon='003'
-          borderless
-          square
-          transparent
-          disabled={!showLeft}
-        ></Button>
-      )}
+      <div className='min-w-7 absolute right-0 top-0 dark:bg-b-dark-dark/40 h-full flex flex-row items-center justify-center rounded-e-2xl'>
+        {visibleFiles && resources.length > 1 && (
+          <Button
+            name='button-change-scheduler'
+            onClick={goLeft}
+            icon='004'
+            borderless
+            square
+            transparent
+            disabled={!showLeft}
+          ></Button>
+        )}
+      </div>
       <div
         className={`flex flex-row flex-nowrap py-1 w-full gap-2 ${isSender ? 'justify-end items-center' : 'justify-start items-center'} px-8 overflow-hidden`}
         style={{ minHeight: '3.5rem' }}
@@ -127,17 +130,19 @@ const showFiles = ({
         ))}
         {mapPoint && <MapViewer mapPoint={mapPoint} />}
       </div>
-      {visibleFiles && resources.length > 0 && (
-        <Button
-          name='button-change-scheduler'
-          onClick={goRight}
-          icon='004'
-          borderless
-          square
-          transparent
-          disabled={!showRight}
-        ></Button>
-      )}
+      <div className='min-w-7 absolute left-0 top-0 dark:bg-b-dark-dark/40 h-full flex flex-row items-center justify-center rounded-s-2xl'>
+        {visibleFiles && resources.length > 1 && (
+          <Button
+            name='button-change-scheduler'
+            onClick={goRight}
+            icon='003'
+            borderless
+            square
+            transparent
+            disabled={!showRight}
+          ></Button>
+        )}
+      </div>
       {typeof svg === 'string' && svg.trim() !== '' && svg.includes('<svg') && (
         <SvgViewer src={svg} />
       )}

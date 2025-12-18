@@ -15,7 +15,7 @@ export const CardSettingHeader: FunctionComponent<
   const { t } = useTranslation();
   return (
     <div className='pb-2 flex flex-col w-1/2'>
-      <div className='flex flex-col dark:bg-b-dark-light bg-b-light-light py-0.5 w-80 rounded-br-2xl px-3'>
+      <div className='flex flex-col py-0.5 w-80 rounded-br-2xl px-3 dark:bg-b-dark-light bg-b-light-light h-14'>
         <h3 className='text-xl font-bold text-pretty'>
           {t(menuInformationSelected.value.label)}
         </h3>

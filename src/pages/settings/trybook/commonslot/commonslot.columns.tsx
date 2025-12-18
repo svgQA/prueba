@@ -29,7 +29,6 @@ export const columns: ColumnDef<CommonSlotRow>[] = [
   {
     id: 'code',
     header: 'l_code',
-    size: 160,
     cell: ({ row }) => {
       const { code } = row.original;
       return <span>{code ?? '-'}</span>;
@@ -38,7 +37,6 @@ export const columns: ColumnDef<CommonSlotRow>[] = [
   {
     id: 'zone',
     header: 'l_zone',
-    size: 220,
     cell: ({ row }) => {
       const r = row.original;
       const label = r.zone?.name ?? String(r.zoneId ?? '');
@@ -48,7 +46,6 @@ export const columns: ColumnDef<CommonSlotRow>[] = [
   {
     id: 'place',
     header: 'l_set_place',
-    size: 220,
     cell: ({ row }) => {
       const r = row.original;
       const label =
@@ -61,7 +58,6 @@ export const columns: ColumnDef<CommonSlotRow>[] = [
   {
     id: 'status',
     header: 'h_status',
-    size: 120,
     cell: ({ row }) => {
       const isOccupied = !!row.original.isOccupied;
       const text = isOccupied ? 'Ocupado' : 'Libre';
@@ -72,13 +68,12 @@ export const columns: ColumnDef<CommonSlotRow>[] = [
   {
     id: 'actions',
     header: 'h_action',
-    size: 120,
     enableSorting: false,
     enableHiding: false,
     cell: ({ row }) => {
       const { uuid } = row.original;
       return (
-        <div className='w-full flex justify-center gap-1'>
+        <div className='w-full flex justify-end gap-1 items-center'>
           <ButtonAction
             id={String(uuid)}
             type='shift'

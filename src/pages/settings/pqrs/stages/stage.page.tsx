@@ -97,7 +97,7 @@ export const StagePage: FunctionalComponent = () => {
                 className={`relative rounded-full px-4 py-2 transition-colors duration-200 mx-1 ${
                   isActive
                     ? 'bg-white text-slate-900 shadow-sm'
-                    : 'text-slate-500 hover:text-slate-700'
+                    : 'text-slate-300 hover:text-slate-700'
                 }`}
                 type='button'
               >

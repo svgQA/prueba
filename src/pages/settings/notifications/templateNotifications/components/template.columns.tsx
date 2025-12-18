@@ -5,6 +5,7 @@ import {
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { TaskCard } from '@/pages/settings/shifts/task/create/task.card';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -17,7 +18,6 @@ export const getColumns = (
     id: 'title',
     accessorKey: 'title',
     header: 'h_title',
-    size: 180,
     cell: (info) => (
       <span
         className='font-medium cursor-pointer'
@@ -31,21 +31,14 @@ export const getColumns = (
     id: 'description',
     accessorKey: 'description',
     header: 'h_description',
-    size: 300,
     cell: (info) => (
-      <span
-        className='line-clamp-2 max-w-[300px]'
-        title={info.getValue() as string}
-      >
-        {info.getValue() as string}
-      </span>
+      <TextEllipsis text={String(info.getValue())} maxWidth='200px' />
     ),
   },
   {
     id: 'tasks',
     accessorKey: 'tasks',
     header: 'h_data',
-    size: 300, // puedes ajustar este ancho
     cell: (info) => {
       const row = info.row.original as Record<string, any>;
       const tasks = row.tasks as any[];
@@ -66,7 +59,6 @@ export const getColumns = (
   {
     id: 'actions',
     header: 'h_action',
-    size: 20,
     cell: (info) => {
       const { id } = info.row.original;
 
@@ -97,7 +89,7 @@ export const getColumns = (
       ];
 
       return (
-        <div className='w-full flex justify-center'>
+        <div className='w-full flex justify-end items-center'>
           <DropdownActionsMenu actions={actions} />
         </div>
       );

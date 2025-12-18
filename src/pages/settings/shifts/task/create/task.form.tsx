@@ -300,7 +300,7 @@ export const TaskFormCreate = ({
                               <SmartSelector
                                 {...input}
                                 placeholder='p_select'
-                                label='i_form'
+                                label='l_form'
                                 icon='206'
                                 meta={meta}
                                 options={_forms.value}

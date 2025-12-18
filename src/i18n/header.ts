@@ -9,6 +9,7 @@ export const header_es = {
   t_access: 'Accesos',
   t_inbox: 'Correspondencia',
   t_pqrs: 'PQRS',
+  t_user_client: 'Usiarios de cliente',
 };
 
 export const header_en = {
@@ -22,4 +23,5 @@ export const header_en = {
   t_access: 'Accesses',
   t_inbox: 'Correspondence',
   t_pqrs: 'PQRS',
+  t_user_client: 'Client`s users',
 };

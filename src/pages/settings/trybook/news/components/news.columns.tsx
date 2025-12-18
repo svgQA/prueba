@@ -5,7 +5,7 @@ import {
   IDropdownAction,
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { INews } from '@/types/trybook/news';
-import { RelativeTime } from '@/components/common/relative/relative';
+// import { RelativeTime } from '@/components/common/relative/relative';
 import { useUserStore } from '@/store/slices';
 
 export const getColumns = (
@@ -21,20 +21,17 @@ export const getColumns = (
     {
       id: 'id',
       accessorKey: 'id',
-      size: 60,
       header: 'h_id',
     },
     {
       id: 'name',
       accessorKey: 'name',
-      size: 180,
       header: 'h_name',
       enableGrouping: true,
     },
     {
       id: 'description',
       accessorKey: 'description',
-      size: 160,
       header: 'h_description',
       enableGrouping: true,
     },
@@ -43,30 +40,30 @@ export const getColumns = (
           {
             id: 'place',
             accessorKey: 'place.name',
-            size: 120,
             header: 'h_place',
             enableGrouping: true,
             enableColumnFilter: user?.userType !== 'ADMIN_CLIENT',
           },
         ]
       : []),
-    {
-      accessorKey: 'createdAt',
-      id: 'createdAt',
-      header: 'h_created',
-      meta: { headerAlign: 'center' },
-      cell: (info) => <RelativeTime date={info.getValue() as string} />,
-    },
-    {
-      accessorKey: 'updatedAt',
-      id: 'updatedAt',
-      header: 'h_updated',
-      meta: { headerAlign: 'center' },
-      cell: (info) => <RelativeTime date={info.getValue() as string} />,
-    },
+    /*
+		{
+			accessorKey: 'createdAt',
+			id: 'createdAt',
+			header: 'h_created',
+			meta: { headerAlign: 'center' },
+			cell: (info) => <RelativeTime date={info.getValue() as string} />,
+		},
+		{
+			accessorKey: 'updatedAt',
+			id: 'updatedAt',
+			header: 'h_updated',
+			meta: { headerAlign: 'center' },
+			cell: (info) => <RelativeTime date={info.getValue() as string} />,
+		},
+    */
     {
       id: 'action',
-      size: 20,
       header: 'h_action',
       cell: (info) => {
         const { id } = info.row.original;
@@ -97,7 +94,7 @@ export const getColumns = (
         ];
 
         return (
-          <div className='w-full flex justify-center items-center'>
+          <div className='w-full flex justify-end items-center'>
             <DropdownActionsMenu actions={actions} />
           </div>
         );
