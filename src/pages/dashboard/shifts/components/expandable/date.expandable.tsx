@@ -110,8 +110,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
       platform: checkData.platform,
       distance: checkData.distance,
       location: {
-        lat: toSafeInteger(checkData.location.lat),
-        lng: toSafeInteger(checkData.location.lng),
+        lat: toSafeInteger(checkData?.location?.lat),
+        lng: toSafeInteger(checkData?.location?.lng),
       },
       url: '',
       type: checkData.type,
@@ -163,10 +163,8 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
   );
 
   return (
-    <div class='flex gap-6 justify-center'>
-      {/* Inicio del Turno */}
+    <div class='flex gap-2 justify-center'>
       <ShiftCard
-        // title={t('shiftStart')}
         name={employeeName}
         date={checkInData?.time || checkInData?.date || ''}
         time={checkInData?.time || checkInData?.date || ''}
@@ -175,7 +173,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         statusColor={checkInStatus.value.color || ''}
         label={checkInStatus.value.label}
         distance={checkInData?.distance || ''}
-        btnLabel='Check In' // TODO: No traducir, porque se usa para una condiciòn
+        btnLabel='b_check_in' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
         latitude={ci_longitude}
         longitude={ci_latitude}
@@ -183,10 +181,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         disabled={shift?.status !== 'CREATED'}
         onCheck={handleCheck}
       />
-
-      {/* Finalización del Turno */}
       <ShiftCard
-        // title={t('shiftEnd')}
         name={employeeName}
         date={checkOutData?.time || checkOutData?.date || ''}
         time={checkOutData?.time || checkOutData?.date || ''}
@@ -195,7 +190,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         statusColor={checkOutStatus.value.color || ''}
         label={checkOutStatus.value.label}
         distance={checkOutData?.distance || ''}
-        btnLabel='Check Out' // TODO: No traducir, porque se usa para una condiciòn
+        btnLabel='b_check_out' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
         latitude={co_latitude}
         longitude={co_longitude}
@@ -292,7 +287,7 @@ const ShiftCard = ({
       longitude: position.coords.longitude.toString(),
       date: new Date().toISOString(),
       platform: 'web',
-      type: btnLabel === 'Check In' ? 'CHECK_IN' : 'CHECK_OUT',
+      type: btnLabel === 'b_check_in' ? 'CHECK_IN' : 'CHECK_OUT',
     };
 
     const response = await ShiftService.createCheck(checkData, shiftId);
@@ -324,9 +319,8 @@ const ShiftCard = ({
   };
 
   return (
-    <div className='bg-b-light-light dark:bg-b-dark-light rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-3 p-1'>
-      <div className='flex flex-col justify-between h-full'>
-        {/* Columna izquierda - Foto y nombre */}
+    <div className='rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-3 p-1 bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light'>
+      <div className='flex flex-col justify-between h-full px-2'>
         <div className='flex flex-col items-center w-full'>
           {file.length ? (
             <ShowFiles resources={file} />
@@ -383,11 +377,12 @@ const ShiftCard = ({
 
         <Button
           label={btnLabel}
-          icon={btnLabel === 'Check In' ? '023' : '024'}
+          icon={btnLabel === 'b_check_in' ? '023' : '024'}
           disabled={disabled}
+          borderless
           onClick={() =>
             showAlert({
-              title: btnLabel,
+              title: t(btnLabel),
               message: `${t('s_request')} ${btnLabel}`,
               onConfirm: () => handleCheck(),
               onCancel: () => {},
