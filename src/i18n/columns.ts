@@ -200,6 +200,8 @@ export const columns_es = {
   h_automatic: 'Automático',
   h_manual: 'Manual',
   h_area: 'Área',
+  h_smart_groups: 'Grupos inteligentes',
+  h_children: 'hijos',
 };
 
 export const columns_en = {
@@ -404,4 +406,6 @@ export const columns_en = {
   h_automatic: 'Automatic',
   h_manual: 'Manual',
   h_area: 'Area',
+  h_smart_groups: 'Smart groups',
+  h_children: 'Children',
 };

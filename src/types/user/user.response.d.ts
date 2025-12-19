@@ -24,6 +24,8 @@ export interface ICountryResponse {
 }
 
 export interface IUserAreaResponse extends IdName {
+  owner?: IdName;
+  ownerId?: number;
   children?: IdName[];
   groups?: any[];
   createdAt: string;

@@ -20,9 +20,11 @@ import arrayMutators from 'final-form-arrays';
 import { useParams } from 'wouter';
 
 import { IUserAreaRequest } from '@/types/user/user.request';
-import { GeneralService } from '@/services';
+import { GeneralService, UserService } from '@/services';
 import { MultiSelect } from '@/pages/settings/forms/create/MultiSelect';
 import { IMultiSelect } from '@/types/general/general';
+import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
+import { StatusButton } from '@/pages/settings/components/custom.button';
 
 export const AreaCreatePage: FunctionComponent = () => {
   const { id } = useParams();
@@ -32,6 +34,7 @@ export const AreaCreatePage: FunctionComponent = () => {
   const loading = useSignal<boolean>(false);
   const group = useSignal<number[]>([]);
   const smartGroups = useSignal<IMultiSelect[]>([]);
+  const users = useSignal<IOption[]>([]);
 
   const { selectedCompany } = useUserStore();
   useEffect(() => {
@@ -44,16 +47,18 @@ export const AreaCreatePage: FunctionComponent = () => {
   const setInitialValues = async () => {
     loading.value = true;
     await getGroups();
+    await getUsers();
     if (!id) return (loading.value = false);
 
     const request = await AreaService.get_one(id);
     if (!request.getStatus()) return (loading.value = false);
 
-    const { name, description, children, groups } = request.getOne();
+    const { name, description, children, groups, ownerId } = request.getOne();
     initialValues.value = {
       name,
       description,
       children: children || [],
+      owner: users.value.find((u) => u.value === ownerId),
     };
     group.value = groups?.map((g) => g?.group?.id) || [];
     loading.value = false;
@@ -63,6 +68,12 @@ export const AreaCreatePage: FunctionComponent = () => {
     const response = await GeneralService.getSmartGroups();
     if (!response.getStatus()) return;
     smartGroups.value = response.getMany();
+  };
+
+  const getUsers = async () => {
+    const response = await UserService.getListUsers();
+    if (!response.getStatus()) return;
+    users.value = response.getMany();
   };
 
   const onSubmit = async (model: IUserAreaRequest) => {
@@ -96,9 +107,24 @@ export const AreaCreatePage: FunctionComponent = () => {
         onSubmit={onSubmit}
         initialValues={{ children: [], ...initialValues.value, companyId: 1 }}
         mutators={{ ...arrayMutators }}
-        render={({ handleSubmit, submitting, form }) => (
-          <form onSubmit={handleSubmit} className='space-y-6'>
-            <div className='grid grid-cols-3 gap-4'>
+        render={({ handleSubmit, submitting, form, pristine }) => (
+          <form
+            onSubmit={handleSubmit}
+            className='space-y-6'
+            id='form-area-upsert'
+          >
+            {/* Acciones */}
+            <div className='flex justify-end'>
+              <StatusButton
+                onClickClean={() => form.reset()}
+                submitting={submitting || loading.value}
+                pristine={pristine}
+                form='form-area-upsert'
+                label={id ? 'edit' : 'save'}
+              />
+            </div>
+
+            <div className='grid grid-cols-2 gap-4'>
               <div className='col-span-1'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
@@ -142,6 +168,23 @@ export const AreaCreatePage: FunctionComponent = () => {
                   placeholder='p_iteam'
                   label='h_smart_groups'
                 />
+              </div>
+              <div className='col-span-1'>
+                <Field<IOption> name='owner' validate={required}>
+                  {({ input, meta }) => (
+                    <SmartSelector
+                      {...input}
+                      meta={meta}
+                      id='select-owner'
+                      icon='191'
+                      label='h_owner'
+                      options={users.value}
+                      menuPortalTarget={document.body}
+                      placeholder='p_select'
+                      disabled={loading.value}
+                    />
+                  )}
+                </Field>
               </div>
             </div>
 
@@ -255,17 +298,6 @@ export const AreaCreatePage: FunctionComponent = () => {
                 }
               </FieldArray>
             </section>
-            <div className='flex justify-end space-x-4'>
-              <Button
-                id='btn-save'
-                name='btn-save'
-                type='submit'
-                label={id ? 'update' : 'save'}
-                icon='022'
-                className='rounded-md bg-cyan-500 text-white px-4 py-2 hover:bg-cyan-600'
-                disabled={submitting}
-              />
-            </div>
           </form>
         )}
       />
