@@ -295,23 +295,46 @@ export const MapLibrePointsMap = ({
     if (setName && points.length === 0) isFirstPointZoomingRef.current = true;
   };
 
+  const getMarkerType = (id: number, index: number, radial?: number) => {
+    if (id === -1) {
+      return {
+        color: '#10B981',
+        label: 'U',
+        text: 8,
+      };
+    }
+
+    if (id === -2) {
+      return {
+        color: '#00bdd6',
+        label: 'P',
+        text: 8,
+      };
+    }
+
+    const _rad = index + 1 >= 10 ? 5 : 10;
+    const _ind = (index + 1).toString();
+    if (radial && id === radial) {
+      return {
+        color: '#2563EB',
+        label: _ind,
+        text: _rad,
+      };
+    }
+
+    return {
+      color: '#EA4335',
+      label: _ind,
+      text: _rad,
+    };
+  };
   const createMarkerElement = (point: MapPoint, index: number) => {
     const el = document.createElement('div');
     el.className = 'marker-container';
     el.setAttribute('data-id', point?.id?.toString() || '');
     el.setAttribute('data-index', (index + 1).toString());
 
-    const isUserLocation = point.id === -1;
-    const isRadialPoint = radialPoint && point?.id === radialPoint?.id;
-    const markerColor = isUserLocation
-      ? '#10B981' // Verde para ubicación del usuario
-      : isRadialPoint
-        ? '#2563EB' // Azul para punto radial
-        : '#EA4335'; // Rojo para puntos normales
-
-    // Texto del marcador
-    const markerText = isUserLocation ? 'U' : (index + 1).toString();
-    const textX = isUserLocation ? 8 : index + 1 >= 10 ? 5 : 10;
+    const marker_data = getMarkerType(point.id, index, radialPoint?.id);
 
     el.innerHTML = `
     <div style="
@@ -321,19 +344,19 @@ export const MapLibrePointsMap = ({
       cursor: pointer;
     ">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="38" viewBox="0 0 24 38">
-        <path fill="${markerColor}"
+        <path fill="${marker_data.color}"
               d="M12 0C5.4 0 0 5.4 0 12c0 6.5 12 25 12 25s12-18.5 12-25c0-6.6-5.4-12-12-12z" />
         <circle fill="#FFFFFF" cx="12" cy="12" r="9" />
         <text
-          fill="${markerColor}"
-          x="${textX}"
+          fill="${marker_data.color}"
+          x="${marker_data.text}"
           y="12.5"
           fontFamily="Arial, sans-serif"
           fontSize="10"
           fontWeight="bold"
           textAnchor="middle"
           dy=".3em"
-        >${markerText}</text>
+        >${marker_data.label}</text>
       </svg>
     </div>
   `;

@@ -77,5 +77,7 @@ module.exports = {
     'h-general-table',
     'h-setting-table',
     'h-container-table',
+    'border-r-ternary',
+    'border-r-4',
   ],
 };

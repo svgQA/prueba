@@ -75,6 +75,7 @@ const getInfoContent = (
           employee={employee}
           shift={shift}
           onCheck={onCheck}
+          place={service.place}
         />
       );
     case 'end':
@@ -85,6 +86,7 @@ const getInfoContent = (
           employee={employee}
           shift={shift}
           onCheck={onCheck}
+          place={service.place}
         />
       );
     default:

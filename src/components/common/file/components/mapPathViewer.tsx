@@ -40,7 +40,7 @@ const MapPathViewer = ({ src }: { src: string }) => {
       //   );
       // });
 
-      console.log('DATA:', data);
+      // console.log('DATA:', data);
       points.value = model_data;
       if (points.value.length === 0) {
         message.value = 'No hay datos de ruta disponibles';
@@ -57,7 +57,7 @@ const MapPathViewer = ({ src }: { src: string }) => {
         points.value.length > 0 ? (
           <MapPath route={points.value} width='100%' />
         ) : (
-          <div className='flex items-center justify-center h-64 bg-gray-100 rounded-lg'>
+          <div className='flex items-center justify-center h-96 w-96 dark:bg-b-dark-light bg-gray-100 rounded-lg text-t-light dark:text-t-dark'>
             <span>{message.value}</span>
           </div>
         )
