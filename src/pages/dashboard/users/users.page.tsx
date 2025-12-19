@@ -229,23 +229,23 @@ export const UsersPage: FunctionalComponent = () => {
       cards={
         <CardsPage>
           <CardData
-            title={t('l_total_users')}
+            title='l_total_users'
             count={totalUsers.value}
-            subtitle={t('l_registered')}
+            subtitle='l_registered'
             color='text-secondary'
             icon='users'
           />
           <CardData
-            title={t('l_active_connection')}
+            title='l_active_connection'
             count={connectedUsers.value}
-            subtitle={t('l_connected_users')}
+            subtitle='l_connected_users'
             color='text-primary'
             icon='user-active'
           />
           <CardData
-            title={t('l_inactive_connection')}
+            title='l_inactive_connection'
             count={disconnectedUsers.value}
-            subtitle={t('l_disconnected_users')}
+            subtitle='l_disconnected_users'
             color='text-error'
             icon='user-inactive'
           />
@@ -298,7 +298,7 @@ export const UsersPage: FunctionalComponent = () => {
           onClose={() => {
             showSendModal.value = !showSendModal;
           }}
-          width='w-4/6'
+          width='max-w-[1200px]'
           position='fixed'
           header={<h3>{t('d_send_notification')}</h3>}
         >

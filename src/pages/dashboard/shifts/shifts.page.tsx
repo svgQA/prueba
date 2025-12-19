@@ -417,7 +417,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             onClose={() => {
               showSendModal.value = !showSendModal;
             }}
-            width='w-4/6'
+            width='max-w-[1200px]'
             position='fixed'
             header={<h3>{t('d_send_notification')}</h3>}
           >
