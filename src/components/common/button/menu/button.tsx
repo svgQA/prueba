@@ -10,26 +10,19 @@ export const ButtonMenu: FunctionComponent<IButtonMenuProps> = ({
   const { t } = useTranslation();
   return (
     <div
-      className={`
-        ${small ? 'h-10' : 'h-12'}
-        my-1 text-center overflow-hidden relative cursor-pointer content-end px-1`}
+      className={`flex relative flex-col items-center justify-center ${small ? 'h-10' : 'h-14'}`}
     >
-      <span
-        className={`absolute w-full left-0 h-14 -top-1 vx-icon vx-icon-${icon}`}
-      ></span>
+      <span className={`left-0 vx-icon vx-icon-${icon}`}></span>
       <h6
         className={`
-          ${small ? 'text-2xs' : 'text-[9px]'}
-          capitalize
-          truncate
-          font-bold
-          overflow-hidden
-          whitespace-nowrap
+          ${small ? 'text-2xs' : 'text-[8.8px]'}
+          capitalize truncate font-bold overflow-hidden whitespace-nowrap max-w-9
         `}
         title={label}
       >
         {t(label)}
       </h6>
+      <span className='absolute w-full h-full'></span>
     </div>
   );
 };

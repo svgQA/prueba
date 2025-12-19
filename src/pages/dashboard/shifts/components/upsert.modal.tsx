@@ -30,8 +30,6 @@ interface ITaskFormProps {
   closed?: boolean;
   onClose?: () => void;
   posSave?: () => void;
-  // userSelected?: User;
-  // taskSelected?: Task;
   shiftId?: number | string;
   users?: IOption[];
   keywordsSelected?: string[];

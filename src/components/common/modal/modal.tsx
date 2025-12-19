@@ -22,6 +22,7 @@ export const Modal: FunctionComponent<IModalProps> = ({
 }: IModalProps) => {
   const [expand, setExpand] = useState(false);
   const { t } = useTranslation();
+
   const toggleExpand = () => {
     const expanded = !expand;
     setExpand(expanded);
@@ -63,7 +64,11 @@ export const Modal: FunctionComponent<IModalProps> = ({
                 <Button
                   id='setting-close'
                   name='setting-close'
-                  onClick={onClose}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    onClose?.();
+                  }}
                   type='button'
                   rounded
                   icon='192'
