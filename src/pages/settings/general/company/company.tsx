@@ -98,10 +98,10 @@ export const CompanySettingPage: FunctionComponent = () => {
   };
 
   return (
-    <>
-      <div className='p-5 w-full'>
-        <div className='flex flex-row justify-between gap-2 items-start'>
-          <div className='flex flex-row gap-2 justify-center flex-wrap overflow-y-auto vox-scroll-design h-[60vh]'>
+    <div className='grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_420px] gap-2 items-start'>
+      <section className='min-w-0'>
+        <div className='vox-scroll-design max-h-[68vh] overflow-y-auto'>
+          <div className='grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-y-4 gap-x-2 p-2'>
             {companies.value.map((company) => (
               <CardCompany
                 key={company.id}
@@ -111,122 +111,117 @@ export const CompanySettingPage: FunctionComponent = () => {
               />
             ))}
           </div>
-          <div className='min-w-[500px] bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
-            <Form<ICCompanyRequest | IUCompanyRequest>
-              onSubmit={onSubmit}
-              initialValues={
-                _selectedCompany.value
-                  ? {
-                      name: _selectedCompany.value?.name,
-                      description: _selectedCompany.value?.description,
-                      address: _selectedCompany.value?.address || '',
-                      identification:
-                        _selectedCompany.value?.identification || '',
-                    }
-                  : initialFormValues
-              }
-              validate={(values) => {
-                // TODO: Traducir errores en i18n validations using underscore
-                const errors: Partial<ICCompanyRequest> = {};
-                if (!values.name || values.name.length < 4)
-                  errors.name = 'Nombre requerido (mínimo 4 caracteres)';
-                if (!values.description)
-                  errors.description = 'Descripción requerida';
-                if (!values.address) errors.address = 'Dirección requerida';
-                if (!values.identification || values.identification.length < 3)
-                  errors.identification =
-                    'Identificación requerida (mínimo 3 caracteres)';
-                return errors;
-              }}
-              render={({ handleSubmit, form, submitting, pristine }) => (
-                <form
-                  onSubmit={handleSubmit}
-                  className='h-full flex flex-col justify-between'
-                  id='form-company'
-                >
-                  <StatusButton
-                    onClickClean={() => {
-                      form.reset();
-                      if (isEditing) {
-                        resetForm(false);
-                      }
-                    }}
-                    clear
-                    lock={!isEditing.value}
-                    submitting={submitting}
-                    pristine={pristine}
-                    form='form-company'
-                  />
-                  <div className='flex flex-col justify-between gap-4'>
-                    <h2 className='text-2xl font-bold'>
-                      {isEditing.value
-                        ? t('company.title_form_edit')
-                        : t('company.title_form')}
-                    </h2>
-                    <div className='grid grid-cols-2 gap-4'>
-                      <div>
-                        <Field<string> name='name'>
-                          {({ input, meta }) => (
-                            <Input
-                              {...input}
-                              id='name'
-                              name='name'
-                              label='h_name'
-                              meta={meta}
-                              type='text'
-                            />
-                          )}
-                        </Field>
-                      </div>
-                      <div>
-                        <Field<string> name='identification'>
-                          {({ input, meta }) => (
-                            <Input
-                              {...input}
-                              id='identification'
-                              label='h_identification'
-                              meta={meta}
-                              type='text'
-                            />
-                          )}
-                        </Field>
-                      </div>
-                      <div className='col-span-2'>
-                        <Field<string> name='description'>
-                          {({ input, meta }) => (
-                            <Input
-                              {...input}
-                              id='description'
-                              name='description'
-                              label='h_description'
-                              meta={meta}
-                              type='text'
-                            />
-                          )}
-                        </Field>
-                      </div>
-                      <div className='col-span-2'>
-                        <Field<string> name='address'>
-                          {({ input, meta }) => (
-                            <Input
-                              {...input}
-                              id='address'
-                              name='address'
-                              label='h_address'
-                              meta={meta}
-                              type='text'
-                            />
-                          )}
-                        </Field>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              )}
-            />
-          </div>
         </div>
-      </div>
-    </>
+      </section>
+
+      {/* FORM */}
+      <aside className='rounded-lg border border-b-light-dark dark:border-b-dark-light bg-b-light dark:bg-b-dark-dark'>
+        <Form<ICCompanyRequest | IUCompanyRequest>
+          onSubmit={onSubmit}
+          initialValues={
+            _selectedCompany.value
+              ? {
+                  name: _selectedCompany.value?.name,
+                  description: _selectedCompany.value?.description,
+                  address: _selectedCompany.value?.address || '',
+                  identification: _selectedCompany.value?.identification || '',
+                }
+              : initialFormValues
+          }
+          validate={(values) => {
+            const errors: Partial<ICCompanyRequest> = {};
+            if (!values.name || values.name.length < 4)
+              errors.name = 'Nombre requerido (mínimo 4 caracteres)';
+            if (!values.description)
+              errors.description = 'Descripción requerida';
+            if (!values.address) errors.address = 'Dirección requerida';
+            if (!values.identification || values.identification.length < 3)
+              errors.identification =
+                'Identificación requerida (mínimo 3 caracteres)';
+            return errors;
+          }}
+          render={({ handleSubmit, form, submitting, pristine }) => (
+            <form onSubmit={handleSubmit} id='form-company' className='p-5'>
+              <StatusButton
+                onClickClean={() => {
+                  form.reset();
+                  if (isEditing) resetForm(false);
+                }}
+                clear
+                lock={!isEditing.value}
+                submitting={submitting}
+                pristine={pristine}
+                form='form-company'
+                hasClean
+              />
+
+              <div className='flex items-start justify-between gap-4 mb-5'>
+                <h2 className='text-xl font-semibold capitalize'>
+                  {isEditing.value ? t('edit') : t('create')}
+                </h2>
+              </div>
+
+              {/* Campos: 1 columna en móvil, 2 en sm+, con gaps más grandes */}
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-5'>
+                <Field<string> name='name'>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      id='name'
+                      name='name'
+                      label='h_name'
+                      meta={meta}
+                      type='text'
+                    />
+                  )}
+                </Field>
+
+                <Field<string> name='identification'>
+                  {({ input, meta }) => (
+                    <Input
+                      {...input}
+                      id='identification'
+                      label='h_identification'
+                      meta={meta}
+                      type='text'
+                    />
+                  )}
+                </Field>
+
+                <div className='sm:col-span-2'>
+                  <Field<string> name='description'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        id='description'
+                        name='description'
+                        label='h_description'
+                        meta={meta}
+                        type='text'
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                <div className='sm:col-span-2'>
+                  <Field<string> name='address'>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        id='address'
+                        name='address'
+                        label='h_address'
+                        meta={meta}
+                        type='text'
+                      />
+                    )}
+                  </Field>
+                </div>
+              </div>
+            </form>
+          )}
+        />
+      </aside>
+    </div>
   );
 };

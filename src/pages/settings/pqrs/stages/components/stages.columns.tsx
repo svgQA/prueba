@@ -8,6 +8,7 @@ import {
 
 import { IStages, TypesOfStages } from '../utils/interface';
 import { Badge } from '@/components/common/badge/badge';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -20,22 +21,25 @@ export const getColumns = (
     {
       id: 'id',
       accessorKey: 'id',
-      size: 60,
       header: 'h_id',
     },
     {
       id: 'stageName',
       accessorKey: 'stageName',
-      size: 180,
       header: 'h_stage_name',
       enableGrouping: true,
+      cell: (info) => (
+        <TextEllipsis text={String(info.getValue())} maxWidth='200px' />
+      ),
     },
     {
       id: 'goal',
       accessorKey: 'goal',
-      size: 200,
       header: 'h_goal',
       enableGrouping: true,
+      cell: (info) => (
+        <TextEllipsis text={String(info.getValue())} maxWidth='200px' />
+      ),
     },
     // {
     //   id: 'executionNotes',
@@ -46,14 +50,12 @@ export const getColumns = (
     {
       id: 'status',
       accessorKey: 'status',
-      size: 100,
       header: 'h_status',
       enableGrouping: true,
     },
     {
       id: 'type',
       accessorKey: 'type',
-      size: 100,
       header: 'h_type',
       enableGrouping: true,
       cell: (info) => {
@@ -68,7 +70,6 @@ export const getColumns = (
     {
       id: 'area',
       accessorKey: 'areaId',
-      size: 100,
       header: 'h_area',
       enableGrouping: true,
       cell: (info) => {

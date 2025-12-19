@@ -7,6 +7,7 @@ import {
 import { INews } from '@/types/trybook/news';
 // import { RelativeTime } from '@/components/common/relative/relative';
 import { useUserStore } from '@/store/slices';
+import { TextEllipsis } from '@/components/common/text-ellipsis';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -28,12 +29,18 @@ export const getColumns = (
       accessorKey: 'name',
       header: 'h_name',
       enableGrouping: true,
+      cell: (info) => (
+        <TextEllipsis text={String(info.getValue())} maxWidth='200px' />
+      ),
     },
     {
       id: 'description',
       accessorKey: 'description',
       header: 'h_description',
       enableGrouping: true,
+      cell: (info) => (
+        <TextEllipsis text={String(info.getValue())} maxWidth='200px' />
+      ),
     },
     ...(user?.userType !== 'ADMIN_CLIENT'
       ? [

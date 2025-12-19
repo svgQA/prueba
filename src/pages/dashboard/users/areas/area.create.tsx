@@ -23,7 +23,10 @@ import { IUserAreaRequest } from '@/types/user/user.request';
 import { GeneralService, UserService } from '@/services';
 import { MultiSelect } from '@/pages/settings/forms/create/MultiSelect';
 import { IMultiSelect } from '@/types/general/general';
-import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
+import {
+  IOption,
+  SmartSelector,
+} from '@/components/common/smart-selector/smart-select';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 
 export const AreaCreatePage: FunctionComponent = () => {

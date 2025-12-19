@@ -40,9 +40,17 @@ export const page_es = {
   p_service: 'TY Servicios',
   p_password: 'TY Cambiar Contraseña',
   p_smart_group: 'TY Grupos inteligentes',
+  p_residence: 'Residencias',
+  p_common_zone: 'Zonas Comunes',
+  p_common_slot: 'Parqueaderos',
+  p_stage: 'Stage',
 };
 
 export const page_en = {
+  p_stage: 'Pasos',
+  p_residence: 'Residences',
+  p_common_zone: 'Common Areas',
+  p_common_slot: 'Parking Spaces',
   p_form: 'TY Forms',
   p_access: 'TY Access',
   p_correspondence: 'TY Correspondence',

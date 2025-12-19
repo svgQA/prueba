@@ -31,7 +31,7 @@ export const TrybookCommonSlotsPage: FunctionComponent = () => {
   const { selectedCompany } = useUserStore();
 
   useEffect(() => {
-    document.title = t('h_tickets');
+    document.title = t('p_common_slot');
   }, [t]);
 
   const fetchRows = useCallback(async () => {
