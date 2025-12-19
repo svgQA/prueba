@@ -1,3 +1,4 @@
+import { IOption } from '@/components/common/smart-selector/smart-select';
 import { IdName } from '../general/general';
 
 export interface ISettingModuleUser {
@@ -16,7 +17,7 @@ export interface ISettingUser {
 export interface IUserAreaRequest {
   name: string;
   description?: string;
-  companyId: number;
+  owner?: IOption;
   children?: IdName[];
   smartGroups?: number[];
 }
