@@ -311,6 +311,7 @@ export const ShiftsPage: FunctionalComponent = () => {
                 unit: 'und',
                 icon: '090',
                 tone: 'success',
+                action: 'user-active',
               },
               {
                 label: 'm_user_churn_v',
@@ -344,6 +345,7 @@ export const ShiftsPage: FunctionalComponent = () => {
                 unit: 'und',
                 icon: '090',
                 tone: 'success',
+                action: 'shift-expected',
               },
               {
                 label: 'm_shift_churn_v',
@@ -351,6 +353,7 @@ export const ShiftsPage: FunctionalComponent = () => {
                 unit: 'und',
                 icon: '030',
                 tone: 'neutral',
+                action: 'shift-active',
               },
               {
                 label: 'm_shift_risk_v',

@@ -5,12 +5,20 @@ import { memo } from 'preact/compat';
 import { useTranslation } from 'react-i18next';
 
 type ToneMetric = 'neutral' | 'success' | 'warning' | 'danger';
+type ActionMetric =
+  | 'user-active'
+  | 'shift-active'
+  | 'shift-expected'
+  | 'shift-started'
+  | 'shift-ended';
+
 type MetricIndicator = {
   label: string;
   value: number | string;
   unit?: string;
   icon?: string;
   tone?: ToneMetric;
+  action?: ActionMetric;
 };
 
 type CardProps = {
@@ -80,7 +88,8 @@ const SimpleCard: FunctionalComponent<{
   icon?: string;
   unit?: string;
   value: number;
-}> = ({ label, tone, icon, unit, value }) => {
+  action?: ActionMetric;
+}> = ({ label, tone, icon, unit, value, action }) => {
   const { t } = useTranslation();
   return (
     <div
@@ -88,7 +97,9 @@ const SimpleCard: FunctionalComponent<{
         'flex items-center gap-2 rounded-lg px-3 py-2',
         'ring-1 ring-black/5 dark:ring-white/10',
         toneClass[tone],
+        `${action ? 'cursor-pointer hover:shadow-xl' : ''}`,
       ].join(' ')}
+      data-action={action}
     >
       {icon ? (
         <span
@@ -101,7 +112,6 @@ const SimpleCard: FunctionalComponent<{
       ) : (
         <span className='w-5 h-5' aria-hidden='true' />
       )}
-
       <div className='min-w-0 flex-1'>
         <div className='text-xs font-medium truncate opacity-90'>
           {t(label)}
@@ -196,6 +206,7 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
                     value={m.value}
                     icon={m.icon}
                     unit={m.unit}
+                    action={m.action}
                   />
                 );
               })}
@@ -251,6 +262,7 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
                     value={m.value}
                     icon={m.icon}
                     unit={m.unit}
+                    action={m.action}
                   />
                 );
               })}
