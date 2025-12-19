@@ -22,7 +22,7 @@ export const TaskCard = ({
   if (!task.id || !task.name) return null;
   return (
     <li className='w-52 text-xs p-2 rounded-bl-2xl bg-b-light-dark dark:bg-b-dark-dark min-w-[150px] relative max-h-[80px] list-none'>
-      {remove && (
+      {remove && onDelete && (
         <span
           data-id={task.id}
           className='vx-icon vx-icon-335 cursor-pointer absolute top-0 right-1 size-sm'

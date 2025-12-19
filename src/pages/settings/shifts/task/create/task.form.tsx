@@ -1,7 +1,7 @@
 import { Input } from '@/components/common/input/input';
 import { IOption } from '@/components/common/multi/interface';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
-import { required } from '@/utils/utilities';
+import { lengthSize, required } from '@/utils/utilities';
 import { Field, Form } from 'react-final-form';
 import { ATTACHMENT_OPTIONS, TASK_TYPE_OPTIONS } from './constant';
 import { StatusButton } from '@/pages/settings/components/custom.button';
@@ -120,6 +120,7 @@ export const TaskFormCreate = ({
       end: _task.end,
       styles: _task.styles,
       companyId: _task.companyId,
+      is_new: true,
     });
 
     if (form) form.change('select-task', undefined);
@@ -201,11 +202,11 @@ export const TaskFormCreate = ({
 
                 {onAppend.value && (
                   <div
-                    className={`flex flex-col justify-center ${divisor ? 'border-t dark:border-t-light-dark py-2' : ''}`}
+                    className={`flex flex-col justify-center ${divisor ? 'border-y dark:border-b-dark-light py-2' : ''}`}
                   >
                     <div className='grid grid-cols-2 gap-3'>
                       <div className='col-span-1'>
-                        <Field<string> name='name' validate={required}>
+                        <Field<string> name='name' validate={lengthSize(5, 30)}>
                           {({ input, meta }) => (
                             <Input
                               {...input}
@@ -219,9 +220,9 @@ export const TaskFormCreate = ({
                         </Field>
                       </div>
 
-                      <div className='col-span-1'>
+                      <div className='col-span-1 items-start flex flex-row w-full'>
                         {type ? (
-                          <div className='font-bold h-full w-full flex text-center flex-col justify-center'>
+                          <div className='font-bold flex h-11 text-center flex-col justify-center bg-ternary rounded-lg w-full mt-5'>
                             <p>{type}</p>
                           </div>
                         ) : (
@@ -359,6 +360,7 @@ export const TaskFormCreate = ({
                     )}
                   </div>
                 )}
+
                 {taskList && taskList.length > 0 && (
                   <div className='mt-1 rounded-lg p-2 bg-b-light dark:bg-b-dark-light'>
                     <ul className='flex flex-wrap gap-1 justify-center'>
