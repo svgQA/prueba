@@ -962,7 +962,7 @@ export const MapLibrePointsMap = ({
       <div
         ref={mapContainerRef}
         style={{ width, height }}
-        className='rounded-lg overflow-hidden shadow-md'
+        className='rounded-lg overflow-hidden'
       />
     </>
   );

@@ -40,14 +40,28 @@ export const page_es = {
   p_service: 'TY Servicios',
   p_password: 'TY Cambiar Contraseña',
   p_smart_group: 'TY Grupos inteligentes',
+  p_residence: 'Residencias',
+  p_common_zone: 'Zonas Comunes',
+  p_common_slot: 'Parqueaderos',
+  p_stage: 'Stage',
+  d_send_notification: 'Enviar Notificaciones',
+  d_notification_disclaimer:
+    'Este campo no es obligario, es mas usado cuando deseas que una o varias personas se dirijan a un sitio a realizar una actividad.',
 };
 
 export const page_en = {
+  d_notification_disclaimer:
+    'This field is not mandatory; it is mostly used when you want one or more people to go to a site to carry out an activity.',
+  p_stage: 'Pasos',
+  p_residence: 'Residences',
+  p_common_zone: 'Common Areas',
+  p_common_slot: 'Parking Spaces',
   p_form: 'TY Forms',
   p_access: 'TY Access',
   p_correspondence: 'TY Correspondence',
   p_devices: 'TY Devices',
   p_history: 'TY History',
+  d_send_notification: 'Send Notifications',
   p_chat: 'TY Chat',
   p_response: 'TY Response',
   p_shift: 'TY Shifts',

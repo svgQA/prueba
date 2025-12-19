@@ -48,7 +48,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   const getSelected = useMemo(
     () => (to: string) =>
       to === location
-        ? 'bg-primary-opacity dark:bg-blue-900/50'
+        ? 'bg-ternary/10 border-r-ternary text-ternary dark:text-white dark:bg-ternary/40'
         : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700',
     [location]
   );
@@ -82,7 +82,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   return (
     <nav
       id={`${id}-nav`}
-      className={`fixed left-0 top-0 transform px-1 py-3 flex flex-col justify-between h-screen dark:border-gray-700 z-20 bg-b-white dark:bg-b-dark-light max-w-16 min-w-16 transition-transform duration-200 ease-in-out ${
+      className={`fixed left-0 top-0 transform pb-3 flex flex-col justify-between h-screen dark:border-gray-700 z-20 bg-b-white dark:bg-b-dark-light max-w-16 min-w-16 transition-transform duration-200 ease-in-out ${
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } lg:translate-x-0`}
     >
@@ -105,22 +105,29 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
           </span>
         </ul>
       )}
-      <ul
-        className='flex flex-col justify-between capitalize'
-        onClick={selectMenu}
-      >
-        {menus.map(
-          (menu) =>
-            validateModuleState(menu.id) && (
-              <MenuItem
-                key={menu.to}
-                menu={menu}
-                isNavigation={isNavigation}
-                getSelected={getSelected}
-              />
-            )
-        )}
-      </ul>
+      <div>
+        {/*
+        <div className='flex relative flex-col items-center justify-center h-14 bg-ternary mb-2'>
+          <span className='vx-icon vx-icon-420'></span>
+        </div>
+        */}
+        <ul
+          className='flex flex-col justify-between capitalize gap-y-3'
+          onClick={selectMenu}
+        >
+          {menus.map(
+            (menu) =>
+              validateModuleState(menu.id) && (
+                <MenuItem
+                  key={menu.to}
+                  menu={menu}
+                  isNavigation={isNavigation}
+                  getSelected={getSelected}
+                />
+              )
+          )}
+        </ul>
+      </div>
       <ul className='flex flex-col justify-between capitalize'>
         {validateModuleState('setting') && (
           <span

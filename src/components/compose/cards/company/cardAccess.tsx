@@ -1,4 +1,3 @@
-import { Card } from '@/components/common/card/card';
 import { memo, useState } from 'preact/compat';
 import { Button } from '@/components/common/button/button';
 import { Badge } from '@/components/common/badge/badge';
@@ -33,12 +32,10 @@ export const CardAccess = memo(
     title,
     subtitle,
     imageUrl,
-    icon,
     onEdit,
     onDelete,
     type,
     link,
-    groups,
     updatedAt,
     id,
     selected,
@@ -60,37 +57,39 @@ export const CardAccess = memo(
     };
 
     return (
-      <Card name={`card-access-${id}`}>
-        <div
-          className={`flex flex-col ${selected ? 'border-2 border-ternary' : ''}`}
-        >
-          <div className='flex flex-row min-h-24'>
-            <div className='flex flex-col justify-between min-h-full px-4 py-3 flex-1'>
-              <div className=''>
-                <h3 className='font-semibold text-lg'>{title}</h3>
-                <TextEllipsis
-                  text={subtitle}
-                  maxWidth='250px'
-                  className='text-t-light dark:text-t-dark'
-                />
-                <TextEllipsis
-                  text={'enlace: ' + link}
-                  maxWidth='250px'
-                  className='text-t-light dark:text-t-dark'
-                />
-                <TextEllipsis
-                  text={'icon: ' + icon}
-                  maxWidth='250px'
-                  className='text-t-light dark:text-t-dark'
-                />
-                <TextEllipsis
-                  text={'grupos: ' + groups.map((group) => group.group.name)}
-                  maxWidth='250px'
-                  className='text-t-light dark:text-t-dark'
-                />
-              </div>
-              <div className='flex flex-row justify-between items-center'>
-                <Badge color='primary' label={type} outline />
+      <div
+        className={`w-7/12 max-w-[520px] dark:bg-b-dark-light bg-b-light rounded-lg border dark:border-b-dark-light border-b-b-light-dark ${selected ? 'border-2 border-ternary dark:border-ternary' : ''}`}
+      >
+        <div className='flex flex-row min-h-24'>
+          <div className='flex flex-col justify-between min-h-full p-3 flex-1'>
+            <div className=''>
+              <h3 className='font-semibold text-lg'>{title}</h3>
+              <TextEllipsis
+                text={subtitle}
+                maxWidth='250px'
+                className='text-t-light dark:text-t-dark'
+              />
+              <TextEllipsis
+                text={'enlace: ' + link}
+                maxWidth='250px'
+                className='text-t-light dark:text-t-dark'
+              />
+              {/*
+              <TextEllipsis
+                text={'icon: ' + icon}
+                maxWidth='250px'
+                className='text-t-light dark:text-t-dark'
+              />
+              <TextEllipsis
+                text={'grupos: ' + groups.map((group) => group.group.name)}
+                maxWidth='250px'
+                className='text-t-light dark:text-t-dark'
+              />
+              */}
+            </div>
+            <div className='flex flex-row justify-between items-center'>
+              <Badge color='primary' label={type} outline />
+              <div className='flex flex-row gap-2'>
                 <Button
                   icon={'123'}
                   onClick={onEdit}
@@ -111,27 +110,26 @@ export const CardAccess = memo(
                 />
               </div>
             </div>
-            <div className='min-h-full w-1/3'>
-              <img
-                src={currentImageSrc}
-                alt={title}
-                className='object-cover h-full w-full rounded-r'
-                onError={handleImageError}
-                onLoad={handleImageLoad}
-              />
+            <div className='py-1 border-t border-gray-100 dark:border-gray-700'>
+              <div className='flex items-center justify-between text-xs dark:text-gray-400 text-gray-600'>
+                <span className='font-bold text-sm'>ID: {id}</span>
+                <span>
+                  Actualizado: {new Date(updatedAt).toLocaleDateString()}
+                </span>
+              </div>
             </div>
           </div>
-          {/* Footer */}
-          <div className='px-4 py-3 border-t border-gray-100 dark:border-gray-700'>
-            <div className='flex items-center justify-between text-xs dark:text-gray-400 text-gray-600'>
-              <span>ID: {id}</span>
-              <span>
-                Actualizado: {new Date(updatedAt).toLocaleDateString()}
-              </span>
-            </div>
+          <div className='min-h-full w-1/3'>
+            <img
+              src={currentImageSrc}
+              alt={title}
+              className='object-cover h-full w-full rounded-r'
+              onError={handleImageError}
+              onLoad={handleImageLoad}
+            />
           </div>
         </div>
-      </Card>
+      </div>
     );
   }
 );

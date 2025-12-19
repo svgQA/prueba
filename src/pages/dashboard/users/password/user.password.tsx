@@ -69,13 +69,6 @@ export const UserPasswordPage: FunctionComponent = () => {
 
   return (
     <Section className='pt-2 px-4 sm:px-8 lg:px-20 xl:px-40'>
-      <div className='py-2 flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-center overflow-visible xl:absolute relative z-20'>
-        <div className='flex flex-wrap items-center justify-between gap-2'>
-          <h1 className='text-2xl font-bold text-primary'>
-            {t('change_password')}
-          </h1>
-        </div>
-      </div>
       <Form
         onSubmit={onSubmit}
         initialValues={{}}
@@ -92,6 +85,9 @@ export const UserPasswordPage: FunctionComponent = () => {
               form='form-password-change'
               label='save'
             />
+            <h1 className='text-2xl font-bold text-primary'>
+              {t('change_password')}
+            </h1>
             <div className='grid grid-cols-1 gap-4'>
               <div className='col-span-1'>
                 <Field<IOption> name='userId'>

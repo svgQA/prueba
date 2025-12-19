@@ -48,10 +48,12 @@ export const getColumns = (
       }
 
       return (
-        <ul className='flex flex-row gap-3 overflow-x-auto vox-scroll-design pr-2 max-w-[500px]'>
-          {tasks.map((item, index) => (
-            <TaskCard key={index} task={item.task} remove={false} />
-          ))}
+        <ul className='flex flex-row gap-x-1 overflow-x-auto vox-scroll-design max-w-[500px] py-1 items-center'>
+          {tasks.map((item, index) => {
+            if (index > 1 && index < 3) return <p>More...</p>;
+            if (index > 1) return null;
+            return <TaskCard key={index} task={item.task} remove={false} />;
+          })}
         </ul>
       );
     },

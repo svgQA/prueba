@@ -14,7 +14,7 @@ import { TaskFormCreate } from '@/pages/settings/shifts/task/create/task.form';
 import { ITask } from '@/pages/settings/shifts/task/create/interface';
 import { useSignal } from '@preact/signals';
 import { useUserStore } from '@/store/slices';
-import { required } from '@/utils/utilities/validate';
+import { lengthSize } from '@/utils/utilities/validate';
 import { Section } from '@/components/common/section/section';
 import { StatusButton } from '@/pages/settings/components/custom.button';
 
@@ -97,6 +97,10 @@ export const TemplateCreateForm = () => {
     tasksResponse.value = [...tasksResponse.value, model];
   };
 
+  const onTaskDelete = (id: string) => {
+    tasksResponse.value = tasksResponse.value.filter((task) => task.id !== id);
+  };
+
   return (
     <Section className='pt-2 px-4 sm:px-8 lg:px-20 xl:px-40'>
       <Form
@@ -134,7 +138,7 @@ export const TemplateCreateForm = () => {
             </div>
             */}
 
-            <Field<string> name='title' validate={required}>
+            <Field<string> name='title' validate={lengthSize(5, 50)}>
               {({ input, meta }) => (
                 <Input
                   name='title'
@@ -149,7 +153,7 @@ export const TemplateCreateForm = () => {
               )}
             </Field>
 
-            <Field<string> name='description' validate={required}>
+            <Field<string> name='description' validate={lengthSize(5, 200)}>
               {({ input, meta }) => (
                 <TextArea
                   name='description'
@@ -172,6 +176,7 @@ export const TemplateCreateForm = () => {
                 taskList={tasksResponse.value}
                 add
                 selector
+                onDelete={onTaskDelete}
                 type='REPORT'
               />
             </div>

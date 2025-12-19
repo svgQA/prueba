@@ -303,7 +303,7 @@ export const PqrsPage: FunctionComponent = () => {
 
         {/* border border-gray-border/50 dark:border-gray-border/20 shadow-sm */}
         {viewMode.value === ViewMode.CARDS && (
-          <div className='w-full h-[calc(100vh-17vh)] overflow-y-auto vox-scroll-design rounded-lg bg-white/80 dark:bg-b-dark-light/70 px-3 md:px-4 py-4 space-y-4 border border-gray-border/60 dark:border-gray-border/20'>
+          <div className='w-full h-[calc(100vh-17vh)] vox-scroll-design overflow-y-auto vox-scroll-design rounded-lg bg-white/80 dark:bg-b-dark-light/70 px-3 md:px-4 py-4 space-y-4 border border-gray-border/60 dark:border-gray-border/20'>
             <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-5 w-full'>
               {columns.value.map((column, index) => {
                 const items = groupedPqrs.value[column.title] ?? [];

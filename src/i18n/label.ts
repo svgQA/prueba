@@ -217,7 +217,8 @@ export const label_es = {
   l_select_smart_groups: 'Seleccione uno o más grupos inteligentes',
   l_no_resources: 'No tienes recursos creados',
   l_delete_resource: 'Eliminar Recurso',
-  l_delete_resource_confirm: '¿Estás seguro de querer eliminar este recurso?',
+  l_send_notification_confirm:
+    '¿Estás seguro de querer enviar la notificación?',
   h_pqrs_description:
     'Visualiza los datos clave del caso y el análisis de IA con una vista más legible.',
   l_auto_resolve: 'Auto-resolver',
@@ -448,4 +449,6 @@ export const label_en = {
   l_no_resources: 'No created resources',
   l_delete_resource: 'Delete Resource',
   l_delete_resource_confirm: 'Are you sure you want to delete this resource?',
+  l_send_notification_confirm:
+    'Are you sure you want to send the notificacion?',
 };

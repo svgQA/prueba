@@ -109,227 +109,222 @@ export const ResourceMemoSettingPage: FunctionComponent = () => {
   };
 
   return (
-    <>
-      <div className='p-5 w-full'>
-        <div className='flex flex-row justify-between gap-2 items-start'>
-          <div className='flex flex-row gap-2 justify-center flex-wrap overflow-y-auto vox-scroll-design h-[60vh]'>
-            {resources.value.map((data) => (
-              <CardAccess
-                key={data.id}
-                title={data.name}
-                subtitle={data.description}
-                icon={data.icon}
-                imageUrl={data.image}
-                type={data.type}
-                id={data.id}
-                link={data.link}
-                groups={data.groups}
-                updatedAt={data.updatedAt}
-                onEdit={() => handleEdit(data.id)}
-                onDelete={() =>
-                  showAlert({
-                    title: t('l_delete_resource'),
-                    message: t('l_delete_resource_confirm'),
-                    onConfirm: () => {
-                      handleDelete(data.id);
-                    },
-                    onCancel: () => {},
-                  })
-                }
-                selected={data.id === initialValues.value?.id}
+    <div className='grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_420px] gap-2 items-start'>
+      <div className='flex flex-row gap-2 justify-center flex-wrap overflow-y-auto vox-scroll-design h-[60vh]'>
+        {resources.value.map((data) => (
+          <CardAccess
+            key={data.id}
+            title={data.name}
+            subtitle={data.description}
+            icon={data.icon}
+            imageUrl={data.image}
+            type={data.type}
+            id={data.id}
+            link={data.link}
+            groups={data.groups}
+            updatedAt={data.updatedAt}
+            onEdit={() => handleEdit(data.id)}
+            onDelete={() =>
+              showAlert({
+                title: t('l_delete_resource'),
+                message: t('l_delete_resource_confirm'),
+                onConfirm: () => {
+                  handleDelete(data.id);
+                },
+                onCancel: () => {},
+              })
+            }
+            selected={data.id === initialValues.value?.id}
+          />
+        ))}
+        {resources.value.length === 0 && (
+          <div className='text-center text-gray-500'>{t('l_no_resources')}</div>
+        )}
+      </div>
+
+      <aside className='rounded-lg border border-b-light-dark dark:border-b-dark-light bg-b-light dark:bg-b-dark-dark'>
+        <Form
+          onSubmit={onSubmit}
+          initialValues={initialValues.value}
+          render={({ handleSubmit, form, submitting, pristine }) => (
+            <form
+              onSubmit={handleSubmit}
+              id='form-resource-create'
+              className='p-5'
+            >
+              <StatusButton
+                onClickClean={() => {
+                  form.reset();
+                  if (initialValues.value.id) {
+                    initialValues.value = {};
+                  }
+                }}
+                submitting={initialValues.value.id ? false : submitting}
+                pristine={initialValues.value.id ? false : pristine}
+                form='form-resource-create'
+                label={t('btnSave')}
               />
-            ))}
-            {resources.value.length === 0 && (
-              <div className='text-center text-gray-500'>
-                {t('l_no_resources')}
-              </div>
-            )}
-          </div>
+              <h2 className='text-2xl font-bold'>
+                {initialValues.value.id
+                  ? t('l_edit_resource')
+                  : t('l_new_resource')}
+              </h2>
 
-          <div className='min-w-[600px] h-fit bg-white dark:bg-b-dark-dark p-4 rounded shadow m-2'>
-            <Form
-              onSubmit={onSubmit}
-              initialValues={initialValues.value}
-              render={({ handleSubmit, form, submitting, pristine }) => (
-                <form onSubmit={handleSubmit} id='form-resource-create'>
-                  <StatusButton
-                    onClickClean={() => {
-                      form.reset();
-                      if (initialValues.value.id) {
-                        initialValues.value = {};
+              <div className='flex flex-col gap-4'>
+                {/* Title field - full width */}
+                <div className='w-full'>
+                  <Field<string> name='name' validate={required}>
+                    {({ input, meta }) => (
+                      <Input
+                        {...input}
+                        type='text'
+                        placeholder={t('l_title')}
+                        label={t('l_title')}
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {/* Description field - full width */}
+                <div className='w-full'>
+                  <Field<string> name='description' validate={required}>
+                    {({ input, meta }) => (
+                      <TextArea
+                        {...input}
+                        id='Description'
+                        className='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-sm border border-gray-300 focus:border-cyan-500'
+                        placeholder={t('description')}
+                        label={t('description')}
+                        type='text'
+                        meta={meta}
+                      />
+                    )}
+                  </Field>
+                </div>
+
+                {/* Two-column layout for remaining fields */}
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                  {/* Left column */}
+                  <div className='space-y-4'>
+                    <Field<string>
+                      name='type'
+                      validate={required}
+                      initialValue='WHATSAPP'
+                    >
+                      {({ input }) => (
+                        <Dropdown
+                          id='type'
+                          name={input.name}
+                          value={input.value}
+                          // @ts-ignore
+                          onChange={(nextVal: string) => {
+                            input.onChange(nextVal);
+                            form.change('link', '');
+                          }}
+                          label={t('l_type_communication')}
+                          options={[
+                            { value: 'WHATSAPP', label: t('l_whatsapp') },
+                            { value: 'EMAIL', label: t('l_email') },
+                            { value: 'LINK', label: t('l_link') },
+                          ]}
+                        />
+                      )}
+                    </Field>
+                  </div>
+
+                  <div className='space-y-4'>
+                    <Field<string> name='image' validate={validateOptionalUrl}>
+                      {({ input, meta }) => (
+                        <Input
+                          {...input}
+                          type='url'
+                          placeholder={t('l_image_url_png')}
+                          label={t('l_image_url_png')}
+                          meta={meta}
+                          onBlur={(e: any) => {
+                            const v = (e?.target?.value ?? '').trim();
+                            input.onBlur(e);
+                            form.change('image', v);
+                          }}
+                        />
+                      )}
+                    </Field>
+                  </div>
+
+                  <div className='col-span-2'>
+                    <Field<string>
+                      name='link'
+                      validate={(value, allValues) =>
+                        validateContactByType(value, allValues)
                       }
-                    }}
-                    submitting={initialValues.value.id ? false : submitting}
-                    pristine={initialValues.value.id ? false : pristine}
-                    form='form-resource-create'
-                    label={t('btnSave')}
-                  />
-                  <h2 className='text-2xl font-bold'>
-                    {initialValues.value.id
-                      ? t('l_edit_resource')
-                      : t('l_new_resource')}
-                  </h2>
+                    >
+                      {({ input, meta }) => {
+                        const currentType =
+                          (form.getState().values?.type as string) ||
+                          'WHATSAPP';
 
-                  <div className='flex flex-col gap-4'>
-                    {/* Title field - full width */}
-                    <div className='w-full'>
-                      <Field<string> name='name' validate={required}>
-                        {({ input, meta }) => (
+                        const { label, placeholder, typeAttr } =
+                          currentType === 'WHATSAPP'
+                            ? {
+                                label: t('l_whatsapp_number'),
+                                placeholder: t('l_example_phone'),
+                                typeAttr: 'tel',
+                              }
+                            : currentType === 'EMAIL'
+                              ? {
+                                  label: t('l_email_address'),
+                                  placeholder: t('l_example_email'),
+                                  typeAttr: 'email',
+                                }
+                              : {
+                                  label: t('l_link_url'),
+                                  placeholder: t('l_example_url'),
+                                  typeAttr: 'url',
+                                };
+
+                        return (
                           <Input
                             {...input}
-                            type='text'
-                            placeholder={t('l_title')}
-                            label={t('l_title')}
+                            type={typeAttr as INPUT_TYPES}
+                            placeholder={placeholder}
+                            label={label}
                             meta={meta}
+                            onBlur={(e: any) => {
+                              const v = (e?.target?.value ?? '').trim();
+                              input.onBlur(e);
+                              form.change('link', v);
+                            }}
                           />
-                        )}
-                      </Field>
-                    </div>
-
-                    {/* Description field - full width */}
-                    <div className='w-full'>
-                      <Field<string> name='description' validate={required}>
-                        {({ input, meta }) => (
-                          <TextArea
-                            {...input}
-                            id='Description'
-                            className='block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-sm border border-gray-300 focus:border-cyan-500'
-                            placeholder={t('description')}
-                            label={t('description')}
-                            type='text'
-                            meta={meta}
-                          />
-                        )}
-                      </Field>
-                    </div>
-
-                    {/* Two-column layout for remaining fields */}
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                      {/* Left column */}
-                      <div className='space-y-4'>
-                        <Field<string>
-                          name='type'
-                          validate={required}
-                          initialValue='WHATSAPP'
-                        >
-                          {({ input }) => (
-                            <Dropdown
-                              id='type'
-                              name={input.name}
-                              value={input.value}
-                              // @ts-ignore
-                              onChange={(nextVal: string) => {
-                                input.onChange(nextVal);
-                                form.change('link', '');
-                              }}
-                              label={t('l_type_communication')}
-                              options={[
-                                { value: 'WHATSAPP', label: t('l_whatsapp') },
-                                { value: 'EMAIL', label: t('l_email') },
-                                { value: 'LINK', label: t('l_link') },
-                              ]}
-                            />
-                          )}
-                        </Field>
-                      </div>
-
-                      <div className='space-y-4'>
-                        <Field<string>
-                          name='image'
-                          validate={validateOptionalUrl}
-                        >
-                          {({ input, meta }) => (
-                            <Input
-                              {...input}
-                              type='url'
-                              placeholder={t('l_image_url_png')}
-                              label={t('l_image_url_png')}
-                              meta={meta}
-                              onBlur={(e: any) => {
-                                const v = (e?.target?.value ?? '').trim();
-                                input.onBlur(e);
-                                form.change('image', v);
-                              }}
-                            />
-                          )}
-                        </Field>
-                      </div>
-
-                      <div className='col-span-2'>
-                        <Field<string>
-                          name='link'
-                          validate={(value, allValues) =>
-                            validateContactByType(value, allValues)
-                          }
-                        >
-                          {({ input, meta }) => {
-                            const currentType =
-                              (form.getState().values?.type as string) ||
-                              'WHATSAPP';
-
-                            const { label, placeholder, typeAttr } =
-                              currentType === 'WHATSAPP'
-                                ? {
-                                    label: t('l_whatsapp_number'),
-                                    placeholder: t('l_example_phone'),
-                                    typeAttr: 'tel',
-                                  }
-                                : currentType === 'EMAIL'
-                                  ? {
-                                      label: t('l_email_address'),
-                                      placeholder: t('l_example_email'),
-                                      typeAttr: 'email',
-                                    }
-                                  : {
-                                      label: t('l_link_url'),
-                                      placeholder: t('l_example_url'),
-                                      typeAttr: 'url',
-                                    };
-
-                            return (
-                              <Input
-                                {...input}
-                                type={typeAttr as INPUT_TYPES}
-                                placeholder={placeholder}
-                                label={label}
-                                meta={meta}
-                                onBlur={(e: any) => {
-                                  const v = (e?.target?.value ?? '').trim();
-                                  input.onBlur(e);
-                                  form.change('link', v);
-                                }}
-                              />
-                            );
-                          }}
-                        </Field>
-                      </div>
-
-                      <div className='w-full col-span-2'>
-                        <Field<number[]> name='groups'>
-                          {({ input }) => (
-                            <MultiSelect<IMultiSelect>
-                              {...input}
-                              options={smartGroups.value}
-                              selectedIds={input.value || []}
-                              onChange={(selectedIds) => {
-                                form.change('groups', selectedIds as number[]);
-                              }}
-                              label={t('l_select_group')}
-                              getLabel={(item) => item.name}
-                              getId={(item) => item.id}
-                              placeholder={t('l_select_smart_groups')}
-                            />
-                          )}
-                        </Field>
-                      </div>
-                    </div>
+                        );
+                      }}
+                    </Field>
                   </div>
-                </form>
-              )}
-            />
-          </div>
-        </div>
-      </div>
-    </>
+
+                  <div className='w-full col-span-2'>
+                    <Field<number[]> name='groups'>
+                      {({ input }) => (
+                        <MultiSelect<IMultiSelect>
+                          {...input}
+                          options={smartGroups.value}
+                          selectedIds={input.value || []}
+                          onChange={(selectedIds) => {
+                            form.change('groups', selectedIds as number[]);
+                          }}
+                          label={t('l_select_group')}
+                          getLabel={(item) => item.name}
+                          getId={(item) => item.id}
+                          placeholder={t('l_select_smart_groups')}
+                        />
+                      )}
+                    </Field>
+                  </div>
+                </div>
+              </div>
+            </form>
+          )}
+        />
+      </aside>
+    </div>
   );
 };

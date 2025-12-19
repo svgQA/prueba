@@ -7,7 +7,7 @@ import { CreateUser } from './components/user.create';
 import { UserMessage } from './components/user.message';
 import { IUserResponse } from '@/types/auth';
 import { useTranslation } from 'react-i18next';
-import { SendForm } from '../shifts/components/send/send.modal';
+// import { SendForm } from '../shifts/components/send/send.modal';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { NotificationService, UserService } from '@/services';
 import { getColumns } from './components/user.columns';
@@ -18,6 +18,8 @@ import { Table } from '@/components/common/table/table';
 import { setUser, USER_MODE_SERVICE } from './store/user.store';
 import { useUserStore } from '@/store/slices';
 import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
+import { Modal } from '@/components/common/modal/modal';
+import { ManualNotificationForm } from '../shifts/components/send/tabs/manual-notification-form';
 
 enum VIEW_NAME {
   TABLE,
@@ -266,15 +268,16 @@ export const UsersPage: FunctionalComponent = () => {
             icon='039'
             permissions={{ name: 'user', state: 'upsert' }}
           />
+          <Button
+            name='button-action'
+            rounded={false}
+            icon='314'
+            onClick={toggleSendModal}
+            disabled={!hasValidPlayer}
+            selected={onNotifications}
+          />
+          {/*
           <div className='relative'>
-            <Button
-              name='button-action'
-              rounded={false}
-              icon='314'
-              onClick={toggleSendModal}
-              disabled={!hasValidPlayer}
-              selected={onNotifications}
-            />
             {showSendModal.value && (
               <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
                 <SendForm
@@ -285,7 +288,26 @@ export const UsersPage: FunctionalComponent = () => {
               </div>
             )}
           </div>
+            */}
         </ButtonsPage>
+      }
+      modals={
+        <Modal
+          open={showSendModal.value}
+          name='modal-send-notification'
+          onClose={() => {
+            showSendModal.value = !showSendModal;
+          }}
+          width='w-4/6'
+          position='fixed'
+          header={<h3>{t('d_send_notification')}</h3>}
+        >
+          <ManualNotificationForm
+            users={selectedUsers as []}
+            hasplayers={hasValidPlayer}
+            onClose={handleCloseSendModal}
+          />
+        </Modal>
       }
     >
       {currentView.value === VIEW_NAME.CREATE && (

@@ -26,10 +26,10 @@ export const getColumns = (
     header: 'h_user',
     meta: { headerAlign: 'center' },
     cell: (info) => {
-      const { name, surname, image } = info.row.original;
+      const { name, surname } = info.row.original;
       return (
         <div className='flex items-center gap-2'>
-          <Avatar name={name} src={image} size='sm' square />
+          <Avatar name={name} size='sm' square />
           <TextEllipsis text={`${name} ${surname}`} maxWidth='250px' />
         </div>
       );

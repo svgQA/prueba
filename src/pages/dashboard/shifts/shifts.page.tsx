@@ -4,7 +4,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
+  // useRef,
   useState,
 } from 'preact/hooks';
 import { useSignal } from '@preact/signals';
@@ -17,7 +17,7 @@ import { Button } from '@/components/common/button/button';
 import { getColumns } from './components/shift.columns';
 import { ExpandableMultiple } from './components/expandable.multiple';
 import { TaskForm } from './components/upsert.modal';
-import { SendForm } from './components/send/send.modal';
+// import { SendForm } from './components/send/send.modal';
 import { ShiftForm } from './components/shift.modal';
 import LiveUserMap from './components/shift.map';
 import { PlannerView } from './components/planner.view';
@@ -45,6 +45,8 @@ import { useShiftActions } from './utils/hooks/useShiftAction';
 import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
 import { signalMetrics } from '@/store/signals/metric';
 import { signalShifts } from '@/store/signals/shift';
+import { Modal } from '@/components/common/modal/modal';
+import { ManualNotificationForm } from './components/send/tabs/manual-notification-form';
 
 export const ShiftsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -68,8 +70,8 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [externalSelected, setExternalSelected] = useState<string>('');
 
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
-  const sendButtonRef = useRef<HTMLDivElement>(null);
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  // const sendButtonRef = useRef<HTMLDivElement>(null);
+  // const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   const [dateRangeFilters, setDateRangeFilters] = useState<{
     [key: string]: [string, string];
@@ -108,6 +110,7 @@ export const ShiftsPage: FunctionalComponent = () => {
   }, [dateRangeFilters, fetchInitialData, selectedCompany]);
 
   // Calcular posición del modal basada en el botón
+  /*
   useEffect(() => {
     if (showSendModal.value && sendButtonRef.current) {
       const updatePosition = () => {
@@ -130,6 +133,7 @@ export const ShiftsPage: FunctionalComponent = () => {
       };
     }
   }, [showSendModal.value]);
+  */
 
   useShiftSocket({
     dateRangeFilters,
@@ -262,17 +266,19 @@ export const ShiftsPage: FunctionalComponent = () => {
           icon='138'
         />
 
+        <Button
+          name='button-action'
+          rounded={false}
+          icon='314'
+          label='remote'
+          onClick={toggleSendModal}
+          selected={showSendModal.value}
+          disabled={!hasValidPlayer}
+        />
+        {/*
         <div ref={sendButtonRef} className='relative'>
-          <Button
-            name='button-action'
-            rounded={false}
-            icon='314'
-            label='remote'
-            onClick={toggleSendModal}
-            selected={showSendModal.value}
-            disabled={!hasValidPlayer}
-          />
         </div>
+          */}
       </div>
     );
   }, [
@@ -405,21 +411,23 @@ export const ShiftsPage: FunctionalComponent = () => {
       }
       modals={
         <>
-          {showSendModal.value && (
-            <div
-              className='fixed rounded-lg shadow-lg z-[9999] w-[600px]'
-              style={{
-                top: `${modalPosition.top}px`,
-                left: `${modalPosition.left}px`,
-              }}
-            >
-              <SendForm
-                onClose={handleCloseSendModal}
-                hasplayers={hasValidPlayer}
-                users={selectedUsers as []}
-              />
-            </div>
-          )}
+          <Modal
+            open={showSendModal.value}
+            name='modal-send-notification'
+            onClose={() => {
+              showSendModal.value = !showSendModal;
+            }}
+            width='w-4/6'
+            position='fixed'
+            header={<h3>{t('d_send_notification')}</h3>}
+          >
+            <ManualNotificationForm
+              users={selectedUsers as []}
+              hasplayers={hasValidPlayer}
+              onClose={handleCloseSendModal}
+            />
+          </Modal>
+
           <TaskForm
             closed={showUpsertModal.value}
             onClose={() => {

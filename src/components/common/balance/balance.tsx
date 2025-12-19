@@ -176,7 +176,7 @@ export const BalanceIndicator: FunctionalComponent<BalanceIndicatorProps> =
             ) : null}
 
             {/* Labels */}
-            <div className='absolute -bottom-4 left-0 right-0 flex justify-between text-[11px] text-t-light-dark dark:text-t-dark-light'>
+            <div className='absolute -bottom-6 left-0 right-0 flex justify-between text-[11px] text-t-light-dark dark:text-t-dark-light'>
               <span className='opacity-80'>{t(leftLabel)}</span>
               <span className='opacity-80'>{t(centerLabel)}</span>
               <span className='opacity-80'>{t(rightLabel)}</span>

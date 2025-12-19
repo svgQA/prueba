@@ -62,7 +62,7 @@ import { IClientResponse } from '@/types/user/user.response';
 import { USER_TYPE } from '@/types/user/user.enum';
 import { IDropdownOptions } from '@/components/common/dropdown/interface';
 import { INITIAL_DROPDOWN_OPTIONS } from './constant';
-import { IconsModal } from '../globals/icons/icons';
+// import { IconsModal } from '../globals/icons/icons';
 import { rawDataManager } from '@/utils/statistics/data.manager';
 import { metricsEngine } from '@/utils/statistics/metric.engine';
 
@@ -246,7 +246,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps & Props> =
           menus={SIDEBAR_MENUS}
           isNavigation
         />
-        <div className='flex flex-col lg:pl-[4.5rem]'>
+        <div className='flex flex-col lg:pl-16'>
           <header className='h-12 sticky top-0 bg-b-content dark:bg-b-dark z-10'>
             <div className='flex items-center w-full justify-end h-13'>
               <div className='flex items-center gap-2 px-2'>
@@ -380,7 +380,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps & Props> =
 
         <SettingsModal />
         <TenantsModal open={openModalTenant} />
-        <IconsModal />
+        {/* <IconsModal /> */}
       </section>
     );
   });
