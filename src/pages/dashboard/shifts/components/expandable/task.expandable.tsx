@@ -88,7 +88,7 @@ const TaskInfo = ({ shiftId, tasks }: Props) => {
           <p className='text-gray-500 dark:text-gray-400'>{t('empty')}</p>
         </div>
       ) : (
-        <div className='flex flex-row gap-6 justify-start overflow-x-auto px-2 pb-4 w-full'>
+        <div className='flex flex-row gap-3 justify-start overflow-x-auto px-2 w-full'>
           {Object.entries(grouped)?.map(([_, list], idx) => {
             const completed = list?.filter((t) => t.check).length ?? 0;
             const total = list?.length ?? 0;

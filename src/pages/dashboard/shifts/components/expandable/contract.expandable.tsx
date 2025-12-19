@@ -91,15 +91,11 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                   </div>
                   <div className='grid grid-cols-1 gap-2'>
                     <FieldInline
-                      label={t('h_date_start')}
+                      label='h_date_start'
                       value={start}
                       icon='195'
                     />
-                    <FieldInline
-                      label={t('h_date_end')}
-                      value={end}
-                      icon='195'
-                    />
+                    <FieldInline label='h_date_end' value={end} icon='195' />
                   </div>
                 </div>
               </div>
@@ -115,29 +111,33 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
 
                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
                   <MetricTile
-                    label={t('l_completed')}
+                    label='l_completed'
                     value={metrics.value.completedShifts}
                     icon='308'
                     tone='secondary'
+                    unit='und'
                     loading={loading.value}
                   />
                   <MetricTile
-                    label={t('l_total_hours')}
+                    label='l_total_hours'
                     value={metrics.value.totalHours}
                     icon='308'
+                    unit='h'
                     tone='primary'
                     loading={loading.value}
                   />
                   <MetricTile
-                    label={t('l_total_shifts')}
+                    label='l_total_shifts'
                     value={metrics.value.totalShifts}
                     icon='308'
+                    unit='und'
                     tone='error'
                     loading={loading.value}
                   />
                   <MetricTile
-                    label={t('l_completion')}
-                    value={`${metrics.value.completionPercentage.toFixed(2)}%`}
+                    label='l_completation'
+                    value={metrics?.value?.completionPercentage}
+                    unit='%'
                     icon='308'
                     tone='secondary'
                     loading={loading.value}

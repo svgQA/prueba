@@ -216,4 +216,5 @@ export const general_es = {
   l_priority_low: 'Baja',
   l_name: 'Nombre',
   p_enter_name: 'Ingrese nombre...',
+  l_completation: 'Finalizados',
 };

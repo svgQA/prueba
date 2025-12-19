@@ -204,7 +204,7 @@ export const PqrsPage: FunctionComponent = () => {
 
   return (
     <div class='min-h-full text-t-light dark:text-t-dark'>
-      <div class='w-full mx-auto px-4 py-2 space-y-2'>
+      <div class='w-full mx-auto p-2 space-y-2'>
         <div class='bg-white/90 dark:bg-b-dark-light/80 border border-gray-border/60 dark:border-gray-border/20 rounded-lg shadow-sm px-4 py-3 md:px-6 md:py-4 flex flex-col'>
           <div class='flex flex-row xl:justify-between w-full items-center flex-wrap gap-y-2 justify-center'>
             <div class='space-y-2'>
@@ -303,7 +303,7 @@ export const PqrsPage: FunctionComponent = () => {
 
         {/* border border-gray-border/50 dark:border-gray-border/20 shadow-sm */}
         {viewMode.value === ViewMode.CARDS && (
-          <div className='w-full h-[calc(100vh-17vh)] vox-scroll-design overflow-y-auto vox-scroll-design rounded-lg bg-white/80 dark:bg-b-dark-light/70 px-3 md:px-4 py-4 space-y-4 border border-gray-border/60 dark:border-gray-border/20'>
+          <div className='w-full h-[calc(100vh-14vh)] vox-scroll-design overflow-y-auto vox-scroll-design rounded-lg bg-white/80 dark:bg-b-dark-light/70 px-3 md:px-4 py-4 space-y-4 border border-gray-border/60 dark:border-gray-border/20'>
             <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 md:gap-5 w-full'>
               {columns.value.map((column, index) => {
                 const items = groupedPqrs.value[column.title] ?? [];

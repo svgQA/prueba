@@ -58,18 +58,12 @@ const EmployeeInfo = ({
                     </div>
                     <div className='pt-2 grid grid-cols-1 gap-2'>
                       <FieldInline
-                        label={t('identification')}
+                        label='identification'
                         value={employee?.cardId}
                       />
-                      <FieldInline label={t('h_city')} value={city} />
-                      <FieldInline
-                        label={t('h_email')}
-                        value={employee?.email}
-                      />
-                      <FieldInline
-                        label={t('h_phone')}
-                        value={employee?.phone}
-                      />
+                      <FieldInline label='h_city' value={city} />
+                      <FieldInline label='h_email' value={employee?.email} />
+                      <FieldInline label='h_phone' value={employee?.phone} />
                     </div>
                   </div>
 
@@ -82,11 +76,8 @@ const EmployeeInfo = ({
                     </div>
 
                     <div className='pt-2 grid grid-cols-1 gap-2'>
-                      <FieldInline label={t('h_company')} value={companyName} />
-                      <FieldInline
-                        label={t('h_department')}
-                        value={department}
-                      />
+                      <FieldInline label='h_company' value={companyName} />
+                      <FieldInline label='h_department' value={department} />
                       <div className='flex items-center justify-between gap-3 min-w-0'>
                         <span className='text-[11px] font-semibold text-t-light-dark dark:text-t-dark whitespace-nowrap'>
                           {t('h_date_start')}

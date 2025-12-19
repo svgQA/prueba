@@ -33,7 +33,14 @@ interface ICheckStatus {
 
 type StatusColor = 'error' | 'success' | 'warning' | 'info' | 'ternary';
 
-const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
+const DateInfo = ({
+  checkIn,
+  checkOut,
+  employee,
+  shift,
+  onCheck,
+  place,
+}: any) => {
   const { t } = useTranslation();
   const [checkInData, setCheckInData] = useState(checkIn);
   const [checkOutData, setCheckOutData] = useState(checkOut);
@@ -119,6 +126,7 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
 
     onCheck(check);
   };
+
   useEffect(() => {
     checkInStatus.value = calculateCheckStatus(
       checkIn?.time ?? checkIn?.date,
@@ -180,6 +188,9 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         file={checkInData?.file || []}
         disabled={shift?.status !== 'CREATED'}
         onCheck={handleCheck}
+        lt_place={toSafeNumber(place.latitude)}
+        lg_place={toSafeNumber(place.longitude)}
+        rd_place={toSafeNumber(place.radius)}
       />
       <ShiftCard
         name={employeeName}
@@ -198,6 +209,9 @@ const DateInfo = ({ checkIn, checkOut, employee, shift, onCheck }: any) => {
         disabled={shift?.status !== 'OPENED'}
         onCheck={handleCheck}
         resource={shift.resource}
+        lt_place={toSafeNumber(place.latitude)}
+        lg_place={toSafeNumber(place.longitude)}
+        rd_place={toSafeNumber(place.radius)}
       />
     </div>
   );
@@ -215,12 +229,15 @@ interface IShiftCardProps {
   btnLabel: string;
   shiftId: number;
   distance?: string;
-  latitude: number | string;
-  longitude: number | string;
+  latitude: number;
+  longitude: number;
+  lt_place: number;
+  lg_place: number;
   file: IPresignedRequest[];
   disabled: boolean;
   onCheck: (checkData: ICheckData) => void;
   resource?: IPresignedRequest[];
+  rd_place: number;
 }
 
 const ShiftCard = ({
@@ -237,8 +254,11 @@ const ShiftCard = ({
   shiftId,
   latitude,
   longitude,
+  lt_place,
+  lg_place,
   file,
   disabled,
+  rd_place,
   // onCheck,
   resource,
 }: IShiftCardProps) => {
@@ -339,7 +359,7 @@ const ShiftCard = ({
           <div className='flex items-center gap-x-2'>
             <span className='!text-primary vox-icon size-sm vx-icon-120'></span>
             <div className='flex flex-row justify-between w-full'>
-              <p className='font-semibold'>{t('h_date')}</p>
+              <p className='font-semibold mr-3'>{t('h_date')}</p>
               <FormattedDate date={date} format='date' />
             </div>
           </div>
@@ -347,7 +367,7 @@ const ShiftCard = ({
           <div className='flex items-center gap-x-2'>
             <span className='!text-primary vox-icon size-sm vx-icon-130'></span>
             <div className='flex flex-row justify-between w-full'>
-              <p className='font-semibold'>{t('h_time')}</p>
+              <p className='font-semibold mr-3'>{t('h_time')}</p>
               <FormattedDate date={time} format='time' />
             </div>
           </div>
@@ -355,7 +375,7 @@ const ShiftCard = ({
           <div className='flex items-center gap-x-2'>
             <span className='!text-primary vox-icon size-sm vx-icon-130'></span>
             <div className='flex flex-row justify-between w-full'>
-              <p className='font-semibold'>{t('h_device')}</p>
+              <p className='font-semibold mr-3'>{t('h_device')}</p>
               <p>{source}</p>
             </div>
           </div>
@@ -363,7 +383,7 @@ const ShiftCard = ({
           <div className='flex items-center gap-x-2'>
             <span className='!text-primary vox-icon size-sm vx-icon-326'></span>
             <div className='flex flex-row justify-between w-full'>
-              <p className='font-semibold'>{t('h_distance')}</p>
+              <p className='font-semibold mr-3'>{t('h_distance')}</p>
               <p>{(Number(distance) / 1000).toFixed(2)} Km</p>
             </div>
           </div>
@@ -412,12 +432,19 @@ const ShiftCard = ({
                 lng: lng,
               },
             },
+            {
+              id: -2,
+              position: {
+                lat: lt_place,
+                lng: lg_place,
+              },
+            },
           ]}
           condition={false}
           errorCondition=''
           radialPoint={null}
           errorRadialPoint=''
-          radius={50}
+          radius={rd_place}
           draggable={false}
           disablePointSelection={true}
           width='100%'

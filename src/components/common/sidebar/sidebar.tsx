@@ -48,8 +48,8 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
   const getSelected = useMemo(
     () => (to: string) =>
       to === location
-        ? 'bg-ternary/10 border-r-ternary text-ternary dark:text-white dark:bg-ternary/40'
-        : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700',
+        ? 'bg-ternary/10 !border-r-teal-600 text-ternary dark:text-white dark:bg-ternary/40'
+        : 'text-gray-700 border-tranparent dark:text-gray-200 hover:bg-ternary/20',
     [location]
   );
 
@@ -86,7 +86,7 @@ export const Sidebar: FunctionComponent<ISidebarProps> = ({
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       } lg:translate-x-0`}
     >
-      <div className='w-full flex flex-row items-start px-10 absolute -right-11 top-2 lg:hidden'>
+      <div className='w-full flex flex-row items-start px-10 absolute -right-11 top-2 lg:hidden border-r-ternary'>
         <Button
           id='btn-toggle-menu'
           name='btn-toggle-menu'
