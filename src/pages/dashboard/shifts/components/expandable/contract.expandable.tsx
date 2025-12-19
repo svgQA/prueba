@@ -55,8 +55,8 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
             <div className='xl:col-span-5'>
               <div className='h-full rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
                 <SectionHeader
-                  icon='195'
-                  title={t('h_contract')}
+                  icon='075'
+                  title='h_contract'
                   center={
                     <TextEllipsis
                       text={contract.name}
@@ -93,9 +93,9 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
                     <FieldInline
                       label='h_date_start'
                       value={start}
-                      icon='195'
+                      icon='025'
                     />
-                    <FieldInline label='h_date_end' value={end} icon='195' />
+                    <FieldInline label='h_date_end' value={end} icon='025' />
                   </div>
                 </div>
               </div>
@@ -104,8 +104,8 @@ const ContractInfo = ({ contract }: { contract: IContract }) => {
             <div className='xl:col-span-7'>
               <div className='h-full rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
                 <SectionHeader
-                  icon='341'
-                  title={t('h_status')}
+                  icon='030'
+                  title='h_status'
                   right={<Badge label={contract.state} status='info' outline />}
                 />
 

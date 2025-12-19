@@ -43,7 +43,7 @@ export const Badge: FunctionComponent<IBadgeProps> = ({
         ${
           outline
             ? `border ${getStatusColor(status)} bg-transparent`
-            : `${borderless ? 'border-none' : 'border border-gray-100 dark:border-gray-700'} ${getStatusColor(status)} !text-white`
+            : `${borderless ? 'border-none' : 'border border-gray-100 dark:border-gray-700'} ${getStatusColor(status)} !text-t-light dark:!text-t-dark`
         }
       `}
       onClick={onClick}

@@ -97,7 +97,7 @@ const SimpleCard: FunctionalComponent<{
         'flex items-center gap-2 rounded-lg px-3 py-2',
         'ring-1 ring-black/5 dark:ring-white/10',
         toneClass[tone],
-        `${action ? 'cursor-pointer hover:shadow-xl' : ''}`,
+        `${action ? 'cursor-pointer hover:shadow-xl hover:opacity-80' : ''}`,
       ].join(' ')}
       data-action={action}
     >

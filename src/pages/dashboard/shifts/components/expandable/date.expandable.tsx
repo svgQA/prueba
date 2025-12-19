@@ -341,11 +341,11 @@ const ShiftCard = ({
   return (
     <div className='rounded-lg shadow-sm w-full text-t-light dark:text-t-dark flex flex-row gap-3 p-1 bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light'>
       <div className='flex flex-col justify-between h-full px-2'>
-        <div className='flex flex-col items-center w-full'>
+        <div className='flex flex-col items-center justify-center w-full h-40'>
           {file.length ? (
             <ShowFiles resources={file} />
           ) : (
-            <Avatar icon='023' size='md' />
+            <Avatar icon='265' size='md' />
           )}
           <div className='flex flex-col justify-center items-center pt-3'>
             <TextEllipsis text={name} maxWidth='200px'></TextEllipsis>
@@ -355,9 +355,9 @@ const ShiftCard = ({
         </div>
 
         {/* Columna central - Información */}
-        <div className='flex flex-col justify-center space-y-3 w-full'>
+        <div className='flex flex-col justify-center space-y-3 w-full h-36'>
           <div className='flex items-center gap-x-2'>
-            <span className='!text-primary vox-icon size-sm vx-icon-120'></span>
+            <span className='!text-primary vox-icon size-sm vx-icon-025'></span>
             <div className='flex flex-row justify-between w-full'>
               <p className='font-semibold mr-3'>{t('h_date')}</p>
               <FormattedDate date={date} format='date' />
@@ -365,7 +365,7 @@ const ShiftCard = ({
           </div>
 
           <div className='flex items-center gap-x-2'>
-            <span className='!text-primary vox-icon size-sm vx-icon-130'></span>
+            <span className='!text-primary vox-icon size-sm vx-icon-049'></span>
             <div className='flex flex-row justify-between w-full'>
               <p className='font-semibold mr-3'>{t('h_time')}</p>
               <FormattedDate date={time} format='time' />
@@ -373,7 +373,7 @@ const ShiftCard = ({
           </div>
 
           <div className='flex items-center gap-x-2'>
-            <span className='!text-primary vox-icon size-sm vx-icon-130'></span>
+            <span className='!text-primary vox-icon size-sm vx-icon-117'></span>
             <div className='flex flex-row justify-between w-full'>
               <p className='font-semibold mr-3'>{t('h_device')}</p>
               <p>{source}</p>
@@ -381,7 +381,7 @@ const ShiftCard = ({
           </div>
 
           <div className='flex items-center gap-x-2'>
-            <span className='!text-primary vox-icon size-sm vx-icon-326'></span>
+            <span className='!text-primary vox-icon size-sm vx-icon-142'></span>
             <div className='flex flex-row justify-between w-full'>
               <p className='font-semibold mr-3'>{t('h_distance')}</p>
               <p>{(Number(distance) / 1000).toFixed(2)} Km</p>
@@ -389,27 +389,29 @@ const ShiftCard = ({
           </div>
         </div>
 
-        {resource && (
-          <div className='flex flex-col items-center mr-4 w-full'>
-            <ShowFiles resources={formatResource(resource)} />
-          </div>
-        )}
+        <div className='flex flex-row  justify-center items-center mr-4 w-full h-16'>
+          <ShowFiles resources={formatResource(resource)} />
+        </div>
 
-        <Button
-          label={btnLabel}
-          icon={btnLabel === 'b_check_in' ? '023' : '024'}
-          disabled={disabled}
-          borderless
-          onClick={() =>
-            showAlert({
-              title: t(btnLabel),
-              message: `${t('s_request')} ${btnLabel}`,
-              onConfirm: () => handleCheck(),
-              onCancel: () => {},
-            })
-          }
-          name={btnLabel}
-        />
+        <div className='h-12 flex flex-row justify-center items-center'>
+          {!disabled && (
+            <Button
+              label={btnLabel}
+              icon='030'
+              disabled={disabled}
+              borderless
+              onClick={() =>
+                showAlert({
+                  title: t(btnLabel),
+                  message: `${t('s_request')} ${btnLabel}`,
+                  onConfirm: () => handleCheck(),
+                  onCancel: () => {},
+                })
+              }
+              name={btnLabel}
+            />
+          )}
+        </div>
       </div>
 
       {/* Columna derecha - Mapa */}
@@ -420,23 +422,23 @@ const ShiftCard = ({
           sendPoints={() => {}}
           name='Map'
           center={{
-            lat: lat,
-            lng: lng,
+            lat: lt_place,
+            lng: lg_place,
           }}
           pointsAmount={1}
           pointsRef={[
-            {
-              id: 1,
-              position: {
-                lat: lat,
-                lng: lng,
-              },
-            },
             {
               id: -2,
               position: {
                 lat: lt_place,
                 lng: lg_place,
+              },
+            },
+            {
+              id: 1,
+              position: {
+                lat: lat,
+                lng: lng,
               },
             },
           ]}

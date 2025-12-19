@@ -47,6 +47,8 @@ import { signalMetrics } from '@/store/signals/metric';
 import { signalShifts } from '@/store/signals/shift';
 import { Modal } from '@/components/common/modal/modal';
 import { ManualNotificationForm } from './components/send/tabs/manual-notification-form';
+import ModeSwitch from './components/mode';
+import { isMonitoring, setSignalShiftMode } from './store/shift';
 
 export const ShiftsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -70,8 +72,6 @@ export const ShiftsPage: FunctionalComponent = () => {
   const [externalSelected, setExternalSelected] = useState<string>('');
 
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
-  // const sendButtonRef = useRef<HTMLDivElement>(null);
-  // const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   const [dateRangeFilters, setDateRangeFilters] = useState<{
     [key: string]: [string, string];
@@ -108,32 +108,6 @@ export const ShiftsPage: FunctionalComponent = () => {
   useEffect(() => {
     reloadData();
   }, [dateRangeFilters, fetchInitialData, selectedCompany]);
-
-  // Calcular posición del modal basada en el botón
-  /*
-  useEffect(() => {
-    if (showSendModal.value && sendButtonRef.current) {
-      const updatePosition = () => {
-        if (sendButtonRef.current) {
-          const rect = sendButtonRef.current.getBoundingClientRect();
-          setModalPosition({
-            top: rect.bottom + window.scrollY + 12,
-            left: rect.left + window.scrollX,
-          });
-        }
-      };
-
-      updatePosition();
-      window.addEventListener('scroll', updatePosition, true);
-      window.addEventListener('resize', updatePosition);
-
-      return () => {
-        window.removeEventListener('scroll', updatePosition, true);
-        window.removeEventListener('resize', updatePosition);
-      };
-    }
-  }, [showSendModal.value]);
-  */
 
   useShiftSocket({
     dateRangeFilters,
@@ -236,60 +210,6 @@ export const ShiftsPage: FunctionalComponent = () => {
     cleanSelectedData();
     toggleUpsertModal();
   }, [cleanSelectedData, toggleUpsertModal]);
-
-  const buttonMenu = useMemo(() => {
-    return (
-      <div className='flex items-center gap-2 ml-1'>
-        <Button
-          name='button-change-table'
-          onClick={() => handleViewChange(VIEW_NAME.TABLE)}
-          selected={currentView.value === VIEW_NAME.TABLE}
-          icon='443'
-        />
-        <Button
-          name='button-change-scheduler'
-          onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
-          selected={currentView.value === VIEW_NAME.SCHEDULER}
-          icon='412'
-        />
-        <Button
-          name='button-change-map'
-          onClick={() => handleViewChange(VIEW_NAME.MAP)}
-          selected={currentView.value === VIEW_NAME.MAP}
-          icon='103'
-        />
-        <Button
-          name='button-reload-data'
-          onClick={() => reloadData()}
-          transparent
-          borderless
-          icon='138'
-        />
-
-        <Button
-          name='button-action'
-          rounded={false}
-          icon='314'
-          label='remote'
-          onClick={toggleSendModal}
-          selected={showSendModal.value}
-          disabled={!hasValidPlayer}
-        />
-        {/*
-        <div ref={sendButtonRef} className='relative'>
-        </div>
-          */}
-      </div>
-    );
-  }, [
-    currentView.value,
-    handleCloseSendModal,
-    handleViewChange,
-    hasValidPlayer,
-    selectedUsers,
-    showSendModal.value,
-    toggleSendModal,
-  ]);
 
   return (
     <SectionPage
@@ -402,14 +322,61 @@ export const ShiftsPage: FunctionalComponent = () => {
       }
       buttons={
         <ButtonsPage>
-          {buttonMenu}
-          <Button
-            name='button-create-shift'
-            label='create'
-            onClick={handleCreacteNewShift}
-            icon='044'
-            iconSize='sm'
-          />
+          <div className='flex items-center gap-2 ml-1'>
+            <Button
+              name='button-change-table'
+              onClick={() => handleViewChange(VIEW_NAME.TABLE)}
+              selected={currentView.value === VIEW_NAME.TABLE}
+              icon='443'
+            />
+            {!isMonitoring.value && (
+              <Button
+                name='button-change-scheduler'
+                onClick={() => handleViewChange(VIEW_NAME.SCHEDULER)}
+                selected={currentView.value === VIEW_NAME.SCHEDULER}
+                icon='412'
+              />
+            )}
+            {isMonitoring.value && (
+              <Button
+                name='button-change-map'
+                onClick={() => handleViewChange(VIEW_NAME.MAP)}
+                selected={currentView.value === VIEW_NAME.MAP}
+                icon='103'
+              />
+            )}
+            <Button
+              name='button-reload-data'
+              onClick={() => reloadData()}
+              transparent
+              borderless
+              icon='138'
+            />
+
+            {currentView.value === VIEW_NAME.TABLE && (
+              <ModeSwitch onChange={setSignalShiftMode} />
+            )}
+          </div>
+          {isMonitoring.value && (
+            <Button
+              name='button-action'
+              rounded={false}
+              icon='314'
+              label='remote'
+              onClick={toggleSendModal}
+              selected={showSendModal.value}
+              disabled={!hasValidPlayer}
+            />
+          )}
+          {!isMonitoring.value && (
+            <Button
+              name='button-create-shift'
+              label='create'
+              onClick={handleCreacteNewShift}
+              icon='044'
+              iconSize='sm'
+            />
+          )}
         </ButtonsPage>
       }
       modals={
@@ -498,6 +465,8 @@ export const ShiftsPage: FunctionalComponent = () => {
             report: false,
             date: false,
             shift: false,
+            start: !isMonitoring.value,
+            end: !isMonitoring.value,
             round: false,
             task: false,
             duration: false,
