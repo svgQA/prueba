@@ -314,6 +314,7 @@ export const MapLibrePointsMap = ({
 
     const _rad = index + 1 >= 10 ? 5 : 10;
     const _ind = (index + 1).toString();
+
     if (radial && id === radial) {
       return {
         color: '#2563EB',
@@ -328,6 +329,7 @@ export const MapLibrePointsMap = ({
       text: _rad,
     };
   };
+
   const createMarkerElement = (point: MapPoint, index: number) => {
     const el = document.createElement('div');
     el.className = 'marker-container';
@@ -398,8 +400,8 @@ export const MapLibrePointsMap = ({
         return;
       }
 
-      // const markerEl = createMarkerElement(point, index);
-      // Para el userLocation, usar índice especial; para puntos normales, usar su posición en el array original
+      // TODO: Mejorar porque algunos de estos calculos estan dentro de
+      // createMarkerElement.
       const markerIndex =
         point.id === -1 ? -1 : points.findIndex((p) => p.id === point.id);
       const markerEl = createMarkerElement(point, markerIndex);

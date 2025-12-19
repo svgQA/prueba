@@ -7,6 +7,7 @@ interface Props extends PropsWithChildren {
   cards?: any;
   buttons?: any;
   modals?: any;
+  navigation?: any;
   className?: string;
   relative?: boolean;
 }

@@ -33,8 +33,8 @@ const ServiceInfo = ({
         <div className='xl:col-span-4'>
           <div className='h-full rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
             <SectionHeader
-              icon='341'
-              title={t('h_service')}
+              icon='075'
+              title='h_service'
               right={<Badge label={service?.state} status='info' outline />}
             />
 
@@ -79,7 +79,7 @@ const ServiceInfo = ({
           <div className='h-full rounded-lg bg-white/60 dark:bg-b-dark-dark/30 border border-b-light dark:border-b-dark-light p-3'>
             <SectionHeader
               icon='103'
-              title={t('h_location')}
+              title='h_location'
               right={
                 <Badge
                   label={`${t('h_radius')}: ${radius}m`}

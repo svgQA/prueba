@@ -7,7 +7,6 @@ import { CreateUser } from './components/user.create';
 import { UserMessage } from './components/user.message';
 import { IUserResponse } from '@/types/auth';
 import { useTranslation } from 'react-i18next';
-// import { SendForm } from '../shifts/components/send/send.modal';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { NotificationService, UserService } from '@/services';
 import { getColumns } from './components/user.columns';
@@ -276,19 +275,6 @@ export const UsersPage: FunctionalComponent = () => {
             disabled={!hasValidPlayer}
             selected={onNotifications}
           />
-          {/*
-          <div className='relative'>
-            {showSendModal.value && (
-              <div className='my-3 absolute left-0 rounded-lg shadow-lg z-50 w-[600px]'>
-                <SendForm
-                  onClose={handleCloseSendModal}
-                  hasplayers={hasValidPlayer}
-                  users={selectedUsers as []}
-                />
-              </div>
-            )}
-          </div>
-            */}
         </ButtonsPage>
       }
       modals={
