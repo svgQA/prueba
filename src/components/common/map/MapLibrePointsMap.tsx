@@ -312,6 +312,14 @@ export const MapLibrePointsMap = ({
       };
     }
 
+    if (id === -3) {
+      return {
+        color: '#EA4335',
+        label: 'C',
+        text: 8,
+      };
+    }
+
     const _rad = index + 1 >= 10 ? 5 : 10;
     const _ind = (index + 1).toString();
 

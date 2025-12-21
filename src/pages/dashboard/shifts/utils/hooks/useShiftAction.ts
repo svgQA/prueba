@@ -1,8 +1,5 @@
-/* Acciones de tabla: update/delete/check-in/out/download. */
 import { useCallback } from 'preact/hooks';
 import { useTranslation } from 'react-i18next';
-// import { Signal } from '@preact/signals';
-// import { IShiftResponse } from '@/types/shift/activity';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { showAlert } from '@/components/common/show-alert/show-alert';
@@ -25,7 +22,6 @@ import {
 import { signalShifts } from '@/store/signals/shift';
 
 export function useShiftActions(params: {
-  // shifts: Signal<IShiftResponse[]>;
   openUpsert: () => void;
   setTaskSelected: (t?: Task) => void;
   setKeywordsSelected: (k: string[]) => void;
@@ -35,7 +31,6 @@ export function useShiftActions(params: {
 }) {
   const { t } = useTranslation();
   const {
-    // shifts,
     openUpsert,
     setTaskSelected,
     setKeywordsSelected,
