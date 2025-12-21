@@ -192,11 +192,11 @@ export const ManualNotificationForm = ({
           className='space-y-6 w-full max-w-5xl mx-auto p-5 relative min-h-[50vh] flex flex-col justify-between pt-10'
         >
           <div className='flex flex-row w-full justify-between items-center absolute top-0 right-0 px-5'>
-            <div className='flex items-center text-gray-700 dark:text-gray-200 bg-ternary py-2 px-2'>
+            <div className='flex items-center text-white bg-ternary py-2 px-2'>
               {t('t_user')}:{' '}
               <p className='mx-2 font-bold'>{selectedUserIds.length}</p>
             </div>
-            <div className='flex items-center text-gray-700 dark:text-gray-200 bg-ternary py-2 px-2'>
+            <div className='flex items-center bg-ternary py-2 px-2'>
               <Switch
                 name='switch-send-to-general'
                 backgroundColor='bg-gray-300 dark:bg-gray-600'
@@ -208,7 +208,7 @@ export const ManualNotificationForm = ({
                   setNotificationType(checked ? 'REPORT' : 'GENERAL');
                 }}
                 label='l_request_report'
-                className='!font-bold'
+                className='!font-bold text-white'
               />
             </div>
           </div>

@@ -19,6 +19,7 @@ type MetricIndicator = {
   icon?: string;
   tone?: ToneMetric;
   action?: ActionMetric;
+  hide?: boolean;
 };
 
 type CardProps = {
@@ -197,6 +198,7 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
           {indicator === 'balance' && (
             <>
               {topIndicators.map((m, idx) => {
+                if (m.hide) return;
                 const tone = m.tone ?? 'neutral';
                 return (
                   <SimpleCard
@@ -250,9 +252,10 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
             />
           )}
 
-          {(!indicator || indicator === 'gauge') && (
+          {(indicator === 'gauge' || !indicator) && (
             <>
               {topIndicators.map((m, idx) => {
+                if (m.hide) return;
                 const tone = m.tone ?? 'neutral';
                 return (
                   <SimpleCard

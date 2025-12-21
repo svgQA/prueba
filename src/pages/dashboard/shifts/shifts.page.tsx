@@ -220,7 +220,7 @@ export const ShiftsPage: FunctionalComponent = () => {
     <SectionPage
       padding
       cards={
-        <CardsPage className='xl:grid-cols-4'>
+        <CardsPage className='xl:grid-cols-7'>
           <MetricCard
             title='m_active_user'
             subtitle='m_active_user_d'
@@ -229,6 +229,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             icon='006'
             color='emerald'
             indicator='gauge'
+            className='col-span-2'
             indicators={[
               {
                 label: 'm_user_v',
@@ -263,6 +264,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             icon='028'
             color='emerald'
             indicator='gauge'
+            className='col-span-2'
             indicators={[
               {
                 label: 'm_shift_v',
@@ -306,6 +308,7 @@ export const ShiftsPage: FunctionalComponent = () => {
                 unit: '%',
                 icon: '090',
                 tone: 'success',
+                // hide: true,
               },
               {
                 label: 'm_round_tim_v',
@@ -314,12 +317,48 @@ export const ShiftsPage: FunctionalComponent = () => {
                 icon: '030',
                 tone: 'warning',
               },
+              /*
               {
                 label: 'm_round_v',
                 value: 0,
                 unit: 'und',
                 icon: '029',
                 tone: 'neutral',
+              },
+              */
+            ]}
+          />
+          <MetricCard
+            title='m_filter_title'
+            subtitle='m_filter_description'
+            values={[0, 0, 0, 0]}
+            unit=''
+            icon='118'
+            color='emerald'
+            indicators={[
+              {
+                label: 'm_round_tim_v',
+                value: 0,
+                unit: '%',
+                icon: '030',
+                tone: 'warning',
+                action: 'user-active',
+              },
+              {
+                label: 'm_round_tim_v',
+                value: 0,
+                unit: '%',
+                icon: '030',
+                tone: 'warning',
+                action: 'user-active',
+              },
+              {
+                label: 'm_round_tim_v',
+                value: 0,
+                unit: '%',
+                icon: '030',
+                tone: 'warning',
+                action: 'user-active',
               },
             ]}
           />
@@ -395,7 +434,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             onClose={() => {
               showSendModal.value = !showSendModal;
             }}
-            width='max-w-[1200px]'
+            width='w-[800px]'
             position='fixed'
             header={<h3>{t('d_send_notification')}</h3>}
           >
