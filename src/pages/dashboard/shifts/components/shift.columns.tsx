@@ -35,7 +35,7 @@ export const getColumns = (
         return (
           <div className='flex items-center gap-2 w-[250px]'>
             <span
-              className={`min-h-10 min-w-10 max-w-10 max-h-10 rounded flex justify-center items-center ${active ? 'bg-teal-700' : 'bg-transparent'}`}
+              className={`text-white min-h-10 min-w-10 max-w-10 max-h-10 rounded flex justify-center items-center ${active ? 'bg-teal-700' : 'bg-transparent'}`}
             >
               {active && <p className='text-xs font-bold'>{risk}%</p>}
             </span>

@@ -138,6 +138,7 @@ export const Table = <T,>({
       filterFn: defaultOrFilterFn,
     }));
   }, []);
+
   const [selectedRows, setSelectedRows] = useState<Record<string, T>>({});
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -145,7 +146,6 @@ export const Table = <T,>({
     pageSize: pageSize,
   });
   const [expanded, setExpanded] = useState<ExpandedState>({});
-  // const currentColumnName = useSignal<string>('');
 
   const [grouping, setGrouping] = useState<GroupingState>([]);
   const [columnOrder, setColumnOrder] = useState(() =>
@@ -241,9 +241,6 @@ export const Table = <T,>({
 
   const handleClick = useCallback(
     (e: MouseEvent) => {
-      // TODO: No descomentar esto, dejar asi.
-      // e.stopPropagation();
-      // e.preventDefault();
       const target = e.target as HTMLElement;
       if (target.tagName === 'SPAN') {
         const id = target.dataset.id;

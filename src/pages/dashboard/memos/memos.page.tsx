@@ -45,6 +45,7 @@ import {
 } from '@/utils/socket/manager/types';
 import { allPermissions } from '@/store/signals/access/permission';
 import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
+import { IRangeValues } from '@/components/common/table/components/range';
 
 enum VIEW_NAME {
   TABLE,
@@ -89,9 +90,9 @@ export const MemosPage: FunctionComponent = () => {
   );
   const panic = useSignal<Memo[]>([]);
   const summaryPanic = useSignal<MemosSummary>(defaultSummary);
-  const [dateRangeFilters, setDateRangeFilters] = useState<{
-    [key: string]: [string, string];
-  } | null>(null);
+  const [dateRangeFilters, setDateRangeFilters] = useState<IRangeValues | null>(
+    null
+  );
 
   useEffect(() => {
     document.title = t('p_chat');
@@ -152,10 +153,11 @@ export const MemosPage: FunctionComponent = () => {
     }
   };
 
-  const fetchInitialData = async (
-    rangeFilters?: { [key: string]: [string, string] } | null
-  ) => {
+  const fetchInitialData = async (rangeFilter?: IRangeValues | null) => {
     loading.value = true;
+    const _range_model = rangeFilter
+      ? { [rangeFilter?.column]: rangeFilter.data }
+      : baseParams;
     const [
       responseMemos,
       responseUsers,
@@ -165,9 +167,7 @@ export const MemosPage: FunctionComponent = () => {
       responseMemoPanic,
       responseSummaryPanic,
     ] = await Promise.all([
-      MemoService.get_all(
-        rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams
-      ),
+      MemoService.get_all({ ...baseParams, ..._range_model }),
       UserService.get_all_employee(baseParams),
       MemoService.getMemosSummary(),
       MemoService.get_all_by_service(),
@@ -270,27 +270,6 @@ export const MemosPage: FunctionComponent = () => {
           icon='418'
           permissions={{ name: 'memo', state: 'chat' }}
         />
-
-        {/* <Button
-          name='button-change-scheduler'
-          onClick={() => {
-            handleViewChange(VIEW_NAME.MAP);
-          }}
-          rounded={false}
-          selected={currentView.value === VIEW_NAME.MAP}
-          icon='318'
-        />
-        {currentView.value === VIEW_NAME.MAP && (
-          <Button
-            name='btn-reload-path'
-            onClick={onReloadRoute}
-            icon='132'
-            rounded={false}
-          />
-        )}
-        */}
-        {/* <Button name='button-change-scheduler' rounded={false} icon='331' />
-        <Button name='button-change-scheduler' rounded={false} icon='314' /> */}
       </>
     ),
     [currentView.value, allPermissions.value]
@@ -401,9 +380,7 @@ export const MemosPage: FunctionComponent = () => {
           showExpandableIcon
           selectable
           loading={loading.value}
-          onRangeChange={(range) => {
-            setDateRangeFilters(range);
-          }}
+          onRangeChange={setDateRangeFilters}
           expandable={(row: Memo, column?: string) => (
             <ExpandableMultiple type={column} data={row} />
           )}

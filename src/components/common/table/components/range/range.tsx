@@ -8,12 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { DateUtils } from '@/utils/utilities/dates';
 import { IOption } from '@/components/common/smart-selector/smart-select';
 
-interface Props {
-  className?: string;
-  isOpen: Signal<boolean>;
-  onRangeChange?: (range: IRangeValues | null) => void;
-  column: string;
-}
+export type IRangeMethod = (value: IRangeValues | null) => void;
 
 interface IModelsValues {
   start: string;
@@ -22,7 +17,15 @@ interface IModelsValues {
 }
 
 export interface IRangeValues {
-  [key: string]: [string, string];
+  column: string;
+  data: [string, string];
+}
+
+interface Props {
+  className?: string;
+  isOpen: Signal<boolean>;
+  onRangeChange?: IRangeMethod;
+  column: string;
 }
 
 export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
@@ -34,10 +37,11 @@ export const RangeDateFilter = ({ isOpen, column, onRangeChange }: Props) => {
     loading.value = true;
 
     const range: IRangeValues = {
-      [column]: [
+      data: [
         DateUtils.dateToBackend(model.start, 'full'),
         DateUtils.dateToBackend(model.end, 'full'),
       ] as [string, string],
+      column,
     };
 
     if (onRangeChange) {

@@ -1,13 +1,14 @@
 import { Avatar } from '@/components/common/Avatar';
 import { Badge } from '@/components/common/badge/badge';
 import { Button } from '@/components/common/button/button';
-import { RelativeTime } from '@/components/common/relative/relative';
+// import { RelativeTime } from '@/components/common/relative/relative';
 import {
   IDropdownAction,
   DropdownActionsMenu,
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
+import { FormattedDate } from '@/components/compose/forms';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
 
@@ -108,14 +109,20 @@ export const getColumns = (
     id: 'createdAt',
     header: 'h_created',
     meta: { headerAlign: 'center' },
-    cell: (info) => <RelativeTime date={info.getValue() as string} />,
+    cell: (info) => (
+      <FormattedDate date={info.getValue() as string} format='date' />
+    ),
+    // cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
     header: 'h_updated',
     meta: { headerAlign: 'center' },
-    cell: (info) => <RelativeTime date={info.getValue() as string} />,
+    cell: (info) => (
+      <FormattedDate date={info.getValue() as string} format='date' />
+    ),
+    // cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'status',

@@ -29,7 +29,8 @@ export const home_es = {
   h_hero_demo_title:
     'Visualiza cómo Tryvoo orquesta turnos, rondas y formularios en segundos.',
   h_hero_demo_close: 'Cerrar',
-
+  h_monitor: 'Monitoreo',
+  h_historical: 'Historico',
   h_carousel_monitor_title: 'Monitoreo en tiempo real',
   h_carousel_monitor_subtitle:
     'Visualiza el progreso de tareas y activos con actualizaciones automáticas basadas en datos en tiempo real.',
@@ -211,7 +212,8 @@ export const home_en = {
   h_hero_demo_title:
     'See how Tryvoo orchestrates shifts, routes, and forms in seconds.',
   h_hero_demo_close: 'Close',
-
+  h_monitor: 'Monitoring',
+  h_historical: 'Historical',
   h_carousel_monitor_title: 'Real-time monitoring',
   h_carousel_monitor_subtitle:
     'Track task progress and asset status with automated, data-driven updates.',

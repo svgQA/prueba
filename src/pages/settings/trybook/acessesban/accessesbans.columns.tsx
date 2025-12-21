@@ -5,7 +5,8 @@ import {
   IDropdownAction,
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { IAccessBan } from '@/types/trybook/access-ban';
-import { RelativeTime } from '@/components/common/relative/relative';
+import { FormattedDate } from '@/components/compose/forms';
+// import { RelativeTime } from '@/components/common/relative/relative';
 
 export const getColumns = (
   onClickAction: (params: { id: string; action: ROW_ACTIONS }) => void
@@ -72,7 +73,8 @@ export const getColumns = (
       header: 'h_expires',
       cell: (info) =>
         info.getValue() ? (
-          <RelativeTime date={info.getValue() as string} />
+          // <RelativeTime date={info.getValue() as string} />
+          <FormattedDate date={info.getValue() as string} format='date' />
         ) : (
           '-'
         ),
@@ -98,7 +100,10 @@ export const getColumns = (
       id: 'updatedAt',
       accessorKey: 'updatedAt',
       header: 'h_updated',
-      cell: (info) => <RelativeTime date={info.getValue() as string} />,
+      cell: (info) => (
+        <FormattedDate date={info.getValue() as string} format='date' />
+      ),
+      // cell: (info) => <RelativeTime date={info.getValue() as string} />,
     },
 
     // Acciones

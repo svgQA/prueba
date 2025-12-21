@@ -221,6 +221,7 @@ class MetricsEngine {
   }
 
   async recalculate() {
+    // console.log('METRIC: ');
     const raw = await rawDataManager.getRaw();
     this.compute(raw);
   }

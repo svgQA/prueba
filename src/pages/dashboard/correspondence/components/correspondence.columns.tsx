@@ -9,7 +9,7 @@ import {
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { ICorrespondence } from '@/types/access';
 import { Badge } from '@/components/common/badge/badge';
-import { RelativeTime } from '@/components/common/relative/relative';
+// import { RelativeTime } from '@/components/common/relative/relative';
 import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 
 /**
@@ -216,7 +216,10 @@ export const getColumns = (
     id: 'updatedAt',
     header: 'h_updated',
     meta: { headerAlign: 'end' },
-    cell: (info) => <RelativeTime date={info.getValue() as string} />,
+    cell: (info) => (
+      <FormattedDate date={info.getValue() as string} format='date' />
+    ),
+    // cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     id: 'action',

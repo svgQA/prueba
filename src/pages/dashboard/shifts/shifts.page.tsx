@@ -43,12 +43,17 @@ import { useShiftSocket } from './utils/hooks/useShiftSocket';
 import { useShiftModals } from './utils/hooks/useShiftModal';
 import { useShiftActions } from './utils/hooks/useShiftAction';
 import { ButtonsPage, CardsPage, SectionPage } from '@/pages/component';
-import { signalMetrics } from '@/store/signals/metric';
+import {
+  useMetricRound,
+  useMetricShift,
+  useMetricUser,
+} from '@/store/signals/metric';
 import { signalShifts } from '@/store/signals/shift';
 import { Modal } from '@/components/common/modal/modal';
 import { ManualNotificationForm } from './components/send/tabs/manual-notification-form';
 import ModeSwitch from './components/mode';
-import { isMonitoring, setSignalShiftMode } from './store/shift';
+import { isMonitoring, setSignalShiftMode, SHIFT_MODE } from './store/shift';
+import { IRangeValues } from '@/components/common/table/components/range';
 
 export const ShiftsPage: FunctionalComponent = () => {
   const { t } = useTranslation();
@@ -73,9 +78,9 @@ export const ShiftsPage: FunctionalComponent = () => {
 
   const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
 
-  const [dateRangeFilters, setDateRangeFilters] = useState<{
-    [key: string]: [string, string];
-  } | null>(null);
+  const [dateRangeFilters, setDateRangeFilters] = useState<IRangeValues | null>(
+    null
+  );
 
   const startDate = useMemo(() => dayjs().subtract(1, 'day').toDate(), []);
   const endDate = useMemo(
@@ -219,7 +224,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           <MetricCard
             title='m_active_user'
             subtitle='m_active_user_d'
-            values={signalMetrics.value.user.values}
+            values={useMetricUser.value}
             unit=''
             icon='006'
             color='emerald'
@@ -253,7 +258,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           <MetricCard
             title='m_active_shift'
             subtitle='m_active_shift_d'
-            values={signalMetrics.value.shift.values}
+            values={useMetricShift.value}
             unit=''
             icon='028'
             color='emerald'
@@ -288,7 +293,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           <MetricCard
             title='m_churn_round'
             subtitle='m_churn_round_d'
-            values={signalMetrics.value.round.values}
+            values={useMetricRound.value}
             unit=''
             icon='142'
             color='emerald'
@@ -354,7 +359,10 @@ export const ShiftsPage: FunctionalComponent = () => {
             />
 
             {currentView.value === VIEW_NAME.TABLE && (
-              <ModeSwitch onChange={setSignalShiftMode} />
+              <ModeSwitch
+                value={SHIFT_MODE.MONITOR}
+                onChange={setSignalShiftMode}
+              />
             )}
           </div>
           {isMonitoring.value && (
@@ -433,7 +441,7 @@ export const ShiftsPage: FunctionalComponent = () => {
           onNotifications={onNotifications}
           hasNotifications={notificationValidate.value}
           loading={loading.value}
-          onRangeChange={(range) => setDateRangeFilters(range)}
+          onRangeChange={setDateRangeFilters}
           className='!h-[calc(100vh-27.5vh)]'
           onSelectionChange={(rows) => {
             const validUsers = rows.map((row: any) => ({
@@ -465,6 +473,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             report: false,
             date: false,
             shift: false,
+            staus: !isMonitoring.value,
             start: !isMonitoring.value,
             end: !isMonitoring.value,
             round: false,

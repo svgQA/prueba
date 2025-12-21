@@ -2,6 +2,7 @@ import { type IComponentProps } from '@/components/utils/interface';
 import { modulesReport } from '@/types/form';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { VNode } from 'preact';
+import { IRangeMethod } from '../table/components/range';
 
 export type IKey = {
   label: string;
@@ -17,11 +18,10 @@ export interface ISearchProps extends IComponentProps {
   placeholder?: string;
   table?: any;
   group?: VNode;
-  // range?: VNode;
   grouping?: boolean;
   disabled?: boolean;
   modules?: modulesReport;
-  onRangeChange?: (range: { [key: string]: [string, string] } | null) => void;
+  onRangeChange?: IRangeMethod;
   fileName?: 'shift' | 'employee';
   range?: boolean;
 }

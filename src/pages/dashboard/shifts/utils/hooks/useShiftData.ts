@@ -9,17 +9,16 @@ import {
 } from '@/services';
 import { UserService } from '@/services/general/user';
 import { MentionOption } from '@/components/common/mention-editor';
-// import { IShiftResponse } from '@/types/shift/activity';
 import {
   withShiftNotifications,
   hasUsersWithPlayerIdFromShifts,
 } from '../notification';
 import { signalShifts } from '@/store/signals/shift';
+import { IRangeValues } from '@/components/common/table/components/range';
 
-type DateRangeFilters = { [key: string]: [string, string] } | null;
+type DateRangeFilters = IRangeValues | null;
 
 export function useShiftsData(params: {
-  // shifts: Signal<IShiftResponse[]>;
   loading: Signal<boolean>;
   notificationValidate: Signal<boolean>;
 }) {
@@ -30,8 +29,11 @@ export function useShiftsData(params: {
   const [hasValidPlayer, setHasValidPlayer] = useState(false);
 
   const fetchInitialData = useCallback(
-    async (rangeFilters?: DateRangeFilters) => {
+    async (rangeFilter?: DateRangeFilters) => {
       loading.value = true;
+      const _range_model = rangeFilter
+        ? { [rangeFilter?.column]: rangeFilter.data }
+        : baseParams;
 
       const [
         shiftsResponse,
@@ -39,9 +41,7 @@ export function useShiftsData(params: {
         usersResponse,
         hasValidResponse,
       ] = await Promise.all([
-        ShiftService.get_all(
-          rangeFilters ? { ...baseParams, ...rangeFilters } : baseParams
-        ),
+        ShiftService.get_all({ ...baseParams, ..._range_model }),
         ServiceService.getServicesSimpleList(),
         UserService.getListUsers(),
         NotificationService.hasUsersWithPlayerId(),
