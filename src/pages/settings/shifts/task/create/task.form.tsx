@@ -129,26 +129,13 @@ export const TaskFormCreate = ({
     onAppend.value = false;
   };
 
-  // const eventDelete = (event: MouseEvent) => {
-  //   event.stopPropagation();
-  //   const target = event.target as HTMLElement;
-  //   if (target.nodeName === 'A' || target.nodeName === 'SPAN') {
-  //     const id = target.getAttribute('data-id');
-  //     if (!id) return;
-  //     onDelete && onDelete(id);
-  //   }
-  // };
-
   const filteredTasks = tasks.value.filter((t) =>
     type ? t.type === type : true
   );
 
   return (
     <>
-      <div
-        className={className}
-        // onClick={eventDelete}
-      >
+      <div className={className}>
         <Form
           onSubmit={onChange}
           initialValues={{ type, ...initialValues }}

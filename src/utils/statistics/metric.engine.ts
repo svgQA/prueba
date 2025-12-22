@@ -248,7 +248,7 @@ class MetricsEngine {
     this.compute(raw);
   }
 
-  connect(intervalMs = 0.5 * 60 * 1000) {
+  connect(intervalMs = 30 * 1000) {
     if (this.timer) return; // window.clearInterval(this.timer);
     this.timer = window.setInterval(() => this.recalculate(), intervalMs);
   }

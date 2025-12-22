@@ -22,21 +22,24 @@ export const TaskCard = ({
   if (!task.id || !task.name) return null;
   return (
     <li className='w-52 text-xs p-2 rounded-bl-2xl bg-b-light-dark dark:bg-b-dark-dark min-w-[150px] relative max-h-[80px] list-none'>
-      {remove && onDelete && (
-        <span
-          data-id={task.id}
-          className='vx-icon vx-icon-335 cursor-pointer absolute top-0 right-1 size-sm'
-          onClick={() => onDelete && onDelete(task.id)}
-        ></span>
-      )}
-      <span className='absolute top-0 left-0 px-2 py-0.5 bg-ternary rounded-br-md'>
-        {t(
-          typeof task?.type === 'string'
-            ? task?.type
-            : (task?.type?.value as string)
+      <div className='absolute top-0 left-0 flex w-full justify-between'>
+        <span className='px-2 py-0.5 bg-ternary rounded-br-md'>
+          {t(
+            typeof task?.type === 'string'
+              ? task?.type
+              : (task?.type?.value as string)
+          )}
+        </span>
+        <span className='text-white'>{task.attachmentType}</span>
+        {remove && onDelete && (
+          <span
+            data-id={task.id}
+            className='vx-icon vx-icon-335 cursor-pointer size-sm px-1'
+            onClick={() => onDelete && onDelete(task.id)}
+          ></span>
         )}
-      </span>
-      <div className='flex flex-row justify-between mt-4'>
+      </div>
+      <div className='flex flex-row justify-between mt-5'>
         <TextEllipsis
           text={task.name}
           className='text-primary'
