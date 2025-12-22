@@ -445,6 +445,7 @@ export const ShiftsPage: FunctionalComponent = () => {
               users={selectedUsers as []}
               hasplayers={hasValidPlayer}
               onClose={handleCloseSendModal}
+              unreport={false}
             />
           </Modal>
 

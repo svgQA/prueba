@@ -244,7 +244,7 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
         <div
           className={
             indicator === 'button'
-              ? 'flex flex-col h-full justify-evenly'
+              ? 'flex flex-col h-full justify-evenly gap-2'
               : 'grid gap-2 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(0,1fr))] mt-2 justify-center pb-2'
           }
         >

@@ -23,10 +23,19 @@ import { _onTaskAddWithId } from '@/pages/settings/shifts/task/create/utils';
 import { useUserStore } from '@/store/slices';
 import { showAlert } from '@/components/common/show-alert/show-alert';
 
+const normalizeUserIds = (ids: any[]): number[] => {
+  return [
+    ...new Set(
+      (ids || []).map((x) => Number(x)).filter((n) => Number.isFinite(n))
+    ),
+  ];
+};
+
 interface Props {
   users?: any[];
   hasplayers?: boolean;
   onClose?: () => void;
+  unreport?: boolean;
 }
 
 interface UserBasicInformation {
@@ -40,6 +49,7 @@ export const ManualNotificationForm = ({
   users: externalUsers = [],
   hasplayers,
   onClose,
+  unreport = false,
 }: Props) => {
   const { t } = useTranslation();
   const [templateSelected, setTemplateSelected] = useState<
@@ -57,19 +67,13 @@ export const ManualNotificationForm = ({
   const [notificationType, setNotificationType] = useState<
     'GENERAL' | 'REPORT'
   >('GENERAL');
-  // const [search, setSearch] = useState<string>('');
+
   const [selectedUserIds, setSelectedUserIds] = useState<number[]>([]);
   const [selectedUsersFull, setSelectedUsersFull] = useState<
     UserBasicInformation[]
   >([]);
   const usersWithPlayerId = externalUsers.filter((u) => !!u.playerId);
   const showInlineCreate = useSignal(false);
-  // const filteredUsers = usersWithPlayerId.filter((u) => {
-  //   const match = `${u.name} ${u.email}`
-  //     .toLowerCase()
-  //     .includes(search.toLowerCase());
-  //   return sendToShiftToday ? match && !u.hasShiftToday : match;
-  // });
 
   useEffect(() => {
     setSelectedUserIds(usersWithPlayerId?.map((u) => u.id));
@@ -95,17 +99,10 @@ export const ManualNotificationForm = ({
       PlaceService.getSimpleList(),
     ]);
 
-    if (request_task.getStatus()) {
-      tasks.value = request_task.getMany();
-    }
-
-    if (request_template.getStatus()) {
+    if (request_task.getStatus()) tasks.value = request_task.getMany();
+    if (request_template.getStatus())
       templates.value = request_template.getMany();
-    }
-
-    if (request_places.getStatus()) {
-      places.value = request_places.getMany();
-    }
+    if (request_places.getStatus()) places.value = request_places.getMany();
   }, []);
 
   const handleSubmit = async (values: any) => {
@@ -121,14 +118,13 @@ export const ManualNotificationForm = ({
 
   const reallySend = async (values: any) => {
     if (!hasplayers) return;
-    /*
-     * const result = await NotificationService.sendManualNotification(output);
-     * if (!result.getStatus()) return;
-     * ToastManager.success('s_send_success');
-     * onClose?.();
-     */
 
-    /* DELETE: Posibllemente eliminar esto */
+    const normalizedUserIds = normalizeUserIds(
+      selectedUsersFull?.map((u) => u.id) ?? selectedUserIds
+    );
+
+    setSelectedUserIds(normalizedUserIds);
+
     const payload: ISendManualNotificationDto = {
       notificationType: notificationType.toLowerCase(),
       ...(values.template?.value && { templateId: values.template.value }),
@@ -139,14 +135,14 @@ export const ManualNotificationForm = ({
       tasks: tasksResponse,
       placeId: values.placeId?.value ? Number(values.placeId.value) : undefined,
       filters: {
-        userIds: selectedUsersFull?.map((u) => String(u.id)),
+        userIds: normalizedUserIds.map(String),
         ...(sendToShiftToday && { shiftToday: true }),
       },
     };
 
     const result = await NotificationService.sendManualNotification(payload);
-
     if (!result.getStatus()) return;
+
     ToastManager.success('s_send_success');
     onClose?.();
   };
@@ -155,13 +151,9 @@ export const ManualNotificationForm = ({
     setTasksResponse(tasksResponse.filter((task) => task.id !== id));
   };
 
-  // const clearUserSelection = () => setSelectedUserIds([]);
-
   const { selectedCompany } = useUserStore();
   useEffect(() => {
-    if (selectedCompany) {
-      getInitData();
-    }
+    if (selectedCompany) getInitData();
   }, [selectedCompany]);
 
   const onTaskAdd = (model: any, t: number = 2) => {
@@ -171,22 +163,105 @@ export const ManualNotificationForm = ({
     showInlineCreate.value = false;
   };
 
-  const infoTemplate = async (value: IOption) => {
+  /**
+   * IMPORTANTE:
+   * - además de setTemplateSelected, aquí seteamos title y description en el form
+   *   cuando el usuario elige template (punto 4).
+   */
+  const infoTemplate = async (value: IOption, form?: any) => {
     setTemplateSelected(value);
+
     const responseTemplate = await TemplateService.getTemplateById(
       String(value.value)
     );
     if (!responseTemplate.getStatus()) return;
+
     const model = responseTemplate.getOne();
-    const task = _onTaskAddWithId(model.tasks, 0, 2);
     setTemplateInformation(model);
+
+    // Punto 4: setear title/description con lo del template para que queden llenos
+    if (form) {
+      if (model?.title) form.change('title', model.title);
+      if (model?.description) form.change('description', model.description);
+    }
+
+    // Tu lógica actual de tasks
+    const task = _onTaskAddWithId(model.tasks, 0, 2);
     onTaskAdd(task);
+  };
+
+  /**
+   * Validadores condicionales:
+   * - Si hay template seleccionado => no validar (undefined)
+   * - Si no hay template => validar length
+   */
+  const validateTitle = (value: string) => {
+    if (templateSelected?.value) return undefined;
+    return lengthSize(5, 50)(value);
+  };
+
+  const validateDescription = (value: string) => {
+    if (templateSelected?.value) return undefined;
+    return lengthSize(5, 200)(value);
+  };
+
+  const renderOneSignalPreview = (values: any) => {
+    const title =
+      values?.title || templateInformation?.title || t('l_custom_title');
+
+    const description =
+      values?.description ||
+      templateInformation?.description ||
+      t('l_custom_description');
+
+    const placeLabel = values?.placeId?.label;
+
+    return (
+      <div className='col-span-2'>
+        <div className='w-full bg-b-light-dark dark:bg-b-dark-light py-3 px-3 border-l-8 border-sky-400 mb-2'>
+          <p className='font-bold mb-2 flex items-center'>
+            <span className='vox-icon size-sm vx-icon-314 pr-2' />
+            {t('l_preview')} (OneSignal)
+          </p>
+
+          {/* “Card” estilo push */}
+          <div className='bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-3'>
+            <div className='flex items-start gap-3'>
+              <div className='w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-bold'>
+                App
+              </div>
+              <div className='flex-1'>
+                <p className='font-semibold text-gray-900 dark:text-gray-100'>
+                  {title}
+                </p>
+                <p className='text-sm text-gray-600 dark:text-gray-300'>
+                  {description}
+                </p>
+
+                {sendToGeneral && placeLabel && (
+                  <p className='text-xs text-gray-500 dark:text-gray-400 mt-2'>
+                    {t('l_place')}: {placeLabel}
+                  </p>
+                )}
+              </div>
+              <div className='text-xs text-gray-500 dark:text-gray-400'>
+                now
+              </div>
+            </div>
+          </div>
+
+          <p className='text-xs text-gray-600 dark:text-gray-300 mt-2'>
+            {t('d_preview_disclaimer')}
+          </p>
+        </div>
+      </div>
+    );
   };
 
   return (
     <Form
       onSubmit={handleSubmit}
-      render={({ handleSubmit }) => (
+      render={({ handleSubmit, form, values }) => (
         <form
           onSubmit={handleSubmit}
           className='space-y-6 w-full max-w-5xl mx-auto p-5 relative min-h-[50vh] flex flex-col justify-between pt-10'
@@ -196,112 +271,32 @@ export const ManualNotificationForm = ({
               {t('t_user')}:{' '}
               <p className='mx-2 font-bold'>{selectedUserIds.length}</p>
             </div>
-            <div className='flex items-center bg-ternary py-2 px-2'>
-              <Switch
-                name='switch-send-to-general'
-                backgroundColor='bg-gray-300 dark:bg-gray-600'
-                value={sendToGeneral}
-                onChange={(e) => {
-                  const checked = e.currentTarget.checked;
-                  setSendToGeneral(checked);
-                  setSendToShiftToday(checked);
-                  setNotificationType(checked ? 'REPORT' : 'GENERAL');
-                }}
-                label='l_request_report'
-                className='!font-bold text-white'
-              />
-            </div>
-          </div>
-          <section>
-            {/*
-          <div className='space-y-2'>
-            <input
-              type='text'
-              className='w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200'
-              placeholder={t('p_searchPlaceholder')}
-              value={search}
-              onInput={(e) => setSearch(e.currentTarget.value)}
-            />
-
-            <div className='max-h-48 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg p-2'>
-              {[...new Map(filteredUsers.map((u) => [u.id, u])).values()].map(
-                (user: any) => (
-                  <label
-                    key={user.id}
-                    className='flex items-center gap-2 py-1 text-gray-700 dark:text-gray-200'
-                  >
-                    <Switch
-                      backgroundColor='bg-gray-300 dark:bg-gray-600'
-                      name={`switch-${user.id}`}
-                      identifier={user.id}
-                      value={selectedUserIds.includes(user.id)}
-                      onChange={() =>
-                        setSelectedUserIds((prev) =>
-                          prev.includes(user.id)
-                            ? prev.filter((id) => id !== user.id)
-                            : [...new Set([...prev, user.id])]
-                        )
-                      }
-                    />
-                    <span className='text-sm'>
-                      {user.name} ({user.email})
-                    </span>
-                  </label>
-                )
-              )}
-            </div>
-
-            <div className='flex items-center justify-between mt-2'>
-              <div className='flex items-center gap-2 text-gray-700 dark:text-gray-200'>
-                {sendToGeneral && (
-                  <Switch
-                    name='switch-send-to-shift-today'
-                    backgroundColor='bg-gray-300 dark:bg-gray-600'
-                    value={sendToShiftToday}
-                    onChange={(e) =>
-                      setSendToShiftToday(e.currentTarget.checked)
-                    }
-                    label='l_active_shift'
-                  />
-                )}
-              </div>
-
-              {selectedUserIds.length > 0 && (
-                <Button
-                  name='button-clear-user-selection'
-                  label='l_clear_user'
-                  mode='primary'
-                  onClick={clearUserSelection}
-                  borderless
-                  unpadded
-                  icon='053'
+            {unreport}
+            {!unreport && (
+              <div className='flex items-center bg-ternary py-2 px-2'>
+                <Switch
+                  name='switch-send-to-general'
+                  backgroundColor='bg-gray-300 dark:bg-gray-600'
+                  value={sendToGeneral}
+                  onChange={(e) => {
+                    const checked = e.currentTarget.checked;
+                    setSendToGeneral(checked);
+                    setSendToShiftToday(checked);
+                    setNotificationType(checked ? 'REPORT' : 'GENERAL');
+                  }}
+                  label='l_request_report'
+                  className='!font-bold text-white'
                 />
-              )}
-            </div>
-
-            {selectedUsersFull.length > 0 && (
-              <div className='mt-2 border-y-b-light-dark dark:border-y-b-dark-light border-y py-3 max-h-40 overflow-y-auto vox-scroll-design'>
-                <h5 className='font-medium mb-1'>{t('h_users_selected')}</h5>
-                <ul className='list-disc list-inside space-y-1'>
-                  {[
-                    ...new Map(
-                      selectedUsersFull?.map((u) => [u.id, u])
-                    ).values(),
-                  ].map((u) => (
-                    <li key={u.id}>
-                      {u.name} ({u.email})
-                    </li>
-                  ))}
-                </ul>
               </div>
             )}
           </div>
-        */}
 
+          <section>
+            {renderOneSignalPreview(values)}
             <div className='grid grid-cols-2 gap-3 mb-3'>
               <Field<string>
                 name='title'
-                validate={lengthSize(5, 50)}
+                validate={validateTitle}
                 render={({ input, meta }) => (
                   <Input
                     {...input}
@@ -312,9 +307,10 @@ export const ManualNotificationForm = ({
                   />
                 )}
               />
+
               <Field<string>
                 name='description'
-                validate={lengthSize(5, 200)}
+                validate={validateDescription}
                 render={({ input, meta }) => (
                   <Input
                     {...input}
@@ -326,15 +322,13 @@ export const ManualNotificationForm = ({
                   />
                 )}
               />
+
               <div className='col-span-2'>
-                {templateInformation && (
-                  <div className='w-full bg-b-light-dark dark:bg-b-dark-light py-2 px-3 border-l-8 border-ternary mb-2 flex flex-row items-center '>
-                    <p className='font-bold mr-2'>
-                      {templateInformation.title}:
-                    </p>
-                    <p>{templateInformation.description}</p>
-                  </div>
-                )}
+                <div className='w-full bg-b-light-dark dark:bg-b-dark-light py-2 px-3 border-l-8 border-amber-400 mb-2 flex flex-row items-center justify-between'>
+                  <span className='vox-icon size-sm vx-icon-133 pr-3' />
+                  <p>{t('d_template_disclaimer')}</p>
+                </div>
+
                 <Field<IOption[]>
                   name='template'
                   render={({ input, meta }) => (
@@ -348,16 +342,26 @@ export const ManualNotificationForm = ({
                       icon='171'
                       onChange={(value?: IOption) => {
                         if (value) {
-                          infoTemplate(value);
+                          // trae template + setea title/description (punto 4)
+                          infoTemplate(value, form);
                         } else {
                           setTemplateSelected(undefined);
                           setTemplateInformation(undefined);
+
+                          // (Opcional) Si quieres limpiar los campos al quitar template:
+                          // form.change('title', '');
+                          // form.change('description', '');
+
+                          // también podrías limpiar tasksResponse si aplica
                         }
                       }}
                     />
                   )}
                 />
               </div>
+
+              {/* Punto 3: Preview OneSignal */}
+
               {sendToGeneral && (
                 <>
                   <div className='col-span-2'>
@@ -371,11 +375,13 @@ export const ManualNotificationForm = ({
                       type={sendToGeneral ? 'REPORT' : 'GENERAL'}
                     />
                   </div>
+
                   <div className='col-span-2'>
                     <div className='w-full bg-b-light-dark dark:bg-b-dark-light py-2 px-3 border-l-8 border-amber-400 mb-2 flex flex-row items-center justify-between'>
                       <span className='vox-icon size-sm vx-icon-133 pr-3' />
                       <p>{t('d_notification_disclaimer')}</p>
                     </div>
+
                     <Field<IOption> name='placeId'>
                       {({ input, meta }) => (
                         <SmartSelector

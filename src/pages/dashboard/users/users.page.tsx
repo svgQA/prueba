@@ -292,6 +292,7 @@ export const UsersPage: FunctionalComponent = () => {
             users={selectedUsers as []}
             hasplayers={hasValidPlayer}
             onClose={handleCloseSendModal}
+            unreport={true}
           />
         </Modal>
       }

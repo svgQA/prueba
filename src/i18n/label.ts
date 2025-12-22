@@ -15,7 +15,12 @@ export const label_es = {
   l_check_pending: 'Registro pendiente',
   l_check_error: 'Registro tardío',
   l_check_success: 'Registro exitoso',
+  l_preview: 'Vista',
+  d_preview_disclaimer:
+    'Vista previa aproximada (el formato puede variar según el dispositivo).',
   l_create_ots: 'Crear OTS',
+  d_template_disclaimer:
+    'Al seleccionar un template el titulo y la descripciòn seran remplazados por el del template',
   l_check_on_time: 'A tiempo',
   l_check_late: 'Tarde',
   l_check_early: 'Temprano',
@@ -88,7 +93,7 @@ export const label_es = {
   l_residential: 'Residencial',
   l_other: 'Otro',
   l_review: 'Revisión',
-  l_in_progress: 'En progreso',
+  l_in_progress: 'Activo',
   l_high: 'Alta',
   l_medium: 'Media',
   l_low: 'Baja',
@@ -243,11 +248,17 @@ export const label_en = {
   l_overall: 'Overall',
   l_total_hours: 'Total hours',
   l_total_shifts: 'Total shifts',
+  d_template_disclaimer:
+    'When selecting a template, the title and description will be replaced with the template values',
+
   l_check_error: 'Late check',
   l_check_success: 'Successful check',
   l_filter_by: 'Filter by',
   l_form_continue: 'Continue with form',
   filter_by: 'Rows',
+  l_preview: 'Preview',
+  d_preview_disclaimer:
+    'Approximate preview (format may vary depending on the device).',
   l_name: 'Name',
   l_surname: 'Surname',
   l_company: 'Company',
@@ -319,7 +330,7 @@ export const label_en = {
   l_residential: 'Residential',
   l_other: 'Other',
   l_review: 'Review',
-  l_in_progress: 'In progress',
+  l_in_progress: 'Active',
   l_high: 'High',
   l_medium: 'Medium',
   l_low: 'Low',
