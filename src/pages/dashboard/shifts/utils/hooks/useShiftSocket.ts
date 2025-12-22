@@ -24,6 +24,8 @@ export function useShiftSocket(params: {
     const handleMessage = (event: InSocketMessage<MessageEvent>) => {
       const { type: name, message } = event.payload;
 
+      // TODO: Agregar el SOCKET_MESSAGE_EVENTS.CHECK_ALIVE que es para actualizar
+      // la fecha de conexiòn de un usuario.
       if (
         name === SOCKET_MESSAGE_EVENTS.UPDATE ||
         name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK
@@ -32,31 +34,6 @@ export function useShiftSocket(params: {
         if (!_model || !_model.id) return;
 
         setSignalShifts(_model);
-        {
-          /**
-           * OLD: Actualizar datos viejos desde
-           */
-          // const idx = shifts.value.findIndex(
-          //   (s) => Number(s.id) === Number(_model.id)
-          // );
-          // if (idx < 0) return;
-          // const copy = shifts.value.slice();
-          //
-          // copy[idx] = message;
-          // shifts.value = copy;
-          //
-          // const model: Partial<ShiftStatisticsData> = {
-          //   start: _model.start,
-          //   end: _model.end,
-          //   status: _model.status,
-          //   hasCheckIn: !!_model.checkIn,
-          //   hasCheckOut: !!_model.checkOut,
-          //   roundPct: _model.roundPct,
-          //   activityPct: _model.activityPct,
-          // };
-          // rawDataManager.updateOne(_model.id, model);
-          // metricsEngine.recalculate();
-        }
       }
 
       if (name === SOCKET_MESSAGE_EVENTS.CREATE) {

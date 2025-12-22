@@ -15,6 +15,10 @@ export type ShiftStatisticsData = {
   serviceId: number;
   pointsAmount?: number | null;
   frequency?: number | null;
+  serviceName?: string | null;
+  contractId?: number | null;
+  contractName?: string | null;
+  lastConnection?: string | null;
   // NO VIENE DESDE BACKEND: Agregado en metrica
   roundPctTime?: number;
   active?: boolean;

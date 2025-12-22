@@ -335,6 +335,7 @@ export const ShiftsPage: FunctionalComponent = () => {
             unit=''
             icon='118'
             color='emerald'
+            indicator='button'
             indicators={[
               {
                 label: 'm_round_tim_v',
@@ -352,6 +353,7 @@ export const ShiftsPage: FunctionalComponent = () => {
                 tone: 'warning',
                 action: 'user-active',
               },
+              /*
               {
                 label: 'm_round_tim_v',
                 value: 0,
@@ -360,6 +362,7 @@ export const ShiftsPage: FunctionalComponent = () => {
                 tone: 'warning',
                 action: 'user-active',
               },
+              */
             ]}
           />
         </CardsPage>

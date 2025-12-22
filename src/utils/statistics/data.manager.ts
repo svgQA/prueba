@@ -7,6 +7,7 @@ import {
   idbUpsertMany,
   idbUpsertOne,
 } from './statistics.idb';
+import { UserService } from '@/services';
 
 const RAW_TTL_MS = 10 * 60 * 1000;
 const lastSyncKey = (companyId: number) => `raw_shift_last_sync:${companyId}`;
@@ -40,6 +41,7 @@ class RawDataManager {
     }
 
     const res = await ShiftService.statistics();
+
     if (!res.getStatus()) {
       const cached = await idbGetByCompany(company);
       this.setActive(cached);
@@ -56,6 +58,7 @@ class RawDataManager {
     this.active = true;
     console.log('[MC] backend: ', company, list.length);
     localStorage.setItem(lastSyncKey(company), String(now));
+    await UserService.check_alive();
     return list;
   }
 

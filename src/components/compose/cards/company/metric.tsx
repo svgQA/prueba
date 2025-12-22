@@ -28,7 +28,7 @@ type CardProps = {
   values: number[];
   unit?: string;
   icon?: string;
-  indicator?: 'gauge' | 'balance';
+  indicator?: 'gauge' | 'balance' | 'button';
   color?: 'sky' | 'emerald' | 'amber' | 'rose' | 'violet' | 'slate';
   indicators?: MetricIndicator[];
   className?: string;
@@ -170,30 +170,34 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
         {/* Header row */}
         {/* {JSON.stringify(values)} */}
         <div className='flex items-start gap-3'>
-          <div
-            className={[
-              'shrink-0 rounded-xl w-12 h-12 flex items-center justify-center',
-              theme.iconBg,
-            ].join(' ')}
-            aria-hidden='true'
-          >
-            <span
-              className={[
-                `vox-icon vx-icon-${icon}`,
-                'w-7 h-7 flex items-center justify-center',
-                theme.iconText,
-              ].join(' ')}
-            />
-          </div>
+          {indicator !== 'button' && (
+            <>
+              <div
+                className={[
+                  'shrink-0 rounded-xl w-12 h-12 flex items-center justify-center',
+                  theme.iconBg,
+                ].join(' ')}
+                aria-hidden='true'
+              >
+                <span
+                  className={[
+                    `vox-icon vx-icon-${icon}`,
+                    'w-7 h-7 flex items-center justify-center',
+                    theme.iconText,
+                  ].join(' ')}
+                />
+              </div>
 
-          <div className='min-w-0 flex-1'>
-            <h3 className='text-base font-semibold truncate'>{t(title)}</h3>
-            {subtitle && (
-              <p className='mt-0.5 text-sm text-t-light-dark dark:text-t-dark-light truncate'>
-                {t(subtitle)}
-              </p>
-            )}
-          </div>
+              <div className='min-w-0 flex-1'>
+                <h3 className='text-base font-semibold truncate'>{t(title)}</h3>
+                {subtitle && (
+                  <p className='mt-0.5 text-sm text-t-light-dark dark:text-t-dark-light truncate'>
+                    {t(subtitle)}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
 
           {indicator === 'balance' && (
             <>
@@ -241,7 +245,13 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
           )}
         </div>
 
-        <div className='grid gap-2 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(0,1fr))] mt-2 justify-center pb-2'>
+        <div
+          className={
+            indicator === 'button'
+              ? 'flex flex-col justify-between gap-2'
+              : 'grid gap-2 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(0,1fr))] mt-2 justify-center pb-2'
+          }
+        >
           {indicator === 'balance' && (
             <BalanceIndicator
               value={mainValue}
@@ -252,7 +262,7 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
             />
           )}
 
-          {(indicator === 'gauge' || !indicator) && (
+          {(indicator === 'gauge' || indicator === 'button' || !indicator) && (
             <>
               {topIndicators.map((m, idx) => {
                 if (m.hide) return;
