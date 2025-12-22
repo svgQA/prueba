@@ -19,6 +19,7 @@ import { useUserStore } from '@/store/slices';
 import { useNavigation } from '@/utils/hooks/navigation';
 import { MapPoint } from '@/components/common/map/utils/interface';
 import { Section } from '@/components/common/section/section';
+import { IOption, SmartSelector } from '@/components/common/smart-selector/smart-select';
 
 interface IPoint {
   name: string;
@@ -45,7 +46,7 @@ interface FormData {
   };
 }
 
-interface ILocation {
+export interface ILocation {
   lat: number;
   lng: number;
 }
@@ -60,13 +61,18 @@ interface XPoint {
 export const RoundCreateSettingPage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { id } = useParams(); // Obtiene el id de la URL
-  const currentLocation = useSignal<ILocation>();
-  const points = useSignal<any>([]);
-  const initialValues: Signal<Partial<FormData>> = useSignal({});
-  const places = useSignal<any>([]);
   const { go } = useNavigation();
-  let lastPointsSerialized = JSON.stringify([]);
+
+  const initialValues: Signal<Partial<FormData>> = useSignal({});
+
   const loading = useSignal<boolean>(false);
+  const simplePlaces = useSignal<IOption[]>([]);
+  const places = useSignal<any[]>([]);
+
+  const points = useSignal<any>([]);
+  const currentLocation = useSignal<ILocation>();
+  const radius = useSignal<number>(0);
+  let lastPointsSerialized = JSON.stringify([]);
 
   const sendPointsRef = (data: MapPoint[]) => {
     const serialized = JSON.stringify(data);
@@ -91,18 +97,18 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       model.points = points.value.map((point: XPoint) => {
         const model = point.tasks
           ? {
-              id: point.id,
-              latitude: point.position.lat,
-              longitude: point.position.lng,
-              task: point.tasks,
-              name: point.name || `Point ${point.id}`,
-            }
+            id: point.id,
+            latitude: point.position.lat,
+            longitude: point.position.lng,
+            task: point.tasks,
+            name: point.name || `Point ${point.id}`,
+          }
           : {
-              id: point.id,
-              latitude: point.position.lat,
-              longitude: point.position.lng,
-              name: point.name || `Point ${point.id}`,
-            };
+            id: point.id,
+            latitude: point.position.lat,
+            longitude: point.position.lng,
+            name: point.name || `Point ${point.id}`,
+          };
         return model;
       });
     }
@@ -163,8 +169,14 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
   };
 
   const getPlaces = async () => {
-    const request: any = await PlaceService.getPlaces();
-    places.value = request.data;
+    const request = await PlaceService.getPlaces();
+    if (!request.getStatus()) return;
+    const response = request.getMany();
+    places.value = response;
+    simplePlaces.value = response.map((place: any) => ({
+      label: place.name,
+      value: place.id,
+    }));
   };
 
   const resetMarket = async () => {
@@ -201,6 +213,21 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
       created();
     }
   }, [selectedCompany, location]);
+
+  const onChangePlace = (placeId: number) => {
+    const place = places.value.find((p) => p.id === placeId);
+    console.log('Selected place:', place);
+    
+    if (place && place.radius) {
+      currentLocation.value = {
+        lat: place.latitude,
+        lng: place.longitude,
+      };
+      radius.value = place.radius;
+    } else {
+      radius.value = 0;
+    }
+  }
 
   return (
     <Section
@@ -265,7 +292,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                       <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>
                         {t('h_frequency')}
                       </label>
-                      <HelpTooltip title='h_frequency' content='i_frequency' />
+                      <HelpTooltip title='h_frequency' content='i_frequency' icon='040' />
                     </div>
                     <Field
                       name='frequency'
@@ -287,7 +314,7 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                       <label className='text-sm font-medium text-gray-700 dark:text-gray-300'>
                         {t('h_radius')}
                       </label>
-                      <HelpTooltip title='h_radius' content='i_radius' />
+                      <HelpTooltip title='h_radius' content='i_radius' icon='040' />
                     </div>
                     <Field
                       name='radius'
@@ -565,6 +592,23 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                     <li>{t('inst_3')}</li>
                   </ul>
                 </div>
+                <div>
+                  <h3 className='font-medium mt-4 mb-2 flex flex-row gap-3'>
+                    <span className='vox-icon vx-icon-252 size-sm' />
+                    {t('l_place')}
+                  </h3>
+                  <h4>{t('i_message_place_optional')}</h4>
+                  <SmartSelector
+                    name='select-place'
+                    placeholder='p_select_place'
+                    label='l_place'
+                    id='placeId'
+                    icon='252'
+                    options={simplePlaces.value}
+                    onChange={(e) => onChangePlace(e?.value as number)}
+                    disabled={loading.value}
+                  />
+                </div>
                 <MapLibrePointsMap
                   name='map-points'
                   pointsAmount={100}
@@ -577,14 +621,17 @@ export const RoundCreateSettingPage: FunctionComponent = () => {
                   pointsRef={points.value}
                   center={currentLocation.value}
                   condition={false}
-                  errorCondition=''
                   radialPoint={null}
+                  errorCondition=''
                   errorRadialPoint=''
-                  draggable={true}
                   width='100%'
                   height='500px'
-                  clickPoint={() => {}}
-                  setName={true}
+                  radius={radius.value}
+                  clickPoint={() => { }}
+                  colorRadius='00BDD6'
+                  radiusInternal={500}
+                  draggable
+                  setName
                 />
               </div>
             </div>

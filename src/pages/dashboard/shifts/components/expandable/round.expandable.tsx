@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'preact/hooks';
-import { ShiftService } from '@/services';
+// import { useSignal } from '@preact/signals';
+// import { ILocation } from '@/pages/settings/shifts/rounds/create/create';
+
 import { Badge } from '@/components/common/badge/badge';
 import { Gauge } from '@/components/common/gauge/gauge';
 import { useTranslation } from 'react-i18next';
-import MapViewer from '@/components/common/file/components/mapViewer';
-import { Button } from '@/components/common/button/button';
 import { MapPoint } from '@/components/common/map/utils/interface';
+import MapLibrePointsMap from '@/components/common/map/MapLibrePointsMap';
+// import MapViewer from '@/components/common/file/components/mapViewer';
+// import { Button } from '@/components/common/button/button';
+
+import { ShiftService } from '@/services';
 
 interface PointStatus {
   point: string | number;
@@ -38,6 +43,9 @@ const RoundInfo = ({
   const { t } = useTranslation();
   const [points, setPoints] = useState<PointStatus[]>([]);
   const [pointsHistory, setPointsHistory] = useState<MapPoint[]>([]);
+
+  // const currentLocation = useSignal<ILocation>();
+  // const radius = useSignal<number>(0);
 
   useEffect(() => {
     getData();
@@ -74,10 +82,23 @@ const RoundInfo = ({
           {t('h_round') + ': ' + roundName}
         </h2>
         {points.length !== 0 && (
-          <MapViewer
-            title={t('h_round') + ': ' + roundName}
-            mapPoint={pointsHistory}
-            clickable={<Button name='btn-map-viewer' icon='289'></Button>}
+          // <MapViewer
+          //   title={t('h_round') + ': ' + roundName}
+          //   mapPoint={pointsHistory}
+          //   clickable={<Button name='btn-map-viewer' icon='289'></Button>}
+          // />
+          <MapLibrePointsMap
+            name='map-points'
+            pointsRef={pointsHistory}
+            sendPoints={(pts: MapPoint[]) => {
+              console.log('map sent points', pts);
+            }}
+            // center={currentLocation.value}
+            // radius={radius.value}
+            radiusInternal={500}
+            colorRadius='00BDD6'
+            width='100%'
+            height='500px'
           />
         )}
       </div>

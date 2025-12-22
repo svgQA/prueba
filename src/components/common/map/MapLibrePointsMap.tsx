@@ -30,13 +30,16 @@ export const MapLibrePointsMap = ({
   draggable = true,
   width = '100%',
   height = '500px',
-  clickPoint = () => {},
+  clickPoint = () => { },
   radius,
   disablePointSelection = false,
   adminUser = false,
   zoom = 12,
   onZoomChange,
+  colorRadius = 'FF0000',
   setName,
+  radiusInternal,
+  colorInternalRadius = 'FF0000',
 }: IMapProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MaplibreMap | null>(null);
@@ -180,7 +183,7 @@ export const MapLibrePointsMap = ({
     if (!mapRef.current || !mapRef.current.isStyleLoaded()) return;
 
     updateRadiusCircle();
-  }, [radius, center]);
+  }, [radius, center, radiusInternal, points]);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -227,9 +230,9 @@ export const MapLibrePointsMap = ({
     const a =
       Math.sin(latDiffRad / 2) * Math.sin(latDiffRad / 2) +
       Math.cos(lat1Rad) *
-        Math.cos(lat2Rad) *
-        Math.sin(lngDiffRad / 2) *
-        Math.sin(lngDiffRad / 2);
+      Math.cos(lat2Rad) *
+      Math.sin(lngDiffRad / 2) *
+      Math.sin(lngDiffRad / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = earthRadius * c;
     return distance > 1000;
@@ -475,50 +478,145 @@ export const MapLibrePointsMap = ({
 
   const updateRadiusCircle = () => {
     if (!mapRef.current || !mapRef.current.isStyleLoaded()) return;
+    const map = mapRef.current!;
+    // radiusInternal can be a number (meters) or false
+    const internalRadius = typeof radiusInternal === 'number' ? radiusInternal : false;
 
+    // --- Global radius circle (single center) ---
+    // The global radius is independent from internal per-point radii.
     if (radius && radius > 0 && center) {
       const circleData = createCircleGeoJSON(center, radius);
 
-      if (mapRef.current.getSource('radius-circle')) {
-        (
-          mapRef.current.getSource('radius-circle') as maplibregl.GeoJSONSource
-        ).setData(circleData);
+      if (map.getSource('radius-circle')) {
+        (map.getSource('radius-circle') as maplibregl.GeoJSONSource).setData(circleData);
       } else {
-        mapRef.current.addSource('radius-circle', {
+        map.addSource('radius-circle', {
           type: 'geojson',
           data: circleData,
         });
 
-        mapRef.current.addLayer({
+        map.addLayer({
           id: 'radius-circle-fill',
           type: 'fill',
           source: 'radius-circle',
           paint: {
-            'fill-color': '#FF0000',
+            'fill-color': ('#' + colorRadius),
             'fill-opacity': 0.2,
           },
         });
 
-        mapRef.current.addLayer({
+        map.addLayer({
           id: 'radius-circle-line',
           type: 'line',
           source: 'radius-circle',
           paint: {
-            'line-color': '#FF0000',
+            'line-color': ('#' + colorRadius),
             'line-opacity': 0.8,
             'line-width': 2,
           },
         });
       }
     } else {
-      if (mapRef.current.getSource('radius-circle')) {
-        if (mapRef.current.getLayer('radius-circle-fill')) {
-          mapRef.current.removeLayer('radius-circle-fill');
+      if (map.getSource('radius-circle')) {
+        if (map.getLayer('radius-circle-fill')) {
+          map.removeLayer('radius-circle-fill');
         }
-        if (mapRef.current.getLayer('radius-circle-line')) {
-          mapRef.current.removeLayer('radius-circle-line');
+        if (map.getLayer('radius-circle-line')) {
+          map.removeLayer('radius-circle-line');
         }
-        mapRef.current.removeSource('radius-circle');
+        map.removeSource('radius-circle');
+      }
+    }
+
+    if (internalRadius && internalRadius > 0) {
+      const allPoints = [...points];
+      if (userLocation) allPoints.push(userLocation);
+      const currentIds = allPoints.map((p) => p.id);
+
+      allPoints.forEach((point) => {
+        const latNum = Number(point.position?.lat);
+        const lngNum = Number(point.position?.lng);
+        if (Number.isNaN(latNum) || Number.isNaN(lngNum)) return;
+        const centerPoint = { lat: latNum, lng: lngNum };
+        const sourceId = `radius-internal-${point.id}`;
+        const fillLayerId = `radius-internal-fill-${point.id}`;
+        const lineLayerId = `radius-internal-line-${point.id}`;
+        const circleData = createCircleGeoJSON(centerPoint, internalRadius as number);
+
+        if (map.getSource(sourceId)) {
+          (map.getSource(sourceId) as maplibregl.GeoJSONSource).setData(circleData);
+        } else {
+          map.addSource(sourceId, {
+            type: 'geojson',
+            data: circleData,
+          });
+
+          map.addLayer({
+            id: fillLayerId,
+            type: 'fill',
+            source: sourceId,
+            paint: {
+              'fill-color': ('#' + colorInternalRadius),
+              'fill-opacity': 0.12,
+            },
+          });
+
+          map.addLayer({
+            id: lineLayerId,
+            type: 'line',
+            source: sourceId,
+            paint: {
+              'line-color': ('#' + colorInternalRadius),
+              'line-opacity': 0.6,
+              'line-width': 1.5,
+            },
+          });
+        }
+      });
+
+      const style = map.getStyle();
+      if (style && style.sources) {
+        Object.keys(style.sources).forEach((srcId) => {
+          if (srcId.startsWith('radius-internal-')) {
+            const idPart = srcId.replace('radius-internal-', '');
+            const idNum = Number(idPart);
+            if (!currentIds.includes(idNum)) {
+              // remove layers and source
+              const fillLayerId = `radius-internal-fill-${idNum}`;
+              const lineLayerId = `radius-internal-line-${idNum}`;
+              if (map.getLayer(fillLayerId)) {
+                map.removeLayer(fillLayerId);
+              }
+              if (map.getLayer(lineLayerId)) {
+                map.removeLayer(lineLayerId);
+              }
+              if (map.getSource(srcId)) {
+                map.removeSource(srcId);
+              }
+            }
+          }
+        });
+      }
+    } else {
+      const style = map.getStyle();
+      if (style && style.sources) {
+        Object.keys(style.sources).forEach((srcId) => {
+          if (srcId.startsWith('radius-internal-')) {
+            const idPart = srcId.replace('radius-internal-', '');
+            const idNum = Number(idPart);
+            const fillLayerId = `radius-internal-fill-${idNum}`;
+            const lineLayerId = `radius-internal-line-${idNum}`;
+            if (map.getLayer(fillLayerId)) {
+              map.removeLayer(fillLayerId);
+            }
+            if (map.getLayer(lineLayerId)) {
+              map.removeLayer(lineLayerId);
+            }
+            if (map.getSource(srcId)) {
+              map.removeSource(srcId);
+            }
+          }
+        });
       }
     }
   };
@@ -585,18 +683,17 @@ export const MapLibrePointsMap = ({
     popupNode.innerHTML = `
       <div>
         <div class="flex flex-col mb-2">
-      ${
-        point.name
-          ? disablePointSelection
-            ? `<div>
+      ${point.name
+        ? disablePointSelection
+          ? `<div>
               <label class="text-sm mb-1">${t('h_name')}</label>
               <input id="edit-name" type="text" value="${point.name}" class="w-full text-sm p-1 border rounded" disabled/>
             </div>`
-            : `<div>
+          : `<div>
               <label class="text-sm mb-1">${t('h_name')}</label>
               <input id="edit-name" type="text" value="${point.name}" class="w-full text-sm p-1 border rounded"/>
             </div>`
-          : ''
+        : ''
       }
           <label class="text-sm mb-1 mt-2">${t('h_latitude')}</label>
           <input id="edit-lat" type="text" value="${point.position.lat}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''}/>
@@ -604,10 +701,9 @@ export const MapLibrePointsMap = ({
           <label class="text-sm mb-1 mt-2">${t('h_longitude')}</label>
           <input id="edit-lng" type="text" value="${point.position.lng}" class="w-full text-sm p-1 border rounded" ${disablePointSelection ? 'disabled' : ''} />
         </div>
-        ${
-          disablePointSelection
-            ? ''
-            : `
+        ${disablePointSelection
+        ? ''
+        : `
           <div class="flex justify-between mt-2">
             <button id="btn-delete" class="bg-red-500 hover:bg-red-600 text-white text-xs py-1 px-2 rounded">
               ${t('delete')}
@@ -615,18 +711,17 @@ export const MapLibrePointsMap = ({
             <button id="btn-edit" class="bg-primary hover:bg-primary-dark text-white text-xs py-1 px-2 rounded">
               ${isCreate ? t('save') : t('edit')}
             </button>
-            ${
-              id === -1
-                ? `
+            ${id === -1
+          ? `
             <button id="btn-restore" class="bg-green-500 hover:bg-green-600 text-white text-xs py-1 px-2 rounded">
               ${t('restore')}
             </button>
             `
-                : ''
-            }
+          : ''
+        }
           </div>
           `
-        }
+      }
       </div>
     `;
 
@@ -789,10 +884,10 @@ export const MapLibrePointsMap = ({
         prevPoints.map((point) =>
           point.id === id
             ? {
-                ...point,
-                position: { lat: newLat, lng: newLng },
-                name: name ?? point.name,
-              }
+              ...point,
+              position: { lat: newLat, lng: newLng },
+              name: name ?? point.name,
+            }
             : point
         )
       );
