@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { rawDataManager } from './data.manager';
-import { ShiftStatisticsData } from './types';
+import { ShiftStatisticsData, SHITF_LIVE_STATE } from './types';
 import { defaultThresholds, riskThresholds, roundThresholds } from './constant';
 import { classifyStatus, toPercent, toRound } from './utils';
 import { setSignalMetric } from '@/store/signals/metric';
@@ -50,13 +50,28 @@ class MetricsEngine {
       const startMs = dayjs.utc(s.start).valueOf();
       const endMs = dayjs.utc(s.end).valueOf();
 
+      /**
+       * METRIC:
+       * --------------------------------------------------------------------------
+       * TODO: Calcular los usuario conectados con un tiempo de 10 min
+       * s.lastConnection;
+       *
+       * TODO: Filtrar los datos cuando se aplique sobre el search el serviceName
+       * s.serviceName;
+       *
+       * TODO: Filtrar los datos cuando se aplique sobre el search el contractName
+       * s.contractName;
+       */
+
       let active = false;
+      let state = undefined;
       let roundPctTime = 0;
       let risk = 0;
 
       if (startMs <= nowMs && nowMs < endMs) {
         totalShifts++;
         active = true;
+        state = SHITF_LIVE_STATE.PROGRESS;
 
         const duration = Math.max(1, endMs - startMs);
         const elapsed = Math.max(0, Math.min(nowMs - startMs, duration));
@@ -106,9 +121,16 @@ class MetricsEngine {
             expectedPoints,
           });
         }
+      } else {
+        const THIRTY_MIN = 30 * 60 * 1000;
+        if (nowMs < startMs && startMs - nowMs <= THIRTY_MIN) {
+          state = SHITF_LIVE_STATE.TO_START;
+        } else if (nowMs > endMs && nowMs - endMs <= THIRTY_MIN) {
+          state = SHITF_LIVE_STATE.FINISHED;
+        }
       }
 
-      raw[i] = { ...raw[i], roundPctTime, active, risk };
+      raw[i] = { ...raw[i], roundPctTime, active, risk, state };
     }
 
     /**

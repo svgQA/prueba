@@ -43,10 +43,18 @@ export class UserService extends BaseService {
     return await super.make_request<IUserResponse>(this.name, model);
   }
 
+  static async check_alive() {
+    const model = {
+      url: ['user/last/connection'],
+      METHODS: REQUEST_METHODS.POST,
+      data: {},
+    };
+    return await super.make_request<IUserResponse>(this.name, model);
+  }
+
   static async createProfile(id: number | string) {
     const model: IMakeRequest = {
       url: ['user', 'profile', String(id), 'create'],
-      method: REQUEST_METHODS.GET,
     };
     return await super.make_request<IUserResponse>(this.name, model);
   }

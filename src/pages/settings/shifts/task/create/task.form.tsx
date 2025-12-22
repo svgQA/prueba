@@ -104,6 +104,7 @@ export const TaskFormCreate = ({
     }
 
     if (!_task) return;
+
     onSubmit({
       id: _task?.value || _task?.id,
       formId: _task.formId?.value ?? _task.formId,
@@ -120,7 +121,7 @@ export const TaskFormCreate = ({
       end: _task.end,
       styles: _task.styles,
       companyId: _task.companyId,
-      is_new: true,
+      is_new: _task?.value ? false : true,
     });
 
     if (form) form.change('select-task', undefined);
@@ -180,10 +181,6 @@ export const TaskFormCreate = ({
                         buttonIcon={!onAppend.value ? '044' : '192'}
                         icon='086'
                         options={[
-                          // {
-                          //   value: 'general',
-                          //   label: 'General',
-                          // },
                           ...filteredTasks.map((e) => ({
                             ...e,
                             value: e.id ?? '',
@@ -250,7 +247,7 @@ export const TaskFormCreate = ({
                                 <SmartSelector
                                   {...input}
                                   placeholder='p_select'
-                                  label='i_form'
+                                  label='l_form'
                                   icon='206'
                                   options={_forms.value}
                                 />

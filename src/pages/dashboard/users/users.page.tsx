@@ -284,7 +284,7 @@ export const UsersPage: FunctionalComponent = () => {
           onClose={() => {
             showSendModal.value = !showSendModal;
           }}
-          width='max-w-[1200px]'
+          width='w-[800px]'
           position='fixed'
           header={<h3>{t('d_send_notification')}</h3>}
         >

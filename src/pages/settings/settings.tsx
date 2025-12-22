@@ -96,7 +96,7 @@ export const SettingsModal = () => {
               />
             </div>
           </MenuButtons>
-          <LanguageSwitcher />
+          <LanguageSwitcher borderless />
         </div>
       }
     >

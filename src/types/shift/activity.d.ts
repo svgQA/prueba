@@ -1,3 +1,5 @@
+import { SHITF_LIVE_STATE } from '@/utils/statistics/types';
+
 interface IUser {
   id: number;
   cognitoId: string;
@@ -207,6 +209,7 @@ export interface IShiftResponse {
   active?: boolean;
   roundPctTime?: number;
   risk?: number;
+  state?: SHITF_LIVE_STATE;
 }
 
 interface ITaskHistory {

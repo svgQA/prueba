@@ -9,6 +9,7 @@ export enum SOCKET_MESSAGE_AREA {
   FORM = 'FORM',
   PQRS = 'PQRS',
   ALL = 'ALL',
+  USER = 'USER',
 }
 
 export enum SOCKET_MESSAGE_EVENTS {
@@ -19,6 +20,7 @@ export enum SOCKET_MESSAGE_EVENTS {
   DELETE = 'DELETE',
   PANIC = 'PANIC',
   CHANGE_STATUS = 'CHANGE_STATUS',
+  CHECK_ALIVE = 'CHECK_ALIVE',
 }
 
 export type OutSocketMessage = {

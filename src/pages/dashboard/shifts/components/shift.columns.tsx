@@ -12,6 +12,7 @@ import { FormattedDate, DateContrast } from '@/components/compose/forms';
 import { DateUtils } from '@/utils/utilities/dates';
 import { Badge } from '@/components/common/badge/badge';
 import { useTranslation } from 'react-i18next';
+import { SHITF_LIVE_STATE } from '@/utils/statistics/types';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -21,6 +22,43 @@ export const getColumns = (
   }) => void
 ): NColumnDef<IShiftResponse>[] => {
   return [
+    {
+      id: 'state',
+      accessorKey: 'state',
+      size: 120,
+      header: 'h_status',
+      meta: { headerAlign: 'center' },
+      cell: (info) => {
+        const { state } = info.row.original;
+        if (!state) return;
+        const _status =
+          state === SHITF_LIVE_STATE.PROGRESS
+            ? {
+                state: 'success',
+                label: 'l_in_progress',
+              }
+            : state === SHITF_LIVE_STATE.FINISHED
+              ? {
+                  state: 'error',
+                  label: 'l_finished',
+                }
+              : {
+                  state: 'info',
+                  label: 'l_to_start',
+                };
+        return (
+          <div className='w-full justify-center flex items-center'>
+            <Badge
+              label={_status.label}
+              width='w-24'
+              outline
+              // @ts-ignore
+              status={_status.state}
+            />
+          </div>
+        );
+      },
+    },
     {
       id: 'employee',
       clickable: true,
