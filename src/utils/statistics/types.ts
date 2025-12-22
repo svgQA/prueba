@@ -27,9 +27,9 @@ export type ShiftStatisticsData = {
 };
 
 export enum SHITF_LIVE_STATE {
-  TO_START,
-  PROGRESS,
-  FINISHED,
+  TO_START = 1,
+  PROGRESS = 2,
+  FINISHED = 3,
 }
 
 export enum MetricStatus {

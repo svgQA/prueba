@@ -29,7 +29,7 @@ export const getColumns = (
       header: 'h_status',
       meta: { headerAlign: 'center' },
       cell: (info) => {
-        const { state } = info.row.original;
+        const { state, active, risk } = info.row.original;
         if (!state) return;
         const _status =
           state === SHITF_LIVE_STATE.PROGRESS
@@ -42,12 +42,26 @@ export const getColumns = (
                   state: 'error',
                   label: 'l_finished',
                 }
-              : {
-                  state: 'info',
-                  label: 'l_to_start',
-                };
+              : state === SHITF_LIVE_STATE.TO_START
+                ? {
+                    state: 'warning',
+                    label: 'l_to_start',
+                  }
+                : {
+                    state: 'info',
+                    label: 'l_to_start',
+                  };
         return (
-          <div className='w-full justify-center flex items-center'>
+          <div className='w-full justify-between flex items-center gap-x-1'>
+            <div>
+              {!!risk && risk > 0 && (
+                <span
+                  className={`text-white min-h-10 min-w-10 max-w-10 max-h-10 rounded flex justify-center items-center ${active ? 'bg-teal-700' : 'bg-transparent'}`}
+                >
+                  {active && <p className='text-xs font-bold'>{risk}%</p>}
+                </span>
+              )}
+            </div>
             <Badge
               label={_status.label}
               width='w-24'
@@ -68,15 +82,10 @@ export const getColumns = (
       enableGrouping: true,
       meta: { headerAlign: 'center' },
       cell: (info) => {
-        const { employee, active, risk } = info.row.original;
+        const { employee } = info.row.original;
         const name = `${employee?.name} ${employee?.surname}`;
         return (
           <div className='flex items-center gap-2 w-[250px]'>
-            <span
-              className={`text-white min-h-10 min-w-10 max-w-10 max-h-10 rounded flex justify-center items-center ${active ? 'bg-teal-700' : 'bg-transparent'}`}
-            >
-              {active && <p className='text-xs font-bold'>{risk}%</p>}
-            </span>
             <span
               className='p-1 size-sm cursor-pointer text-left'
               onClick={() => info.row.toggleExpanded()}
