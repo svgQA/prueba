@@ -192,6 +192,7 @@ class MetricsEngine {
 
     /**
      * FINAL METRIC OBJECT
+     * -------------------------------------------
      */
     const metric = {
       user: {
@@ -243,12 +244,11 @@ class MetricsEngine {
   }
 
   async recalculate() {
-    // console.log('METRIC: ');
     const raw = await rawDataManager.getRaw();
     this.compute(raw);
   }
 
-  connect(intervalMs = 1 * 60 * 1000) {
+  connect(intervalMs = 0.5 * 60 * 1000) {
     if (this.timer) return; // window.clearInterval(this.timer);
     this.timer = window.setInterval(() => this.recalculate(), intervalMs);
   }
