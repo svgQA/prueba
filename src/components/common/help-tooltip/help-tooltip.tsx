@@ -13,7 +13,7 @@ interface HelpTooltipProps {
 export const HelpTooltip: FunctionComponent<HelpTooltipProps> = ({
   title = 'Ayuda',
   content,
-  icon = '235',
+  icon = '323',
   className = '',
 }) => {
   const { t } = useTranslation();

@@ -207,7 +207,7 @@ export const FormCreateSettingPage: FunctionComponent = () => {
               ? 'update'
               : 'create'
           }
-          icon='146'
+          icon='039'
           onClick={saveFormat}
         />
       </div>

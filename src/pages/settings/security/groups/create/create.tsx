@@ -86,7 +86,7 @@ export const GroupCreateSettingPage: FunctionComponent = () => {
         <Button
           name='id-save-group'
           label={id ? 'update' : 'create'}
-          icon='146'
+          icon='039'
           onClick={saveGroup}
         />
       </div>

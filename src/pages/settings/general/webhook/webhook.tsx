@@ -154,7 +154,7 @@ export const WebHookSettingPage: FunctionComponent = () => {
             <Button
               name='create-hook'
               label='create'
-              icon='212'
+              icon='039'
               type='submit'
               form='form-create-webhook'
             />

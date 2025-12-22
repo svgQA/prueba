@@ -34,7 +34,7 @@ export const CardSettingHeader: FunctionComponent<
             id={`${computedCreateMenu.value.id}:create`}
             className='bg-ternary w-full px-4 py-1 rounded-md'
           >
-            <span className='vx-icon vx-icon-045 size-sm mr-2 h-full' />
+            <span className='vx-icon vx-icon-039 size-sm mr-2 h-full' />
             {t('new')}
           </Link>
         )}

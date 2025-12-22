@@ -89,7 +89,7 @@ export const KeysSettingPage: FunctionalComponent = () => {
             <Button
               name='create-key'
               label='create'
-              icon='212'
+              icon='039'
               onClick={createKey}
             />
           </div>
