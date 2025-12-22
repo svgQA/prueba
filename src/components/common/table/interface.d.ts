@@ -6,6 +6,7 @@ import {
 } from '../expansible/expansible';
 import { ROW_ACTIONS } from './enum';
 import { modulesReport } from '@/types/form';
+import { IRangeMethod } from './components/range';
 
 export interface IRowAction {
   id: number | string;
@@ -35,7 +36,7 @@ export interface ITableProps<T> {
   loading?: boolean;
   searchable?: { [key: string]: boolean };
   modules?: modulesReport;
-  onRangeChange?: (range: { [key: string]: [string, string] } | null) => void;
+  onRangeChange?: IRangeMethod;
   fileName?: 'shift' | 'employee';
   range?: boolean;
   className?: string;

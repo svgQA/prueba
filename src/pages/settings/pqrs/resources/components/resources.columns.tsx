@@ -4,8 +4,9 @@ import {
   DropdownActionsMenu,
   IDropdownAction,
 } from '@/components/common/table/components/dropdown.actions.menu';
-import { RelativeTime } from '@/components/common/relative/relative';
+// import { RelativeTime } from '@/components/common/relative/relative';
 import { IResourceResponse } from '@/types/memo/memo.response';
+import { FormattedDate } from '@/components/compose/forms';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -40,7 +41,10 @@ export const getColumns = (
       id: 'updatedAt',
       header: 'h_updated',
       meta: { headerAlign: 'center' },
-      cell: (info) => <RelativeTime date={info.getValue() as string} />,
+      cell: (info) => (
+        <FormattedDate date={info.getValue() as string} format='date' />
+      ),
+      // cell: (info) => <RelativeTime date={info.getValue() as string} />,
     },
     {
       id: 'action',

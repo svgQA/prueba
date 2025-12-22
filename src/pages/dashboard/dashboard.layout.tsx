@@ -62,7 +62,6 @@ import { IClientResponse } from '@/types/user/user.response';
 import { USER_TYPE } from '@/types/user/user.enum';
 import { IDropdownOptions } from '@/components/common/dropdown/interface';
 import { INITIAL_DROPDOWN_OPTIONS } from './constant';
-import { IconsModal } from '../globals/icons/icons';
 import { rawDataManager } from '@/utils/statistics/data.manager';
 import { metricsEngine } from '@/utils/statistics/metric.engine';
 
@@ -70,6 +69,7 @@ type Props = {
   location: string;
 };
 
+// import { IconsModal } from '../globals/icons/icons';
 /** ***********************************************************************
  * COMPONENT
  ** ***********************************************************************/
@@ -380,7 +380,7 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps & Props> =
 
         <SettingsModal />
         <TenantsModal open={openModalTenant} />
-        <IconsModal />
+        {/* <IconsModal /> */}
       </section>
     );
   });

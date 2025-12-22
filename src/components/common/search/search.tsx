@@ -5,9 +5,10 @@ import { TargetedEvent } from 'preact/compat';
 import { ColumnFiltersState } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { ReportAutomatic } from '../report-automatic/report-automatic';
-// import { FileControl } from '../file-control/file-control';
 import { RangeExport } from '../range-export/range-export';
 import { IRangeValues, RangeDateFilter } from '../table/components/range/range';
+import { DateUtils } from '@/utils/utilities/dates';
+import { TextEllipsis } from '../text-ellipsis';
 
 export const Search = ({
   id,
@@ -22,7 +23,6 @@ export const Search = ({
   disabled = false,
   onRangeChange,
   modules,
-  // fileName,
   range,
 }: ISearchProps) => {
   const { t } = useTranslation();
@@ -34,10 +34,6 @@ export const Search = ({
   const isDropdownOpen = useSignal<boolean>(false);
   const isOpenRange = useSignal<boolean>(false);
   const columnSelected = useSignal<IKey>({ id: '0', label: '', type: 'date' });
-  //TODO: Verificar si es necesario este useEffect, porque cuando se cambia el valor se borra del buscador automáticamente
-  /* useEffect(() => {
-    searchArray.value = value;
-  }, [value]);*/
 
   const handleChangeInput = useCallback(
     (event: TargetedEvent<HTMLInputElement, Event>) => {
@@ -65,7 +61,7 @@ export const Search = ({
     (selected: IKey, _value?: string) => {
       return (prev: ColumnFiltersState) => {
         const id = selected.id;
-        const value = inputState.value.trim();
+        const value = _value || inputState.value.trim();
         const type = selected.type;
         const existingIndex = prev.findIndex((item) => item.id === id);
         if (existingIndex !== -1) {
@@ -117,7 +113,6 @@ export const Search = ({
           if (key.type === 'date') {
             isOpenRange.value = true;
             columnSelected.value = key;
-            // setFilterSelected(key, true);
             return;
           }
           setFilterSelected(key);
@@ -201,7 +196,6 @@ export const Search = ({
 
   const handleClickKeys = useCallback(
     (event: TargetedEvent<HTMLDivElement>) => {
-      // event.stopPropagation();
       const target = event.target as HTMLDivElement;
       const name = target.getAttribute('data-name');
       if (name && name.startsWith('filter-key-')) {
@@ -213,7 +207,6 @@ export const Search = ({
         if (type === 'date') {
           isOpenRange.value = true;
           columnSelected.value = { id, label, type };
-          // setFilterSelected({ id, label, type }, true);
           return;
         }
 
@@ -236,18 +229,9 @@ export const Search = ({
                   ? 'bg-primary-opacity text-primary'
                   : 'hover:bg-b-light hover:text-primary'
               }`}
-              // className={'bg-red-100 relative my-1'}
               key={keyName}
-              // data-name={keyName}
-              // data-id={key.id}
-              // data-label={key.label}
-              // data-type={key.type}
               tabIndex={0}
               onKeyDown={handleKeyPress}
-              // onClick={(e) => {
-              //   e.stopPropagation();
-              //   setFilterSelected(key);
-              // }}
             >
               <span
                 className='absolute top-0 left-0 w-full h-full'
@@ -257,7 +241,7 @@ export const Search = ({
                 data-type={key.type}
               />
               <span className='px-2 mr-1 font-medium text-sm capitalize'>
-                {/* [{key.type}] */} {t(key.label)}:
+                {t(key.label)}:
               </span>
               <span className='text-sm font-normal'>{inputState.value}</span>
             </div>
@@ -286,9 +270,12 @@ export const Search = ({
               data-name={keyName}
               className='flex items-center h-7 px-2 py-1 bg-primary-opacity dark:bg-ternary dark:text-white text-primary rounded-xl cursor-pointer gap-1 transition-all hover:bg-primary-opacity-2 text-sm'
             >
-              <span className='font-medium'>
-                <strong>{t(keyLabel)}</strong>{' '}
-                {keyType === 'date' ? '' : `: ${String(item.value)}`}
+              <span className='font-medium flex flex-row justify-between gap-1'>
+                <strong>{t(keyLabel)}: </strong>
+                <TextEllipsis
+                  text={String(item.value)}
+                  maxWidth='200px'
+                ></TextEllipsis>
               </span>
               <span
                 className='ml-1 hover:text-ternary cursor-pointer flex items-center justify-center w-4 h-4 rounded-full hover:bg-primary-opacity-2'
@@ -327,7 +314,7 @@ export const Search = ({
   return (
     <div
       id={id}
-      className='flex flex-row items-center h-10 w-full max-w-[850px] px-3 border rounded-xl relative bg-white dark:bg-b-dark-dark border-gray-200 dark:border-gray-700 shadow-sm'
+      className='flex flex-row items-center h-10 w-full max-w-[850px] px-3 border rounded-xl relative bg-white dark:bg-b-dark-dark border-gray-200 dark:border-gray-700'
     >
       <span className='vox-icon vx-icon-153 text-gray-500 dark:text-gray-400 !text-lg' />
       <div
@@ -362,7 +349,7 @@ export const Search = ({
       {keys.length > 0 && isDropdownOpen.value && (
         <div
           ref={keysContainerRef}
-          className='absolute right-0 top-full mt-2 min-w-56 border py-2 z-30 bg-white dark:bg-b-dark-dark rounded-xl shadow-md border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-top-5 duration-150 max-h-[300px] overflow-y-auto vox-scroll-design'
+          className='absolute right-0 top-full mt-2 min-w-56 border py-2 z-30 bg-white dark:bg-b-dark-dark rounded-xl border-gray-200 dark:border-gray-700 animate-in fade-in slide-in-from-top-5 duration-150 max-h-[300px] overflow-y-auto vox-scroll-design'
           onClick={handleClickKeys}
         >
           <h6 className='px-3 py-1 text-xs text-gray-500 dark:text-gray-400 font-medium uppercase'>
@@ -374,26 +361,16 @@ export const Search = ({
 
       <RangeDateFilter
         isOpen={isOpenRange}
-        onRangeChange={(e: IRangeValues | null) => {
-          if (!e) return;
-
-          /*
-          const keysObj = e?.keys;
-          if (!keysObj || typeof keysObj !== 'object') return;
-
-          const firstKey = Object.keys(keysObj)[0];
-          const arr = keysObj[firstKey];
-
-          if (!Array.isArray(arr) || arr.length === 0) return;
-
-          const firstValue = arr[0];
-          const joinedValues = arr.join('-');
-
-          console.log(typeof e, e);
-
-          onRangeChange?.(e);
-          */
-          setFilterSelected(columnSelected.value, false);
+        onRangeChange={(event?: IRangeValues | null) => {
+          if (!event) return;
+          setFilterSelected(
+            columnSelected.value,
+            false,
+            String(
+              `${DateUtils.dateToFrontend(event.data[0])} | ${DateUtils.dateToFrontend(event.data[1])}`
+            )
+          );
+          onRangeChange?.(event);
         }}
         column={columnSelected.value?.id}
       />

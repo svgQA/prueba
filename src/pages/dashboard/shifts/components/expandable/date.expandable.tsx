@@ -15,6 +15,7 @@ import { useSignal } from '@preact/signals';
 import { useTranslation } from 'react-i18next';
 import { toSafeInteger } from 'lodash';
 import { toSafeNumber } from '@/utils/general';
+
 interface ICheckData {
   time?: string;
   date?: string;
@@ -183,8 +184,8 @@ const DateInfo = ({
         distance={checkInData?.distance || ''}
         btnLabel='b_check_in' // TODO: No traducir, porque se usa para una condiciòn
         shiftId={shift?.id || 0}
-        latitude={ci_longitude}
-        longitude={ci_latitude}
+        latitude={ci_latitude}
+        longitude={ci_longitude}
         file={checkInData?.file || []}
         disabled={shift?.status !== 'CREATED'}
         onCheck={handleCheck}
@@ -403,7 +404,7 @@ const ShiftCard = ({
               onClick={() =>
                 showAlert({
                   title: t(btnLabel),
-                  message: `${t('s_request')} ${btnLabel}`,
+                  message: `${t('s_request')} ${t('h_check_in')}`,
                   onConfirm: () => handleCheck(),
                   onCancel: () => {},
                 })
@@ -435,7 +436,7 @@ const ShiftCard = ({
               },
             },
             {
-              id: 1,
+              id: -3,
               position: {
                 lat: lat,
                 lng: lng,

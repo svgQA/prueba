@@ -1,6 +1,6 @@
 import { IFormResponse } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
-import { RelativeTime } from '@/components/common/relative/relative';
+// import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Avatar } from '@/components/common/Avatar';
 import {
@@ -8,6 +8,7 @@ import {
   IDropdownAction,
 } from '@/components/common/table/components/dropdown.actions.menu';
 import { TextEllipsis } from '@/components/common/text-ellipsis';
+import { FormattedDate } from '@/components/compose/forms';
 
 export const getColumns = (
   onClickAction: (params: {
@@ -67,14 +68,20 @@ export const getColumns = (
     id: 'createdAt',
     size: 50,
     header: 'h_created',
-    cell: (info) => <RelativeTime date={info.getValue() as string} />,
+    cell: (info) => (
+      <FormattedDate date={info.getValue() as string} format='date' />
+    ),
+    // cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
     size: 50,
     header: 'h_updated',
-    cell: (info) => <RelativeTime date={info.getValue() as string} />,
+    cell: (info) => (
+      <FormattedDate date={info.getValue() as string} format='date' />
+    ),
+    // cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'category',

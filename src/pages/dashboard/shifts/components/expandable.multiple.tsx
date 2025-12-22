@@ -26,8 +26,6 @@ const getInfoContent = (
   const { service, employee, activityPct, roundPct, tasks, report, task } =
     shift;
 
-  // console.log('tasks', task);
-
   switch (type) {
     case 'service':
       return <ServiceInfo service={service} shift={shift} />;

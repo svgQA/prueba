@@ -10,8 +10,9 @@ import {
 } from '@/utils/socket/manager/types';
 import { setSignalShifts, signalShifts } from '@/store/signals/shift';
 import { IShiftResponse } from '@/types/shift/activity';
+import { IRangeValues } from '@/components/common/table/components/range';
 
-type DateRangeFilters = { [key: string]: [string, string] } | null;
+type DateRangeFilters = IRangeValues | null;
 
 export function useShiftSocket(params: {
   dateRangeFilters: DateRangeFilters;

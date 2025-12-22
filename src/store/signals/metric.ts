@@ -1,5 +1,5 @@
 import { MetricsSeries, MetricStatus } from '@/utils/statistics/types';
-import { signal } from '@preact/signals';
+import { computed, signal } from '@preact/signals';
 
 const initialData = {
   user: {
@@ -11,12 +11,16 @@ const initialData = {
     status: MetricStatus.DANGER,
   },
   round: {
-    values: [0, 0, 0],
+    values: [50, 0, 0],
     status: MetricStatus.DANGER,
   },
 };
 
-export const signalMetrics = signal<MetricsSeries>(initialData);
+const signalMetrics = signal<MetricsSeries>(initialData);
+
+export const useMetricUser = computed(() => signalMetrics.value.user.values);
+export const useMetricShift = computed(() => signalMetrics.value.shift.values);
+export const useMetricRound = computed(() => signalMetrics.value.round.values);
 
 export const setSignalMetric = (data: MetricsSeries) => {
   signalMetrics.value = data;

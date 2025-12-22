@@ -1,8 +1,9 @@
 import { Avatar } from '@/components/common/Avatar';
 import { Badge } from '@/components/common/badge/badge';
 import { ButtonAction } from '@/components/common/button/column';
-import { RelativeTime } from '@/components/common/relative/relative';
+// import { RelativeTime } from '@/components/common/relative/relative';
 import { ROW_ACTIONS } from '@/components/common/table/enum';
+import { FormattedDate } from '@/components/compose/forms';
 import { IResponseResponse, RESPONSE_STATUS } from '@/types/form';
 import { ColumnDef } from '@tanstack/react-table';
 
@@ -48,13 +49,19 @@ export const columns: ColumnDef<IResponseResponse>[] = [
     accessorKey: 'createdAt',
     id: 'createdAt',
     header: 'h_created',
-    cell: (info) => <RelativeTime date={info.getValue() as string} />,
+    cell: (info) => (
+      <FormattedDate date={info.getValue() as string} format='date' />
+    ),
+    // cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'updatedAt',
     id: 'updatedAt',
     header: 'h_updated',
-    cell: (info) => <RelativeTime date={info.getValue() as string} />,
+    cell: (info) => (
+      <FormattedDate date={info.getValue() as string} format='date' />
+    ),
+    // cell: (info) => <RelativeTime date={info.getValue() as string} />,
   },
   {
     accessorKey: 'status',

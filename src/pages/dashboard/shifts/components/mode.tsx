@@ -1,7 +1,9 @@
 import { useState } from 'preact/hooks';
 import { SHIFT_MODE } from '../store/shift';
+import { useTranslation } from 'react-i18next';
 
 export default function ModeSwitch({ value = SHIFT_MODE, onChange }: any) {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<SHIFT_MODE>(value);
   const isMonitoring = mode === SHIFT_MODE.MONITOR;
 
@@ -41,7 +43,7 @@ export default function ModeSwitch({ value = SHIFT_MODE, onChange }: any) {
         <span
           className={`${isMonitoring ? 'text-white' : ''} transition-colors`}
         >
-          Monitoreo
+          {t('h_monitor')}
         </span>
       </span>
 
@@ -49,7 +51,7 @@ export default function ModeSwitch({ value = SHIFT_MODE, onChange }: any) {
         <span
           className={`${!isMonitoring ? 'text-white' : ''} transition-colors`}
         >
-          Historial
+          {t('h_historical')}
         </span>
       </span>
     </button>
