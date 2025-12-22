@@ -15,6 +15,7 @@ import {
 } from '../notification';
 import { signalShifts } from '@/store/signals/shift';
 import { IRangeValues } from '@/components/common/table/components/range';
+import { metricsEngine } from '@/utils/statistics/metric.engine';
 
 type DateRangeFilters = IRangeValues | null;
 
@@ -65,6 +66,7 @@ export function useShiftsData(params: {
       setHasValidPlayer(hasUsers);
 
       loading.value = false;
+      metricsEngine.recalculate();
     },
     [loading, notificationValidate]
   );

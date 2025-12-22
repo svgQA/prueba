@@ -23,7 +23,14 @@ export type ShiftStatisticsData = {
   roundPctTime?: number;
   active?: boolean;
   risk?: number;
+  state?: SHITF_LIVE_STATE;
 };
+
+export enum SHITF_LIVE_STATE {
+  TO_START,
+  PROGRESS,
+  FINISHED,
+}
 
 export enum MetricStatus {
   SUCCESS = 'success',

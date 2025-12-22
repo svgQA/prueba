@@ -167,88 +167,84 @@ export const MetricCard: FunctionalComponent<CardProps> = memo(
           className,
         ].join(' ')}
       >
-        {/* Header row */}
-        {/* {JSON.stringify(values)} */}
-        <div className='flex items-start gap-3'>
-          {indicator !== 'button' && (
-            <>
-              <div
-                className={[
-                  'shrink-0 rounded-xl w-12 h-12 flex items-center justify-center',
-                  theme.iconBg,
-                ].join(' ')}
-                aria-hidden='true'
-              >
-                <span
-                  className={[
-                    `vox-icon vx-icon-${icon}`,
-                    'w-7 h-7 flex items-center justify-center',
-                    theme.iconText,
-                  ].join(' ')}
-                />
-              </div>
-
-              <div className='min-w-0 flex-1'>
-                <h3 className='text-base font-semibold truncate'>{t(title)}</h3>
-                {subtitle && (
-                  <p className='mt-0.5 text-sm text-t-light-dark dark:text-t-dark-light truncate'>
-                    {t(subtitle)}
-                  </p>
-                )}
-              </div>
-            </>
-          )}
-
-          {indicator === 'balance' && (
-            <>
-              {topIndicators.map((m, idx) => {
-                if (m.hide) return;
-                const tone = m.tone ?? 'neutral';
-                return (
-                  <SimpleCard
-                    key={`${m.label}-${idx}`}
-                    tone={tone}
-                    label={m.label}
-                    value={m.value}
-                    icon={m.icon}
-                    unit={m.unit}
-                    action={m.action}
-                  />
-                );
-              })}
-            </>
-          )}
-
-          {!indicator && (
+        {indicator !== 'button' && (
+          <div className='flex items-start gap-x-2'>
             <div
               className={[
-                'shrink-0 rounded-xl px-3 py-2',
-                'text-right',
-                theme.valueBg,
+                'shrink-0 rounded-xl w-12 h-12 flex items-center justify-center',
+                theme.iconBg,
               ].join(' ')}
+              aria-hidden='true'
             >
-              <div className='flex items-baseline gap-1 justify-end'>
-                <span className='text-2xl font-bold tracking-tight'>
-                  {mainValue}
-                </span>
-                {unit && (
-                  <span className='text-sm font-semibold opacity-80'>
-                    {unit}
-                  </span>
-                )}
-              </div>
+              <span
+                className={[
+                  `vox-icon vx-icon-${icon}`,
+                  'w-7 h-7 flex items-center justify-center',
+                  theme.iconText,
+                ].join(' ')}
+              />
             </div>
-          )}
 
-          {indicator === 'gauge' && (
-            <SimpleGauge progress={mainValue} color='red' size={14} />
-          )}
-        </div>
+            <div className='min-w-0 flex-1'>
+              <h3 className='text-base font-semibold truncate'>{t(title)}</h3>
+              {subtitle && (
+                <p className='mt-0.5 text-sm text-t-light-dark dark:text-t-dark-light truncate'>
+                  {t(subtitle)}
+                </p>
+              )}
+            </div>
+
+            {indicator === 'balance' && (
+              <>
+                {topIndicators.map((m, idx) => {
+                  if (m.hide) return;
+                  const tone = m.tone ?? 'neutral';
+                  return (
+                    <SimpleCard
+                      key={`${m.label}-${idx}`}
+                      tone={tone}
+                      label={m.label}
+                      value={m.value}
+                      icon={m.icon}
+                      unit={m.unit}
+                      action={m.action}
+                    />
+                  );
+                })}
+              </>
+            )}
+
+            {!indicator && (
+              <div
+                className={[
+                  'shrink-0 rounded-xl px-3 py-2',
+                  'text-right',
+                  theme.valueBg,
+                ].join(' ')}
+              >
+                <div className='flex items-baseline gap-1 justify-end'>
+                  <span className='text-2xl font-bold tracking-tight'>
+                    {mainValue}
+                  </span>
+                  {unit && (
+                    <span className='text-sm font-semibold opacity-80'>
+                      {unit}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {indicator === 'gauge' && (
+              <SimpleGauge progress={mainValue} color='red' size={14} />
+            )}
+          </div>
+        )}
 
         <div
           className={
             indicator === 'button'
-              ? 'flex flex-col justify-between gap-2'
+              ? 'flex flex-col h-full justify-evenly'
               : 'grid gap-2 grid-cols-1 sm:grid-cols-[repeat(auto-fit,minmax(0,1fr))] mt-2 justify-center pb-2'
           }
         >

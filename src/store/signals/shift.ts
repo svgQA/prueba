@@ -26,6 +26,7 @@ export const setSignalMetricShifts = (model: ShiftStatisticsData[]) => {
       active: upd.active,
       roundPctTime: upd.roundPctTime,
       risk: upd.risk,
+      state: upd.state,
     };
     changed = true;
   }
@@ -50,6 +51,7 @@ export const setSignalShifts = (model: IShiftResponse) => {
     hasCheckOut: !!model.checkOut,
     roundPct: model.roundPct,
     activityPct: model.activityPct,
+    lastConnection: model?.employee?.lastConnection,
   };
 
   rawDataManager.updateOne(model.id, _model);

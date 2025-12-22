@@ -24,8 +24,12 @@ export function useShiftSocket(params: {
     const handleMessage = (event: InSocketMessage<MessageEvent>) => {
       const { type: name, message } = event.payload;
 
-      // TODO: Agregar el SOCKET_MESSAGE_EVENTS.CHECK_ALIVE que es para actualizar
-      // la fecha de conexiòn de un usuario.
+      /**
+       * METRIC:
+       * --------------------------------------------------------------------------
+       * TODO: Agregar el SOCKET_MESSAGE_EVENTS.CHECK_ALIVE que es para actualizar
+       * la fecha de conexiòn de un usuario.
+       */
       if (
         name === SOCKET_MESSAGE_EVENTS.UPDATE ||
         name === SOCKET_MESSAGE_EVENTS.UPDATE_CHECK

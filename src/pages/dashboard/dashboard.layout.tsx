@@ -120,7 +120,6 @@ export const DashboardLayout: FunctionComponent<AuthAmplifyProps & Props> =
         // FaroManager.connect(getTenant, getCompanyId, getToken, getCognito);
         rawDataManager.connect(getCompanyId);
         metricsEngine.connect();
-        metricsEngine.recalculate();
       }
       return () => {
         WebSocketManager.disconnect();
