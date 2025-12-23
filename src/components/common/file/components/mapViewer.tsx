@@ -6,10 +6,16 @@ const MapViewer = ({
   mapPoint,
   clickable,
   title,
+  radius,
+  radiusInternal,
+  colorRadius,
 }: {
   mapPoint?: MapPoint | MapPoint[];
   clickable?: any;
   title?: string;
+  radius?: number;
+  radiusInternal?: number;
+  colorRadius?: string;
 }) => {
   const infoExpanded = (
     <div className='w-full mx-auto flex flex-col items-center justify-center'>
@@ -35,6 +41,9 @@ const MapViewer = ({
         }}
         height='78vh'
         width='80vw'
+        radius={radius}
+        radiusInternal={radiusInternal}
+        colorRadius={colorRadius}
       />
     </div>
   );
