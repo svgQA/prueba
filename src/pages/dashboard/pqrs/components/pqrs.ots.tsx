@@ -11,7 +11,13 @@ import { getColumns } from './pqrs-ots.columns';
 import { ICOtsRequest } from '../utils/interface';
 import { useUserStore } from '@/store/slices';
 
+// 1. IMPORTAR LA LIBRERÍA DE TRADUCCIÓN
+import { useTranslation } from 'react-i18next';
+
 const OtsPage = () => {
+  // 2. OBTENER LA FUNCIÓN 't'
+  const { t } = useTranslation();
+  
   const { selectedCompany } = useUserStore();
 
   const pqrsOts = useSignal<ICOtsRequest[]>([]);
@@ -45,7 +51,8 @@ const OtsPage = () => {
       <div className='max-h-screen relative'>
         <Table<ICOtsRequest>
           data={pqrsOts.value}
-          columns={getColumns(onClickAction)}
+          // 3. PASAR 't' COMO PRIMER ARGUMENTO
+          columns={getColumns(t, onClickAction)} 
           showExpandableIcon
           selectable
           loading={loading.value}

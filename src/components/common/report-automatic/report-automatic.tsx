@@ -85,7 +85,7 @@ export const ReportAutomatic = ({ modules }: ReportAutomaticProps) => {
       {
         value: SelectCheckType.CLIENTE,
         label: t('l_client'),
-        icon: '344',
+        icon: '318',
         color: 'secondary',
         //disabled: !getPermissionByModuleState('memo', 'client:report'),
         disabled: false,

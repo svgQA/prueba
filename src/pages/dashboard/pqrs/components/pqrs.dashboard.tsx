@@ -1,6 +1,10 @@
 import { Badge } from '@/components/common/badge/badge';
+// Importamos el hook de traducción
+import { useTranslation } from 'react-i18next';
 
 const DashboardPreview = () => {
+  const { t } = useTranslation();
+
   const SkeletonBlock = ({ className = '' }: { className?: string }) => (
     <div
       class={`animate-pulse bg-gray-100 dark:bg-b-dark-light rounded ${className}`}
@@ -13,45 +17,47 @@ const DashboardPreview = () => {
         <div class='bg-white rounded-xl p-6 shadow-sm dark:bg-b-dark-light dark:text-white text-b-dark'>
           <div class='flex items-start justify-between flex-wrap gap-4'>
             <div>
-              <p class='text-xs uppercase tracking-wide'>Resumen operativo</p>
-              <h2 class='text-xl font-semibold'>Dashboard de atención</h2>
+              <p class='text-xs uppercase tracking-wide'>
+                {t('pqrs.dashboard.operational_summary')}
+              </p>
+              <h2 class='text-xl font-semibold'>
+                {t('pqrs.dashboard.attention_dashboard')}
+              </h2>
               <p class='text-sm mt-1 max-w-xl'>
-                Usa este espacio para visualizar el desempeño de PQRS: números
-                atendidos por mes, resoluciones automáticas con IA y desglose
-                por áreas o niveles de prioridad.
+                {t('pqrs.dashboard.attention_desc')}
               </p>
             </div>
             <div class='flex items-center gap-2 bg-b-light dark:bg-b-dark rounded-full px-4 py-2 text-xs'>
               <span class='w-2 h-2 rounded-full bg-primary animate-pulse'></span>
-              Diseño previo — listo para conectar con el backend
+              {t('pqrs.dashboard.design_preview')}
             </div>
           </div>
 
           <div class='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6'>
             {[
               {
-                title: 'Atenciones del mes',
-                helper: 'Incluye totales y porcentaje vs. mes anterior',
+                title: t('pqrs.dashboard.cards.monthly_attention'),
+                helper: t('pqrs.dashboard.cards.monthly_attention_help'),
               },
               {
-                title: 'Resueltas por IA',
-                helper: 'Qué porcentaje resolvió el chatbot o agente virtual',
+                title: t('pqrs.dashboard.cards.ai_resolved'),
+                helper: t('pqrs.dashboard.cards.ai_resolved_help'),
               },
               {
-                title: 'Prioridad alta',
-                helper: 'Cuántas solicitudes críticas siguen abiertas',
+                title: t('pqrs.dashboard.cards.high_priority'),
+                helper: t('pqrs.dashboard.cards.high_priority_help'),
               },
               {
-                title: 'Área con más casos',
-                helper: 'Top 3 áreas con mayor volumen y tiempos de respuesta',
+                title: t('pqrs.dashboard.cards.top_area'),
+                helper: t('pqrs.dashboard.cards.top_area_help'),
               },
               {
-                title: 'SLA promedio',
-                helper: 'Duración desde radicación hasta resolución',
+                title: t('pqrs.dashboard.cards.avg_sla'),
+                helper: t('pqrs.dashboard.cards.avg_sla_help'),
               },
               {
-                title: 'Satisfacción',
-                helper: 'NPS/CSAT asociado a casos atendidos',
+                title: t('pqrs.dashboard.cards.satisfaction'),
+                helper: t('pqrs.dashboard.cards.satisfaction_help'),
               },
             ].map((card, idx) => (
               <div
@@ -81,18 +87,18 @@ const DashboardPreview = () => {
           <div class='p-6 rounded-xl bg-white shadow-sm dark:bg-b-dark-light dark:text-white text-b-dark'>
             <div class='flex items-start justify-between gap-2'>
               <div>
-                <p class='text-xs uppercase tracking-wide'>Gráfica sugerida</p>
+                <p class='text-xs uppercase tracking-wide'>
+                  {t('pqrs.dashboard.suggested_chart')}
+                </p>
                 <h3 class='text-lg font-semibold'>
-                  Distribución por estado y prioridad
+                  {t('pqrs.dashboard.status_priority_dist')}
                 </h3>
                 <p class='text-sm'>
-                  Aquí podría ir una gráfica de barras apiladas con estados
-                  (creado, en proceso, finalizado) y prioridades
-                  alta/media/baja.
+                  {t('pqrs.dashboard.status_priority_desc')}
                 </p>
               </div>
               <Badge
-                label='Gráfico'
+                label={t('pqrs.dashboard.chart')}
                 status='info'
                 outline
                 size='xs'
@@ -112,17 +118,18 @@ const DashboardPreview = () => {
           <div class='p-6 rounded-xl bg-white shadow-sm dark:bg-b-dark-light dark:text-white text-b-dark'>
             <div class='flex items-start justify-between gap-2 '>
               <div>
-                <p class='text-xs uppercase tracking-wide'>Tendencia semanal</p>
+                <p class='text-xs uppercase tracking-wide'>
+                  {t('pqrs.dashboard.weekly_trend')}
+                </p>
                 <h3 class='text-lg font-semibold'>
-                  Tiempo de respuesta y casos por día
+                  {t('pqrs.dashboard.response_time_cases')}
                 </h3>
                 <p class='text-sm'>
-                  Reserva este espacio para una gráfica de líneas con casos
-                  atendidos y tiempos promedio de resolución.
+                  {t('pqrs.dashboard.response_time_desc')}
                 </p>
               </div>
               <Badge
-                label='Línea'
+                label={t('pqrs.dashboard.line')}
                 status='success'
                 outline
                 size='xs'
@@ -144,15 +151,18 @@ const DashboardPreview = () => {
         <div class='p-6 rounded-xl bg-white shadow-sm dark:bg-b-dark-light dark:text-white text-b-dark'>
           <div class='flex items-start justify-between gap-2'>
             <div>
-              <p class='text-xs uppercase tracking-wide'>Tablas recomendadas</p>
-              <h3 class='text-lg font-semibold'>Casos por agente o área</h3>
+              <p class='text-xs uppercase tracking-wide'>
+                {t('pqrs.dashboard.rec_tables')}
+              </p>
+              <h3 class='text-lg font-semibold'>
+                {t('pqrs.dashboard.cases_by_agent')}
+              </h3>
               <p class='text-sm'>
-                Ideal para listar detalle de casos abiertos, SLA, responsable y
-                prioridad.
+                {t('pqrs.dashboard.cases_by_agent_desc')}
               </p>
             </div>
             <Badge
-              label='Tabla'
+              label={t('pqrs.dashboard.table')}
               status='warning'
               outline
               size='xs'
@@ -186,14 +196,18 @@ const DashboardPreview = () => {
         <div class='p-6 bg-white shadow-sm dark:bg-b-dark-light dark:text-white text-b-dark'>
           <div class='flex items-start justify-between gap-2'>
             <div>
-              <p class='text-xs uppercase tracking-wide'>Alertas clave</p>
-              <h3 class='text-lg font-semibold'>Casos a punto de vencer</h3>
+              <p class='text-xs uppercase tracking-wide'>
+                {t('pqrs.dashboard.key_alerts')}
+              </p>
+              <h3 class='text-lg font-semibold'>
+                {t('pqrs.dashboard.expiring_cases')}
+              </h3>
               <p class='text-sm'>
-                Lista de casos con fecha límite cercana para priorizar acciones.
+                {t('pqrs.dashboard.expiring_cases_desc')}
               </p>
             </div>
             <Badge
-              label='Recordatorios'
+              label={t('pqrs.dashboard.reminders')}
               status='error'
               outline
               size='xs'

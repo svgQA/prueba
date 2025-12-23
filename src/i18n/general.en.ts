@@ -1,4 +1,26 @@
 export const general_en = {
+  general: {
+    add: 'Add',
+    no_data: 'No items added',
+    active: 'Active',
+    inactive: 'Inactive',
+  },
+  frequency: {
+    daily: 'Daily',
+    weekly: 'Weekly',
+    monthly: 'Monthly',
+    quarterly: 'Quarterly',
+    yearly: 'Yearly',
+    },
+    filters: {
+    service: 'Service',
+    client: 'Client',
+    contract: 'Contract',
+  },
+    slots: {
+      free: 'Free',
+      occupied: 'Occupied',
+    },
   actions: {
     delete: 'Delete',
     download: 'Download',
@@ -9,7 +31,7 @@ export const general_en = {
     save: 'Save',
     update: 'Update',
   },
-    memo: {
+  memo: {
     solve: {
       title: 'Resolve Memo',
       message: 'Are you sure you want to mark this memo as resolved?',
@@ -94,6 +116,9 @@ export const general_en = {
   },
   users: {
     pageTitle: 'TR - User Service',
+    areas: {
+      children: 'Sub-areas / Children',
+    },
     client: {
       users_client: {
         title: 'Client Users',
@@ -150,7 +175,7 @@ export const general_en = {
     notify: 'Notify',
     delete: 'Delete',
     map: 'Map View',
-    supervision: 'Supervision',
+    supervision: 'Supervisión',
     checkin: 'Check-in',
     gantt: 'Gantt View',
     create: 'Create',
@@ -168,7 +193,6 @@ export const general_en = {
     'response:create': 'Create Response',
     'acces:invite': 'Generate Invitation',
   },
-
   role_descriptions: {
     delete: 'Allows deleting a record',
     update: 'Allows updating a record',
@@ -208,6 +232,80 @@ export const general_en = {
     created: 'Created',
     finished: 'Finished',
     no_resources_added: 'No resources added',
+    stages: {
+      title: 'Stages',
+      general: 'General',
+      name: 'Stage Name',
+      status: 'Status',
+      type: 'Type',
+      visibility: 'Visibility',
+      attach_area: 'Attach area?',
+      content: 'Content',
+      goal: 'Goal',
+      execution_notes: 'Execution Notes',
+      prompt: 'Prompt',
+      resources: 'Resources',
+    },
+    upsert: {
+      title: 'PQRS Case Details',
+      subtitle: 'Share case details and attach files before sending to AI.',
+      case_description: 'Case Description',
+      be_concise: 'Be specific and concise',
+      attachments: 'Attachments',
+      attachments_desc:
+        'Add screenshots, videos, or documents to help contextualize the request.',
+      tips: {
+        clarity: 'Clarity in the subject',
+        contact: 'Contact details',
+        time: 'Elapsed time',
+        impact: 'Customer impact',
+      },
+    },
+    // --- ESTO VA AQUÍ (DENTRO DE PQRS) ---
+    dashboard: {
+      operational_summary: 'Operational Summary',
+      attention_dashboard: 'Support Dashboard',
+      attention_desc:
+        'Use this space to visualize PQRS performance: numbers handled per month, AI automatic resolutions, and breakdown by areas or priority levels.',
+      design_preview: 'Design preview — ready to connect with backend',
+      suggested_chart: 'Suggested Chart',
+      status_priority_dist: 'Distribution by status and priority',
+      status_priority_desc:
+        'A stacked bar chart with statuses (created, in progress, finished) and high/medium/low priorities could go here.',
+      chart: 'Chart',
+      weekly_trend: 'Weekly Trend',
+      response_time_cases: 'Response time and cases per day',
+      response_time_desc:
+        'Reserve this space for a line chart with handled cases and average resolution times.',
+      line: 'Line',
+      rec_tables: 'Recommended Tables',
+      cases_by_agent: 'Cases by agent or area',
+      cases_by_agent_desc:
+        'Ideal for listing details of open cases, SLA, responsible person, and priority.',
+      table: 'Table',
+      key_alerts: 'Key Alerts',
+      expiring_cases: 'Cases about to expire',
+      expiring_cases_desc:
+        'List of cases with approaching deadlines to prioritize actions.',
+      reminders: 'Reminders',
+      cards: {
+        monthly_attention: 'Monthly Attentions',
+        monthly_attention_help:
+          'Includes totals and percentage vs. previous month',
+        ai_resolved: 'Resolved by AI',
+        ai_resolved_help:
+          'What percentage was resolved by the chatbot or virtual agent',
+        high_priority: 'High Priority',
+        high_priority_help: 'How many critical requests remain open',
+        top_area: 'Area with most cases',
+        top_area_help: 'Top 3 areas with highest volume and response times',
+        avg_sla: 'Average SLA',
+        avg_sla_help: 'Duration from filing to resolution',
+        satisfaction: 'Satisfaction',
+        satisfaction_help: 'NPS/CSAT associated with handled cases',
+      },
+    },
+    // -------------------------------------
   },
   mobile: 'Mobile',
   web: 'Web',
@@ -237,7 +335,8 @@ export const general_en = {
   p_select_template: 'Select a template...',
   p_enter_description: 'Enter Description...',
   h_management_experience: 'Management and Experience',
-  p_pqrs_description: 'Visualize and manage your cases with a clean and organized board.',
+  p_pqrs_description:
+    'Visualize and manage your cases with a clean and organized board.',
   h_total_cases: 'Total Cases',
   l_updated: 'Updated',
   l_view: 'View',
@@ -247,10 +346,29 @@ export const general_en = {
   p_no_pqrs_in_column: 'No PQRS in this column',
   p_create_case_to_start: 'Create a new case to start.',
   p_no_states_configured: 'No states configured yet',
-  p_update_or_create_to_view: 'Update or create a case to see available columns.',
+  p_update_or_create_to_view:
+    'Update or create a case to see available columns.',
   l_site_type: 'Site Type',
   l_house: 'House',
+  h_inference: 'Inference',
   l_apartment: 'Apartment',
   l_office: 'Office',
+  zone_type: {
+    parking: 'Parking',
+    pool: 'Swimming Pool',
+    gym: 'Gym',
+    other: 'Other',
+  },
+  trybook: {
+    zones: {
+      parking: 'Parking',
+      pool: 'Pool',
+      gym: 'Gym',
+      other: 'Other',
+    },
+    slots: {
+      free: 'Free',
+      occupied: 'Occupied',
+    },
+  },
 };
-

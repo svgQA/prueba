@@ -1,4 +1,3 @@
-// CommonZoneUpsertPage.tsx
 import { Signal, useSignal } from '@preact/signals';
 import { Form, Field } from 'react-final-form';
 import { FunctionComponent } from 'preact';
@@ -21,10 +20,10 @@ import { useTranslation } from 'react-i18next';
 type ZoneType = 'PARKING' | 'POOL' | 'GYM' | 'OTHER';
 
 interface FormData {
-  placeId?: IOption; // { value: number, label: string }
+  placeId?: IOption; 
   name: string;
-  type?: IOption; // { value: ZoneType, label: string }
-  isActive?: IOption; // { value: boolean, label: string }
+  type?: IOption; 
+  isActive?: IOption; 
 }
 
 const TYPE_OPTIONS: IOption[] = [
@@ -34,7 +33,7 @@ const TYPE_OPTIONS: IOption[] = [
   { value: 'OTHER', label: 'Otro' },
 ];
 
-const ACTIVE_OPTIONS: IOption[] = [
+export const ACTIVE_OPTIONS: IOption[] = [
   { value: 1, label: 'Activo' },
   { value: 0, label: 'Inactivo' },
 ];
@@ -42,25 +41,43 @@ const ACTIVE_OPTIONS: IOption[] = [
 export const CommonZoneCreatePage: FunctionComponent = () => {
   const { t } = useTranslation();
   const { go } = useNavigation();
-  const { id } = useParams<{ id?: string }>(); // id numérico (CommonZone.id)
+  const { id } = useParams<{ id?: string }>(); 
   const { selectedCompany } = useUserStore();
 
   const places: Signal<IOption[]> = useSignal([]);
   const initialValues: Signal<Partial<FormData>> = useSignal({});
   const loading = useSignal<boolean>(false);
 
-  // título
+  const getActiveOptions = () => [
+    { value: 1, label: t('general.active') },
+    { value: 0, label: t('general.inactive') },
+  ];
+
+  const activeOptions = useSignal<IOption[]>(getActiveOptions());
+
+  useEffect(() => {
+    activeOptions.value = getActiveOptions();
+  }, [t]);
+  const getTypeOptions = () => [
+    { value: 'PARKING', label: t('zone_type.parking') }, 
+    { value: 'POOL', label: t('zone_type.pool') },
+    { value: 'GYM', label: t('zone_type.gym') },
+    { value: 'OTHER', label: t('zone_type.other') },
+  ];
+
+  const typeOptions = useSignal<IOption[]>(getTypeOptions());
+
+  useEffect(() => {
+    typeOptions.value = getTypeOptions();
+  }, [t]);
   useEffect(() => {
     document.title = t('h_common_areas');
-  }, []);
-
-  // Cargar places para selector
+  }, [t]); 
   const getPlaces = useCallback(async () => {
     const req = await PlaceService.getSimpleList();
     if (req.getStatus()) places.value = req.getMany();
   }, []);
 
-  // Setear valores iniciales en edición
   const setInitialValues = useCallback(async () => {
     loading.value = true;
     if (!id) return (loading.value = false);
@@ -71,6 +88,16 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
     if (!req.getStatus()) return (loading.value = false);
 
     const model = req.getOne();
+
+    const currentActiveOptions = activeOptions.value;
+    const activeOption = model.isActive
+      ? currentActiveOptions.find((o) => o.value === 1)
+      : currentActiveOptions.find((o) => o.value === 0);
+
+    const currentTypeOptions = typeOptions.value;
+    const typeOption = currentTypeOptions.find((o) => o.value === model.type) 
+      ?? { value: model.type, label: model.type };
+
     initialValues.value = {
       placeId: model.placeId
         ? {
@@ -79,21 +106,14 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
           }
         : undefined,
       name: model.name ?? '',
-      type: model.type
-        ? (TYPE_OPTIONS.find((o) => o.value === model.type) ?? {
-            value: model.type,
-            label: model.type,
-          })
-        : undefined,
+      type: model.type ? typeOption : undefined, 
       isActive:
         typeof model.isActive === 'boolean'
-          ? model.isActive
-            ? ACTIVE_OPTIONS[0]
-            : ACTIVE_OPTIONS[1]
-          : ACTIVE_OPTIONS[0],
+          ? activeOption
+          : currentActiveOptions.find((o) => o.value === 1), 
     };
     loading.value = false;
-  }, [id]);
+  }, [id, activeOptions.value, typeOptions.value]);
 
   const getAll = useCallback(async () => {
     loading.value = true;
@@ -155,7 +175,6 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
             />
 
             <div className='grid grid-cols-4 gap-2'>
-              {/* Lugar */}
               <div className='col-span-2'>
                 <Field<IOption> name='placeId' validate={required}>
                   {({ input, meta }) => (
@@ -173,7 +192,6 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
                 </Field>
               </div>
 
-              {/* Nombre de la zona */}
               <div className='col-span-2'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
@@ -188,7 +206,6 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
                 </Field>
               </div>
 
-              {/* Tipo */}
               <div className='col-span-2'>
                 <Field<IOption> name='type' validate={required}>
                   {({ input, meta }) => (
@@ -199,14 +216,12 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
                       label='l_zona_type'
                       id='type'
                       icon='layers'
-                      options={TYPE_OPTIONS}
+                      options={typeOptions.value} 
                       disabled={loading.value}
                     />
                   )}
                 </Field>
               </div>
-
-              {/* Estado (Activo/Inactivo) */}
               <div className='col-span-2'>
                 <Field<IOption> name='isActive'>
                   {({ input, meta }) => (
@@ -217,7 +232,7 @@ export const CommonZoneCreatePage: FunctionComponent = () => {
                       label='l_status'
                       id='isActive'
                       icon='toggle-right'
-                      options={ACTIVE_OPTIONS}
+                      options={activeOptions.value} 
                       disabled={loading.value}
                     />
                   )}

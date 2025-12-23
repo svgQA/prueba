@@ -2,7 +2,6 @@ import { ColumnDef } from '@tanstack/react-table';
 
 import { ROW_ACTIONS } from '@/components/common/table/enum';
 import { Badge } from '@/components/common/badge/badge';
-// import { TextEllipsis } from '@/components/common/text-ellipsis/text-ellipsis';
 import { NColumnDef } from '@/components/common/table/type';
 import { FormattedDate } from '@/components/compose/forms';
 import { ICOtsRequest } from '../utils/interface';
@@ -18,7 +17,9 @@ type CustomColumnDef<TData> = ColumnDef<TData> &
   CustomColumnProps &
   NColumnDef<TData>;
 
+// 1. AHORA RECIBIMOS 't' COMO PRIMER ARGUMENTO
 export const getColumns = (
+  t: any, 
   _onClickAction: (params: {
     id: string;
     type: string;
@@ -84,6 +85,7 @@ export const getColumns = (
       },
       cell: (info) => {
         const has = info.getValue() as boolean;
+        // Traducimos Sí/No manualmente si quieres, o lo dejamos así
         return (
           <Badge
             label={has ? 'Sí' : 'No'}
@@ -99,11 +101,9 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       accessorFn: (row) => {
         const pqrs = Array.isArray(row.pqrs) ? row.pqrs?.[0] : row.pqrs;
-        // Prefer explicit priority name if present
         const direct = pqrs?.priority?.name;
         if (direct) return direct;
 
-        // Fallback: try to infer from the latest inference that contains prioridad
         const infs = pqrs?.inferences;
         if (Array.isArray(infs) && infs.length) {
           for (let i = infs.length - 1; i >= 0; i--) {
@@ -118,7 +118,10 @@ export const getColumns = (
       cell: (info) => {
         const value = info.getValue() as string | null;
         if (!value) return '-';
+        
         const normalized = value.toLowerCase();
+        
+        // Lógica de colores (se mantiene)
         const status: 'info' | 'error' | 'warning' | 'success' =
           normalized === 'alta'
             ? 'error'
@@ -127,7 +130,14 @@ export const getColumns = (
               : normalized === 'baja'
                 ? 'success'
                 : 'info';
-        return <Badge label={value} status={status} outline />;
+
+        // 2. LÓGICA DE TRADUCCIÓN AÑADIDA
+        let translatedLabel = value;
+        if (normalized === 'alta') translatedLabel = t('l_priority_high');
+        else if (normalized === 'media') translatedLabel = t('l_priority_medium');
+        else if (normalized === 'baja') translatedLabel = t('l_priority_low');
+
+        return <Badge label={translatedLabel} status={status} outline />;
       },
     },
     {
@@ -138,7 +148,6 @@ export const getColumns = (
       meta: { headerAlign: 'center' },
       cell: (info: any) => {
         const area = info.getValue() as { id: number; name: string };
-
         return <Badge label={area.name} status={'info'} full outline />;
       },
     },
@@ -194,15 +203,5 @@ export const getColumns = (
         return <FormattedDate date={String(info.getValue())} format='date' />;
       },
     },
-    // {
-    //   id: 'updatedAt',
-    //   accessorKey: 'updatedAt',
-    //   header: 'h_updated',
-    //   enableGrouping: true,
-    //   meta: { headerAlign: 'center', type: 'date' },
-    //   cell: (info) => {
-    //     return <FormattedDate date={String(info.getValue())} format='date' />;
-    //   },
-    // },
   ];
 };

@@ -18,7 +18,7 @@ import { Field, Form } from 'react-final-form';
 import { FieldArray } from 'react-final-form-arrays';
 import arrayMutators from 'final-form-arrays';
 import { useParams } from 'wouter';
-
+import { useTranslation } from 'react-i18next';
 import { IUserAreaRequest } from '@/types/user/user.request';
 import { GeneralService, UserService } from '@/services';
 import { MultiSelect } from '@/pages/settings/forms/create/MultiSelect';
@@ -32,7 +32,7 @@ import { StatusButton } from '@/pages/settings/components/custom.button';
 export const AreaCreatePage: FunctionComponent = () => {
   const { id } = useParams();
   const { go } = useNavigation();
-
+  const { t } = useTranslation();
   const initialValues: Signal<Partial<IUserAreaRequest>> = useSignal({});
   const loading = useSignal<boolean>(false);
   const group = useSignal<number[]>([]);
@@ -195,7 +195,7 @@ export const AreaCreatePage: FunctionComponent = () => {
             <section className='rounded-lg border border-gray-border dark:border-b-dark-dark bg-b-light dark:bg-b-dark-light p-4'>
               <div className='flex items-center justify-between mb-3'>
                 <h3 className='text-sm font-medium text-t-light dark:text-t-dark'>
-                  children
+                {t('users.areas.children')}
                 </h3>
 
                 <Button
@@ -210,7 +210,7 @@ export const AreaCreatePage: FunctionComponent = () => {
                   }
                   disabled={loading.value}
                   className='px-3 py-1 text-xs bg-primary text-white rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-primary'
-                  label='add'
+                  label={t('general.add')}
                 />
               </div>
 

@@ -24,7 +24,7 @@ export const MODAL_SETTING_TRYBOOK: IModalSidebarMenu = {
       id: 'trybook:residences:state',
     },
     {
-      icon: '022',
+      icon: '145',
       label: 'm_commonzone',
       description: 'd_commonzone',
       base,

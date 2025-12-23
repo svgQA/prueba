@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'preact/hooks';
+import { useState, useEffect, useCallback, useMemo } from 'preact/hooks';
 import { Form, Field } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
 import { SmartSelector } from '@/components/common/smart-selector/smart-select';
@@ -27,6 +27,14 @@ import { DateField } from '@/components/compose/forms';
 import { DateUtils } from '@/utils/utilities/dates';
 import { Section } from '@/components/common/section/section';
 
+const legacyPeriodMap: Record<string, number> = {
+  DAILY: 1,
+  WEEKLY: 2,
+  MONTHLY: 3,
+  QUARTERLY: 4,
+  YEARLY: 5,
+};
+
 export const ReportUpsertForm = () => {
   const { t } = useTranslation();
   const { id } = useParams();
@@ -36,7 +44,14 @@ export const ReportUpsertForm = () => {
   const loading = useSignal<boolean>(false);
   const modules = useSignal<IOption[]>([]);
   const projects = useSignal<IOption[]>([]);
-  const periods = useSignal<IOption[]>(periodOptions);
+  
+  const periods = useMemo(() => {
+    return periodOptions.map((opt) => ({
+      ...opt,
+      label: t(opt.label),
+    }));
+  }, [t]);
+
   const emails = useSignal<IOption[]>([]);
   const users = useSignal<MentionOption[]>([]);
   const filterReport = useSignal<IOption[]>([]);
@@ -44,7 +59,7 @@ export const ReportUpsertForm = () => {
 
   useEffect(() => {
     fetchInitialValues();
-  }, [id, modules.value, projects.value, periods.value]);
+  }, [id, modules.value, projects.value, periods]);
 
   useEffect(() => {
     if (selectedCompany) {
@@ -54,12 +69,12 @@ export const ReportUpsertForm = () => {
         value: index,
       }));
 
-      filterReport.value = Object.values(ReportFilter).map((info, index) => ({
-        label: info,
-        value: index,
+      filterReport.value = Object.values(ReportFilter).map((info) => ({
+        label: t(`filters.${String(info).toLowerCase()}`), 
+        value: info, 
       }));
     }
-  }, [selectedCompany]);
+  }, [selectedCompany, t]);
 
   const fetchInitialValues = async () => {
     loading.value = true;
@@ -68,11 +83,19 @@ export const ReportUpsertForm = () => {
     if (!response.getStatus()) return (loading.value = false);
     const initialData = response.getOne();
 
+    const periodValue = initialData.period as string;
+
+    const periodId =
+      legacyPeriodMap[periodValue] ||
+      periodOptions.find((p) => p.label === periodValue)?.value;
+
+    const selectedPeriod = periods.find((p) => p.value === periodId);
+
     setInitialValues({
       title: initialData.title,
       subtitle: initialData.subtitle,
       description: initialData.description,
-      period: periods.value.find((opt) => opt.label === initialData.period), // <-- esto está correcto
+      period: selectedPeriod, 
       modules: initialData.extraData?.modules
         ? initialData.extraData.modules.map((mod: any) =>
             modules.value.find((opt) => opt.value === mod.id)
@@ -111,14 +134,22 @@ export const ReportUpsertForm = () => {
           id: mod.value,
         }))
       : model.modules
-        ? [{ name: model.modules.label, id: model.modules.value }]
-        : [];
+      ? [{ name: model.modules.label, id: model.modules.value }]
+      : [];
+
+    const originalPeriodOption = periodOptions.find(
+      (p) => p.value === model.period.value
+    );
+    
+    const periodToSend = originalPeriodOption
+      ? originalPeriodOption.label 
+      : model.period.label;
 
     let report: IReport = {
       title: model.title,
       subtitle: model.subtitle,
       description: model.description,
-      period: model.period.label,
+      period: periodToSend,
       extraData: {
         modules: selectedModules,
         ...(model.projects && {
@@ -205,9 +236,8 @@ export const ReportUpsertForm = () => {
                     )}
                   </Field>
                 </div>
-
                 {values.filter?.value !== undefined &&
-                  values.filter?.value === 0 && (
+                  values.filter?.value === ReportFilter.SERVICE && (
                     <div className='col-span-1'>
                       <Field<IOption> name='projects'>
                         {({ input, meta }) => (
@@ -233,8 +263,9 @@ export const ReportUpsertForm = () => {
                     </div>
                   )}
 
+                {/* CAMBIO: Usamos ReportFilter.CLIENT en lugar de comparar labels */}
                 {values.filter?.value &&
-                  values.filter?.label === ReportFilter.CLIENT && (
+                  values.filter?.value === ReportFilter.CLIENT && (
                     <div class='col-span-1'>
                       <Field<IOption> name='userId'>
                         {({ input, meta }) => (
@@ -253,8 +284,9 @@ export const ReportUpsertForm = () => {
                     </div>
                   )}
 
+                {/* CAMBIO: Usamos ReportFilter.CONTRACT en lugar de comparar labels */}
                 {values.filter?.value &&
-                  values.filter?.label === ReportFilter.CONTRACT && (
+                  values.filter?.value === ReportFilter.CONTRACT && (
                     <div className='col-span-1'>
                       <Field<string> name='contract'>
                         {({ input, meta }) => (
@@ -272,7 +304,9 @@ export const ReportUpsertForm = () => {
                     </div>
                   )}
                 <div
-                  className={values.filter?.value ? 'col-span-2' : 'col-span-1'}
+                  className={
+                    values.filter?.value ? 'col-span-2' : 'col-span-1'
+                  }
                 >
                   <Field<IOption[]> name='modules'>
                     {({ input }) => (
@@ -342,7 +376,7 @@ export const ReportUpsertForm = () => {
                         id='select-period'
                         icon='135'
                         label='h_frequency'
-                        options={periods.value}
+                        options={periods} 
                         menuPortalTarget={document.body}
                         placeholder='p_select'
                         disabled={loading.value}
@@ -350,7 +384,7 @@ export const ReportUpsertForm = () => {
                     )}
                   </Field>
                 </div>
-                {values.period?.value && values.period?.label !== 'DAILY' && (
+                {values.period?.value && values.period?.value !== 1 && (
                   <div className='col-span-1'>
                     <DateField
                       name='date_period'

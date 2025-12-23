@@ -1,7 +1,7 @@
 export const periodOptions = [
-  { label: 'DAILY', value: 1 },
-  { label: 'WEEKLY', value: 2 },
-  { label: 'MONTHLY', value: 3 },
-  { label: 'QUARTERLY', value: 4 },
-  { label: 'YEARLY', value: 5 },
+{ label: 'frequency.daily', value: 1 },
+  { label: 'frequency.weekly', value: 2 },
+  { label: 'frequency.monthly', value: 3 },
+  { label: 'frequency.quarterly', value: 4 },
+  { label: 'frequency.yearly', value: 5 },
 ];

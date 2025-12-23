@@ -15,7 +15,7 @@ export const MODAL_SETTING_PQRS: IModalSidebarMenu = {
   },
   menus: [
     {
-      icon: '135', 
+      icon: '392', 
       label: 'm_stage',
       description: 'd_stages',
       base,

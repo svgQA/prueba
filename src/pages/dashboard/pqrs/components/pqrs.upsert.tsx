@@ -1,7 +1,5 @@
 import { Signal, useSignal } from '@preact/signals';
-
 import { Modal } from '@/components/common/modal/modal';
-
 import { useTranslation } from 'react-i18next';
 import { Field, Form } from 'react-final-form';
 import { TextArea } from '@/components/common/text.area/text.area';
@@ -25,7 +23,6 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
 
   const handleSubmit = async (model: any, _form: any) => {
     loading.value = true;
-
     let data = {
       information: model.description,
       files: files.value,
@@ -64,14 +61,14 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
           label='cancel'
           type='button'
           onClick={handleOnClose}
-          icon='041'
+          icon='192'
         />
         <Button
           name='btn-form-pqrs-save'
           type='submit'
           label={'save'}
           form='form-pqrs-upsert'
-          icon='041'
+          icon='146'
         />
       </div>
     ),
@@ -89,19 +86,14 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
         <div className='flex items-center justify-between w-full gap-3'>
           <div>
             <h3 className='text-xl font-semibold text-t-light dark:text-white'>
-              {t('h_pqrs_details')}
+              {/* CAMBIO: Usamos traducción */}
+              {t('pqrs.upsert.title')}
             </h3>
             <p className='text-sm text-gray-text-light dark:text-b-light-dark'>
-              Comparte los detalles del caso y adjunta archivos antes de
-              enviarlo a IA.
+              {/* CAMBIO: Usamos traducción */}
+              {t('pqrs.upsert.subtitle')}
             </p>
           </div>
-          {/*
-          <div className='hidden sm:flex items-center gap-2 px-3 py-2 rounded-full bg-primary-opacity text-primary text-xs font-medium border border-primary/40'>
-            <span className='vox-icon vx-icon-201 text-base'></span>
-            Redacción asistida
-          </div>
-          */}
         </div>
       }
       footer={footerContent}
@@ -122,10 +114,12 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                 <div className='lg:col-span-2 space-y-3'>
                   <div className='flex items-center justify-between'>
                     <p className='text-sm font-semibold text-t-light dark:text-white'>
-                      Descripción del caso
+                      {/* CAMBIO: Usamos traducción */}
+                      {t('pqrs.upsert.case_description')}
                     </p>
                     <span className='text-[11px] text-gray-text-light dark:text-b-light-dark bg-white/80 dark:bg-b-dark px-2 py-1 rounded-full border border-gray-border/60'>
-                      Sé específico y conciso
+                      {/* CAMBIO: Usamos traducción */}
+                      {t('pqrs.upsert.be_concise')}
                     </span>
                   </div>
                   <Field<string> name='description'>
@@ -133,8 +127,8 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                       <TextArea
                         {...input}
                         type='text'
-                        // placeholder={t('h_description')}
-                        label='h_description'
+                        // CAMBIO: label traducido
+                        label='pqrs.upsert.case_description'
                         meta={meta}
                         disabled={loading.value}
                         rows={12}
@@ -146,11 +140,12 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                 <div className='lg:col-span-1 space-y-3'>
                   <div className='flex items-center gap-2 text-sm font-semibold text-t-light dark:text-white'>
                     <span className='vox-icon vx-icon-284 text-primary'></span>
-                    Adjuntos
+                    {/* CAMBIO: Usamos traducción */}
+                    {t('pqrs.upsert.attachments')}
                   </div>
                   <p className='text-xs text-gray-text-light dark:text-b-light-dark'>
-                    Agrega capturas, videos o documentos que ayuden a
-                    contextualizar la solicitud.
+                    {/* CAMBIO: Usamos traducción */}
+                    {t('pqrs.upsert.attachments_desc')}
                   </p>
                   <div className='rounded-lg border border-dashed border-gray-border dark:border-b-dark-light p-3 bg-white dark:bg-b-dark shadow-inner h-72'>
                     <Field name='attachments'>
@@ -160,7 +155,6 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
                           onChange={handleAttachmentUpload}
                           value={files.value}
                           accept='image/*, video/*, application/pdf'
-                          // label='h_attachment'
                           area='trybook'
                           showFiles={true}
                           multiple={true}
@@ -174,20 +168,21 @@ export const PqrsUpsert = ({ showModal, closeModal }: IProps) => {
               </div>
 
               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3'>
+                {/* CAMBIO: Array de claves de traducción en lugar de textos fijos */}
                 {[
-                  'Claridad en el asunto',
-                  'Datos de contacto',
-                  'Tiempo transcurrido',
-                  'Impacto en el cliente',
-                ].map((tip) => (
+                  'pqrs.upsert.tips.clarity',
+                  'pqrs.upsert.tips.contact',
+                  'pqrs.upsert.tips.time',
+                  'pqrs.upsert.tips.impact',
+                ].map((tipKey) => (
                   <div
-                    key={tip}
+                    key={tipKey}
                     className='flex items-center gap-2 p-3 rounded-lg bg-b-light dark:bg-b-dark-light border border-gray-border dark:border-b-dark-light text-xs text-gray-text-light dark:text-b-light-dark'
                   >
                     <span className='w-6 h-6 rounded-full bg-primary-opacity text-primary flex items-center justify-center text-xs font-semibold'>
                       ✓
                     </span>
-                    <span className='leading-snug'>{tip}</span>
+                    <span className='leading-snug'>{t(tipKey)}</span>
                   </div>
                 ))}
               </div>

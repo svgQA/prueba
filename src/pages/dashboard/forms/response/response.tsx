@@ -633,14 +633,14 @@ export const FormResponseSettingPage: FunctionComponent<
                     type='button'
                     onClick={finishResponse}
                     name='btn-finish-response'
-                    icon='137'
+                    icon='030'
                     label='finish'
                   />
                   <Button
                     type='button'
                     onClick={saveResponse}
                     name='btn-save-response'
-                    icon='134'
+                    icon='146'
                     label='save'
                   />
                 </div>

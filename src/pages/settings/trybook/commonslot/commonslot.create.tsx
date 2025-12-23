@@ -19,9 +19,9 @@ import { CommonZoneService } from '@/services/trybook/commonzone';
 import { CommonSlotService } from '@/services/trybook/comonslot';
 
 interface FormData {
-  zoneId?: IOption; // { value: number, label: string }
+  zoneId?: IOption; 
   code: string;
-  isOccupied?: IOption; // { value: 1|0, label: string }
+  isOccupied?: IOption; 
 }
 
 const OCCUPIED_OPTIONS: IOption[] = [
@@ -31,7 +31,7 @@ const OCCUPIED_OPTIONS: IOption[] = [
 
 export const CommonSlotCreatetPage: FunctionComponent = () => {
   const { go } = useNavigation();
-  const { uuid } = useParams<{ uuid?: string }>(); // UUID del slot
+  const { uuid } = useParams<{ uuid?: string }>(); 
   const { selectedCompany } = useUserStore();
 
   const zones: Signal<IOption[]> = useSignal([]);
@@ -42,9 +42,7 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
     document.title = 'Espacios (Common Slots)';
   }, []);
 
-  // Cargar zonas para el selector
   const getZones = useCallback(async () => {
-    // puedes pasar paginación si tu servicio lo requiere
     const req = await CommonZoneService.getCommonZones({
       page: 1,
       items: 1000,
@@ -57,8 +55,6 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
       label: z.name ?? `Zona #${z.id}`,
     }));
   }, []);
-
-  // Setear valores iniciales en modo edición
   const setInitialValues = useCallback(async () => {
     loading.value = true;
     if (!uuid) return (loading.value = false);
@@ -100,10 +96,8 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
     const payload = {
       zoneId: Number(model.zoneId?.value),
       code: String(model.code || '').trim(),
-      isOccupied: Boolean(model.isOccupied?.value), // 1 -> true, 0 -> false
+      isOccupied: Boolean(model.isOccupied?.value),
     };
-
-    // saneo mínimo
     if (!payload.zoneId || !payload.code) return;
 
     const req = uuid
@@ -145,7 +139,6 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
             />
 
             <div className='grid grid-cols-4 gap-2'>
-              {/* Zona común */}
               <div className='col-span-2'>
                 <Field<IOption> name='zoneId' validate={required}>
                   {({ input, meta }) => (
@@ -162,8 +155,6 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-
-              {/* Código del slot */}
               <div className='col-span-2'>
                 <Field<string> name='code' validate={required}>
                   {({ input, meta }) => (
@@ -177,8 +168,6 @@ export const CommonSlotCreatetPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-
-              {/* Estado de ocupación */}
               <div className='col-span-2'>
                 <Field<IOption> name='isOccupied'>
                   {({ input, meta }) => (

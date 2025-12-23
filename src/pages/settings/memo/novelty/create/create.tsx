@@ -4,8 +4,6 @@ import { FunctionComponent } from 'preact';
 import { Input } from '@/components/common/input/input';
 import { TextArea } from '@/components/common/text.area/text.area';
 import { required } from '@/utils/utilities';
-// import { Select } from '@/components/common/select/select';
-// import { Section } from '@/components/common/section/section';
 import { ToastManager } from '@/utils/toast/toast-manager';
 import { useParams } from 'wouter';
 import { useEffect } from 'preact/hooks';
@@ -17,10 +15,10 @@ import {
   IOption,
   SmartSelector,
 } from '@/components/common/smart-selector/smart-select';
-// import { Checkbox } from '@/components/common/checkbox/checkbox';
 import { Section } from '@/components/common/section/section';
 import { Switch } from '@/components/common/switch/switch';
 import { useTranslation } from 'react-i18next';
+
 interface FormData {
   name: string;
   description: string;
@@ -28,6 +26,7 @@ interface FormData {
   autoResolve: boolean;
 }
 
+// Mantenemos esto para compatibilidad con otros archivos
 export const selectPriority: IOption[] = [
   { value: 5, label: 'Alta' },
   { value: 4, label: 'Media' },
@@ -35,12 +34,27 @@ export const selectPriority: IOption[] = [
 ];
 
 export const NoveltyCreateSettingPage: FunctionComponent = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(); // React-i18next activará el re-render al cambiar idioma
   const { go } = useNavigation();
   const initialValues: Signal<Partial<FormData>> = useSignal({});
-  const { id } = useParams(); // Obtiene el id de la URL
-  const priorities = useSignal<IOption[]>(selectPriority);
+  const { id } = useParams();
+
+  // Función auxiliar para generar la lista traducida
+  const getTranslatedPriorities = () => [
+    { value: 5, label: t('l_priority_high') },
+    { value: 4, label: t('l_priority_medium') },
+    { value: 3, label: t('l_priority_low') },
+  ];
+
+  // Inicializamos con el idioma actual
+  const priorities = useSignal<IOption[]>(getTranslatedPriorities());
+
   const loading = useSignal<boolean>(false);
+
+  // 1. NUEVO: Este useEffect escucha cambios en 't' (cambio de idioma) y actualiza la lista
+  useEffect(() => {
+    priorities.value = getTranslatedPriorities();
+  }, [t]);
 
   const onSubmit = async (model: FormData) => {
     loading.value = true;
@@ -81,6 +95,8 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
 
     const request: any = await NoveltyService.getNoveltyById(id);
     const model = pick(omitBy(request.model, isNull), userKeys);
+    
+    // Busca en la lista actual (priorities.value ya tiene el idioma correcto al inicio)
     const priority = priorities.value.find((p) => p.value === model.priority);
 
     initialValues.value = {
@@ -103,7 +119,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
           const errors: Partial<FormData> = {};
           if (!values.name) errors.name = 'Campo obligatorio';
           if (!values.description) errors.description = 'Campo obligatorio';
-          if (!values.priority) errors.description = 'Campo obligatorio';
+          if (!values.priority) errors.priority = 'Campo obligatorio';
 
           return errors;
         }}
@@ -115,16 +131,16 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
           >
             <StatusButton
               onClickClean={() => {
-                () => form.reset();
+                form.reset();
               }}
               submitting={submitting}
               pristine={pristine}
               form='form-place-create'
               label={id ? 'edit' : 'save'}
             />
-            {/** FORMULARIO PRINCIPAL */}
+            
             <div className='grid grid-cols-2 gap-3 relative pt-8'>
-              <div class='col-span-1'>
+              <div className='col-span-1'>
                 <Field<string> name='name' validate={required}>
                   {({ input, meta }) => (
                     <Input
@@ -137,7 +153,7 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                   )}
                 </Field>
               </div>
-              <div class='col-span-1'>
+              <div className='col-span-1'>
                 <Field<IOption> name='priority' validate={required}>
                   {({ input, meta }) => (
                     <SmartSelector
@@ -146,34 +162,26 @@ export const NoveltyCreateSettingPage: FunctionComponent = () => {
                       id='select-priority'
                       icon='191'
                       label='h_priority'
-                      options={priorities.value}
+                      options={priorities.value} // Esto ahora se actualiza automáticamente
                       menuPortalTarget={document.body}
                       placeholder='p_select'
                     />
                   )}
                 </Field>
               </div>
-              <div class='absolute top-0 right-0 bg-ternary flex items-center py-2 px-3 rounded-es-lg'>
+              <div className='absolute top-0 right-0 bg-ternary flex items-center py-2 px-3 rounded-es-lg'>
                 <Field<boolean> name='autoResolve' defaultValue={false}>
                   {({ input }) => (
                     <Switch
                       {...input}
                       name='autoResolve'
                       label='l_auto_resolve'
-                      // options={[
-                      //   {
-                      //     value: 'autoResolve',
-                      //     label: 'Activar resolución automática',
-                      //   },
-                      // ]}
                       value={input.checked}
-                      // value={input.value ? { autoResolve: true } : {}}
-                      // checked={input.value}
                     />
                   )}
                 </Field>
               </div>
-              <div class='col-span-2'>
+              <div className='col-span-2'>
                 <Field<string> name='description' validate={required}>
                   {({ input, meta }) => (
                     <TextArea

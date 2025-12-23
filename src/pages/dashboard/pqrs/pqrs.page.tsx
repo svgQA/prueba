@@ -235,7 +235,7 @@ export const PqrsPage: FunctionComponent = () => {
                     name='btn-refresh'
                     onClick={() => fetchingAllData()}
                     label='h_refresh'
-                    icon='050'
+                    icon='135'
                     borderless
                     iconSize='sm'
                     className='!bg-primary/15 !text-primary !border-none hover:!bg-primary/25'
@@ -244,7 +244,7 @@ export const PqrsPage: FunctionComponent = () => {
                     name='btn-upsert-pqrs'
                     onClick={() => (openModalUpsert.value = true)}
                     label='create'
-                    icon='044'
+                    icon='039'
                     borderless
                     iconSize='sm'
                     className='!bg-secondary/15 !text-secondary !border-none hover:!bg-secondary/25'
@@ -252,9 +252,9 @@ export const PqrsPage: FunctionComponent = () => {
                 </div>
               )}
               {[
-                { id: ViewMode.CARDS, label: 'Tarjetas' },
-                { id: ViewMode.DASHBOARD, label: 'Dashboard' },
-                { id: ViewMode.OTS, label: 'OTS' },
+                { id: ViewMode.CARDS, label: t('cards') },
+                { id: ViewMode.DASHBOARD, label: t('dashboard') },
+                { id: ViewMode.OTS, label: t('ots') },
               ].map((option) => (
                 <button
                   key={option.id}

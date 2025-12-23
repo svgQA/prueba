@@ -39,9 +39,10 @@ export const StageForm: FunctionComponent = () => {
   const resource = useSignal<IResourceStage[]>([]);
 
   useEffect(() => {
-    document.title = 'h_stages';
+    // CORREGIDO: Título traducido
+    document.title = t('pqrs.stages.title');
     fetchInitialValues();
-  }, []);
+  }, [t]);
 
   const { selectedCompany } = useUserStore();
   useEffect(() => {
@@ -214,7 +215,6 @@ export const StageForm: FunctionComponent = () => {
       resource: resources,
       nextStageId: model.hasArea ? null : model.nextStageId?.value || null,
       prevStageId: model.hasArea ? null : model.prevStageId?.value || null,
-      // errorStageId: model.hasArea ? null : model.errorStageId?.value || null,
       errorStageId: null,
       areaId: model.hasArea ? model.areaId?.value || null : null,
       visibility: model.visibility ?? true,
@@ -273,7 +273,7 @@ export const StageForm: FunctionComponent = () => {
                 {/* 1) Información básica */}
                 <section className='flex-1 min-w-[450px] rounded-lg border border-gray-border dark:border-b-dark-dark bg-b-light dark:bg-b-dark-light p-4 relative'>
                   <h3 className='mb-4 text-sm font-medium text-t-light dark:text-t-dark'>
-                    {t('m_general')}
+                    {t('pqrs.stages.general')}
                   </h3>
 
                   <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -282,8 +282,8 @@ export const StageForm: FunctionComponent = () => {
                         {({ input, meta }) => (
                           <Input
                             {...input}
-                            placeholder={t('h_stage_name')}
-                            label={t('h_stage_name')}
+                            placeholder={t('pqrs.stages.name')}
+                            label={t('pqrs.stages.name')}
                             meta={meta}
                             icon='120'
                             type='text'
@@ -299,8 +299,8 @@ export const StageForm: FunctionComponent = () => {
                         {({ input, meta }) => (
                           <Input
                             {...input}
-                            placeholder={t('h_status')}
-                            label={t('h_status')}
+                            placeholder={t('pqrs.stages.status')}
+                            label={t('pqrs.stages.status')}
                             meta={meta}
                             icon='120'
                             type='text'
@@ -319,7 +319,7 @@ export const StageForm: FunctionComponent = () => {
                             meta={meta}
                             id='select-stage-type'
                             icon='191'
-                            label='h_type'
+                            label={t('pqrs.stages.type')}
                             options={[
                               {
                                 value: TypesOfStages.CONTINUE,
@@ -343,7 +343,7 @@ export const StageForm: FunctionComponent = () => {
                           <Switch
                             id='visibility-switch'
                             name={input.name}
-                            label='h_visibility'
+                            label={t('pqrs.stages.visibility')}
                             value={input.checked}
                             onChange={input.onChange}
                             disabled={loading.value}
@@ -357,7 +357,7 @@ export const StageForm: FunctionComponent = () => {
                 {/* 2) Configuración del stage */}
                 <section className='flex-1 min-w-[450px] rounded-lg border border-gray-border dark:border-b-dark-dark bg-b-light dark:bg-b-dark-light p-4 relative'>
                   <h3 className='mb-4 text-sm font-medium text-t-light dark:text-t-dark'>
-                    {t('h_type')}
+                    {t('pqrs.stages.type')}
                   </h3>
 
                   <div className='grid grid-cols-1 gap-4'>
@@ -371,7 +371,7 @@ export const StageForm: FunctionComponent = () => {
                           <Switch
                             id='has-area-switch'
                             name={input.name}
-                            label='¿Anexar área al stage?'
+                            label={t('pqrs.stages.attach_area')}
                             value={input.checked}
                             onChange={input.onChange}
                             disabled={loading.value}
@@ -380,7 +380,6 @@ export const StageForm: FunctionComponent = () => {
                       </Field>
                     </div>
 
-                    {/* Condicionales (misma lógica, solo orden/maquetación) */}
                     {form.getState().values.hasArea ? (
                       <div className='md:col-span-1'>
                         <Field<IOption> name='areaId'>
@@ -435,23 +434,6 @@ export const StageForm: FunctionComponent = () => {
                               )}
                             </Field>
                           </div>
-
-                          {/* <div className="md:col-span-1">
-                        <Field<IOption> name="errorStageId">
-                          {({ input, meta }) => (
-                            <SmartSelector
-                              {...input}
-                              meta={meta}
-                              id="select-error-stageId"
-                              icon="191"
-                              label="h_error_stage"
-                              options={stageList.value || []}
-                              menuPortalTarget={document.body}
-                              placeholder="p_select"
-                            />
-                          )}
-                        </Field>
-                      </div> */}
                         </>
                       )
                     )}
@@ -459,10 +441,10 @@ export const StageForm: FunctionComponent = () => {
                 </section>
               </div>
 
-              {/* 3) Contenido / textos (lo que normalmente se diligencia después) */}
+              {/* 3) Contenido / textos */}
               <section className='rounded-lg border border-gray-border dark:border-b-dark-dark bg-b-light dark:bg-b-dark-light p-4'>
                 <h3 className='mb-4 text-sm font-medium text-t-light dark:text-t-dark'>
-                  {t('t_content')}
+                  {t('pqrs.stages.content')}
                 </h3>
 
                 <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -471,11 +453,10 @@ export const StageForm: FunctionComponent = () => {
                       {({ input, meta }) => (
                         <TextArea
                           {...input}
-                          // icon='120'
                           type='text'
                           rows={3}
-                          placeholder={'h_goal'}
-                          label={'h_goal'}
+                          placeholder={t('pqrs.stages.goal')}
+                          label={t('pqrs.stages.goal')}
                           meta={meta}
                           disabled={loading.value}
                           className='bg-white dark:bg-b-dark text-t-light dark:text-white resize-none'
@@ -488,11 +469,10 @@ export const StageForm: FunctionComponent = () => {
                       {({ input, meta }) => (
                         <TextArea
                           {...input}
-                          // icon='120'
                           type='text'
                           rows={3}
-                          placeholder={'h_execution_notes'}
-                          label={'h_execution_notes'}
+                          placeholder={t('pqrs.stages.execution_notes')}
+                          label={t('pqrs.stages.execution_notes')}
                           meta={meta}
                           disabled={loading.value}
                           className='bg-white dark:bg-b-dark text-t-light dark:text-white resize-none'
@@ -505,11 +485,10 @@ export const StageForm: FunctionComponent = () => {
                       {({ input, meta }) => (
                         <TextArea
                           {...input}
-                          // icon='120'
                           type='text'
                           rows={5}
-                          placeholder={'h_prompt'}
-                          label={'h_prompt'}
+                          placeholder={t('pqrs.stages.prompt')}
+                          label={t('pqrs.stages.prompt')}
                           meta={meta}
                           disabled={loading.value}
                         />
@@ -523,7 +502,7 @@ export const StageForm: FunctionComponent = () => {
               <section className='rounded-lg border border-gray-border dark:border-b-dark-dark bg-b-light dark:bg-b-dark-light p-4'>
                 <div className='flex items-center justify-between mb-3'>
                   <h3 className='text-sm font-medium text-t-light dark:text-t-dark'>
-                    {t('h_resource')}
+                    {t('pqrs.stages.resources')}
                   </h3>
 
                   <Button
@@ -538,7 +517,7 @@ export const StageForm: FunctionComponent = () => {
                     }
                     disabled={loading.value}
                     className='px-3 py-1 text-xs bg-primary text-white rounded hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-primary'
-                    label='add'
+                    label={t('general.add')}
                   />
                 </div>
 
@@ -571,7 +550,7 @@ export const StageForm: FunctionComponent = () => {
                                       meta={meta}
                                       id={`select-resource-type-${index}`}
                                       icon='041'
-                                      label='Type'
+                                      label={t('pqrs.stages.type')}
                                       options={[
                                         {
                                           value: 'internal',
