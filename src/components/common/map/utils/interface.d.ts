@@ -23,6 +23,9 @@ export interface IMapProps extends IComponentProps {
   zoom?: number;
   onZoomChange?: (z: number) => void;
   setName?: boolean;
+  colorRadius?: string
+  radiusInternal?: number;
+  colorInternalRadius?: string;
 }
 
 export interface MapPoint {

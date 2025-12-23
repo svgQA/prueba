@@ -107,18 +107,18 @@ export const PqrsPage: FunctionComponent = () => {
     groupedPqrs.value = {};
     const list: IOption[] = response.getMany();
 
-    const createdStatus = list.find((item) => item.label === 'created') || {
-      value: uuid(),
-      label: 'created',
-    };
-    const finishedStatus = list.find((item) => item.label === 'finished') || {
-      value: uuid(),
-      label: 'finished',
-    };
-    const middleStatuses = list.filter(
-      (item) => item.label !== 'created' && item.label !== 'finished'
-    );
-    const orderedList = [createdStatus, ...middleStatuses, finishedStatus];
+    const finishedFound = list.find((item) => item.label === 'finished');
+    const finishedStatus = finishedFound
+      ? { ...finishedFound, label: 'pqrs.finished' }
+      : { value: uuid(), label: 'pqrs.finished' };
+
+    const errorFound = list.find((item) => item.label === 'error');
+    const errorStatus = errorFound
+      ? { ...errorFound, label: 'pqrs.error' }
+      : { value: uuid(), label: 'pqrs.error' };
+
+    const middleStatuses = list.filter((item) => item.label !== 'error' && item.label !== 'finished');
+    const orderedList = [...middleStatuses, finishedStatus, errorStatus];
 
     orderedList.forEach((statusItem) => {
       const normalizedStatus = statusItem.label.toLowerCase();
@@ -138,7 +138,6 @@ export const PqrsPage: FunctionComponent = () => {
         if (
           Array.isArray(item.inferences) &&
           item.inferences.length > 0 &&
-          normalizedStatus !== 'created' &&
           normalizedStatus !== 'finished' &&
           normalizedStatus !== 'error'
         ) {
@@ -147,6 +146,10 @@ export const PqrsPage: FunctionComponent = () => {
           normalizedStatus =
             lastInference?.stage?.stageName.toLowerCase() || null;
         }
+
+        // Normaliza claves: si el estado es finished/error, usa prefijo 'pqrs.'
+        if (normalizedStatus === 'finished') normalizedStatus = 'pqrs.finished';
+        if (normalizedStatus === 'error') normalizedStatus = 'pqrs.error';
 
         if (!groupedPqrs.value[normalizedStatus])
           groupedPqrs.value[normalizedStatus] = [];

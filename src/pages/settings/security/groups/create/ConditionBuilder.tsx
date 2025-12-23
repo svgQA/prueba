@@ -17,19 +17,19 @@ const operatorsWithValue = ['=', '!=', 'like', 'starts with'];
 //const { t } = useTranslation();
 
 const fieldOptions = [
-  'nombre',
-  'cognito',
-  'address',
-  'correo',
-  'alias',
-  'telefono',
-  'canal',
-  'roles',
-  'perfil',
-  'compañía',
-  'departamento',
-  'puesto',
-].map((field) => ({ label: field, value: field }));
+  { label: 'Nombre', value: 'name' },
+  { label: 'Cognito', value: 'cognito' },
+  { label: 'Dirección', value: 'address' },
+  { label: 'Correo', value: 'email' },
+  { label: 'Alias', value: 'alias' },
+  { label: 'Teléfono', value: 'phone' },
+  { label: 'Canal', value: 'channel' },
+  { label: 'Roles', value: 'roles' },
+  { label: 'Perfil', value: 'profile' },
+  { label: 'Compañía', value: 'company' },
+  { label: 'Departamento', value: 'department' },
+  { label: 'Puesto', value: 'position' },
+];
 
 const operatorOptions = [
   { label: '=', value: '=' },
@@ -41,9 +41,9 @@ const operatorOptions = [
 ];
 
 const predefinedOptions: Record<string, { label: string; value: string }[]> = {
-  compañía: [],
+  company: [],
   roles: [],
-  perfil: [
+  profile: [
     {
       value: 'USER',
       label: 'user.create.form.userType.USER',
@@ -67,7 +67,7 @@ export const ConditionBuilder = ({ condition, onRemove, onChange }: Props) => {
   const getCompanies = async (): Promise<void> => {
     const response = await CompanyService.getCompanyList();
     if (!response.getStatus()) return;
-    predefinedOptions.compañía = response.getMany().map((company) => ({
+    predefinedOptions.company = response.getMany().map((company) => ({
       label: company.label,
       value: company.label,
     }));

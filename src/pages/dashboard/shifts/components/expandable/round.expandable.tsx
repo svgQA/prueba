@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'preact/hooks';
-import { ShiftService } from '@/services';
+
 import { Badge } from '@/components/common/badge/badge';
 import { Gauge } from '@/components/common/gauge/gauge';
 import { useTranslation } from 'react-i18next';
+import { MapPoint } from '@/components/common/map/utils/interface';
 import MapViewer from '@/components/common/file/components/mapViewer';
 import { Button } from '@/components/common/button/button';
-import { MapPoint } from '@/components/common/map/utils/interface';
+
+import { ShiftService } from '@/services';
 
 interface PointStatus {
   point: string | number;
@@ -78,6 +80,9 @@ const RoundInfo = ({
             title={t('h_round') + ': ' + roundName}
             mapPoint={pointsHistory}
             clickable={<Button name='btn-map-viewer' icon='289'></Button>}
+            radius={1000}
+            radiusInternal={500}
+            colorRadius='red'
           />
         )}
       </div>

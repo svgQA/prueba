@@ -206,6 +206,7 @@ export const general_es = {
     pageTitle: 'TR - Servicio de PQRS',
     created: 'Creadas',
     finished: 'Finalizadas',
+    error: 'Con error',
     no_resources_added: 'No se han añadido recursos',
   },
   mobile: 'Móvil',

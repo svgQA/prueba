@@ -186,6 +186,7 @@ export const message_es = {
     '¿Estás seguro de querer eliminar la zona de recurso?',
   i_showAlert_title_resource: 'Eliminar zona de recurso',
   s_structure_success: 'Estructura acorde a lo esperado',
+  i_message_place_optional: "El lugar que estas seleccionando es OPCIONAL dado que no se guardara en la ronda. Este lugar es solo para visualizar en el mapa"
 };
 
 export const message_en = {
@@ -373,4 +374,5 @@ export const message_en = {
   i_showAlert_title_resource: 'Delete resource zone',
   i_showAlert_title_zone: 'Delete common zone',
   s_structure_success: 'Correct structure format',
+  i_message_place_optional: "The place you are selecting is OPTIONAL since it will not be saved in the round. This place is just for visualization on the map"
 };
